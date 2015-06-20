@@ -1,0 +1,1054 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Cloud | realguess</title>
+  <meta name="author" content="Chao Huang">
+  
+  <meta name="description" content="Just a blog about every detail encountered.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="realguess"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="realguess" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-45698182-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">realguess</a></h1>
+  <h2><a href="/">Don&#39;t afraid to try!</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+<h2 class="archive-title category">Cloud</h2>
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-10-25T15:37:25.000Z"><a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/">Oct 25, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/">Use CNAME for Resovling Private and Public IP Address in Amazon EC2</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>“A security group acts as a virtual firewall that controlls the traffic for one or more instances.” <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">1</a> The <a href="https://aws.amazon.com/ec2/" target="_blank" rel="external">Amazon EC2</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">Security Groups</a> are not just capable controlling traffic from an IP address, but also from all EC2 instances belong to a specific security group. I want to allow an instance belonging to one security group to access an instance belongs to another security group via a custom domain name (subdomain.example.com).</p>
+<p>But when I configured the subdomain via <a href="https://aws.amazon.com/route53/" target="_blank" rel="external">Amazon Route 53</a>, I have misconfigured it by assigning a A record, an IP address or the <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" target="_blank" rel="external">Elastic IP address</a> of the instance. I should have used CNAME, and assigned the public DNS (the public hostname of the EC2 instance).</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-05-24T22:17:41.000Z"><a href="/2014/05/24/amazon-s3-delimiter-and-prefix/">May 24, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/05/24/amazon-s3-delimiter-and-prefix/">Amazon S3 Delimiter and Prefix</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://aws.amazon.com/s3/" target="_blank" rel="external">Amazon S3</a> is an inexpensive online file storage service, and there is the <a href="http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html" target="_blank" rel="external">JavaScript SDK</a> to use. There are things puzzling me when using the SDK were:</p>
+<ol>
+<li>How to use parameters <code>Delimiter</code> and <code>Prefix</code>?</li>
+<li>What is the difference between <code>CommonPrefixes</code> and <code>Contents</code>?</li>
+<li>How to create a folder/directory with JavaScript SDK?</li>
+</ol>
+<p>To retrieve objects in an Amazon S3 bucket, the operation is <code>listObjects</code>. The <code>listObjects</code> does not return the content of the object, but the key and meta data such as size and owner of the object.</p>
+<p>To make a call to get a list of objects in a bucket:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">s3.listObjects(params, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{</div><div class="line">  <span class="comment">// ...</span></div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Where the <code>params</code> can be configured with the following parameters:</p>
+<ul>
+<li>Bucket</li>
+<li>Delimiter</li>
+<li>EncodingType</li>
+<li>Marker</li>
+<li>MaxKeys</li>
+<li>Prefix</li>
+</ul>
+<p>But what are <code>Delimiter</code> and <code>Prefix</code>? And how to use them?</p>
+<p>Let’s start by creating some objects in an Amazon S3 bucket similar to the following file structure. This can be easily done by using the AWS Console.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── <span class="built_in">directory</span></div><div class="line">│   ├── <span class="built_in">directory</span></div><div class="line">│   │   └── <span class="built_in">file</span></div><div class="line">│   └── <span class="built_in">file</span></div><div class="line">└── <span class="built_in">file</span></div><div class="line"></div><div class="line"><span class="number">2</span> <span class="built_in">directories</span>, <span class="number">3</span> <span class="built_in">files</span></div></pre></td></tr></table></figure>
+
+<p>In Amazon S3, the objects are:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>One thing to keep in mind is that Amazon S3 is not a file system. There is not really the concept of file and directory/folder. From the console, it might look like there are 2 directories and 3 files. But they are all objects. And objects are listed alphabetically by their keys. </p>
+<p>To make it a little bit more clear, let’s invoke the <code>listObjects</code> method. Since the operation has only <code>Bucket</code> parameter is required:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">params = {</div><div class="line">  Bucket: <span class="string">'example'</span></div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>The response <code>data</code> contains in the callback function:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'file'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  Marker: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  IsTruncated: false }</div></pre></td></tr></table></figure>
+
+<p>If this is a file structure, you might expect:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>But it is not, because a bucket does not work like a folder or a directory, where the immediate files inside the directory is shown.  The objects inside the bucket are laid out flat and alphabetically.</p>
+<p>In UNIX, a directory is a file, but in Amazon S3, everything is an object, and can be identified by key.</p>
+<p>So, how to make Amazon S3 behave more like a folder or a directory? Or how to just list the content of first level right inside the bucket?</p>
+<p>In order to make it work like directory you have to use <code>Delimiter</code> and <code>Prefix</code>. <code>Delimiter</code> is what you use to group keys. It does have to be a <em>single character</em>, it can be a string of characters. And <code>Prefix</code> limits the response to keys that begin with the specified prefix.</p>
+<h2 id="Delimiter">Delimiter</h2>
+<p>Let’s start by adding the following delimiter:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">params = {</div><div class="line">  Bucket: <span class="string">'example'</span>,</div><div class="line">  Delimiter: <span class="string">'/'</span></div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>You will get something more like a listing of a directory:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'/'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>There are a directory <code>directory/</code> and a file <code>file</code>. What happened was that the following objects except <code>file</code> are grouped by the delimiter <code>/</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>So, result in:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>This feels more like a listing of a directory or folder. But if we change <code>Delimiter</code> to <code>i</code>, then, you get no <code>Contents</code> and just the prefixes:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">{ Contents: [],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'di'</span> }, { Prefix: <span class="string">'fi'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'i'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>All keys can be grouped into two prefixes: <code>di</code> and <code>fi</code>. Therefore, Amazon S3 is not a file system, but might act like one if using the right parameters.</p>
+<p>As I have mentioned that <code>Delimiter</code> does not need to be a single character:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> },</div><div class="line">     { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/directory'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'/directory'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>If recall the bucket structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Both <code>directory/directory/</code> and <code>directory/directory/file</code> are grouped into a common prefix: <code>directory/directory</code>, due to the common grouping string <code>/directory</code>.</p>
+<p>Let’s try another one with <code>Delimiter: &#39;directory&#39;</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'directory'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>Okay, one more. Let’s try <code>ry/fi</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: </div><div class="line">   [ { Prefix: <span class="string">'directory/directory/fi'</span> },</div><div class="line">     { Prefix: <span class="string">'directory/fi'</span> } ],</div><div class="line">  Name: <span class="string">'example,</span></div><div class="line">  Prefix: '<span class="string">',</span></div><div class="line">  MaxKeys: 1000,</div><div class="line">  Delimiter: 'ry/<span class="keyword">fi</span><span class="string">',</span></div><div class="line">  IsTruncated: false }</div></pre></td></tr></table></figure>
+
+<p>So, remember that <code>Delimiter</code> is just providing a grouping functionality for keys. If you want it to behave like a file system, use <code>Delimiter: &#39;/&#39;</code>.</p>
+<h2 id="Prefix">Prefix</h2>
+<p><code>Prefix</code> is much easier to understand, it is a filter that limits keys to be prefixed by the one specified.</p>
+<p>With the same structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Let’s set the <code>Prefix</code> parameter to <code>directory</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">'directory'</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>How about <code>directory/</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Prefix: <span class="string">'directory/'</span> }</div></pre></td></tr></table></figure>
+
+<p>Both <code>directory</code> and <code>directory/</code> prefixes are the same.</p>
+<p>If we try something slightly different, <code>Prefix: &#39;directory/d&#39;</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Prefix: <span class="string">'directory/d'</span> }</div></pre></td></tr></table></figure>
+
+<p>Putting all together with both <code>Delimiter: &#39;directory&#39;</code> and <code>Prefix: &#39;directory&#39;</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/directory'</span> } ],</div><div class="line">  Prefix: <span class="string">'directory'</span>,</div><div class="line">  Delimiter: <span class="string">'directory'</span> }</div></pre></td></tr></table></figure>
+
+<p>First, list the keys prefixed by <code>directory</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Group them by the delimiter <code>directory</code> <strong>with prefix <code>directory</code></strong>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span></div></pre></td></tr></table></figure>
+
+<p>The result <code>Contents</code> are:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>and <code>CommonPrefixes</code> are:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span></div></pre></td></tr></table></figure>
+
+<p>Maybe changing <code>Delimiter</code> to <code>i</code> could give a better perspective:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/di'</span> }, { Prefix: <span class="string">'directory/fi'</span> } ],</div><div class="line">  Prefix: <span class="string">'directory'</span>,</div><div class="line">  Delimiter: <span class="string">'i'</span> }</div></pre></td></tr></table></figure>
+
+<p>as:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/               <span class="comment"># key to show</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/     <span class="comment"># group to 'directory/di'</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span> <span class="comment"># group to 'directory/di'</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span>           <span class="comment"># Group to 'directory/fi'</span></div><div class="line"><span class="built_in">file</span>                     <span class="comment"># ignored due to prefix</span></div></pre></td></tr></table></figure>
+
+<p>One advantage of using Amazon S3 over listing a directory is that you don’t need to concern about nested directories, everything is being flattened. So, you can loop it through just by specifying the <code>Prefix</code> property.</p>
+<h2 id="Directory/Folder">Directory/Folder</h2>
+<p>If you’re using the Amazon AWS console to “Create Folder”, you can create a directory/folder and upload a file to inside the directory/folder. In effect, you are actually creating two objects with the following keys:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>If you use the following command to upload a file, the directory is not created:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp <span class="built_in">file</span> s3://example/<span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Because, Amazon S3 is not a file system, but a key/value store. If you use <code>listObjects</code> method, you will just see one object. That is the same reason that you cannot copy a local directory:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp directory s3://example/directory</div><div class="line">upload failed: aws/ to s3://example/directory [Errno <span class="number">21</span>] Is a directory: <span class="string">u'/home/chao/tmp/directory/'</span></div></pre></td></tr></table></figure>
+
+<p>But we can use the JavaScript SDK to create a directory/folder:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">s3.putObject({ Bucket: <span class="string">'example'</span>, Key: <span class="string">'directory/'</span> }, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) { <span class="keyword">return</span> <span class="built_in">console</span>.error(err); }</div><div class="line"></div><div class="line">  <span class="built_in">console</span>.log(data);</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Note that you must use <code>directory/</code> with trailing slash instead the one without. Otherwise, it is just a regular file not a directory.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+
+  <nav id="pagination">
+  
+  
+  <div class="clearfix"></div>
+</nav>
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:realguess.net">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
+  
+    <li><a href="/categories/communication/">Communication</a><small>1</small></li>
+  
+    <li><a href="/categories/linux/">Linux</a><small>1</small></li>
+  
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>6</small></li>
+  
+    <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
+  
+    <li><a href="/categories/productivity/">Productivity</a><small>1</small></li>
+  
+    <li><a href="/categories/programming/">Programming</a><small>3</small></li>
+  
+    <li><a href="/categories/security/">Security</a><small>1</small></li>
+  
+    <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
+  
+    <li><a href="/categories/tools/">Tools</a><small>24</small></li>
+  
+    <li><a href="/categories/travel/">Travel</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/2013/">2013</a><small>1</small></li>
+  
+    <li><a href="/tags/2014/">2014</a><small>3</small></li>
+  
+    <li><a href="/tags/2015/">2015</a><small>1</small></li>
+  
+    <li><a href="/tags/abraham-lincoln/">abraham-lincoln</a><small>1</small></li>
+  
+    <li><a href="/tags/absolute-path/">absolute-path</a><small>1</small></li>
+  
+    <li><a href="/tags/accessor-property/">accessor-property</a><small>1</small></li>
+  
+    <li><a href="/tags/aftereach/">aftereach</a><small>1</small></li>
+  
+    <li><a href="/tags/agenda/">agenda</a><small>1</small></li>
+  
+    <li><a href="/tags/alexa/">alexa</a><small>3</small></li>
+  
+    <li><a href="/tags/alias/">alias</a><small>1</small></li>
+  
+    <li><a href="/tags/amazon/">amazon</a><small>6</small></li>
+  
+    <li><a href="/tags/amazon-s3/">amazon-s3</a><small>2</small></li>
+  
+    <li><a href="/tags/amazon-s3api/">amazon-s3api</a><small>1</small></li>
+  
+    <li><a href="/tags/amazon-sqs/">amazon-sqs</a><small>1</small></li>
+  
+    <li><a href="/tags/amtrak/">amtrak</a><small>1</small></li>
+  
+    <li><a href="/tags/android/">android</a><small>1</small></li>
+  
+    <li><a href="/tags/android-4-3/">android-4.3</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous/">anonymous</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous-function/">anonymous-function</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous-like/">anonymous-like</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous-login/">anonymous-login</a><small>1</small></li>
+  
+    <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
+  
+    <li><a href="/tags/apple/">apple</a><small>1</small></li>
+  
+    <li><a href="/tags/apt-get/">apt-get</a><small>1</small></li>
+  
+    <li><a href="/tags/array/">array</a><small>3</small></li>
+  
+    <li><a href="/tags/asynchronous/">asynchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/automated-build/">automated-build</a><small>1</small></li>
+  
+    <li><a href="/tags/automatic-link/">automatic-link</a><small>1</small></li>
+  
+    <li><a href="/tags/automation/">automation</a><small>2</small></li>
+  
+    <li><a href="/tags/awk/">awk</a><small>1</small></li>
+  
+    <li><a href="/tags/aws/">aws</a><small>8</small></li>
+  
+    <li><a href="/tags/aws-cli/">aws-cli</a><small>4</small></li>
+  
+    <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>3</small></li>
+  
+    <li><a href="/tags/beforeeach/">beforeeach</a><small>1</small></li>
+  
+    <li><a href="/tags/best-practice/">best-practice</a><small>2</small></li>
+  
+    <li><a href="/tags/big-apple/">big-apple</a><small>1</small></li>
+  
+    <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
+  
+    <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
+  
+    <li><a href="/tags/bitbucket/">bitbucket</a><small>2</small></li>
+  
+    <li><a href="/tags/blog/">blog</a><small>4</small></li>
+  
+    <li><a href="/tags/boss/">boss</a><small>1</small></li>
+  
+    <li><a href="/tags/brace-expansion/">brace-expansion</a><small>1</small></li>
+  
+    <li><a href="/tags/bret-victor/">bret-victor</a><small>1</small></li>
+  
+    <li><a href="/tags/browser/">browser</a><small>1</small></li>
+  
+    <li><a href="/tags/browser-sync/">browser-sync</a><small>1</small></li>
+  
+    <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
+  
+    <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
+  
+    <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/chat/">chat</a><small>1</small></li>
+  
+    <li><a href="/tags/chrome/">chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
+  
+    <li><a href="/tags/cli/">cli</a><small>7</small></li>
+  
+    <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
+  
+    <li><a href="/tags/cloud9/">cloud9</a><small>1</small></li>
+  
+    <li><a href="/tags/cm/">cm</a><small>1</small></li>
+  
+    <li><a href="/tags/cname/">cname</a><small>1</small></li>
+  
+    <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
+  
+    <li><a href="/tags/coding-style/">coding-style</a><small>1</small></li>
+  
+    <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
+  
+    <li><a href="/tags/coffeescript/">coffeescript</a><small>7</small></li>
+  
+    <li><a href="/tags/color/">color</a><small>1</small></li>
+  
+    <li><a href="/tags/comcast/">comcast</a><small>1</small></li>
+  
+    <li><a href="/tags/command-history/">command-history</a><small>1</small></li>
+  
+    <li><a href="/tags/command-line/">command-line</a><small>2</small></li>
+  
+    <li><a href="/tags/command-line-interface/">command-line-interface</a><small>1</small></li>
+  
+    <li><a href="/tags/compare/">compare</a><small>1</small></li>
+  
+    <li><a href="/tags/configuration/">configuration</a><small>1</small></li>
+  
+    <li><a href="/tags/configuration-management/">configuration-management</a><small>1</small></li>
+  
+    <li><a href="/tags/console/">console</a><small>1</small></li>
+  
+    <li><a href="/tags/container/">container</a><small>1</small></li>
+  
+    <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
+  
+    <li><a href="/tags/control-character/">control-character</a><small>1</small></li>
+  
+    <li><a href="/tags/cors/">cors</a><small>1</small></li>
+  
+    <li><a href="/tags/crescent/">crescent</a><small>1</small></li>
+  
+    <li><a href="/tags/crlf/">crlf</a><small>1</small></li>
+  
+    <li><a href="/tags/cron/">cron</a><small>2</small></li>
+  
+    <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
+  
+    <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
+  
+    <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
+  
+    <li><a href="/tags/custom-generator/">custom-generator</a><small>1</small></li>
+  
+    <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
+  
+    <li><a href="/tags/data-volume/">data-volume</a><small>1</small></li>
+  
+    <li><a href="/tags/datagram/">datagram</a><small>1</small></li>
+  
+    <li><a href="/tags/date/">date</a><small>1</small></li>
+  
+    <li><a href="/tags/debian/">debian</a><small>1</small></li>
+  
+    <li><a href="/tags/december/">december</a><small>1</small></li>
+  
+    <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
+  
+    <li><a href="/tags/dependency/">dependency</a><small>2</small></li>
+  
+    <li><a href="/tags/development/">development</a><small>1</small></li>
+  
+    <li><a href="/tags/development-environment/">development-environment</a><small>1</small></li>
+  
+    <li><a href="/tags/diff/">diff</a><small>2</small></li>
+  
+    <li><a href="/tags/directory/">directory</a><small>1</small></li>
+  
+    <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
+  
+    <li><a href="/tags/distributed/">distributed</a><small>1</small></li>
+  
+    <li><a href="/tags/distributed-team/">distributed-team</a><small>1</small></li>
+  
+    <li><a href="/tags/dns/">dns</a><small>2</small></li>
+  
+    <li><a href="/tags/docco/">docco</a><small>1</small></li>
+  
+    <li><a href="/tags/docker/">docker</a><small>4</small></li>
+  
+    <li><a href="/tags/domain/">domain</a><small>1</small></li>
+  
+    <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
+  
+    <li><a href="/tags/ec2/">ec2</a><small>3</small></li>
+  
+    <li><a href="/tags/echo/">echo</a><small>2</small></li>
+  
+    <li><a href="/tags/ecmascript-harmony/">ecmascript-harmony</a><small>1</small></li>
+  
+    <li><a href="/tags/encryption/">encryption</a><small>1</small></li>
+  
+    <li><a href="/tags/environment/">environment</a><small>3</small></li>
+  
+    <li><a href="/tags/environment-variable/">environment-variable</a><small>2</small></li>
+  
+    <li><a href="/tags/eol/">eol</a><small>1</small></li>
+  
+    <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
+  
+    <li><a href="/tags/express/">express</a><small>3</small></li>
+  
+    <li><a href="/tags/extended-pattern-matching/">extended-pattern-matching</a><small>1</small></li>
+  
+    <li><a href="/tags/extglob/">extglob</a><small>1</small></li>
+  
+    <li><a href="/tags/facebook/">facebook</a><small>1</small></li>
+  
+    <li><a href="/tags/file-system/">file-system</a><small>1</small></li>
+  
+    <li><a href="/tags/filename/">filename</a><small>1</small></li>
+  
+    <li><a href="/tags/firewall/">firewall</a><small>1</small></li>
+  
+    <li><a href="/tags/folder/">folder</a><small>1</small></li>
+  
+    <li><a href="/tags/fs/">fs</a><small>1</small></li>
+  
+    <li><a href="/tags/function/">function</a><small>4</small></li>
+  
+    <li><a href="/tags/function-declaration/">function-declaration</a><small>2</small></li>
+  
+    <li><a href="/tags/function-expression/">function-expression</a><small>3</small></li>
+  
+    <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
+  
+    <li><a href="/tags/generator/">generator</a><small>1</small></li>
+  
+    <li><a href="/tags/get/">get</a><small>1</small></li>
+  
+    <li><a href="/tags/getter/">getter</a><small>2</small></li>
+  
+    <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
+  
+    <li><a href="/tags/git/">git</a><small>3</small></li>
+  
+    <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/github/">github</a><small>4</small></li>
+  
+    <li><a href="/tags/github-pages/">github-pages</a><small>1</small></li>
+  
+    <li><a href="/tags/glob/">glob</a><small>1</small></li>
+  
+    <li><a href="/tags/gnome/">gnome</a><small>1</small></li>
+  
+    <li><a href="/tags/goal/">goal</a><small>1</small></li>
+  
+    <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
+  
+    <li><a href="/tags/google-trends/">google-trends</a><small>1</small></li>
+  
+    <li><a href="/tags/groupthink/">groupthink</a><small>1</small></li>
+  
+    <li><a href="/tags/grunt/">grunt</a><small>1</small></li>
+  
+    <li><a href="/tags/grunt-contrib-jshint/">grunt-contrib-jshint</a><small>1</small></li>
+  
+    <li><a href="/tags/grunt-contrib-watch/">grunt-contrib-watch</a><small>1</small></li>
+  
+    <li><a href="/tags/guard/">guard</a><small>1</small></li>
+  
+    <li><a href="/tags/gulp/">gulp</a><small>2</small></li>
+  
+    <li><a href="/tags/hackathon/">hackathon</a><small>1</small></li>
+  
+    <li><a href="/tags/head/">head</a><small>2</small></li>
+  
+    <li><a href="/tags/heartbleed/">heartbleed</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/hipchat/">hipchat</a><small>1</small></li>
+  
+    <li><a href="/tags/hong-kong/">hong-kong</a><small>1</small></li>
+  
+    <li><a href="/tags/hosted-zone/">hosted-zone</a><small>1</small></li>
+  
+    <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
+  
+    <li><a href="/tags/http/">http</a><small>3</small></li>
+  
+    <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
+  
+    <li><a href="/tags/id/">id</a><small>1</small></li>
+  
+    <li><a href="/tags/ide/">ide</a><small>1</small></li>
+  
+    <li><a href="/tags/identifier/">identifier</a><small>1</small></li>
+  
+    <li><a href="/tags/iife/">iife</a><small>2</small></li>
+  
+    <li><a href="/tags/imessage/">imessage</a><small>1</small></li>
+  
+    <li><a href="/tags/immediately-invoked-function-expression/">immediately-invoked-function-expression</a><small>2</small></li>
+  
+    <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
+  
+    <li><a href="/tags/install/">install</a><small>2</small></li>
+  
+    <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
+  
+    <li><a href="/tags/internet-speed/">internet-speed</a><small>1</small></li>
+  
+    <li><a href="/tags/interpreter/">interpreter</a><small>1</small></li>
+  
+    <li><a href="/tags/iojs/">iojs</a><small>2</small></li>
+  
+    <li><a href="/tags/ip-address/">ip-address</a><small>3</small></li>
+  
+    <li><a href="/tags/january/">january</a><small>1</small></li>
+  
+    <li><a href="/tags/jasmine/">jasmine</a><small>1</small></li>
+  
+    <li><a href="/tags/javascript/">javascript</a><small>12</small></li>
+  
+    <li><a href="/tags/jelly-bean/">jelly-bean</a><small>1</small></li>
+  
+    <li><a href="/tags/join/">join</a><small>1</small></li>
+  
+    <li><a href="/tags/jq/">jq</a><small>4</small></li>
+  
+    <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
+  
+    <li><a href="/tags/json/">json</a><small>4</small></li>
+  
+    <li><a href="/tags/koa/">koa</a><small>4</small></li>
+  
+    <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
+  
+    <li><a href="/tags/koa-router/">koa-router</a><small>1</small></li>
+  
+    <li><a href="/tags/lean/">lean</a><small>1</small></li>
+  
+    <li><a href="/tags/lean-coffee/">lean-coffee</a><small>1</small></li>
+  
+    <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
+  
+    <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lf/">lf</a><small>1</small></li>
+  
+    <li><a href="/tags/libssl/">libssl</a><small>1</small></li>
+  
+    <li><a href="/tags/like-button/">like-button</a><small>1</small></li>
+  
+    <li><a href="/tags/line-divider/">line-divider</a><small>1</small></li>
+  
+    <li><a href="/tags/line-ending/">line-ending</a><small>1</small></li>
+  
+    <li><a href="/tags/linux/">linux</a><small>3</small></li>
+  
+    <li><a href="/tags/listobjects/">listobjects</a><small>1</small></li>
+  
+    <li><a href="/tags/livereload/">livereload</a><small>2</small></li>
+  
+    <li><a href="/tags/load/">load</a><small>1</small></li>
+  
+    <li><a href="/tags/log/">log</a><small>1</small></li>
+  
+    <li><a href="/tags/m101/">m101</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>2</small></li>
+  
+    <li><a href="/tags/meeting/">meeting</a><small>1</small></li>
+  
+    <li><a href="/tags/messaging/">messaging</a><small>1</small></li>
+  
+    <li><a href="/tags/metric/">metric</a><small>4</small></li>
+  
+    <li><a href="/tags/mi3/">mi3</a><small>1</small></li>
+  
+    <li><a href="/tags/middleware/">middleware</a><small>1</small></li>
+  
+    <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
+  
+    <li><a href="/tags/mocha/">mocha</a><small>1</small></li>
+  
+    <li><a href="/tags/module/">module</a><small>1</small></li>
+  
+    <li><a href="/tags/mongodb/">mongodb</a><small>1</small></li>
+  
+    <li><a href="/tags/mongoexport/">mongoexport</a><small>1</small></li>
+  
+    <li><a href="/tags/multi-parts/">multi-parts</a><small>1</small></li>
+  
+    <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
+  
+    <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/nb/">nb</a><small>1</small></li>
+  
+    <li><a href="/tags/network/">network</a><small>1</small></li>
+  
+    <li><a href="/tags/new-orleans/">new-orleans</a><small>1</small></li>
+  
+    <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
+  
+    <li><a href="/tags/nginx/">nginx</a><small>1</small></li>
+  
+    <li><a href="/tags/node/">node</a><small>12</small></li>
+  
+    <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
+  
+    <li><a href="/tags/nodemon/">nodemon</a><small>1</small></li>
+  
+    <li><a href="/tags/normalization/">normalization</a><small>1</small></li>
+  
+    <li><a href="/tags/nota-bene/">nota-bene</a><small>1</small></li>
+  
+    <li><a href="/tags/note-well/">note-well</a><small>1</small></li>
+  
+    <li><a href="/tags/november/">november</a><small>1</small></li>
+  
+    <li><a href="/tags/npm/">npm</a><small>2</small></li>
+  
+    <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
+  
+    <li><a href="/tags/null/">null</a><small>1</small></li>
+  
+    <li><a href="/tags/nvm/">nvm</a><small>1</small></li>
+  
+    <li><a href="/tags/object/">object</a><small>3</small></li>
+  
+    <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
+  
+    <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
+  
+    <li><a href="/tags/order/">order</a><small>1</small></li>
+  
+    <li><a href="/tags/outdated/">outdated</a><small>1</small></li>
+  
+    <li><a href="/tags/package/">package</a><small>1</small></li>
+  
+    <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
+  
+    <li><a href="/tags/parseint/">parseint</a><small>1</small></li>
+  
+    <li><a href="/tags/path/">path</a><small>4</small></li>
+  
+    <li><a href="/tags/pattern-matching/">pattern-matching</a><small>1</small></li>
+  
+    <li><a href="/tags/ping/">ping</a><small>1</small></li>
+  
+    <li><a href="/tags/pm2/">pm2</a><small>1</small></li>
+  
+    <li><a href="/tags/port/">port</a><small>2</small></li>
+  
+    <li><a href="/tags/prefix/">prefix</a><small>1</small></li>
+  
+    <li><a href="/tags/preinstall/">preinstall</a><small>1</small></li>
+  
+    <li><a href="/tags/principle/">principle</a><small>1</small></li>
+  
+    <li><a href="/tags/process/">process</a><small>1</small></li>
+  
+    <li><a href="/tags/profile/">profile</a><small>1</small></li>
+  
+    <li><a href="/tags/provision/">provision</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>1</small></li>
+  
+    <li><a href="/tags/query-parameter/">query-parameter</a><small>1</small></li>
+  
+    <li><a href="/tags/queue/">queue</a><small>1</small></li>
+  
+    <li><a href="/tags/random/">random</a><small>2</small></li>
+  
+    <li><a href="/tags/rawgit/">rawgit</a><small>1</small></li>
+  
+    <li><a href="/tags/read/">read</a><small>1</small></li>
+  
+    <li><a href="/tags/reboot/">reboot</a><small>2</small></li>
+  
+    <li><a href="/tags/record-set/">record-set</a><small>1</small></li>
+  
+    <li><a href="/tags/redis/">redis</a><small>1</small></li>
+  
+    <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
+  
+    <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
+  
+    <li><a href="/tags/repl/">repl</a><small>1</small></li>
+  
+    <li><a href="/tags/require/">require</a><small>2</small></li>
+  
+    <li><a href="/tags/responsibility/">responsibility</a><small>1</small></li>
+  
+    <li><a href="/tags/restart/">restart</a><small>1</small></li>
+  
+    <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
+  
+    <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
+  
+    <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
+  
+    <li><a href="/tags/san-francisco/">san-francisco</a><small>1</small></li>
+  
+    <li><a href="/tags/save/">save</a><small>1</small></li>
+  
+    <li><a href="/tags/scaffolding/">scaffolding</a><small>1</small></li>
+  
+    <li><a href="/tags/script/">script</a><small>1</small></li>
+  
+    <li><a href="/tags/search/">search</a><small>1</small></li>
+  
+    <li><a href="/tags/search-term/">search-term</a><small>1</small></li>
+  
+    <li><a href="/tags/security/">security</a><small>1</small></li>
+  
+    <li><a href="/tags/security-group/">security-group</a><small>2</small></li>
+  
+    <li><a href="/tags/sed/">sed</a><small>1</small></li>
+  
+    <li><a href="/tags/semantics/">semantics</a><small>1</small></li>
+  
+    <li><a href="/tags/semver/">semver</a><small>1</small></li>
+  
+    <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
+  
+    <li><a href="/tags/server/">server</a><small>1</small></li>
+  
+    <li><a href="/tags/setter/">setter</a><small>2</small></li>
+  
+    <li><a href="/tags/settings/">settings</a><small>1</small></li>
+  
+    <li><a href="/tags/setup/">setup</a><small>1</small></li>
+  
+    <li><a href="/tags/shabang/">shabang</a><small>1</small></li>
+  
+    <li><a href="/tags/sharing/">sharing</a><small>1</small></li>
+  
+    <li><a href="/tags/shebang/">shebang</a><small>1</small></li>
+  
+    <li><a href="/tags/shell/">shell</a><small>3</small></li>
+  
+    <li><a href="/tags/shell-expansion/">shell-expansion</a><small>1</small></li>
+  
+    <li><a href="/tags/shell-script/">shell-script</a><small>1</small></li>
+  
+    <li><a href="/tags/shellshock/">shellshock</a><small>1</small></li>
+  
+    <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
+  
+    <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
+  
+    <li><a href="/tags/speed-test/">speed-test</a><small>1</small></li>
+  
+    <li><a href="/tags/split/">split</a><small>2</small></li>
+  
+    <li><a href="/tags/ssh/">ssh</a><small>3</small></li>
+  
+    <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
+  
+    <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/startup/">startup</a><small>2</small></li>
+  
+    <li><a href="/tags/stats/">stats</a><small>5</small></li>
+  
+    <li><a href="/tags/stream/">stream</a><small>1</small></li>
+  
+    <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
+  
+    <li><a href="/tags/success/">success</a><small>1</small></li>
+  
+    <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
+  
+    <li><a href="/tags/supertest/">supertest</a><small>1</small></li>
+  
+    <li><a href="/tags/symbolic-link/">symbolic-link</a><small>1</small></li>
+  
+    <li><a href="/tags/symlink/">symlink</a><small>1</small></li>
+  
+    <li><a href="/tags/sync/">sync</a><small>1</small></li>
+  
+    <li><a href="/tags/synchronous/">synchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/taipei/">taipei</a><small>1</small></li>
+  
+    <li><a href="/tags/taiwan/">taiwan</a><small>1</small></li>
+  
+    <li><a href="/tags/task/">task</a><small>1</small></li>
+  
+    <li><a href="/tags/tcdisrupt/">tcdisrupt</a><small>1</small></li>
+  
+    <li><a href="/tags/teardown/">teardown</a><small>1</small></li>
+  
+    <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
+  
+    <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
+  
+    <li><a href="/tags/test/">test</a><small>1</small></li>
+  
+    <li><a href="/tags/testing/">testing</a><small>1</small></li>
+  
+    <li><a href="/tags/texting/">texting</a><small>1</small></li>
+  
+    <li><a href="/tags/time-zone/">time-zone</a><small>1</small></li>
+  
+    <li><a href="/tags/tmux/">tmux</a><small>1</small></li>
+  
+    <li><a href="/tags/todo/">todo</a><small>1</small></li>
+  
+    <li><a href="/tags/topic/">topic</a><small>1</small></li>
+  
+    <li><a href="/tags/train/">train</a><small>1</small></li>
+  
+    <li><a href="/tags/travel/">travel</a><small>1</small></li>
+  
+    <li><a href="/tags/trello/">trello</a><small>1</small></li>
+  
+    <li><a href="/tags/trigger/">trigger</a><small>1</small></li>
+  
+    <li><a href="/tags/tumblr/">tumblr</a><small>1</small></li>
+  
+    <li><a href="/tags/twitter/">twitter</a><small>1</small></li>
+  
+    <li><a href="/tags/ubuntu/">ubuntu</a><small>3</small></li>
+  
+    <li><a href="/tags/uglifyjs/">uglifyjs</a><small>1</small></li>
+  
+    <li><a href="/tags/underscore/">underscore</a><small>1</small></li>
+  
+    <li><a href="/tags/unicode/">unicode</a><small>1</small></li>
+  
+    <li><a href="/tags/unique-visitor/">unique-visitor</a><small>4</small></li>
+  
+    <li><a href="/tags/united-states/">united-states</a><small>1</small></li>
+  
+    <li><a href="/tags/unix/">unix</a><small>1</small></li>
+  
+    <li><a href="/tags/update/">update</a><small>1</small></li>
+  
+    <li><a href="/tags/upgrade/">upgrade</a><small>1</small></li>
+  
+    <li><a href="/tags/upstart/">upstart</a><small>1</small></li>
+  
+    <li><a href="/tags/username/">username</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant/">vagrant</a><small>4</small></li>
+  
+    <li><a href="/tags/version/">version</a><small>1</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>1</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>3</small></li>
+  
+    <li><a href="/tags/vimdiff/">vimdiff</a><small>1</small></li>
+  
+    <li><a href="/tags/vimeo/">vimeo</a><small>1</small></li>
+  
+    <li><a href="/tags/visit/">visit</a><small>4</small></li>
+  
+    <li><a href="/tags/vpn/">vpn</a><small>1</small></li>
+  
+    <li><a href="/tags/vulnerability/">vulnerability</a><small>1</small></li>
+  
+    <li><a href="/tags/web-framework/">web-framework</a><small>1</small></li>
+  
+    <li><a href="/tags/web-server/">web-server</a><small>1</small></li>
+  
+    <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
+  
+    <li><a href="/tags/windows/">windows</a><small>1</small></li>
+  
+    <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
+  
+    <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
+  
+    <li><a href="/tags/yeoman/">yeoman</a><small>1</small></li>
+  
+    <li><a href="/tags/yield/">yield</a><small>1</small></li>
+  
+    <li><a href="/tags/zone-apex/">zone-apex</a><small>1</small></li>
+  
+    <li><a href="/tags/中華電信/">中華電信</a><small>1</small></li>
+  
+    <li><a href="/tags/小米/">小米</a><small>1</small></li>
+  
+    <li><a href="/tags/小米手机/">小米手机</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 Chao Huang
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'realguess';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

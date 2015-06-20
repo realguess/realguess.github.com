@@ -1,0 +1,1546 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>javascript | realguess</title>
+  <meta name="author" content="Chao Huang">
+  
+  <meta name="description" content="Just a blog about every detail encountered.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="realguess"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="realguess" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-45698182-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">realguess</a></h1>
+  <h2><a href="/">Don&#39;t afraid to try!</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+<h2 class="archive-title tag">javascript</h2>
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-06-29T21:07:07.000Z"><a href="/2014/06/29/inherited-accessor-property-can-only-be-overridden-by-accessor-property/">Jun 29, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/29/inherited-accessor-property-can-only-be-overridden-by-accessor-property/">Inherited Accessor Property Can Only Be Overridden by Accessor Property</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In Javascript, define a property <code>prop</code> as an accessor property via getter/setter:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = {</div><div class="line">  get prop() {},</div><div class="line">  set prop() {}</div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>And the property will have the following attributes:</p>
+<pre><code>&gt; <span class="built_in">Object</span>.keys(obj)
+[ <span class="string">'prop'</span> ]
+&gt; <span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, <span class="string">'prop'</span>)
+{ <span class="keyword">get</span>: [<span class="built_in">Function</span>: prop],
+  <span class="keyword">set</span>: [<span class="built_in">Function</span>: prop],
+  enumerable: <span class="literal">true</span>,
+  configurable: <span class="literal">true</span> }
+</code></pre><p>Now, create a new object that inherits <code>obj</code>, and attempt to overwrite the accessor property by a data property:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = <span class="built_in">Object</span>.create(obj);</div><div class="line">foo.prop = <span class="string">'data'</span>;</div></pre></td></tr></table></figure>
+
+<p>But, the same property of the new object cannot be created:</p>
+<pre><code><span class="input"><span class="prompt">&gt; Object.keys(foo)
+[]
+&gt;</span> <span class="constant">Object</span>.getOwnPropertyDescriptor(foo, <span class="string">'prop'</span>)</span>
+undefined
+</code></pre><p>That is because that the property is an accessor property and it cannot be overridden by a data property. It can only be overridden by an accessor property:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(foo, <span class="string">'prop'</span>, {</div><div class="line">  get: <span class="function"><span class="keyword">function</span> <span class="title">prop</span><span class="params">()</span> </span>{},</div><div class="line">  set: <span class="function"><span class="keyword">function</span> <span class="title">prop</span><span class="params">()</span> </span>{},</div><div class="line">  enumerable: <span class="literal">true</span>,</div><div class="line">  configurable: <span class="literal">true</span>,</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Then, the <code>foo</code> object will have its own property named <code>prop</code>:</p>
+<pre><code>&gt; <span class="built_in">Object</span>.keys(foo)
+[ <span class="string">'prop'</span> ]
+&gt; <span class="built_in">Object</span>.getOwnPropertyDescriptor(foo, <span class="string">'prop'</span>)
+{ <span class="keyword">get</span>: [<span class="built_in">Function</span>: prop],
+  <span class="keyword">set</span>: [<span class="built_in">Function</span>: prop],
+  enumerable: <span class="literal">true</span>,
+  configurable: <span class="literal">true</span> }
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-06-28T10:10:21.000Z"><a href="/2014/06/28/getter-and-setter-methods-without-function-identifier-restriction/">Jun 28, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/28/getter-and-setter-methods-without-function-identifier-restriction/">Getter and Setter Methods without Function Identifier Restriction</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>A JavaScript identifier must start with either a letter, underscore, or dollar sign:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="function"><span class="keyword">function</span> 7/11<span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected number</div><div class="line">&gt; <span class="function"><span class="keyword">function</span> '7/11'<span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected string</div><div class="line">&gt; <span class="keyword">var</span> <span class="number">7</span>/<span class="number">11</span> = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected number</div><div class="line">&gt; <span class="keyword">var</span> <span class="string">'7/11'</span> = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected string</div></pre></td></tr></table></figure>
+
+<p>But object property does have such a limitation:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">var</span> obj = { <span class="string">'7/11'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{} }</div><div class="line">&gt; obj[<span class="string">'7/11'</span>]</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">()</span></span>{}</div></pre></td></tr></table></figure>
+
+<p>And it works with accessor properties or getter and setter methods:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">var</span> obj = { get <span class="string">'7/11'</span>(){ <span class="keyword">return</span> <span class="string">'7/11'</span>; } }</div><div class="line">&gt; obj[<span class="string">'7/11'</span>]</div><div class="line"><span class="string">"7/11"</span></div></pre></td></tr></table></figure>
+
+<p>The syntax <code>get &#39;7/11&#39;(){}</code> looks like <code>function &#39;7/11&#39;(){}</code>, but it is not, getter and setter are still object properties. That is why it works. That’s another reason to use JavaScript object.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-06-21T11:58:22.000Z"><a href="/2014/06/21/avoid-assigning-undefined-to-an-object-property/">Jun 21, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/21/avoid-assigning-undefined-to-an-object-property/">Avoid Assigning undefined to an Object Property</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>A property value should be any JavaScript value except for <code>undefined</code>. If you do something like this (albeit it is legal):</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = { bar: <span class="literal">undefined</span> };</div></pre></td></tr></table></figure>
+
+<p>will leads to confusing code. Because when accessing the property value:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(foo.bar); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
+
+<p>It will returns <code>undefined</code>. But you are not sure if it means the property exists or not or the value of the property is set to <code>undefined</code>. Therefore, you should do:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = { bar: <span class="literal">null</span> };</div></pre></td></tr></table></figure>
+
+<p>This indicates that the property is expected, and with the value of <code>null</code>.</p>
+<p>You do be able to check the existence of a property by:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.keys(foo); <span class="comment">// ['bar']</span></div><div class="line">foo.hasOwnProperty(<span class="string">'bar'</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+
+<p>But more importantly, if you serialize the object with <code>JSON.stringify</code>, properties with <code>undefined</code> will be omitted:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">JSON</span>.stringify({ bar: <span class="literal">undefined</span> }); <span class="comment">// '{}'</span></div></pre></td></tr></table></figure>
+
+<p>According to <a href="http://www.json.org/" target="_blank" rel="external">JSON specification</a>, <em>a value can be a <code>string</code> in double quotes, or a <code>number</code>, or <code>true</code> or <code>false</code> or <code>null</code>, or an <code>object</code> or an <code>array</code></em>. <code>undefined</code> is not a valid JSON value.</p>
+<p><code>null</code> is fine:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">JSON</span>.stringify({ bar: <span class="literal">null</span> }); <span class="comment">// '{"bar":null}'</span></div></pre></td></tr></table></figure>
+
+<p>So, for the best practice, avoid assigning <code>undefined</code> to a property of an object. Use <code>null</code> to indicate the expected property without a value. This will increase portability when using JSON to serialize.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-05-24T22:17:41.000Z"><a href="/2014/05/24/amazon-s3-delimiter-and-prefix/">May 24, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/05/24/amazon-s3-delimiter-and-prefix/">Amazon S3 Delimiter and Prefix</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://aws.amazon.com/s3/" target="_blank" rel="external">Amazon S3</a> is an inexpensive online file storage service, and there is the <a href="http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html" target="_blank" rel="external">JavaScript SDK</a> to use. There are things puzzling me when using the SDK were:</p>
+<ol>
+<li>How to use parameters <code>Delimiter</code> and <code>Prefix</code>?</li>
+<li>What is the difference between <code>CommonPrefixes</code> and <code>Contents</code>?</li>
+<li>How to create a folder/directory with JavaScript SDK?</li>
+</ol>
+<p>To retrieve objects in an Amazon S3 bucket, the operation is <code>listObjects</code>. The <code>listObjects</code> does not return the content of the object, but the key and meta data such as size and owner of the object.</p>
+<p>To make a call to get a list of objects in a bucket:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">s3.listObjects(params, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{</div><div class="line">  <span class="comment">// ...</span></div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Where the <code>params</code> can be configured with the following parameters:</p>
+<ul>
+<li>Bucket</li>
+<li>Delimiter</li>
+<li>EncodingType</li>
+<li>Marker</li>
+<li>MaxKeys</li>
+<li>Prefix</li>
+</ul>
+<p>But what are <code>Delimiter</code> and <code>Prefix</code>? And how to use them?</p>
+<p>Let’s start by creating some objects in an Amazon S3 bucket similar to the following file structure. This can be easily done by using the AWS Console.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── <span class="built_in">directory</span></div><div class="line">│   ├── <span class="built_in">directory</span></div><div class="line">│   │   └── <span class="built_in">file</span></div><div class="line">│   └── <span class="built_in">file</span></div><div class="line">└── <span class="built_in">file</span></div><div class="line"></div><div class="line"><span class="number">2</span> <span class="built_in">directories</span>, <span class="number">3</span> <span class="built_in">files</span></div></pre></td></tr></table></figure>
+
+<p>In Amazon S3, the objects are:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>One thing to keep in mind is that Amazon S3 is not a file system. There is not really the concept of file and directory/folder. From the console, it might look like there are 2 directories and 3 files. But they are all objects. And objects are listed alphabetically by their keys. </p>
+<p>To make it a little bit more clear, let’s invoke the <code>listObjects</code> method. Since the operation has only <code>Bucket</code> parameter is required:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">params = {</div><div class="line">  Bucket: <span class="string">'example'</span></div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>The response <code>data</code> contains in the callback function:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'file'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  Marker: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  IsTruncated: false }</div></pre></td></tr></table></figure>
+
+<p>If this is a file structure, you might expect:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>But it is not, because a bucket does not work like a folder or a directory, where the immediate files inside the directory is shown.  The objects inside the bucket are laid out flat and alphabetically.</p>
+<p>In UNIX, a directory is a file, but in Amazon S3, everything is an object, and can be identified by key.</p>
+<p>So, how to make Amazon S3 behave more like a folder or a directory? Or how to just list the content of first level right inside the bucket?</p>
+<p>In order to make it work like directory you have to use <code>Delimiter</code> and <code>Prefix</code>. <code>Delimiter</code> is what you use to group keys. It does have to be a <em>single character</em>, it can be a string of characters. And <code>Prefix</code> limits the response to keys that begin with the specified prefix.</p>
+<h2 id="Delimiter">Delimiter</h2>
+<p>Let’s start by adding the following delimiter:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">params = {</div><div class="line">  Bucket: <span class="string">'example'</span>,</div><div class="line">  Delimiter: <span class="string">'/'</span></div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>You will get something more like a listing of a directory:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'/'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>There are a directory <code>directory/</code> and a file <code>file</code>. What happened was that the following objects except <code>file</code> are grouped by the delimiter <code>/</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>So, result in:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>This feels more like a listing of a directory or folder. But if we change <code>Delimiter</code> to <code>i</code>, then, you get no <code>Contents</code> and just the prefixes:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">{ Contents: [],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'di'</span> }, { Prefix: <span class="string">'fi'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'i'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>All keys can be grouped into two prefixes: <code>di</code> and <code>fi</code>. Therefore, Amazon S3 is not a file system, but might act like one if using the right parameters.</p>
+<p>As I have mentioned that <code>Delimiter</code> does not need to be a single character:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> },</div><div class="line">     { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/directory'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'/directory'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>If recall the bucket structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Both <code>directory/directory/</code> and <code>directory/directory/file</code> are grouped into a common prefix: <code>directory/directory</code>, due to the common grouping string <code>/directory</code>.</p>
+<p>Let’s try another one with <code>Delimiter: &#39;directory&#39;</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'directory'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>Okay, one more. Let’s try <code>ry/fi</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: </div><div class="line">   [ { Prefix: <span class="string">'directory/directory/fi'</span> },</div><div class="line">     { Prefix: <span class="string">'directory/fi'</span> } ],</div><div class="line">  Name: <span class="string">'example,</span></div><div class="line">  Prefix: '<span class="string">',</span></div><div class="line">  MaxKeys: 1000,</div><div class="line">  Delimiter: 'ry/<span class="keyword">fi</span><span class="string">',</span></div><div class="line">  IsTruncated: false }</div></pre></td></tr></table></figure>
+
+<p>So, remember that <code>Delimiter</code> is just providing a grouping functionality for keys. If you want it to behave like a file system, use <code>Delimiter: &#39;/&#39;</code>.</p>
+<h2 id="Prefix">Prefix</h2>
+<p><code>Prefix</code> is much easier to understand, it is a filter that limits keys to be prefixed by the one specified.</p>
+<p>With the same structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Let’s set the <code>Prefix</code> parameter to <code>directory</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">'directory'</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>How about <code>directory/</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Prefix: <span class="string">'directory/'</span> }</div></pre></td></tr></table></figure>
+
+<p>Both <code>directory</code> and <code>directory/</code> prefixes are the same.</p>
+<p>If we try something slightly different, <code>Prefix: &#39;directory/d&#39;</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Prefix: <span class="string">'directory/d'</span> }</div></pre></td></tr></table></figure>
+
+<p>Putting all together with both <code>Delimiter: &#39;directory&#39;</code> and <code>Prefix: &#39;directory&#39;</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/directory'</span> } ],</div><div class="line">  Prefix: <span class="string">'directory'</span>,</div><div class="line">  Delimiter: <span class="string">'directory'</span> }</div></pre></td></tr></table></figure>
+
+<p>First, list the keys prefixed by <code>directory</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Group them by the delimiter <code>directory</code> <strong>with prefix <code>directory</code></strong>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span></div></pre></td></tr></table></figure>
+
+<p>The result <code>Contents</code> are:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>and <code>CommonPrefixes</code> are:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span></div></pre></td></tr></table></figure>
+
+<p>Maybe changing <code>Delimiter</code> to <code>i</code> could give a better perspective:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/di'</span> }, { Prefix: <span class="string">'directory/fi'</span> } ],</div><div class="line">  Prefix: <span class="string">'directory'</span>,</div><div class="line">  Delimiter: <span class="string">'i'</span> }</div></pre></td></tr></table></figure>
+
+<p>as:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/               <span class="comment"># key to show</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/     <span class="comment"># group to 'directory/di'</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span> <span class="comment"># group to 'directory/di'</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span>           <span class="comment"># Group to 'directory/fi'</span></div><div class="line"><span class="built_in">file</span>                     <span class="comment"># ignored due to prefix</span></div></pre></td></tr></table></figure>
+
+<p>One advantage of using Amazon S3 over listing a directory is that you don’t need to concern about nested directories, everything is being flattened. So, you can loop it through just by specifying the <code>Prefix</code> property.</p>
+<h2 id="Directory/Folder">Directory/Folder</h2>
+<p>If you’re using the Amazon AWS console to “Create Folder”, you can create a directory/folder and upload a file to inside the directory/folder. In effect, you are actually creating two objects with the following keys:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>If you use the following command to upload a file, the directory is not created:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp <span class="built_in">file</span> s3://example/<span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Because, Amazon S3 is not a file system, but a key/value store. If you use <code>listObjects</code> method, you will just see one object. That is the same reason that you cannot copy a local directory:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp directory s3://example/directory</div><div class="line">upload failed: aws/ to s3://example/directory [Errno <span class="number">21</span>] Is a directory: <span class="string">u'/home/chao/tmp/directory/'</span></div></pre></td></tr></table></figure>
+
+<p>But we can use the JavaScript SDK to create a directory/folder:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">s3.putObject({ Bucket: <span class="string">'example'</span>, Key: <span class="string">'directory/'</span> }, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) { <span class="keyword">return</span> <span class="built_in">console</span>.error(err); }</div><div class="line"></div><div class="line">  <span class="built_in">console</span>.log(data);</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Note that you must use <code>directory/</code> with trailing slash instead the one without. Otherwise, it is just a regular file not a directory.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-03-02T09:55:23.000Z"><a href="/2014/03/02/immediately-invoked-function-expression/">Mar 2, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/02/immediately-invoked-function-expression/">Immediately Invoked Function Expression</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>What’s difference between:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}());</div><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{})();</div></pre></td></tr></table></figure>
+
+<p>This is function declaration:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{}</div></pre></td></tr></table></figure>
+
+<p>The identifier of the function declaration is required.</p>
+<p>This is function expression:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{};</div></pre></td></tr></table></figure>
+
+<p>The right hand side of the assignment must be an expression. And function identifier is optional. Check the previous article about the difference between <a href="/2014/03/01/function-declaration-and-function-expression/">function declaration and function expression</a>.</p>
+<p>Now, come in the grouping operator, which return the result of evaluating an expression:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{});</div></pre></td></tr></table></figure>
+
+<p>If we do it with named function:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{}</div><div class="line">(foo);</div></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{});</div></pre></td></tr></table></figure>
+
+<p>But we haven’t done anything here, in another word, we haven’t invoked the function. We merely evaluate the function in three occasions. Function is object in JavaScript, when you’re evaluating an object, the result is still an object:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{}); <span class="comment">// [Function: foo]</span></div><div class="line"><span class="built_in">console</span>.log(<span class="function"><span class="keyword">function</span> <span class="params">()</span></span>{});    <span class="comment">// [Function]</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span><span class="params">()</span></span>{}</div><div class="line"><span class="built_in">console</span>.log(bar);              <span class="comment">// [Function: bar]</span></div><div class="line"><span class="built_in">console</span>.log({});               <span class="comment">// {}</span></div></pre></td></tr></table></figure>
+
+<p>Now, let’s apply function invocation, and do it the traditional way:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">foo();</div></pre></td></tr></table></figure>
+
+<p>The function has been invoked, and it will return the result of the function.</p>
+<p>Replace the identifier with function declaration:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{}();</div></pre></td></tr></table></figure>
+
+<p>However, this does not work. Because interpreter treats it as a function declaration, and <code>(</code> will become an unexpected token. Function declaration cannot be invoked immediately. So, we need to make it an expression, by using the grouping operator:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{})();</div></pre></td></tr></table></figure>
+
+<p>The function identifier is no longer necessary:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{})();</div></pre></td></tr></table></figure>
+
+<p>Since grouping operator return the result of the expression, we can just drop it:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}();</div></pre></td></tr></table></figure>
+
+<p>But this statement becomes a function declaration again, so we need to place the grouping operator around it:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}());</div></pre></td></tr></table></figure>
+
+<p>Okay, but what’s difference between:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}());</div><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{})();</div></pre></td></tr></table></figure>
+
+<p>There is no difference, they are both function expressions being invoked immediately.  Function invocation can only be done via function expression. But first one is more align with <code>foo()</code>, the traditional way. According to the <a href="http://javascript.crockford.com/code.html" target="_blank" rel="external">Code Convention for JavaScript Programming Language</a> by Douglas Crockford:</p>
+<blockquote>
+<p>When a function is to be invoked immediately, the entire <em>invocation expression</em> should be wrapped in parens so that it is clear that the value being produced is the result of the function and not the function itself.</p>
+</blockquote>
+<p>The invocation expression is <code>function(){}()</code>, and wrap it around parenthesis becomes <code>(function(){}());</code>.</p>
+<p>Therefore, this first method is more traditional and preferred.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-03-01T00:04:36.000Z"><a href="/2014/03/01/function-declaration-and-function-expression/">Mar 1, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/01/function-declaration-and-function-expression/">Function Declaration and Function Expression</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In JavaScript, what is <em>function declaration</em>?</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="title">square</span><span class="params">(n)</span> </span>{ <span class="keyword">return</span> n * n; }
+</code></pre><p>Here we declare a function and name it “square”. But what is <em>function expression</em>?</p>
+<pre><code><span class="keyword">var</span> square = <span class="function"><span class="keyword">function</span> <span class="params">(n)</span> </span>{ <span class="keyword">return</span> n * n; };
+</code></pre><p>When you start a statement with keyword <code>function</code>, then the statement is <em>function declaration</em>, everything else is <em>function expression</em>.</p>
+<p>Function expression can either be named or anonymous. The above is anonymous function, and here is a named one:</p>
+<pre><code><span class="keyword">var</span> square = <span class="function"><span class="keyword">function</span> <span class="title">square</span><span class="params">(n)</span> </span>{ <span class="keyword">return</span> n * n; };
+</code></pre><p>There is a variable <code>square</code> and function name <code>square</code>, but they are not the same. The scopes are different. The function name <code>square</code> of the function expression can be only used inside the function, mainly for debugging purpose. Accessing from outside the function, will throw <code>ReferenceError</code>:</p>
+<pre><code><span class="keyword">var</span> foo = <span class="function"><span class="keyword">function</span> <span class="title">bar</span><span class="params">()</span> </span>{};
+bar(); <span class="comment">// ReferenceError: bar is not defined</span>
+</code></pre><p>We can also use property ‘name’ to differentiate a named vs. an anonymous function:</p>
+<pre><code>console.<span class="built_in">log</span>(square.name); // <span class="built_in">empty</span> <span class="built_in">string</span> <span class="keyword">for</span> <span class="keyword">an</span> anonymous <span class="function"><span class="keyword">function</span></span>
+</code></pre><p>However, you cannot create an anonymous function declaration, for a very obvious reason:</p>
+<pre><code><span class="function"><span class="keyword">function</span> <span class="params">(n)</span> </span>{ <span class="keyword">return</span> n * n; } <span class="comment">// SyntaxError: Unexpected token (</span>
+</code></pre><p>Another difference between function declaration and function expression is hoisting:</p>
+<pre><code>square(<span class="number">10</span>); <span class="comment">// 100</span>
+<span class="function"><span class="keyword">function</span> <span class="title">square</span><span class="params">(n)</span> </span>{ <span class="keyword">return</span> n * n; }
+</code></pre><p>Function defined by declaration is hoisted, but not for function expression:</p>
+<pre><code>square(<span class="number">10</span>); <span class="comment">// TypeError: undefined is not a function</span>
+<span class="keyword">var</span> square = <span class="function"><span class="keyword">function</span> <span class="params">(n)</span> </span>{ <span class="keyword">return</span> n * n; }
+</code></pre><p>The variable declaration is hoisted, but not for the definition. Therefore, result in <code>TypeError</code>. However, for best practice, functions should be defined before being used.</p>
+<p>In conclusion:</p>
+<ul>
+<li>Function declaration must start with keyword <code>function</code> in the beginning of the statement. Everything else is function expression.</li>
+<li>Function expression can be anonymous and named, but function declaration can only be named.</li>
+<li>Function declaration is hoisted, but not function expression.</li>
+</ul>
+<p>This function declaration happens inside a unreachable block.</p>
+<pre><code>square(<span class="number">10</span>); <span class="comment">// 100</span>
+<span class="keyword">if</span> (<span class="literal">false</span>) {
+  <span class="function"><span class="keyword">function</span> <span class="title">square</span><span class="params">(n)</span> </span>{ <span class="keyword">return</span> n * n; }
+}
+</code></pre><p>There is no block scope in JavaScript. Spaces in the beginning of keyword <code>function</code> do not count. This is still a valid function declaration.</p>
+<p>A simple way to turn function declaration into function expression is by wrapping around parentheses:</p>
+<pre><code>(<span class="function"><span class="keyword">function</span> <span class="title">square</span><span class="params">(n)</span> </span>{ <span class="keyword">return</span> n * n; });
+</code></pre><p>We are applying the grouping operator <code>()</code> here, which evaluates the function expression.</p>
+<p>Another way:</p>
+<pre><code>foo(err, <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{});
+</code></pre><p>Just think about <code>,</code> as <code>()</code>.</p>
+<p>Other good reads:</p>
+<ul>
+<li>StackOverflow, <a href="http://stackoverflow.com/q/336859/594696" target="_blank" rel="external">var functionName = function() {} vs function functionName() {}</a></li>
+<li>Angus Croll, <a href="http://javascriptweblog.wordpress.com/2010/07/06/function-declarations-vs-function-expressions/" target="_blank" rel="external">Function Declarations vs. Function Expressions</a></li>
+<li>MDN, <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions_and_function_scope#Function_constructor_vs._function_declaration_vs._function_expression" target="_blank" rel="external">Function constructor vs. function declaration vs. function expression</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-01-24T21:19:23.000Z"><a href="/2014/01/24/null/">Jan 24, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/24/null/">null</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In JavaScript, you assign value <code>null</code> to an object property to indicate that the property is defined but with no value. But using <code>null</code> outside the JavaScript domain becomes tricky. For example, in URL query parameters:</p>
+<pre><code>?<span class="variable">foo=</span><span class="constant">null</span>&amp;<span class="variable">bar=</span>bar
+</code></pre><p>after parsing the query:</p>
+<pre><code>{
+  "<span class="attribute">foo</span>": <span class="value"><span class="string">"null"</span></span>,
+  "<span class="attribute">bar</span>": <span class="value"><span class="string">"bar"</span>
+</span>}
+</code></pre><p>Should the value of <code>foo</code> be parsed from <code>&quot;null&quot;</code> string into <code>null</code> object? Unless you know the context.</p>
+<p>Using <code>null</code> in both schema design and URL query gave me a few headaches. So, I have decided to use string and throw away <code>null</code>.  As string is the most basic data type across many applications. For simplier design and greater compatibility and portability, use empty string instead of <code>null</code>.</p>
+<p>Therefore, the value of query parameter <code>foo</code> should be:</p>
+<pre><code>?<span class="variable">foo=</span><span class="constant">null</span>&amp;<span class="variable">bar=</span>bar // <span class="string">"null"</span>
+?<span class="variable">foo=</span>&amp;<span class="variable">bar=</span>bar     // <span class="string">""</span>
+</code></pre><p>and:</p>
+<pre><code><span class="string">"null"</span> <span class="exclamation_mark">!</span>== <span class="string">""</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-01-09T09:18:19.000Z"><a href="/2014/01/09/working-with-big-number-in-javascript/">Jan 9, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/09/working-with-big-number-in-javascript/">Working with Big Number in JavaScript</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>JavaScript is only capable of handling 53-bit numbers, if you are working with a big number such as <a href="https://dev.twitter.com/docs/twitter-ids-json-and-snowflake" target="_blank" rel="external">Twitter ID</a>, which is using 64-bit number, then you need to find an external library to do that, otherwise, there will be precision lost:</p>
+<pre><code>&gt; num = <span class="number">420938523475451904</span>
+<span class="input"><span class="prompt">420938523475451900
+&gt;</span> num = <span class="number">420938523475451904</span> + <span class="number">1</span></span>
+<span class="input"><span class="prompt">420938523475451900
+&gt;</span> num = <span class="number">420938523475451904</span> - <span class="number">1</span></span>
+<span class="number">420938523475451900</span>
+</code></pre><p>Here is one library to use in Node environment, install <a href="https://github.com/MikeMcl/big.js/" target="_blank" rel="external">Big.js</a>:</p>
+<pre><code><span class="variable">$ </span>npm install big.js
+</code></pre><p>Load the module:</p>
+<pre><code>&gt; BigNum = <span class="built_in">require</span>(<span class="string">'big.js'</span>)
+{ [<span class="built_in">Function</span>: Big] DP: <span class="number">20</span>, RM: <span class="number">1</span> }
+</code></pre><p>Use string to create the big number:</p>
+<pre><code>&gt; num = <span class="constant">BigNum</span>(<span class="string">'420938523475451904'</span>)
+<span class="input"><span class="prompt">{ s: 1,
+  e: 17,
+  c: [ 4, 2, 0, 9, 3, 8, 5, 2, 3, 4, 7, 5, 4, 5, 1, 9, 0, 4 ] }
+&gt;</span> num.toString()</span>
+<span class="string">'420938523475451904'</span>
+</code></pre><p>Perform addition:</p>
+<pre><code>&gt; num.<span class="keyword">plus</span>(<span class="number">1</span>).toString()
+<span class="string">'420938523475451905'</span>
+</code></pre><p>Perform substraction:</p>
+<pre><code>&gt; num.<span class="keyword">minus</span>(<span class="number">1</span>).toString()
+<span class="string">'420938523475451903'</span>
+</code></pre><p>There are other packages that yet to be tested:</p>
+<ul>
+<li><a href="https://github.com/MikeMcl/bignumber.js/" target="_blank" rel="external">bignumber.js</a></li>
+<li><a href="https://github.com/rauschma/strint" target="_blank" rel="external">strint.js</a></li>
+<li><a href="http://jsfromhell.com/classes/bignumber" target="_blank" rel="external">bignumber</a></li>
+<li><a href="https://github.com/jtobey/javascript-bignum" target="_blank" rel="external">JavaScript bignumber</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-11-29T12:00:30.000Z"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Nov 29, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Written in CoffeeScript, Required in JavaScript</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>If you are writing in CoffeeScript, then requiring another module written in CoffeeScript works the same as as both scripts are in JavaScript:</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cm = <span class="built_in">require</span> <span class="string">'coffee-module'</span></div></pre></td></tr></table></figure>
+
+<p>But if you are writing in JavaScript, and the dependent module is in CoffeeScript, you have to include CoffeeScript as a dependency with require statement:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'coffee-script'</span>);</div><div class="line"><span class="keyword">var</span> cm = <span class="built_in">require</span>(<span class="string">'coffee-module'</span>);</div></pre></td></tr></table></figure>
+
+<p>For better compatibility, source codes written in CoffeeScript should be compiled into JavaScript. But what is the best practice? You don’t want to maintain two languages. When to compile? Here is two options:</p>
+<ol>
+<li>Compile before publish the module</li>
+<li>Compile after module install</li>
+</ol>
+<p>The advantage of the first approach is that there is no dependency on CoffeeScript. The module has been compiled into JavaScript prior to submitting to module registry. However, this approach requires two repositories, one is source code repository, and another one is the published module repository. If you are working on a private project, it is less likely that you will publish your module to an public NPM registry or running your own private one. It is more likely to have a single source code repository. Therefore, the second approach might be better in this situation. However, <code>coffee-script</code> must be added in <code>dependency</code>, or it must be installed globally with <code>coffee</code> command available during <code>preinstall</code> phase. Although this approach is not recommended in <a href="https://npmjs.org/doc/misc/npm-scripts.html" target="_blank" rel="external">npm-scripts</a>, before setting up a private NPM registry, this is the way to go.</p>
+<p>Here is the required fields in <code>package.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">scripts</span>": <span class="value">{</span></div><div class="line">    "<span class="attribute">preinstall</span>": <span class="value"><span class="string">"coffee --compile --bare --output lib/ src/"</span></span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-10-02T22:23:58.000Z"><a href="/2013/10/02/javascript-parseint(array)-only-converts-the-first-element/">Oct 2, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/10/02/javascript-parseint(array)-only-converts-the-first-element/">JavaScript parseInt(array) Only Converts the First Element</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Converting from one type to another frequently causes bugs or unexpected result if you’re not careful. For example, when converting a string to an integer, we use the following function:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> num = <span class="built_in">parseInt</span>(string, radix);</div></pre></td></tr></table></figure>
+
+<p>Accidentally, I used an array of numeric strings in place of string for conversion.</p>
+<p>As stated in <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt" target="_blank" rel="external">MDN parseInt</a>:</p>
+<blockquote>
+<p>If string is not a string, then it is converted to one. Leading whitespace in the string is ignored.</p>
+</blockquote>
+<p>The array is converted to string.</p>
+<p>If the array has only one element, then there won’t be any problem:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[<span class="number">10</span>].toString()</div><div class="line">&gt; <span class="string">'10'</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'10'</span>, <span class="number">10</span>)</div><div class="line">&gt; <span class="number">10</span></div></pre></td></tr></table></figure>
+
+<p>But when there are more than one element, only the first element will be parsed:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[<span class="number">10</span>, <span class="number">5</span>].toString()</div><div class="line">&gt; <span class="string">'10,5'</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'10,5'</span>, <span class="number">10</span>)</div><div class="line">&gt; <span class="number">10</span></div></pre></td></tr></table></figure>
+
+<p>Therefore, you have to be very careful when processing query parameter like:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?<span class="variable">year=</span><span class="number">2013</span>&<span class="variable">year=</span><span class="number">2012</span></div></pre></td></tr></table></figure>
+
+<p>In many cases, it will be converted to:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">year: [<span class="string">'2013'</span>, <span class="string">'2012'</span>]</div></pre></td></tr></table></figure>
+
+<p>After running through <code>parseInt</code>, it will result in <code>2013</code>, might not be what you are looking for.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+
+  <nav id="pagination">
+  
+  
+    <a href="/tags/javascript/page/2/" class="alignright next">Next</a>
+  
+  <div class="clearfix"></div>
+</nav>
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:realguess.net">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
+  
+    <li><a href="/categories/communication/">Communication</a><small>1</small></li>
+  
+    <li><a href="/categories/linux/">Linux</a><small>1</small></li>
+  
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>6</small></li>
+  
+    <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
+  
+    <li><a href="/categories/productivity/">Productivity</a><small>1</small></li>
+  
+    <li><a href="/categories/programming/">Programming</a><small>3</small></li>
+  
+    <li><a href="/categories/security/">Security</a><small>1</small></li>
+  
+    <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
+  
+    <li><a href="/categories/tools/">Tools</a><small>24</small></li>
+  
+    <li><a href="/categories/travel/">Travel</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/2013/">2013</a><small>1</small></li>
+  
+    <li><a href="/tags/2014/">2014</a><small>3</small></li>
+  
+    <li><a href="/tags/2015/">2015</a><small>1</small></li>
+  
+    <li><a href="/tags/abraham-lincoln/">abraham-lincoln</a><small>1</small></li>
+  
+    <li><a href="/tags/absolute-path/">absolute-path</a><small>1</small></li>
+  
+    <li><a href="/tags/accessor-property/">accessor-property</a><small>1</small></li>
+  
+    <li><a href="/tags/aftereach/">aftereach</a><small>1</small></li>
+  
+    <li><a href="/tags/agenda/">agenda</a><small>1</small></li>
+  
+    <li><a href="/tags/alexa/">alexa</a><small>3</small></li>
+  
+    <li><a href="/tags/alias/">alias</a><small>1</small></li>
+  
+    <li><a href="/tags/amazon/">amazon</a><small>6</small></li>
+  
+    <li><a href="/tags/amazon-s3/">amazon-s3</a><small>2</small></li>
+  
+    <li><a href="/tags/amazon-s3api/">amazon-s3api</a><small>1</small></li>
+  
+    <li><a href="/tags/amazon-sqs/">amazon-sqs</a><small>1</small></li>
+  
+    <li><a href="/tags/amtrak/">amtrak</a><small>1</small></li>
+  
+    <li><a href="/tags/android/">android</a><small>1</small></li>
+  
+    <li><a href="/tags/android-4-3/">android-4.3</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous/">anonymous</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous-function/">anonymous-function</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous-like/">anonymous-like</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous-login/">anonymous-login</a><small>1</small></li>
+  
+    <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
+  
+    <li><a href="/tags/apple/">apple</a><small>1</small></li>
+  
+    <li><a href="/tags/apt-get/">apt-get</a><small>1</small></li>
+  
+    <li><a href="/tags/array/">array</a><small>3</small></li>
+  
+    <li><a href="/tags/asynchronous/">asynchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/automated-build/">automated-build</a><small>1</small></li>
+  
+    <li><a href="/tags/automatic-link/">automatic-link</a><small>1</small></li>
+  
+    <li><a href="/tags/automation/">automation</a><small>2</small></li>
+  
+    <li><a href="/tags/awk/">awk</a><small>1</small></li>
+  
+    <li><a href="/tags/aws/">aws</a><small>8</small></li>
+  
+    <li><a href="/tags/aws-cli/">aws-cli</a><small>4</small></li>
+  
+    <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>3</small></li>
+  
+    <li><a href="/tags/beforeeach/">beforeeach</a><small>1</small></li>
+  
+    <li><a href="/tags/best-practice/">best-practice</a><small>2</small></li>
+  
+    <li><a href="/tags/big-apple/">big-apple</a><small>1</small></li>
+  
+    <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
+  
+    <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
+  
+    <li><a href="/tags/bitbucket/">bitbucket</a><small>2</small></li>
+  
+    <li><a href="/tags/blog/">blog</a><small>4</small></li>
+  
+    <li><a href="/tags/boss/">boss</a><small>1</small></li>
+  
+    <li><a href="/tags/brace-expansion/">brace-expansion</a><small>1</small></li>
+  
+    <li><a href="/tags/bret-victor/">bret-victor</a><small>1</small></li>
+  
+    <li><a href="/tags/browser/">browser</a><small>1</small></li>
+  
+    <li><a href="/tags/browser-sync/">browser-sync</a><small>1</small></li>
+  
+    <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
+  
+    <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
+  
+    <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/chat/">chat</a><small>1</small></li>
+  
+    <li><a href="/tags/chrome/">chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
+  
+    <li><a href="/tags/cli/">cli</a><small>7</small></li>
+  
+    <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
+  
+    <li><a href="/tags/cloud9/">cloud9</a><small>1</small></li>
+  
+    <li><a href="/tags/cm/">cm</a><small>1</small></li>
+  
+    <li><a href="/tags/cname/">cname</a><small>1</small></li>
+  
+    <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
+  
+    <li><a href="/tags/coding-style/">coding-style</a><small>1</small></li>
+  
+    <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
+  
+    <li><a href="/tags/coffeescript/">coffeescript</a><small>7</small></li>
+  
+    <li><a href="/tags/color/">color</a><small>1</small></li>
+  
+    <li><a href="/tags/comcast/">comcast</a><small>1</small></li>
+  
+    <li><a href="/tags/command-history/">command-history</a><small>1</small></li>
+  
+    <li><a href="/tags/command-line/">command-line</a><small>2</small></li>
+  
+    <li><a href="/tags/command-line-interface/">command-line-interface</a><small>1</small></li>
+  
+    <li><a href="/tags/compare/">compare</a><small>1</small></li>
+  
+    <li><a href="/tags/configuration/">configuration</a><small>1</small></li>
+  
+    <li><a href="/tags/configuration-management/">configuration-management</a><small>1</small></li>
+  
+    <li><a href="/tags/console/">console</a><small>1</small></li>
+  
+    <li><a href="/tags/container/">container</a><small>1</small></li>
+  
+    <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
+  
+    <li><a href="/tags/control-character/">control-character</a><small>1</small></li>
+  
+    <li><a href="/tags/cors/">cors</a><small>1</small></li>
+  
+    <li><a href="/tags/crescent/">crescent</a><small>1</small></li>
+  
+    <li><a href="/tags/crlf/">crlf</a><small>1</small></li>
+  
+    <li><a href="/tags/cron/">cron</a><small>2</small></li>
+  
+    <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
+  
+    <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
+  
+    <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
+  
+    <li><a href="/tags/custom-generator/">custom-generator</a><small>1</small></li>
+  
+    <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
+  
+    <li><a href="/tags/data-volume/">data-volume</a><small>1</small></li>
+  
+    <li><a href="/tags/datagram/">datagram</a><small>1</small></li>
+  
+    <li><a href="/tags/date/">date</a><small>1</small></li>
+  
+    <li><a href="/tags/debian/">debian</a><small>1</small></li>
+  
+    <li><a href="/tags/december/">december</a><small>1</small></li>
+  
+    <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
+  
+    <li><a href="/tags/dependency/">dependency</a><small>2</small></li>
+  
+    <li><a href="/tags/development/">development</a><small>1</small></li>
+  
+    <li><a href="/tags/development-environment/">development-environment</a><small>1</small></li>
+  
+    <li><a href="/tags/diff/">diff</a><small>2</small></li>
+  
+    <li><a href="/tags/directory/">directory</a><small>1</small></li>
+  
+    <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
+  
+    <li><a href="/tags/distributed/">distributed</a><small>1</small></li>
+  
+    <li><a href="/tags/distributed-team/">distributed-team</a><small>1</small></li>
+  
+    <li><a href="/tags/dns/">dns</a><small>2</small></li>
+  
+    <li><a href="/tags/docco/">docco</a><small>1</small></li>
+  
+    <li><a href="/tags/docker/">docker</a><small>4</small></li>
+  
+    <li><a href="/tags/domain/">domain</a><small>1</small></li>
+  
+    <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
+  
+    <li><a href="/tags/ec2/">ec2</a><small>3</small></li>
+  
+    <li><a href="/tags/echo/">echo</a><small>2</small></li>
+  
+    <li><a href="/tags/ecmascript-harmony/">ecmascript-harmony</a><small>1</small></li>
+  
+    <li><a href="/tags/encryption/">encryption</a><small>1</small></li>
+  
+    <li><a href="/tags/environment/">environment</a><small>3</small></li>
+  
+    <li><a href="/tags/environment-variable/">environment-variable</a><small>2</small></li>
+  
+    <li><a href="/tags/eol/">eol</a><small>1</small></li>
+  
+    <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
+  
+    <li><a href="/tags/express/">express</a><small>3</small></li>
+  
+    <li><a href="/tags/extended-pattern-matching/">extended-pattern-matching</a><small>1</small></li>
+  
+    <li><a href="/tags/extglob/">extglob</a><small>1</small></li>
+  
+    <li><a href="/tags/facebook/">facebook</a><small>1</small></li>
+  
+    <li><a href="/tags/file-system/">file-system</a><small>1</small></li>
+  
+    <li><a href="/tags/filename/">filename</a><small>1</small></li>
+  
+    <li><a href="/tags/firewall/">firewall</a><small>1</small></li>
+  
+    <li><a href="/tags/folder/">folder</a><small>1</small></li>
+  
+    <li><a href="/tags/fs/">fs</a><small>1</small></li>
+  
+    <li><a href="/tags/function/">function</a><small>4</small></li>
+  
+    <li><a href="/tags/function-declaration/">function-declaration</a><small>2</small></li>
+  
+    <li><a href="/tags/function-expression/">function-expression</a><small>3</small></li>
+  
+    <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
+  
+    <li><a href="/tags/generator/">generator</a><small>1</small></li>
+  
+    <li><a href="/tags/get/">get</a><small>1</small></li>
+  
+    <li><a href="/tags/getter/">getter</a><small>2</small></li>
+  
+    <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
+  
+    <li><a href="/tags/git/">git</a><small>3</small></li>
+  
+    <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/github/">github</a><small>4</small></li>
+  
+    <li><a href="/tags/github-pages/">github-pages</a><small>1</small></li>
+  
+    <li><a href="/tags/glob/">glob</a><small>1</small></li>
+  
+    <li><a href="/tags/gnome/">gnome</a><small>1</small></li>
+  
+    <li><a href="/tags/goal/">goal</a><small>1</small></li>
+  
+    <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
+  
+    <li><a href="/tags/google-trends/">google-trends</a><small>1</small></li>
+  
+    <li><a href="/tags/groupthink/">groupthink</a><small>1</small></li>
+  
+    <li><a href="/tags/grunt/">grunt</a><small>1</small></li>
+  
+    <li><a href="/tags/grunt-contrib-jshint/">grunt-contrib-jshint</a><small>1</small></li>
+  
+    <li><a href="/tags/grunt-contrib-watch/">grunt-contrib-watch</a><small>1</small></li>
+  
+    <li><a href="/tags/guard/">guard</a><small>1</small></li>
+  
+    <li><a href="/tags/gulp/">gulp</a><small>2</small></li>
+  
+    <li><a href="/tags/hackathon/">hackathon</a><small>1</small></li>
+  
+    <li><a href="/tags/head/">head</a><small>2</small></li>
+  
+    <li><a href="/tags/heartbleed/">heartbleed</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/hipchat/">hipchat</a><small>1</small></li>
+  
+    <li><a href="/tags/hong-kong/">hong-kong</a><small>1</small></li>
+  
+    <li><a href="/tags/hosted-zone/">hosted-zone</a><small>1</small></li>
+  
+    <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
+  
+    <li><a href="/tags/http/">http</a><small>3</small></li>
+  
+    <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
+  
+    <li><a href="/tags/id/">id</a><small>1</small></li>
+  
+    <li><a href="/tags/ide/">ide</a><small>1</small></li>
+  
+    <li><a href="/tags/identifier/">identifier</a><small>1</small></li>
+  
+    <li><a href="/tags/iife/">iife</a><small>2</small></li>
+  
+    <li><a href="/tags/imessage/">imessage</a><small>1</small></li>
+  
+    <li><a href="/tags/immediately-invoked-function-expression/">immediately-invoked-function-expression</a><small>2</small></li>
+  
+    <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
+  
+    <li><a href="/tags/install/">install</a><small>2</small></li>
+  
+    <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
+  
+    <li><a href="/tags/internet-speed/">internet-speed</a><small>1</small></li>
+  
+    <li><a href="/tags/interpreter/">interpreter</a><small>1</small></li>
+  
+    <li><a href="/tags/iojs/">iojs</a><small>2</small></li>
+  
+    <li><a href="/tags/ip-address/">ip-address</a><small>3</small></li>
+  
+    <li><a href="/tags/january/">january</a><small>1</small></li>
+  
+    <li><a href="/tags/jasmine/">jasmine</a><small>1</small></li>
+  
+    <li><a href="/tags/javascript/">javascript</a><small>12</small></li>
+  
+    <li><a href="/tags/jelly-bean/">jelly-bean</a><small>1</small></li>
+  
+    <li><a href="/tags/join/">join</a><small>1</small></li>
+  
+    <li><a href="/tags/jq/">jq</a><small>4</small></li>
+  
+    <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
+  
+    <li><a href="/tags/json/">json</a><small>4</small></li>
+  
+    <li><a href="/tags/koa/">koa</a><small>4</small></li>
+  
+    <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
+  
+    <li><a href="/tags/koa-router/">koa-router</a><small>1</small></li>
+  
+    <li><a href="/tags/lean/">lean</a><small>1</small></li>
+  
+    <li><a href="/tags/lean-coffee/">lean-coffee</a><small>1</small></li>
+  
+    <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
+  
+    <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lf/">lf</a><small>1</small></li>
+  
+    <li><a href="/tags/libssl/">libssl</a><small>1</small></li>
+  
+    <li><a href="/tags/like-button/">like-button</a><small>1</small></li>
+  
+    <li><a href="/tags/line-divider/">line-divider</a><small>1</small></li>
+  
+    <li><a href="/tags/line-ending/">line-ending</a><small>1</small></li>
+  
+    <li><a href="/tags/linux/">linux</a><small>3</small></li>
+  
+    <li><a href="/tags/listobjects/">listobjects</a><small>1</small></li>
+  
+    <li><a href="/tags/livereload/">livereload</a><small>2</small></li>
+  
+    <li><a href="/tags/load/">load</a><small>1</small></li>
+  
+    <li><a href="/tags/log/">log</a><small>1</small></li>
+  
+    <li><a href="/tags/m101/">m101</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>2</small></li>
+  
+    <li><a href="/tags/meeting/">meeting</a><small>1</small></li>
+  
+    <li><a href="/tags/messaging/">messaging</a><small>1</small></li>
+  
+    <li><a href="/tags/metric/">metric</a><small>4</small></li>
+  
+    <li><a href="/tags/mi3/">mi3</a><small>1</small></li>
+  
+    <li><a href="/tags/middleware/">middleware</a><small>1</small></li>
+  
+    <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
+  
+    <li><a href="/tags/mocha/">mocha</a><small>1</small></li>
+  
+    <li><a href="/tags/module/">module</a><small>1</small></li>
+  
+    <li><a href="/tags/mongodb/">mongodb</a><small>1</small></li>
+  
+    <li><a href="/tags/mongoexport/">mongoexport</a><small>1</small></li>
+  
+    <li><a href="/tags/multi-parts/">multi-parts</a><small>1</small></li>
+  
+    <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
+  
+    <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/nb/">nb</a><small>1</small></li>
+  
+    <li><a href="/tags/network/">network</a><small>1</small></li>
+  
+    <li><a href="/tags/new-orleans/">new-orleans</a><small>1</small></li>
+  
+    <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
+  
+    <li><a href="/tags/nginx/">nginx</a><small>1</small></li>
+  
+    <li><a href="/tags/node/">node</a><small>12</small></li>
+  
+    <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
+  
+    <li><a href="/tags/nodemon/">nodemon</a><small>1</small></li>
+  
+    <li><a href="/tags/normalization/">normalization</a><small>1</small></li>
+  
+    <li><a href="/tags/nota-bene/">nota-bene</a><small>1</small></li>
+  
+    <li><a href="/tags/note-well/">note-well</a><small>1</small></li>
+  
+    <li><a href="/tags/november/">november</a><small>1</small></li>
+  
+    <li><a href="/tags/npm/">npm</a><small>2</small></li>
+  
+    <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
+  
+    <li><a href="/tags/null/">null</a><small>1</small></li>
+  
+    <li><a href="/tags/nvm/">nvm</a><small>1</small></li>
+  
+    <li><a href="/tags/object/">object</a><small>3</small></li>
+  
+    <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
+  
+    <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
+  
+    <li><a href="/tags/order/">order</a><small>1</small></li>
+  
+    <li><a href="/tags/outdated/">outdated</a><small>1</small></li>
+  
+    <li><a href="/tags/package/">package</a><small>1</small></li>
+  
+    <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
+  
+    <li><a href="/tags/parseint/">parseint</a><small>1</small></li>
+  
+    <li><a href="/tags/path/">path</a><small>4</small></li>
+  
+    <li><a href="/tags/pattern-matching/">pattern-matching</a><small>1</small></li>
+  
+    <li><a href="/tags/ping/">ping</a><small>1</small></li>
+  
+    <li><a href="/tags/pm2/">pm2</a><small>1</small></li>
+  
+    <li><a href="/tags/port/">port</a><small>2</small></li>
+  
+    <li><a href="/tags/prefix/">prefix</a><small>1</small></li>
+  
+    <li><a href="/tags/preinstall/">preinstall</a><small>1</small></li>
+  
+    <li><a href="/tags/principle/">principle</a><small>1</small></li>
+  
+    <li><a href="/tags/process/">process</a><small>1</small></li>
+  
+    <li><a href="/tags/profile/">profile</a><small>1</small></li>
+  
+    <li><a href="/tags/provision/">provision</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>1</small></li>
+  
+    <li><a href="/tags/query-parameter/">query-parameter</a><small>1</small></li>
+  
+    <li><a href="/tags/queue/">queue</a><small>1</small></li>
+  
+    <li><a href="/tags/random/">random</a><small>2</small></li>
+  
+    <li><a href="/tags/rawgit/">rawgit</a><small>1</small></li>
+  
+    <li><a href="/tags/read/">read</a><small>1</small></li>
+  
+    <li><a href="/tags/reboot/">reboot</a><small>2</small></li>
+  
+    <li><a href="/tags/record-set/">record-set</a><small>1</small></li>
+  
+    <li><a href="/tags/redis/">redis</a><small>1</small></li>
+  
+    <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
+  
+    <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
+  
+    <li><a href="/tags/repl/">repl</a><small>1</small></li>
+  
+    <li><a href="/tags/require/">require</a><small>2</small></li>
+  
+    <li><a href="/tags/responsibility/">responsibility</a><small>1</small></li>
+  
+    <li><a href="/tags/restart/">restart</a><small>1</small></li>
+  
+    <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
+  
+    <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
+  
+    <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
+  
+    <li><a href="/tags/san-francisco/">san-francisco</a><small>1</small></li>
+  
+    <li><a href="/tags/save/">save</a><small>1</small></li>
+  
+    <li><a href="/tags/scaffolding/">scaffolding</a><small>1</small></li>
+  
+    <li><a href="/tags/script/">script</a><small>1</small></li>
+  
+    <li><a href="/tags/search/">search</a><small>1</small></li>
+  
+    <li><a href="/tags/search-term/">search-term</a><small>1</small></li>
+  
+    <li><a href="/tags/security/">security</a><small>1</small></li>
+  
+    <li><a href="/tags/security-group/">security-group</a><small>2</small></li>
+  
+    <li><a href="/tags/sed/">sed</a><small>1</small></li>
+  
+    <li><a href="/tags/semantics/">semantics</a><small>1</small></li>
+  
+    <li><a href="/tags/semver/">semver</a><small>1</small></li>
+  
+    <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
+  
+    <li><a href="/tags/server/">server</a><small>1</small></li>
+  
+    <li><a href="/tags/setter/">setter</a><small>2</small></li>
+  
+    <li><a href="/tags/settings/">settings</a><small>1</small></li>
+  
+    <li><a href="/tags/setup/">setup</a><small>1</small></li>
+  
+    <li><a href="/tags/shabang/">shabang</a><small>1</small></li>
+  
+    <li><a href="/tags/sharing/">sharing</a><small>1</small></li>
+  
+    <li><a href="/tags/shebang/">shebang</a><small>1</small></li>
+  
+    <li><a href="/tags/shell/">shell</a><small>3</small></li>
+  
+    <li><a href="/tags/shell-expansion/">shell-expansion</a><small>1</small></li>
+  
+    <li><a href="/tags/shell-script/">shell-script</a><small>1</small></li>
+  
+    <li><a href="/tags/shellshock/">shellshock</a><small>1</small></li>
+  
+    <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
+  
+    <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
+  
+    <li><a href="/tags/speed-test/">speed-test</a><small>1</small></li>
+  
+    <li><a href="/tags/split/">split</a><small>2</small></li>
+  
+    <li><a href="/tags/ssh/">ssh</a><small>3</small></li>
+  
+    <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
+  
+    <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/startup/">startup</a><small>2</small></li>
+  
+    <li><a href="/tags/stats/">stats</a><small>5</small></li>
+  
+    <li><a href="/tags/stream/">stream</a><small>1</small></li>
+  
+    <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
+  
+    <li><a href="/tags/success/">success</a><small>1</small></li>
+  
+    <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
+  
+    <li><a href="/tags/supertest/">supertest</a><small>1</small></li>
+  
+    <li><a href="/tags/symbolic-link/">symbolic-link</a><small>1</small></li>
+  
+    <li><a href="/tags/symlink/">symlink</a><small>1</small></li>
+  
+    <li><a href="/tags/sync/">sync</a><small>1</small></li>
+  
+    <li><a href="/tags/synchronous/">synchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/taipei/">taipei</a><small>1</small></li>
+  
+    <li><a href="/tags/taiwan/">taiwan</a><small>1</small></li>
+  
+    <li><a href="/tags/task/">task</a><small>1</small></li>
+  
+    <li><a href="/tags/tcdisrupt/">tcdisrupt</a><small>1</small></li>
+  
+    <li><a href="/tags/teardown/">teardown</a><small>1</small></li>
+  
+    <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
+  
+    <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
+  
+    <li><a href="/tags/test/">test</a><small>1</small></li>
+  
+    <li><a href="/tags/testing/">testing</a><small>1</small></li>
+  
+    <li><a href="/tags/texting/">texting</a><small>1</small></li>
+  
+    <li><a href="/tags/time-zone/">time-zone</a><small>1</small></li>
+  
+    <li><a href="/tags/tmux/">tmux</a><small>1</small></li>
+  
+    <li><a href="/tags/todo/">todo</a><small>1</small></li>
+  
+    <li><a href="/tags/topic/">topic</a><small>1</small></li>
+  
+    <li><a href="/tags/train/">train</a><small>1</small></li>
+  
+    <li><a href="/tags/travel/">travel</a><small>1</small></li>
+  
+    <li><a href="/tags/trello/">trello</a><small>1</small></li>
+  
+    <li><a href="/tags/trigger/">trigger</a><small>1</small></li>
+  
+    <li><a href="/tags/tumblr/">tumblr</a><small>1</small></li>
+  
+    <li><a href="/tags/twitter/">twitter</a><small>1</small></li>
+  
+    <li><a href="/tags/ubuntu/">ubuntu</a><small>3</small></li>
+  
+    <li><a href="/tags/uglifyjs/">uglifyjs</a><small>1</small></li>
+  
+    <li><a href="/tags/underscore/">underscore</a><small>1</small></li>
+  
+    <li><a href="/tags/unicode/">unicode</a><small>1</small></li>
+  
+    <li><a href="/tags/unique-visitor/">unique-visitor</a><small>4</small></li>
+  
+    <li><a href="/tags/united-states/">united-states</a><small>1</small></li>
+  
+    <li><a href="/tags/unix/">unix</a><small>1</small></li>
+  
+    <li><a href="/tags/update/">update</a><small>1</small></li>
+  
+    <li><a href="/tags/upgrade/">upgrade</a><small>1</small></li>
+  
+    <li><a href="/tags/upstart/">upstart</a><small>1</small></li>
+  
+    <li><a href="/tags/username/">username</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant/">vagrant</a><small>4</small></li>
+  
+    <li><a href="/tags/version/">version</a><small>1</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>1</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>3</small></li>
+  
+    <li><a href="/tags/vimdiff/">vimdiff</a><small>1</small></li>
+  
+    <li><a href="/tags/vimeo/">vimeo</a><small>1</small></li>
+  
+    <li><a href="/tags/visit/">visit</a><small>4</small></li>
+  
+    <li><a href="/tags/vpn/">vpn</a><small>1</small></li>
+  
+    <li><a href="/tags/vulnerability/">vulnerability</a><small>1</small></li>
+  
+    <li><a href="/tags/web-framework/">web-framework</a><small>1</small></li>
+  
+    <li><a href="/tags/web-server/">web-server</a><small>1</small></li>
+  
+    <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
+  
+    <li><a href="/tags/windows/">windows</a><small>1</small></li>
+  
+    <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
+  
+    <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
+  
+    <li><a href="/tags/yeoman/">yeoman</a><small>1</small></li>
+  
+    <li><a href="/tags/yield/">yield</a><small>1</small></li>
+  
+    <li><a href="/tags/zone-apex/">zone-apex</a><small>1</small></li>
+  
+    <li><a href="/tags/中華電信/">中華電信</a><small>1</small></li>
+  
+    <li><a href="/tags/小米/">小米</a><small>1</small></li>
+  
+    <li><a href="/tags/小米手机/">小米手机</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 Chao Huang
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'realguess';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>

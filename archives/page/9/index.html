@@ -1,0 +1,1399 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>Page 9 | Archives | realguess</title>
+  <meta name="author" content="Chao Huang">
+  
+  <meta name="description" content="Just a blog about every detail encountered.">
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  
+  <meta property="og:site_name" content="realguess"/>
+
+  
+    <meta property="og:image" content="undefined"/>
+  
+
+  <link href="/favicon.png" rel="icon">
+  <link rel="alternate" href="/atom.xml" title="realguess" type="application/atom+xml">
+  <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-45698182-1']);
+  
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+</head>
+
+
+<body>
+  <header id="header" class="inner"><div class="alignleft">
+  <h1><a href="/">realguess</a></h1>
+  <h2><a href="/">Don&#39;t afraid to try!</a></h2>
+</div>
+<nav id="main-nav" class="alignright">
+  <ul>
+    
+      <li><a href="/">Home</a></li>
+    
+      <li><a href="/archives">Archives</a></li>
+    
+  </ul>
+  <div class="clearfix"></div>
+</nav>
+<div class="clearfix"></div></header>
+  <div id="content" class="inner">
+    <div id="main-col" class="alignleft"><div id="wrapper">
+<h2 class="archive-title">Archives</h2>
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-12-18T15:12:43.000Z"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Dec 18, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Set Filename Path with process.cwd()</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When working with <a href="http://nodejs.org/api/fs.html" target="_blank" rel="external">file system</a> in Node, you will need a fully qualified filename to do things like reading the content of a file:</p>
+<pre><code><span class="built_in">require</span>(<span class="string">'fs'</span>).readFile(filename, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{});
+</code></pre><p>If you have the following directory structure:</p>
+<pre><code>.
+├── app.js
+├── <span class="typedef"><span class="keyword">data</span></span>
+│   └── file.txt
+└── lib
+    └── reader.js
+</code></pre><p>There are two ways to read the content of <code>data/file.txt</code> from <code>lib/reader.js</code>:</p>
+<p>Use the current directory of the script <code>__dirname</code>:</p>
+<pre><code><span class="title">filename</span> = __dirname + '/../<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
+</code></pre><p>or with <code>path.join</code> to normalize the resulting path:</p>
+<pre><code>filename = path.<span class="keyword">join</span>(__dirname, <span class="string">'../data/file.txt'</span>);
+</code></pre><p>The second method is to use the current working directory of the process <code>process.cwd()</code>:</p>
+<pre><code><span class="title">filename</span> = process.cwd() + '/<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
+</code></pre><p>The second approach is more portable. If you move <code>lib/reader.js</code> to <code>lib/utils/reader.js</code>, no code change will be needed. But make sure the directory of the Node process is the application root directory where <code>node app.js</code> is being issued.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-12-17T18:05:38.000Z"><a href="/2013/12/17/small-markdown-features-on-ghost-blogging-platform/">Dec 17, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/17/small-markdown-features-on-ghost-blogging-platform/">Small Markdown Features on Ghost Blogging Platform</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I have known about <a href="http://ghost.org/" target="_blank" rel="external">Ghost</a> since its <a href="http://www.kickstarter.com/projects/johnonolan/ghost-just-a-blogging-platform" target="_blank" rel="external">KickStarter campaign</a>. And recently they just launched the hosted platform for Ghost. I like to set up and run it myself, but the hosted platform is 100% customized to run Ghost blogs. So it could be more efficient and reliable than tinkering on my own. While I was testing it, I have noticed two small <a href="http://daringfireball.net/projects/markdown/" target="_blank" rel="external">Markdown</a> features supported by Ghost:</p>
+<p><strong>Automatic links</strong></p>
+<p>You do not need to enclose the fully qualified URL in angular brackets, URL like <code>http://ghost.org</code> will be automatically linked up. But this works well without language like English where a space denotes as a separator. When I work with language like Chinese, this frequently creating a problem where the Chinese characters are treated as parts of the link. Therefore, I still prefer to write it with angular brackets and get into the habit in doing:</p>
+<pre><code>&lt;http:<span class="comment">//ghost.org/&gt;</span>
+</code></pre><p><strong>Line divider</strong></p>
+<p>One feature I like so far is the support of a line divider. Just need three dashes in a line, it will be converted into a fancy divider. This is great for writing references and footnotes.</p>
+<p><em><small>This is a quick blog for getting started with Ghost.</small></em></p>
+<hr>
+<p>Exploration continues…</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-12-09T18:09:08.000Z"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Dec 9, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Insert Text to the Beginning of a File</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>It is easy to append some text to the end of another file:</p>
+<pre><code><span class="input"><span class="prompt">$ cat foo &gt;&gt;</span> bar</span>
+</code></pre><p>or even just portion of a file:</p>
+<pre><code><span class="input"><span class="prompt">$ head -n 2 foo &gt;&gt;</span> bar</span>
+</code></pre><p>but how about to the beginning of a file? Well, it is not that bad to do either:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">"<span class="variable">$(cat foo bar)</span>"</span> &gt; bar
+</code></pre><p>just a portion of a file:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">"<span class="variable">$(head -n 2 foo)</span>\n<span class="variable">$(cat bar)</span>"</span> &gt; bar
+</code></pre><p>Now you can easily add some text such as copyright information to the beginning of another file with one command.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-12-06T10:55:55.000Z"><a href="/2013/12/06/amazon-route-53-via-command-line/">Dec 6, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/06/amazon-route-53-via-command-line/">Amazon Route 53 via Command Line</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Retrieve a list of hosted zones:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53 list-hosted-zones          </div><div class="line">{</div><div class="line">  <span class="string">"HostedZones"</span><span class="symbol">:</span> [</div><div class="line">    {</div><div class="line">        <span class="string">"ResourceRecordSetCount"</span><span class="symbol">:</span> <span class="number">4</span>,</div><div class="line">        <span class="string">"CallerReference"</span><span class="symbol">:</span> <span class="string">"12345678-ABCD-EFGH-IJKL-ABCDEFGHIJKL"</span>,</div><div class="line">        <span class="string">"Config"</span><span class="symbol">:</span> {},</div><div class="line">        <span class="string">"Id"</span><span class="symbol">:</span> <span class="string">"/hostedzone/1234567890ABC"</span>,</div><div class="line">        <span class="string">"Name"</span><span class="symbol">:</span> <span class="string">"realguess.net."</span></div><div class="line">    }</div><div class="line">  ], </div><div class="line">  <span class="string">"IsTruncated"</span><span class="symbol">:</span> <span class="keyword">false</span>, </div><div class="line">  <span class="string">"MaxItems"</span><span class="symbol">:</span> <span class="string">"100"</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Get a single hosted zone with delegation set (four Route 53 name servers that were assigned to the hosted zone):</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="built_in">get</span>-hosted-zone <span class="comment">--id 1234567890ABC</span></div><div class="line">{</div><div class="line">  <span class="string">"HostedZone"</span>: {</div><div class="line">    <span class="string">"ResourceRecordSetCount"</span>: <span class="number">4</span>,</div><div class="line">    <span class="string">"CallerReference"</span>: <span class="string">"12345678-ABCD-EFGH-IJKL-ABCDEFGHIJKL"</span>,</div><div class="line">    <span class="string">"Config"</span>: {},</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"/hostedzone/1234567890ABC"</span>,</div><div class="line">    <span class="string">"Name"</span>: <span class="string">"realguess.net."</span></div><div class="line">  },</div><div class="line">  <span class="string">"DelegationSet"</span>: {</div><div class="line">    <span class="string">"NameServers"</span>: [</div><div class="line">      <span class="string">"ns-1727.awsdns-23.co.uk"</span>,</div><div class="line">      <span class="string">"ns-1312.awsdns-36.org"</span>,</div><div class="line">      <span class="string">"ns-402.awsdns-50.com"</span>,</div><div class="line">      <span class="string">"ns-587.awsdns-09.net"</span></div><div class="line">    ]</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>List all resource record sets in a hosted zone:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="type">list</span>-resource-<span class="type">record</span>-sets <span class="comment">--hosted-zone-id 1234567890ABC</span></div><div class="line">{</div><div class="line">  <span class="string">"IsTruncated"</span>: <span class="constant">false</span>,</div><div class="line">  <span class="string">"ResourceRecordSets"</span>: [</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">172800</span></div><div class="line">    },</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1727.awsdns-23.co.uk."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1312.awsdns-36.org."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-402.awsdns-50.com."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-587.awsdns-09.net."</span></div><div class="line">        }</div><div class="line">      ], </div><div class="line">      <span class="string">"Type"</span>: <span class="string">"NS"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">172800</span></div><div class="line">    }, </div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1727.awsdns-23.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"</span></div><div class="line">        }</div><div class="line">      ], </div><div class="line">      <span class="string">"Type"</span>: <span class="string">"SOA"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">900</span></div><div class="line">    },</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"www.realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">86400</span></div><div class="line">    }</div><div class="line">  ],</div><div class="line">  <span class="string">"MaxItems"</span>: <span class="string">"100"</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Retrieve a single record set:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="type">list</span>-resource-<span class="type">record</span>-sets <span class="comment">--hosted-zone-id 1234567890ABC \</span></div><div class="line">  <span class="comment">--start-record-name www.realguess.net --start-record-type A --max-items 1</span></div><div class="line">{</div><div class="line">  <span class="string">"IsTruncated"</span>: <span class="constant">false</span>,</div><div class="line">  <span class="string">"ResourceRecordSets"</span>: [</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"www.realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">86400</span></div><div class="line">    }</div><div class="line">  ],</div><div class="line">  <span class="string">"MaxItems"</span>: <span class="string">"1"</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>In order to create a new record set, first create a JSON file to describe the new record:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">Comment</span>": <span class="value"><span class="string">"A new record set for the zone."</span></span>,</div><div class="line">  "<span class="attribute">Changes</span>": <span class="value">[</span></div><div class="line">    {</div><div class="line">      "<span class="attribute">Action</span>": <span class="value"><span class="string">"CREATE"</span></span>,</div><div class="line">      "<span class="attribute">ResourceRecordSet</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">Name</span>": <span class="value"><span class="string">"api.realguess.net."</span></span>,</div><div class="line">        "<span class="attribute">Type</span>": <span class="value"><span class="string">"CNAME"</span></span>,</div><div class="line">        "<span class="attribute">TTL</span>": <span class="value"><span class="number">60</span></span>,</div><div class="line">        "<span class="attribute">ResourceRecords</span>": <span class="value">[</span></div><div class="line">          {</div><div class="line">            "<span class="attribute">Value</span>": <span class="value"><span class="string">"www.realguess.net"</span></span></div><div class="line">          }</div><div class="line">        ]</div><div class="line">      }</div><div class="line">    }</div><div class="line">  ]</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Add a new record set (note that the JSON file must use <code>file://</code> starting path):</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53 change-resource-record-sets --hosted-zone-id <span class="number">1234567890</span>ABC \</div><div class="line">  --change-batch <span class="symbol">file:</span>/<span class="regexp">//path</span><span class="regexp">/to/record</span>.json</div><div class="line">{</div><div class="line">  <span class="string">"ChangeInfo"</span><span class="symbol">:</span> {</div><div class="line">    <span class="string">"Status"</span><span class="symbol">:</span> <span class="string">"PENDING"</span>,</div><div class="line">    <span class="string">"Comment"</span><span class="symbol">:</span> <span class="string">"A new record set for the zone."</span>,</div><div class="line">    <span class="string">"SubmittedAt"</span><span class="symbol">:</span> <span class="string">"2013-12-06T00:00:00.000Z"</span>,</div><div class="line">    <span class="string">"Id"</span><span class="symbol">:</span> <span class="string">"/change/CHANGEID123"</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>The status of adding the new record is currently <em>pending</em>. Poll the server to get the updated status:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ aws route53 get-<span class="operator"><span class="keyword">change</span> <span class="comment">--id CHANGEID123</span></span></div><div class="line">{</div><div class="line">  <span class="string">"ChangeInfo"</span>: {</div><div class="line">    <span class="string">"Status"</span>: <span class="string">"INSYNC"</span>,</div><div class="line">    <span class="string">"Comment"</span>: <span class="string">"A new record set for the zone."</span>,</div><div class="line">    <span class="string">"SubmittedAt"</span>: <span class="string">"2013-12-06T00:00:00.000Z"</span>,</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"/change/CHANGEID123"</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>A new record has been created and has been propagated to all hosts.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-12-04T17:34:59.000Z"><a href="/2013/12/04/configuration-setup-and-loading-precedence/">Dec 4, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/04/configuration-setup-and-loading-precedence/">Configuration Setup and Loading Precedence</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Loading precedence (latter overrides former):</p>
+<ol>
+<li>Load application default settings (<code>config/default.yml</code>)</li>
+<li>Load environment settings</li>
+<li>Load custom settings</li>
+</ol>
+<p>Default settings of the application is provided by the upstream, therefore, it should not be modified.</p>
+<p>There are four types of environments: <code>development</code>, <code>testing</code>, <code>staging</code> and <code>production</code>. Environment can be set by using the shell environment variable: <code>ENV</code>. If the environment variable is not specified, it is set to <code>development</code> as default. Environment settings override default settings.</p>
+<p>Custom settings override environment settings. The search path for custom settings is:</p>
+<ol>
+<li>Environment variable <code>SETTINGS</code></li>
+<li><code>config/settings.yml</code></li>
+</ol>
+<p>If both paths are not available, that means the custom settings are not specified.</p>
+<p><code>config/settings.yml</code> is a custom settings, therefore, it will be ignored by git in <code>.gitignore</code> file:</p>
+<pre><code>config/settings.yml
+</code></pre><p>The complete directory structure regarding to the configuration setup:</p>
+<pre><code><span class="title">config</span>/
+├── <span class="default"><span class="keyword">default</span>.yml</span>
+├── environments
+│   ├── development.yml
+│   ├── production.yml
+│   ├── staging.yml
+│   └── testing.yml
+└── settings.yml
+</code></pre><p>Quick start command:</p>
+<pre><code><span class="variable">$ </span>node app
+</code></pre><p>Fully customized start command:</p>
+<pre><code><span class="variable">$ </span><span class="constant">ENV</span>=production <span class="constant">SETTINGS</span>=<span class="regexp">/path/to</span><span class="regexp">/settings.yml node app</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-11-29T12:00:30.000Z"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Nov 29, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Written in CoffeeScript, Required in JavaScript</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>If you are writing in CoffeeScript, then requiring another module written in CoffeeScript works the same as as both scripts are in JavaScript:</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cm = <span class="built_in">require</span> <span class="string">'coffee-module'</span></div></pre></td></tr></table></figure>
+
+<p>But if you are writing in JavaScript, and the dependent module is in CoffeeScript, you have to include CoffeeScript as a dependency with require statement:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'coffee-script'</span>);</div><div class="line"><span class="keyword">var</span> cm = <span class="built_in">require</span>(<span class="string">'coffee-module'</span>);</div></pre></td></tr></table></figure>
+
+<p>For better compatibility, source codes written in CoffeeScript should be compiled into JavaScript. But what is the best practice? You don’t want to maintain two languages. When to compile? Here is two options:</p>
+<ol>
+<li>Compile before publish the module</li>
+<li>Compile after module install</li>
+</ol>
+<p>The advantage of the first approach is that there is no dependency on CoffeeScript. The module has been compiled into JavaScript prior to submitting to module registry. However, this approach requires two repositories, one is source code repository, and another one is the published module repository. If you are working on a private project, it is less likely that you will publish your module to an public NPM registry or running your own private one. It is more likely to have a single source code repository. Therefore, the second approach might be better in this situation. However, <code>coffee-script</code> must be added in <code>dependency</code>, or it must be installed globally with <code>coffee</code> command available during <code>preinstall</code> phase. Although this approach is not recommended in <a href="https://npmjs.org/doc/misc/npm-scripts.html" target="_blank" rel="external">npm-scripts</a>, before setting up a private NPM registry, this is the way to go.</p>
+<p>Here is the required fields in <code>package.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">scripts</span>": <span class="value">{</span></div><div class="line">    "<span class="attribute">preinstall</span>": <span class="value"><span class="string">"coffee --compile --bare --output lib/ src/"</span></span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-11-24T23:22:24.000Z"><a href="/2013/11/24/poor-mans-vpn/">Nov 24, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/24/poor-mans-vpn/">Poor Man&#39;s VPN</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://github.com/apenwarr/sshuttle/" target="_blank" rel="external">sshuttle</a> is a very simple tool to create a VPN connection to a remote server that you have SSH access. You do not need to set up the complex VPN in a remote machine.</p>
+<p>Requirements:</p>
+<ul>
+<li>Root access on local machine</li>
+<li>SSH access to a remote machine</li>
+</ul>
+<p>Install:</p>
+<pre><code>$ <span class="built_in">sudo</span> apt-get install sshuttle
+</code></pre><p>Usage:</p>
+<pre><code><span class="variable">$ </span>sshuttle --dns -vvr username<span class="variable">@sshserver</span> <span class="number">0</span>/<span class="number">0</span>
+</code></pre><p><code>0/0</code> is the shortcut for <code>0.0.0.0/0</code>. <code>--dns</code> enables DNS queries to be proxied. Note that <code>sudo</code> is not needed but will be prompted.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-11-24T10:19:24.000Z"><a href="/2013/11/24/treading-on-startup-scene-in-hong-kong/">Nov 24, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/24/treading-on-startup-scene-in-hong-kong/">Treading On Startup Scene in Hong Kong</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>On the morning of November 22, 2013, the Sun was yet to rise behind all the tall buildings. I was up and preparing to leave Hong Kong. Streets were quiet, the taxi driver was still stretching his arms while waiting us outside. I was in Hong Kong for a month and working remotely. As a startup founder, there is always a drive to explore the local startup culture and scene.</p>
+<p>Hong Kong government is actively promoting and attracting talents into the region. They have built a <a href="http://www.hkstp.org/en-US/Homepage.aspx" target="_blank" rel="external">Science &amp; Technology Parks</a> for concentrating researchers, entrepreneurs and student into a Silicon Valley alike location. The program like <a href="http://www.hkstp.org/en-US/Services-Programmes/Incubation-Programme/Incu-App/About-Incu-App-Programme.aspx" target="_blank" rel="external">Incu-App</a> is most closely resemble to startup incubator/accelerator.</p>
+<p><img src="/img/2013-11-14/hong-kong-science-park.jpg" alt="Hong Kong Science &amp; Technology Parks" title="Hong Kong Science &amp; Technology Parks"></p>
+<p>This is a community in a small scale, you need the bigger community support. So, I went to watch the pitch event in <a href="http://www.hkcocoon.org/" target="_blank" rel="external">CoCoon</a> (a co-working space). There were 5 companies, 3 of them are ecommerce companies, selling products originated in Hong Kong or nearby to Western audience. The quality of pitch (presentation and slides) were quite bad.</p>
+<p><img src="/img/2013-11-14/cocoon-pitch-event.jpg" alt="CoCoon Pitch Event"><br><img src="/img/2013-11-14/cocoon-wall.jpg" alt="CoCoon Shared Board"><br><img src="/img/2013-11-14/cocoon-shared-desks.jpg" alt="CoCoon Shared Desks"></p>
+<p>Set aside the pitch for now. I chatted with a few founders after the event, one of the issues people here face here is the lack of funding. Funding is difficult here, might be better than before, but still so far away comparing to the US. They actually limit the entrepreneurs here to bootstrap and get to profit earlier. Ecommerce is obviously an easy way to go. But it does not mean that you cannot dream bigger. It might just take longer to get to where you want to go. Sometimes it is not a bad thing. Good stuff takes a longer and more troubled journey.</p>
+<p>I think this comes down to the mindset of people here. The mindset of entrepreneurs here are much narrower than entrepreneurs from Silicon Valley, New York or other places. Finance and entertainment are still dominant factors here. As the influence of mainland Chinese companies and integration of transportation, it is going to make it harder and harder for it becoming a tech hub.</p>
+<p><img src="/img/2013-11-14/lamma-island-seafood.jpg" alt="Lamma Island Seafood"></p>
+<p>Let’s end with a positive note there. Food and tech go hand to hand. Just by walking downstairs, I was at a shopping mall. Inside the shopping mall, there are restaurants with variety of food. Don’t like those, take an indoor sky bridge or subway tunnels across the street to the adjacent mall, there are more restaurants and more food. You can get everything you need without going outside to the streets. But if you do, every street corner is a new exploration. For authenticated Chinese food, there is nothing you can beat that.</p>
+<p>Hong Kong has its special place, but in tech, it needs a lot of work.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-11-23T18:44:35.000Z"><a href="/2013/11/23/ping/">Nov 23, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/23/ping/">Ping</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>There are many network utilities that are ready to use out of Linux box. <code>ping</code> is one of them:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DESCRIPTION</div><div class="line">       ping uses the ICMP protocol's mandatory ECHO_REQUEST datagram to elicit</div><div class="line">       an  ICMP  ECHO_RESPONSE from a host or gateway.  ECHO_REQUEST datagrams</div><div class="line">       (``pings'') have an IP and ICMP header, followed by  a  struct  timeval</div><div class="line">       and  then  an  arbitrary  number  of ``pad'' bytes used to fill out the</div><div class="line">       packet.</div><div class="line"></div><div class="line">       ping6 can also send Node Information Queries (RFC4620).</div></pre></td></tr></table></figure>
+
+<p><strong>pings</strong> are ECHO_REQUEST datagrams.</p>
+<p>For a quick usage:</p>
+<pre><code>% ping localhost
+PING localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>) <span class="number">56</span>(<span class="number">84</span>) <span class="keyword">bytes</span> <span class="operator">of</span> data.
+<span class="number">64</span> <span class="keyword">bytes</span> <span class="built_in">from</span> localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>): icmp_req=<span class="number">1</span> ttl=<span class="number">64</span> <span class="built_in">time</span>=<span class="number">0.034</span> ms
+<span class="number">64</span> <span class="keyword">bytes</span> <span class="built_in">from</span> localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>): icmp_req=<span class="number">2</span> ttl=<span class="number">64</span> <span class="built_in">time</span>=<span class="number">0.045</span> ms
+<span class="number">64</span> <span class="keyword">bytes</span> <span class="built_in">from</span> localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>): icmp_req=<span class="number">3</span> ttl=<span class="number">64</span> <span class="built_in">time</span>=<span class="number">0.039</span> ms
+^C
+<span class="comment">--- localhost ping statistics ---</span>
+<span class="number">3</span> packets transmitted, <span class="number">3</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">1999</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">0.034</span>/<span class="number">0.039</span>/<span class="number">0.045</span>/<span class="number">0.006</span> ms
+</code></pre><p><code>rrt</code> is the round-trip time in milliseconds. The statistics includes minimum, average, maximum and mean deviation times.</p>
+<p>The manual page explains many options. Here are onces I found helpful to me:</p>
+<pre><code>ping -<span class="keyword">D</span> -n -q -c <span class="number">100</span> localhost
+</code></pre><ul>
+<li><code>-D</code>: UNIX timestamp + microseconds</li>
+<li><code>-n</code>: no lookup symbolic names for host addresses (faster)</li>
+<li><code>-c</code>: number of pings to send</li>
+<li><code>-q</code>: result only</li>
+</ul>
+<p>Ping localhost to verify that the local network interface is up and running:</p>
+<pre><code>% ping -d -n -q -c <span class="number">100</span> localhost
+PING localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>) <span class="number">56</span>(<span class="number">84</span>) <span class="keyword">bytes</span> <span class="operator">of</span> data.
+
+<span class="comment">--- localhost ping statistics ---</span>
+<span class="number">100</span> packets transmitted, <span class="number">100</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">99005</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">0.029</span>/<span class="number">0.047</span>/<span class="number">0.059</span>/<span class="number">0.007</span> ms
+</code></pre><p>Ping local gateway, usually router:</p>
+<pre><code>% ping -D -n -q -c <span class="number">100</span> <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>
+PING <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span> (<span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>) <span class="number">56</span>(<span class="number">84</span>) <span class="keyword">bytes</span> <span class="operator">of</span> data.
+
+<span class="comment">--- 192.168.1.1 ping statistics ---</span>
+<span class="number">100</span> packets transmitted, <span class="number">100</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">98997</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">0.416</span>/<span class="number">0.502</span>/<span class="number">1.448</span>/<span class="number">0.100</span> ms
+</code></pre><p>If we ping a remote server without using <code>-n</code> option, it will be slower due to the host address lookup:</p>
+<pre><code>% ping -c <span class="number">20</span> baidu.com
+<span class="number">20</span> packets transmitted, <span class="number">20</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">96034</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">46.061</span>/<span class="number">49.096</span>/<span class="number">92.912</span>/<span class="number">10.061</span> ms
+</code></pre><p>Without lookup:</p>
+<pre><code>% ping -c <span class="number">20</span> -n baidu.com
+<span class="number">20</span> packets transmitted, <span class="number">20</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">19029</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">45.802</span>/<span class="number">46.428</span>/<span class="number">47.391</span>/<span class="number">0.458</span> ms
+</code></pre><p>Look up the actual IP address of the domain:</p>
+<pre><code>% nslookup baidu.com
+<span class="label">Server:</span>         <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>
+<span class="label">Address:</span>        <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="preprocessor">#53</span>
+
+Non-authoritative answer:
+<span class="label">Name:</span>   baidu.com
+<span class="label">Address:</span> <span class="number">220.181</span><span class="number">.111</span><span class="number">.86</span>
+<span class="label">Name:</span>   baidu.com
+<span class="label">Address:</span> <span class="number">220.181</span><span class="number">.111</span><span class="number">.85</span>
+<span class="label">Name:</span>   baidu.com
+<span class="label">Address:</span> <span class="number">123.125</span><span class="number">.114</span><span class="number">.144</span>   
+</code></pre><p>We can send pings by using IP address directly, which is almost the same as using <code>-n</code> option. It is faster:</p>
+<pre><code>% ping -c <span class="number">20</span> <span class="number">220.181</span><span class="number">.11</span><span class="number">.86</span>
+<span class="comment">--- 220.181.111.86 ping statistics ---</span>
+<span class="number">20</span> packets transmitted, <span class="number">20</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">19026</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">46.103</span>/<span class="number">53.019</span>/<span class="number">86.077</span>/<span class="number">12.831</span> ms
+</code></pre><p>But not all servers support ping, pings might be dropped altogether. Also, even a server does support ping, it does not mean that you can browser the website hosted by the server. The port might get blocked, or server is down.</p>
+<p>Pinging an IP address is fun, but what is more exciting to actually find out more information about the address, such as the <a href="http://whatismyipaddress.com/ip/220.181.11.86" target="_blank" rel="external">geographical location of the IP</a>. <a href="http://whatismyipaddress.com/" target="_blank" rel="external">What Is My IP Address</a> is good tool to use.</p>
+<p>Next: <code>ping6</code>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-11-17T12:30:17.000Z"><a href="/2013/11/17/why-shebang/">Nov 17, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/17/why-shebang/">Why Shebang?</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Frequently the initial two characters on the initial line of a script are: <code>#!</code>.</p>
+<p><em>Why <a href="http://en.wikipedia.org/wiki/Shebang_(Unix)" target="_blank" rel="external">Shebang</a>?</em> Well, simple reason, because shell needs to know which interpreter to use when executing the script.</p>
+<blockquote>
+<p>The sha-bang (<code>#!</code>) at the head of a script tells your system that this file is a set of commands to be fed to the command interpreter indicated. The <code>#!</code> is actually a two-byte magic number, a special marker that designates a file type, or in this case an executable shell script (type man magic for more details on this fascinating topic). Immediately following the sha-bang is a path name. This is the path to the program that interprets the commands in the script, whether it be a shell, a programming language, or a utility. This command interpreter then executes the commands in the script, starting at the top (the line following the sha-bang line), and ignoring comments. - <a href="http://tldp.org/LDP/abs/html/sha-bang.html" target="_blank" rel="external">Starting Off With a Sha-Bang</a></p>
+</blockquote>
+<p>The shebang line is usually ignored by the interpreter because the <code>#</code> character is a comment marker in many scripting languages. Even the actual script is written with a different commenting character, such as in JavaScript:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env node</span></div><div class="line"><span class="comment">// JavaScript stuff starts here.</span></div></pre></td></tr></table></figure>
+
+<p>Because the first line is interpreted by the shell, and the rest is passed into JavaScript interpreter, in this case, Node.</p>
+<p>The syntax of shebang:</p>
+<pre><code><span class="shebang">#! interpreter [optional-arg]</span>
+</code></pre><p>Whether there is a space between shebang character and the interpreter or not, it does not matter.</p>
+<p>The interpreter must usually be an absolute path to a program that is not itself a script. The following are example interpreters:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#! /bin/sh</span></div><div class="line"><span class="shebang">#! /bin/bash</span></div></pre></td></tr></table></figure>
+
+<p>More examples are via <code>head -n 1 /etc/init.d/*</code>.</p>
+<blockquote>
+<p>The optional‑arg should either not be included or it should be a string that is meant to be a single argument (for reasons of portability, it should not contain any whitespace). - <a href="http://en.wikipedia.org/wiki/Shebang_(Unix)" target="_blank" rel="external">Shebang_(Unix)</a></p>
+</blockquote>
+<p>We also frequently see the following shebang:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div></pre></td></tr></table></figure>
+
+<p>That has to do with portability. Not every system install <code>node</code> or <code>bash</code> command in the same path. <code>/usr/bin/env</code> will search through user’s <code>$PATH</code>, and correctly locate the executable.</p>
+<p>To conclude for Node, here is the format I am using:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#! <span class="regexp">/usr/</span>bin/env node</div><div class="line"></div><div class="line"><span class="comment">// Title</span></div><div class="line"><span class="comment">// =====</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Markdown style description starts here.</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+
+  <nav id="pagination">
+  
+    <a href="/archives/page/8/" class="alignleft prev">Prev</a>
+  
+  
+    <a href="/archives/page/10/" class="alignright next">Next</a>
+  
+  <div class="clearfix"></div>
+</nav>
+</div></div>
+    <aside id="sidebar" class="alignright">
+  <div class="search">
+  <form action="//google.com/search" method="get" accept-charset="utf-8">
+    <input type="search" name="q" results="0" placeholder="Search">
+    <input type="hidden" name="q" value="site:realguess.net">
+  </form>
+</div>
+
+  
+<div class="widget tag">
+  <h3 class="title">Categories</h3>
+  <ul class="entry">
+  
+    <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
+  
+    <li><a href="/categories/communication/">Communication</a><small>1</small></li>
+  
+    <li><a href="/categories/linux/">Linux</a><small>1</small></li>
+  
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>6</small></li>
+  
+    <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
+  
+    <li><a href="/categories/productivity/">Productivity</a><small>1</small></li>
+  
+    <li><a href="/categories/programming/">Programming</a><small>3</small></li>
+  
+    <li><a href="/categories/security/">Security</a><small>1</small></li>
+  
+    <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
+  
+    <li><a href="/categories/tools/">Tools</a><small>24</small></li>
+  
+    <li><a href="/categories/travel/">Travel</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+
+  
+<div class="widget tag">
+  <h3 class="title">Tags</h3>
+  <ul class="entry">
+  
+    <li><a href="/tags/2013/">2013</a><small>1</small></li>
+  
+    <li><a href="/tags/2014/">2014</a><small>3</small></li>
+  
+    <li><a href="/tags/2015/">2015</a><small>1</small></li>
+  
+    <li><a href="/tags/abraham-lincoln/">abraham-lincoln</a><small>1</small></li>
+  
+    <li><a href="/tags/absolute-path/">absolute-path</a><small>1</small></li>
+  
+    <li><a href="/tags/accessor-property/">accessor-property</a><small>1</small></li>
+  
+    <li><a href="/tags/aftereach/">aftereach</a><small>1</small></li>
+  
+    <li><a href="/tags/agenda/">agenda</a><small>1</small></li>
+  
+    <li><a href="/tags/alexa/">alexa</a><small>3</small></li>
+  
+    <li><a href="/tags/alias/">alias</a><small>1</small></li>
+  
+    <li><a href="/tags/amazon/">amazon</a><small>6</small></li>
+  
+    <li><a href="/tags/amazon-s3/">amazon-s3</a><small>2</small></li>
+  
+    <li><a href="/tags/amazon-s3api/">amazon-s3api</a><small>1</small></li>
+  
+    <li><a href="/tags/amazon-sqs/">amazon-sqs</a><small>1</small></li>
+  
+    <li><a href="/tags/amtrak/">amtrak</a><small>1</small></li>
+  
+    <li><a href="/tags/android/">android</a><small>1</small></li>
+  
+    <li><a href="/tags/android-4-3/">android-4.3</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous/">anonymous</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous-function/">anonymous-function</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous-like/">anonymous-like</a><small>1</small></li>
+  
+    <li><a href="/tags/anonymous-login/">anonymous-login</a><small>1</small></li>
+  
+    <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
+  
+    <li><a href="/tags/apple/">apple</a><small>1</small></li>
+  
+    <li><a href="/tags/apt-get/">apt-get</a><small>1</small></li>
+  
+    <li><a href="/tags/array/">array</a><small>3</small></li>
+  
+    <li><a href="/tags/asynchronous/">asynchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/automated-build/">automated-build</a><small>1</small></li>
+  
+    <li><a href="/tags/automatic-link/">automatic-link</a><small>1</small></li>
+  
+    <li><a href="/tags/automation/">automation</a><small>2</small></li>
+  
+    <li><a href="/tags/awk/">awk</a><small>1</small></li>
+  
+    <li><a href="/tags/aws/">aws</a><small>8</small></li>
+  
+    <li><a href="/tags/aws-cli/">aws-cli</a><small>4</small></li>
+  
+    <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/bash/">bash</a><small>3</small></li>
+  
+    <li><a href="/tags/beforeeach/">beforeeach</a><small>1</small></li>
+  
+    <li><a href="/tags/best-practice/">best-practice</a><small>2</small></li>
+  
+    <li><a href="/tags/big-apple/">big-apple</a><small>1</small></li>
+  
+    <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
+  
+    <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
+  
+    <li><a href="/tags/bitbucket/">bitbucket</a><small>2</small></li>
+  
+    <li><a href="/tags/blog/">blog</a><small>4</small></li>
+  
+    <li><a href="/tags/boss/">boss</a><small>1</small></li>
+  
+    <li><a href="/tags/brace-expansion/">brace-expansion</a><small>1</small></li>
+  
+    <li><a href="/tags/bret-victor/">bret-victor</a><small>1</small></li>
+  
+    <li><a href="/tags/browser/">browser</a><small>1</small></li>
+  
+    <li><a href="/tags/browser-sync/">browser-sync</a><small>1</small></li>
+  
+    <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
+  
+    <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
+  
+    <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/chat/">chat</a><small>1</small></li>
+  
+    <li><a href="/tags/chrome/">chrome</a><small>1</small></li>
+  
+    <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
+  
+    <li><a href="/tags/cli/">cli</a><small>7</small></li>
+  
+    <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
+  
+    <li><a href="/tags/cloud9/">cloud9</a><small>1</small></li>
+  
+    <li><a href="/tags/cm/">cm</a><small>1</small></li>
+  
+    <li><a href="/tags/cname/">cname</a><small>1</small></li>
+  
+    <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
+  
+    <li><a href="/tags/coding-style/">coding-style</a><small>1</small></li>
+  
+    <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
+  
+    <li><a href="/tags/coffeescript/">coffeescript</a><small>7</small></li>
+  
+    <li><a href="/tags/color/">color</a><small>1</small></li>
+  
+    <li><a href="/tags/comcast/">comcast</a><small>1</small></li>
+  
+    <li><a href="/tags/command-history/">command-history</a><small>1</small></li>
+  
+    <li><a href="/tags/command-line/">command-line</a><small>2</small></li>
+  
+    <li><a href="/tags/command-line-interface/">command-line-interface</a><small>1</small></li>
+  
+    <li><a href="/tags/compare/">compare</a><small>1</small></li>
+  
+    <li><a href="/tags/configuration/">configuration</a><small>1</small></li>
+  
+    <li><a href="/tags/configuration-management/">configuration-management</a><small>1</small></li>
+  
+    <li><a href="/tags/console/">console</a><small>1</small></li>
+  
+    <li><a href="/tags/container/">container</a><small>1</small></li>
+  
+    <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
+  
+    <li><a href="/tags/control-character/">control-character</a><small>1</small></li>
+  
+    <li><a href="/tags/cors/">cors</a><small>1</small></li>
+  
+    <li><a href="/tags/crescent/">crescent</a><small>1</small></li>
+  
+    <li><a href="/tags/crlf/">crlf</a><small>1</small></li>
+  
+    <li><a href="/tags/cron/">cron</a><small>2</small></li>
+  
+    <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
+  
+    <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
+  
+    <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
+  
+    <li><a href="/tags/custom-generator/">custom-generator</a><small>1</small></li>
+  
+    <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
+  
+    <li><a href="/tags/data-volume/">data-volume</a><small>1</small></li>
+  
+    <li><a href="/tags/datagram/">datagram</a><small>1</small></li>
+  
+    <li><a href="/tags/date/">date</a><small>1</small></li>
+  
+    <li><a href="/tags/debian/">debian</a><small>1</small></li>
+  
+    <li><a href="/tags/december/">december</a><small>1</small></li>
+  
+    <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
+  
+    <li><a href="/tags/dependency/">dependency</a><small>2</small></li>
+  
+    <li><a href="/tags/development/">development</a><small>1</small></li>
+  
+    <li><a href="/tags/development-environment/">development-environment</a><small>1</small></li>
+  
+    <li><a href="/tags/diff/">diff</a><small>2</small></li>
+  
+    <li><a href="/tags/directory/">directory</a><small>1</small></li>
+  
+    <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
+  
+    <li><a href="/tags/distributed/">distributed</a><small>1</small></li>
+  
+    <li><a href="/tags/distributed-team/">distributed-team</a><small>1</small></li>
+  
+    <li><a href="/tags/dns/">dns</a><small>2</small></li>
+  
+    <li><a href="/tags/docco/">docco</a><small>1</small></li>
+  
+    <li><a href="/tags/docker/">docker</a><small>4</small></li>
+  
+    <li><a href="/tags/domain/">domain</a><small>1</small></li>
+  
+    <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
+  
+    <li><a href="/tags/ec2/">ec2</a><small>3</small></li>
+  
+    <li><a href="/tags/echo/">echo</a><small>2</small></li>
+  
+    <li><a href="/tags/ecmascript-harmony/">ecmascript-harmony</a><small>1</small></li>
+  
+    <li><a href="/tags/encryption/">encryption</a><small>1</small></li>
+  
+    <li><a href="/tags/environment/">environment</a><small>3</small></li>
+  
+    <li><a href="/tags/environment-variable/">environment-variable</a><small>2</small></li>
+  
+    <li><a href="/tags/eol/">eol</a><small>1</small></li>
+  
+    <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
+  
+    <li><a href="/tags/express/">express</a><small>3</small></li>
+  
+    <li><a href="/tags/extended-pattern-matching/">extended-pattern-matching</a><small>1</small></li>
+  
+    <li><a href="/tags/extglob/">extglob</a><small>1</small></li>
+  
+    <li><a href="/tags/facebook/">facebook</a><small>1</small></li>
+  
+    <li><a href="/tags/file-system/">file-system</a><small>1</small></li>
+  
+    <li><a href="/tags/filename/">filename</a><small>1</small></li>
+  
+    <li><a href="/tags/firewall/">firewall</a><small>1</small></li>
+  
+    <li><a href="/tags/folder/">folder</a><small>1</small></li>
+  
+    <li><a href="/tags/fs/">fs</a><small>1</small></li>
+  
+    <li><a href="/tags/function/">function</a><small>4</small></li>
+  
+    <li><a href="/tags/function-declaration/">function-declaration</a><small>2</small></li>
+  
+    <li><a href="/tags/function-expression/">function-expression</a><small>3</small></li>
+  
+    <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
+  
+    <li><a href="/tags/generator/">generator</a><small>1</small></li>
+  
+    <li><a href="/tags/get/">get</a><small>1</small></li>
+  
+    <li><a href="/tags/getter/">getter</a><small>2</small></li>
+  
+    <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
+  
+    <li><a href="/tags/git/">git</a><small>3</small></li>
+  
+    <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/github/">github</a><small>4</small></li>
+  
+    <li><a href="/tags/github-pages/">github-pages</a><small>1</small></li>
+  
+    <li><a href="/tags/glob/">glob</a><small>1</small></li>
+  
+    <li><a href="/tags/gnome/">gnome</a><small>1</small></li>
+  
+    <li><a href="/tags/goal/">goal</a><small>1</small></li>
+  
+    <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
+  
+    <li><a href="/tags/google-trends/">google-trends</a><small>1</small></li>
+  
+    <li><a href="/tags/groupthink/">groupthink</a><small>1</small></li>
+  
+    <li><a href="/tags/grunt/">grunt</a><small>1</small></li>
+  
+    <li><a href="/tags/grunt-contrib-jshint/">grunt-contrib-jshint</a><small>1</small></li>
+  
+    <li><a href="/tags/grunt-contrib-watch/">grunt-contrib-watch</a><small>1</small></li>
+  
+    <li><a href="/tags/guard/">guard</a><small>1</small></li>
+  
+    <li><a href="/tags/gulp/">gulp</a><small>2</small></li>
+  
+    <li><a href="/tags/hackathon/">hackathon</a><small>1</small></li>
+  
+    <li><a href="/tags/head/">head</a><small>2</small></li>
+  
+    <li><a href="/tags/heartbleed/">heartbleed</a><small>1</small></li>
+  
+    <li><a href="/tags/hexo/">hexo</a><small>1</small></li>
+  
+    <li><a href="/tags/hipchat/">hipchat</a><small>1</small></li>
+  
+    <li><a href="/tags/hong-kong/">hong-kong</a><small>1</small></li>
+  
+    <li><a href="/tags/hosted-zone/">hosted-zone</a><small>1</small></li>
+  
+    <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
+  
+    <li><a href="/tags/http/">http</a><small>3</small></li>
+  
+    <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
+  
+    <li><a href="/tags/id/">id</a><small>1</small></li>
+  
+    <li><a href="/tags/ide/">ide</a><small>1</small></li>
+  
+    <li><a href="/tags/identifier/">identifier</a><small>1</small></li>
+  
+    <li><a href="/tags/iife/">iife</a><small>2</small></li>
+  
+    <li><a href="/tags/imessage/">imessage</a><small>1</small></li>
+  
+    <li><a href="/tags/immediately-invoked-function-expression/">immediately-invoked-function-expression</a><small>2</small></li>
+  
+    <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
+  
+    <li><a href="/tags/install/">install</a><small>2</small></li>
+  
+    <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
+  
+    <li><a href="/tags/internet-speed/">internet-speed</a><small>1</small></li>
+  
+    <li><a href="/tags/interpreter/">interpreter</a><small>1</small></li>
+  
+    <li><a href="/tags/iojs/">iojs</a><small>2</small></li>
+  
+    <li><a href="/tags/ip-address/">ip-address</a><small>3</small></li>
+  
+    <li><a href="/tags/january/">january</a><small>1</small></li>
+  
+    <li><a href="/tags/jasmine/">jasmine</a><small>1</small></li>
+  
+    <li><a href="/tags/javascript/">javascript</a><small>12</small></li>
+  
+    <li><a href="/tags/jelly-bean/">jelly-bean</a><small>1</small></li>
+  
+    <li><a href="/tags/join/">join</a><small>1</small></li>
+  
+    <li><a href="/tags/jq/">jq</a><small>4</small></li>
+  
+    <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
+  
+    <li><a href="/tags/json/">json</a><small>4</small></li>
+  
+    <li><a href="/tags/koa/">koa</a><small>4</small></li>
+  
+    <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
+  
+    <li><a href="/tags/koa-router/">koa-router</a><small>1</small></li>
+  
+    <li><a href="/tags/lean/">lean</a><small>1</small></li>
+  
+    <li><a href="/tags/lean-coffee/">lean-coffee</a><small>1</small></li>
+  
+    <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
+  
+    <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lf/">lf</a><small>1</small></li>
+  
+    <li><a href="/tags/libssl/">libssl</a><small>1</small></li>
+  
+    <li><a href="/tags/like-button/">like-button</a><small>1</small></li>
+  
+    <li><a href="/tags/line-divider/">line-divider</a><small>1</small></li>
+  
+    <li><a href="/tags/line-ending/">line-ending</a><small>1</small></li>
+  
+    <li><a href="/tags/linux/">linux</a><small>3</small></li>
+  
+    <li><a href="/tags/listobjects/">listobjects</a><small>1</small></li>
+  
+    <li><a href="/tags/livereload/">livereload</a><small>2</small></li>
+  
+    <li><a href="/tags/load/">load</a><small>1</small></li>
+  
+    <li><a href="/tags/log/">log</a><small>1</small></li>
+  
+    <li><a href="/tags/m101/">m101</a><small>1</small></li>
+  
+    <li><a href="/tags/markdown/">markdown</a><small>2</small></li>
+  
+    <li><a href="/tags/meeting/">meeting</a><small>1</small></li>
+  
+    <li><a href="/tags/messaging/">messaging</a><small>1</small></li>
+  
+    <li><a href="/tags/metric/">metric</a><small>4</small></li>
+  
+    <li><a href="/tags/mi3/">mi3</a><small>1</small></li>
+  
+    <li><a href="/tags/middleware/">middleware</a><small>1</small></li>
+  
+    <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
+  
+    <li><a href="/tags/mocha/">mocha</a><small>1</small></li>
+  
+    <li><a href="/tags/module/">module</a><small>1</small></li>
+  
+    <li><a href="/tags/mongodb/">mongodb</a><small>1</small></li>
+  
+    <li><a href="/tags/mongoexport/">mongoexport</a><small>1</small></li>
+  
+    <li><a href="/tags/multi-parts/">multi-parts</a><small>1</small></li>
+  
+    <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
+  
+    <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/nb/">nb</a><small>1</small></li>
+  
+    <li><a href="/tags/network/">network</a><small>1</small></li>
+  
+    <li><a href="/tags/new-orleans/">new-orleans</a><small>1</small></li>
+  
+    <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
+  
+    <li><a href="/tags/nginx/">nginx</a><small>1</small></li>
+  
+    <li><a href="/tags/node/">node</a><small>12</small></li>
+  
+    <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
+  
+    <li><a href="/tags/nodemon/">nodemon</a><small>1</small></li>
+  
+    <li><a href="/tags/normalization/">normalization</a><small>1</small></li>
+  
+    <li><a href="/tags/nota-bene/">nota-bene</a><small>1</small></li>
+  
+    <li><a href="/tags/note-well/">note-well</a><small>1</small></li>
+  
+    <li><a href="/tags/november/">november</a><small>1</small></li>
+  
+    <li><a href="/tags/npm/">npm</a><small>2</small></li>
+  
+    <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
+  
+    <li><a href="/tags/null/">null</a><small>1</small></li>
+  
+    <li><a href="/tags/nvm/">nvm</a><small>1</small></li>
+  
+    <li><a href="/tags/object/">object</a><small>3</small></li>
+  
+    <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
+  
+    <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
+  
+    <li><a href="/tags/order/">order</a><small>1</small></li>
+  
+    <li><a href="/tags/outdated/">outdated</a><small>1</small></li>
+  
+    <li><a href="/tags/package/">package</a><small>1</small></li>
+  
+    <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
+  
+    <li><a href="/tags/parseint/">parseint</a><small>1</small></li>
+  
+    <li><a href="/tags/path/">path</a><small>4</small></li>
+  
+    <li><a href="/tags/pattern-matching/">pattern-matching</a><small>1</small></li>
+  
+    <li><a href="/tags/ping/">ping</a><small>1</small></li>
+  
+    <li><a href="/tags/pm2/">pm2</a><small>1</small></li>
+  
+    <li><a href="/tags/port/">port</a><small>2</small></li>
+  
+    <li><a href="/tags/prefix/">prefix</a><small>1</small></li>
+  
+    <li><a href="/tags/preinstall/">preinstall</a><small>1</small></li>
+  
+    <li><a href="/tags/principle/">principle</a><small>1</small></li>
+  
+    <li><a href="/tags/process/">process</a><small>1</small></li>
+  
+    <li><a href="/tags/profile/">profile</a><small>1</small></li>
+  
+    <li><a href="/tags/provision/">provision</a><small>1</small></li>
+  
+    <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/python/">python</a><small>1</small></li>
+  
+    <li><a href="/tags/query-parameter/">query-parameter</a><small>1</small></li>
+  
+    <li><a href="/tags/queue/">queue</a><small>1</small></li>
+  
+    <li><a href="/tags/random/">random</a><small>2</small></li>
+  
+    <li><a href="/tags/rawgit/">rawgit</a><small>1</small></li>
+  
+    <li><a href="/tags/read/">read</a><small>1</small></li>
+  
+    <li><a href="/tags/reboot/">reboot</a><small>2</small></li>
+  
+    <li><a href="/tags/record-set/">record-set</a><small>1</small></li>
+  
+    <li><a href="/tags/redis/">redis</a><small>1</small></li>
+  
+    <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
+  
+    <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
+  
+    <li><a href="/tags/repl/">repl</a><small>1</small></li>
+  
+    <li><a href="/tags/require/">require</a><small>2</small></li>
+  
+    <li><a href="/tags/responsibility/">responsibility</a><small>1</small></li>
+  
+    <li><a href="/tags/restart/">restart</a><small>1</small></li>
+  
+    <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
+  
+    <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
+  
+    <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
+  
+    <li><a href="/tags/san-francisco/">san-francisco</a><small>1</small></li>
+  
+    <li><a href="/tags/save/">save</a><small>1</small></li>
+  
+    <li><a href="/tags/scaffolding/">scaffolding</a><small>1</small></li>
+  
+    <li><a href="/tags/script/">script</a><small>1</small></li>
+  
+    <li><a href="/tags/search/">search</a><small>1</small></li>
+  
+    <li><a href="/tags/search-term/">search-term</a><small>1</small></li>
+  
+    <li><a href="/tags/security/">security</a><small>1</small></li>
+  
+    <li><a href="/tags/security-group/">security-group</a><small>2</small></li>
+  
+    <li><a href="/tags/sed/">sed</a><small>1</small></li>
+  
+    <li><a href="/tags/semantics/">semantics</a><small>1</small></li>
+  
+    <li><a href="/tags/semver/">semver</a><small>1</small></li>
+  
+    <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
+  
+    <li><a href="/tags/server/">server</a><small>1</small></li>
+  
+    <li><a href="/tags/setter/">setter</a><small>2</small></li>
+  
+    <li><a href="/tags/settings/">settings</a><small>1</small></li>
+  
+    <li><a href="/tags/setup/">setup</a><small>1</small></li>
+  
+    <li><a href="/tags/shabang/">shabang</a><small>1</small></li>
+  
+    <li><a href="/tags/sharing/">sharing</a><small>1</small></li>
+  
+    <li><a href="/tags/shebang/">shebang</a><small>1</small></li>
+  
+    <li><a href="/tags/shell/">shell</a><small>3</small></li>
+  
+    <li><a href="/tags/shell-expansion/">shell-expansion</a><small>1</small></li>
+  
+    <li><a href="/tags/shell-script/">shell-script</a><small>1</small></li>
+  
+    <li><a href="/tags/shellshock/">shellshock</a><small>1</small></li>
+  
+    <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
+  
+    <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
+  
+    <li><a href="/tags/speed-test/">speed-test</a><small>1</small></li>
+  
+    <li><a href="/tags/split/">split</a><small>2</small></li>
+  
+    <li><a href="/tags/ssh/">ssh</a><small>3</small></li>
+  
+    <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
+  
+    <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/startup/">startup</a><small>2</small></li>
+  
+    <li><a href="/tags/stats/">stats</a><small>5</small></li>
+  
+    <li><a href="/tags/stream/">stream</a><small>1</small></li>
+  
+    <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
+  
+    <li><a href="/tags/success/">success</a><small>1</small></li>
+  
+    <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
+  
+    <li><a href="/tags/supertest/">supertest</a><small>1</small></li>
+  
+    <li><a href="/tags/symbolic-link/">symbolic-link</a><small>1</small></li>
+  
+    <li><a href="/tags/symlink/">symlink</a><small>1</small></li>
+  
+    <li><a href="/tags/sync/">sync</a><small>1</small></li>
+  
+    <li><a href="/tags/synchronous/">synchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/taipei/">taipei</a><small>1</small></li>
+  
+    <li><a href="/tags/taiwan/">taiwan</a><small>1</small></li>
+  
+    <li><a href="/tags/task/">task</a><small>1</small></li>
+  
+    <li><a href="/tags/tcdisrupt/">tcdisrupt</a><small>1</small></li>
+  
+    <li><a href="/tags/teardown/">teardown</a><small>1</small></li>
+  
+    <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
+  
+    <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
+  
+    <li><a href="/tags/test/">test</a><small>1</small></li>
+  
+    <li><a href="/tags/testing/">testing</a><small>1</small></li>
+  
+    <li><a href="/tags/texting/">texting</a><small>1</small></li>
+  
+    <li><a href="/tags/time-zone/">time-zone</a><small>1</small></li>
+  
+    <li><a href="/tags/tmux/">tmux</a><small>1</small></li>
+  
+    <li><a href="/tags/todo/">todo</a><small>1</small></li>
+  
+    <li><a href="/tags/topic/">topic</a><small>1</small></li>
+  
+    <li><a href="/tags/train/">train</a><small>1</small></li>
+  
+    <li><a href="/tags/travel/">travel</a><small>1</small></li>
+  
+    <li><a href="/tags/trello/">trello</a><small>1</small></li>
+  
+    <li><a href="/tags/trigger/">trigger</a><small>1</small></li>
+  
+    <li><a href="/tags/tumblr/">tumblr</a><small>1</small></li>
+  
+    <li><a href="/tags/twitter/">twitter</a><small>1</small></li>
+  
+    <li><a href="/tags/ubuntu/">ubuntu</a><small>3</small></li>
+  
+    <li><a href="/tags/uglifyjs/">uglifyjs</a><small>1</small></li>
+  
+    <li><a href="/tags/underscore/">underscore</a><small>1</small></li>
+  
+    <li><a href="/tags/unicode/">unicode</a><small>1</small></li>
+  
+    <li><a href="/tags/unique-visitor/">unique-visitor</a><small>4</small></li>
+  
+    <li><a href="/tags/united-states/">united-states</a><small>1</small></li>
+  
+    <li><a href="/tags/unix/">unix</a><small>1</small></li>
+  
+    <li><a href="/tags/update/">update</a><small>1</small></li>
+  
+    <li><a href="/tags/upgrade/">upgrade</a><small>1</small></li>
+  
+    <li><a href="/tags/upstart/">upstart</a><small>1</small></li>
+  
+    <li><a href="/tags/username/">username</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant/">vagrant</a><small>4</small></li>
+  
+    <li><a href="/tags/version/">version</a><small>1</small></li>
+  
+    <li><a href="/tags/video/">video</a><small>1</small></li>
+  
+    <li><a href="/tags/vim/">vim</a><small>3</small></li>
+  
+    <li><a href="/tags/vimdiff/">vimdiff</a><small>1</small></li>
+  
+    <li><a href="/tags/vimeo/">vimeo</a><small>1</small></li>
+  
+    <li><a href="/tags/visit/">visit</a><small>4</small></li>
+  
+    <li><a href="/tags/vpn/">vpn</a><small>1</small></li>
+  
+    <li><a href="/tags/vulnerability/">vulnerability</a><small>1</small></li>
+  
+    <li><a href="/tags/web-framework/">web-framework</a><small>1</small></li>
+  
+    <li><a href="/tags/web-server/">web-server</a><small>1</small></li>
+  
+    <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
+  
+    <li><a href="/tags/windows/">windows</a><small>1</small></li>
+  
+    <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
+  
+    <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
+  
+    <li><a href="/tags/yeoman/">yeoman</a><small>1</small></li>
+  
+    <li><a href="/tags/yield/">yield</a><small>1</small></li>
+  
+    <li><a href="/tags/zone-apex/">zone-apex</a><small>1</small></li>
+  
+    <li><a href="/tags/中華電信/">中華電信</a><small>1</small></li>
+  
+    <li><a href="/tags/小米/">小米</a><small>1</small></li>
+  
+    <li><a href="/tags/小米手机/">小米手机</a><small>1</small></li>
+  
+  </ul>
+</div>
+
+</aside>
+    <div class="clearfix"></div>
+  </div>
+  <footer id="footer" class="inner"><div class="alignleft">
+  
+  &copy; 2015 Chao Huang
+  
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+var disqus_shortname = 'realguess';
+
+(function(){
+  var dsq = document.createElement('script');
+  dsq.type = 'text/javascript';
+  dsq.async = true;
+  dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+}());
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+  $('.fancybox').fancybox();
+})(jQuery);
+</script>
+
+</body>
+</html>
