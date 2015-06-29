@@ -68,6 +68,103 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-23T18:44:35.000Z"><a href="/2013/11/23/ping/">Nov 23, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/23/ping/">Ping</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>There are many network utilities that are ready to use out of Linux box. <code>ping</code> is one of them:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DESCRIPTION</div><div class="line">       ping uses the ICMP protocol's mandatory ECHO_REQUEST datagram to elicit</div><div class="line">       an  ICMP  ECHO_RESPONSE from a host or gateway.  ECHO_REQUEST datagrams</div><div class="line">       (``pings'') have an IP and ICMP header, followed by  a  struct  timeval</div><div class="line">       and  then  an  arbitrary  number  of ``pad'' bytes used to fill out the</div><div class="line">       packet.</div><div class="line"></div><div class="line">       ping6 can also send Node Information Queries (RFC4620).</div></pre></td></tr></table></figure>
+
+<p><strong>pings</strong> are ECHO_REQUEST datagrams.</p>
+<p>For a quick usage:</p>
+<pre><code>% ping localhost
+PING localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>) <span class="number">56</span>(<span class="number">84</span>) <span class="keyword">bytes</span> <span class="operator">of</span> data.
+<span class="number">64</span> <span class="keyword">bytes</span> <span class="built_in">from</span> localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>): icmp_req=<span class="number">1</span> ttl=<span class="number">64</span> <span class="built_in">time</span>=<span class="number">0.034</span> ms
+<span class="number">64</span> <span class="keyword">bytes</span> <span class="built_in">from</span> localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>): icmp_req=<span class="number">2</span> ttl=<span class="number">64</span> <span class="built_in">time</span>=<span class="number">0.045</span> ms
+<span class="number">64</span> <span class="keyword">bytes</span> <span class="built_in">from</span> localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>): icmp_req=<span class="number">3</span> ttl=<span class="number">64</span> <span class="built_in">time</span>=<span class="number">0.039</span> ms
+^C
+<span class="comment">--- localhost ping statistics ---</span>
+<span class="number">3</span> packets transmitted, <span class="number">3</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">1999</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">0.034</span>/<span class="number">0.039</span>/<span class="number">0.045</span>/<span class="number">0.006</span> ms
+</code></pre><p><code>rrt</code> is the round-trip time in milliseconds. The statistics includes minimum, average, maximum and mean deviation times.</p>
+<p>The manual page explains many options. Here are onces I found helpful to me:</p>
+<pre><code>ping -<span class="keyword">D</span> -n -q -c <span class="number">100</span> localhost
+</code></pre><ul>
+<li><code>-D</code>: UNIX timestamp + microseconds</li>
+<li><code>-n</code>: no lookup symbolic names for host addresses (faster)</li>
+<li><code>-c</code>: number of pings to send</li>
+<li><code>-q</code>: result only</li>
+</ul>
+<p>Ping localhost to verify that the local network interface is up and running:</p>
+<pre><code>% ping -d -n -q -c <span class="number">100</span> localhost
+PING localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>) <span class="number">56</span>(<span class="number">84</span>) <span class="keyword">bytes</span> <span class="operator">of</span> data.
+
+<span class="comment">--- localhost ping statistics ---</span>
+<span class="number">100</span> packets transmitted, <span class="number">100</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">99005</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">0.029</span>/<span class="number">0.047</span>/<span class="number">0.059</span>/<span class="number">0.007</span> ms
+</code></pre><p>Ping local gateway, usually router:</p>
+<pre><code>% ping -D -n -q -c <span class="number">100</span> <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>
+PING <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span> (<span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>) <span class="number">56</span>(<span class="number">84</span>) <span class="keyword">bytes</span> <span class="operator">of</span> data.
+
+<span class="comment">--- 192.168.1.1 ping statistics ---</span>
+<span class="number">100</span> packets transmitted, <span class="number">100</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">98997</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">0.416</span>/<span class="number">0.502</span>/<span class="number">1.448</span>/<span class="number">0.100</span> ms
+</code></pre><p>If we ping a remote server without using <code>-n</code> option, it will be slower due to the host address lookup:</p>
+<pre><code>% ping -c <span class="number">20</span> baidu.com
+<span class="number">20</span> packets transmitted, <span class="number">20</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">96034</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">46.061</span>/<span class="number">49.096</span>/<span class="number">92.912</span>/<span class="number">10.061</span> ms
+</code></pre><p>Without lookup:</p>
+<pre><code>% ping -c <span class="number">20</span> -n baidu.com
+<span class="number">20</span> packets transmitted, <span class="number">20</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">19029</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">45.802</span>/<span class="number">46.428</span>/<span class="number">47.391</span>/<span class="number">0.458</span> ms
+</code></pre><p>Look up the actual IP address of the domain:</p>
+<pre><code>% nslookup baidu.com
+<span class="label">Server:</span>         <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>
+<span class="label">Address:</span>        <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="preprocessor">#53</span>
+
+Non-authoritative answer:
+<span class="label">Name:</span>   baidu.com
+<span class="label">Address:</span> <span class="number">220.181</span><span class="number">.111</span><span class="number">.86</span>
+<span class="label">Name:</span>   baidu.com
+<span class="label">Address:</span> <span class="number">220.181</span><span class="number">.111</span><span class="number">.85</span>
+<span class="label">Name:</span>   baidu.com
+<span class="label">Address:</span> <span class="number">123.125</span><span class="number">.114</span><span class="number">.144</span>   
+</code></pre><p>We can send pings by using IP address directly, which is almost the same as using <code>-n</code> option. It is faster:</p>
+<pre><code>% ping -c <span class="number">20</span> <span class="number">220.181</span><span class="number">.11</span><span class="number">.86</span>
+<span class="comment">--- 220.181.111.86 ping statistics ---</span>
+<span class="number">20</span> packets transmitted, <span class="number">20</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">19026</span>ms
+rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">46.103</span>/<span class="number">53.019</span>/<span class="number">86.077</span>/<span class="number">12.831</span> ms
+</code></pre><p>But not all servers support ping, pings might be dropped altogether. Also, even a server does support ping, it does not mean that you can browser the website hosted by the server. The port might get blocked, or server is down.</p>
+<p>Pinging an IP address is fun, but what is more exciting to actually find out more information about the address, such as the <a href="http://whatismyipaddress.com/ip/220.181.11.86" target="_blank" rel="external">geographical location of the IP</a>. <a href="http://whatismyipaddress.com/" target="_blank" rel="external">What Is My IP Address</a> is good tool to use.</p>
+<p>Next: <code>ping6</code>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-17T12:30:17.000Z"><a href="/2013/11/17/why-shebang/">Nov 17, 2013</a></time>
       
       
@@ -488,46 +585,6 @@ coffee&gt; .help
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-08-03T08:10:45.000Z"><a href="/2013/08/03/android-43-jelly-bean/">Aug 3, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/08/03/android-43-jelly-bean/">Android 4.3 Jelly Bean</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><img src="http://www.android.com/images/whatsnew/jb-new-logo.png" alt="Jelly Bean"></p>
-<p>Finally jump back into the Google land in the mobile world. Here is what are<br>coming up:</p>
-<ul>
-<li>Take a deep dive into the operating system</li>
-<li>Explore every possible features in the hardware</li>
-<li>Maximize the potential, including app development</li>
-<li>Come up with a list of useful apps and their workflow</li>
-</ul>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -569,6 +626,8 @@ coffee&gt; .help
     <li><a href="/categories/programming/">Programming</a><small>3</small></li>
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
+  
+    <li><a href="/categories/starters/">Starters</a><small>1</small></li>
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
@@ -831,7 +890,7 @@ coffee&gt; .help
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gcloud/">gcloud</a><small>1</small></li>
+    <li><a href="/tags/gcloud/">gcloud</a><small>2</small></li>
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
   
@@ -856,6 +915,8 @@ coffee&gt; .help
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
@@ -1011,7 +1072,7 @@ coffee&gt; .help
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>12</small></li>
+    <li><a href="/tags/node/">node</a><small>13</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1179,6 +1240,8 @@ coffee&gt; .help
   
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
+    <li><a href="/tags/subscription/">subscription</a><small>1</small></li>
+  
     <li><a href="/tags/success/">success</a><small>1</small></li>
   
     <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
@@ -1219,7 +1282,7 @@ coffee&gt; .help
   
     <li><a href="/tags/todo/">todo</a><small>1</small></li>
   
-    <li><a href="/tags/topic/">topic</a><small>1</small></li>
+    <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
     <li><a href="/tags/train/">train</a><small>1</small></li>
   
