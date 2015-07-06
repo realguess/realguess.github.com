@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-07-06T12:00:00.000Z"><a href="/2015/07/06/fields-in-package-json-for-private-and-unlicensed-modules/">Jul 6, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/06/fields-in-package-json-for-private-and-unlicensed-modules/">Fields in &#39;package.json&#39; for Private and Unlicensed Modules</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>If you not include the <code>license</code> field in <code>package.json</code>, <a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a> will keep bugging you:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">INFO: package.json</div><div class="line">INFO: api@<span class="number">0.1</span>.<span class="number">8</span> No license field.</div></pre></td></tr></table></figure>
+
+<p>If your module is private, just add the following two fields to <code>package.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"UNLICENSED"</span></span>,</div><div class="line">  "<span class="attribute">private</span>": <span class="value"><span class="literal">true</span></span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>See NPM <code>package.json</code> <a href="https://docs.npmjs.com/files/package.json#license" target="_blank" rel="external">license</a>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-04-02T12:00:00.000Z"><a href="/2015/04/02/require-modules-from-the-command-line/">Apr 2, 2015</a></time>
       
       
@@ -371,7 +410,7 @@
   
     <li><a href="/categories/linux/">Linux</a><small>1</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>6</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>7</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -768,6 +807,8 @@
   
     <li><a href="/tags/libssl/">libssl</a><small>1</small></li>
   
+    <li><a href="/tags/license/">license</a><small>1</small></li>
+  
     <li><a href="/tags/like-button/">like-button</a><small>1</small></li>
   
     <li><a href="/tags/line-divider/">line-divider</a><small>1</small></li>
@@ -840,7 +881,7 @@
   
     <li><a href="/tags/november/">november</a><small>1</small></li>
   
-    <li><a href="/tags/npm/">npm</a><small>2</small></li>
+    <li><a href="/tags/npm/">npm</a><small>3</small></li>
   
     <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
   
@@ -859,6 +900,8 @@
     <li><a href="/tags/outdated/">outdated</a><small>1</small></li>
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
+  
+    <li><a href="/tags/package-json/">package.json</a><small>1</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   
