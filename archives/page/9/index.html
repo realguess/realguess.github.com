@@ -68,6 +68,53 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-01-05T14:18:22.000Z"><a href="/2014/01/05/use-vim-cryptographic-features-to-encrypt-important-text-files/">Jan 5, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/05/use-vim-cryptographic-features-to-encrypt-important-text-files/">Use Vim Cryptographic Features to Encrypt Important Text Files</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>You can protect your important text files by using <a href="http://www.vim.org/" target="_blank" rel="external">Vim</a> cryptographic features.</p>
+<p>Set cryptographic method to <a href="http://en.wikipedia.org/wiki/Blowfish_(cipher)" target="_blank" rel="external">Blowfish</a>:</p>
+<pre><code>:<span class="keyword">set</span> cryptmethod=blowfish
+</code></pre><p>Set encryption key:</p>
+<pre><code><span class="symbol">:X</span>
+</code></pre><p>Save and get out:</p>
+<pre><code><span class="symbol">:wq</span>
+</code></pre><p>But the drawback is:</p>
+<pre><code>$ <span class="keyword">grep</span> <span class="string">'Vim'</span> encrypted.txt
+Binary <span class="keyword">file</span> encrypted.txt matches
+</code></pre><p>References:</p>
+<ul>
+<li><a href="http://usevim.com/2013/11/01/vim-encryption/" target="_blank" rel="external">Protect Notes with Vim Encryption</a></li>
+<li><a href="http://vim.wikia.com/wiki/Encryption" target="_blank" rel="external">Encryption - Vim Tips Wiki</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-02T21:59:01.000Z"><a href="/2014/01/02/passage-of-time-2013/">Jan 2, 2014</a></time>
       
       
@@ -488,49 +535,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-24T23:22:24.000Z"><a href="/2013/11/24/poor-mans-vpn/">Nov 24, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/24/poor-mans-vpn/">Poor Man&#39;s VPN</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://github.com/apenwarr/sshuttle/" target="_blank" rel="external">sshuttle</a> is a very simple tool to create a VPN connection to a remote server that you have SSH access. You do not need to set up the complex VPN in a remote machine.</p>
-<p>Requirements:</p>
-<ul>
-<li>Root access on local machine</li>
-<li>SSH access to a remote machine</li>
-</ul>
-<p>Install:</p>
-<pre><code>$ <span class="built_in">sudo</span> apt-get install sshuttle
-</code></pre><p>Usage:</p>
-<pre><code><span class="variable">$ </span>sshuttle --dns -vvr username<span class="variable">@sshserver</span> <span class="number">0</span>/<span class="number">0</span>
-</code></pre><p><code>0/0</code> is the shortcut for <code>0.0.0.0/0</code>. <code>--dns</code> enables DNS queries to be proxied. Note that <code>sudo</code> is not needed but will be prompted.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -563,7 +567,7 @@
   
     <li><a href="/categories/linux/">Linux</a><small>1</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>7</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>8</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -642,6 +646,8 @@
   
     <li><a href="/tags/array/">array</a><small>3</small></li>
   
+    <li><a href="/tags/async/">async</a><small>1</small></li>
+  
     <li><a href="/tags/asynchronous/">asynchronous</a><small>2</small></li>
   
     <li><a href="/tags/automated-build/">automated-build</a><small>1</small></li>
@@ -669,6 +675,8 @@
     <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
   
     <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
+  
+    <li><a href="/tags/binding/">binding</a><small>1</small></li>
   
     <li><a href="/tags/bitbucket/">bitbucket</a><small>2</small></li>
   
@@ -725,6 +733,8 @@
     <li><a href="/tags/command-line-interface/">command-line-interface</a><small>1</small></li>
   
     <li><a href="/tags/compare/">compare</a><small>1</small></li>
+  
+    <li><a href="/tags/compose/">compose</a><small>1</small></li>
   
     <li><a href="/tags/configuration/">configuration</a><small>1</small></li>
   
@@ -1020,7 +1030,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>13</small></li>
+    <li><a href="/tags/node/">node</a><small>14</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1142,6 +1152,8 @@
   
     <li><a href="/tags/semver/">semver</a><small>1</small></li>
   
+    <li><a href="/tags/seq/">seq</a><small>1</small></li>
+  
     <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
   
     <li><a href="/tags/server/">server</a><small>1</small></li>
@@ -1225,6 +1237,8 @@
     <li><a href="/tags/testing/">testing</a><small>1</small></li>
   
     <li><a href="/tags/texting/">texting</a><small>1</small></li>
+  
+    <li><a href="/tags/this/">this</a><small>1</small></li>
   
     <li><a href="/tags/time-zone/">time-zone</a><small>1</small></li>
   
