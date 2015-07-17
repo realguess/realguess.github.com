@@ -64,6 +64,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-10-25T14:48:10.000Z"><a href="/2013/10/25/coffeescript-array-of-objects/">Oct 25, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/10/25/coffeescript-array-of-objects/">CoffeeScript Array of Objects</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>We frequently find ourselves need to define array of objects. In CoffeeScript we can write in the following way:</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">arr = [</div><div class="line">  {</div><div class="line">    <span class="attribute">name</span>: <span class="string">'foo'</span></div><div class="line">    <span class="attribute">pass</span>: <span class="string">'oof'</span></div><div class="line">  }</div><div class="line">  {</div><div class="line">    <span class="attribute">name</span>: <span class="string">'bar'</span></div><div class="line">    <span class="attribute">pass</span>: <span class="string">'rab'</span></div><div class="line">  }</div><div class="line">]</div></pre></td></tr></table></figure>
+
+<p>Or another format is to insert a comma:</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">arr = [</div><div class="line">  <span class="attribute">name</span>: <span class="string">'foo'</span></div><div class="line">  <span class="attribute">pass</span>: <span class="string">'oof'</span></div><div class="line">,</div><div class="line">  <span class="attribute">name</span>: <span class="string">'bar'</span></div><div class="line">  <span class="attribute">pass</span>: <span class="string">'rab'</span></div><div class="line">]</div></pre></td></tr></table></figure>
+
+<p>In the spirit of CoffeeScript, we want to avoid using braces as much as possible. Therefore, the second method is preferred.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-10-02T22:23:58.000Z"><a href="/2013/10/02/javascript-parseint(array)-only-converts-the-first-element/">Oct 2, 2013</a></time>
       
       
@@ -445,53 +484,6 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-01-26T21:08:45.000Z"><a href="/2013/01/26/bittorrent-sync/">Jan 26, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/01/26/bittorrent-sync/">BitTorrent Sync</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <blockquote>
-<p><a href="http://blog.bittorrent.com/2013/01/24/test-bittorrent-sync-pre-alpha/" target="_blank" rel="external">BitTorrent Sync</a> automatically syncs files between computers via secure, distributed technology.</p>
-</blockquote>
-<p>This is nothing new, I am using <a href="https://www.dropbox.com/" target="_blank" rel="external">Dropbox</a> everyday. But the catch line is that there is no storage limit and it is using P2P method to directly sync between computers. The only limit is the size of your hard disk. Nowadays, you should have pretty. This is not a cloud storage service, it is a piece of software.</p>
-<p>Here is a list of some cloud storage services:</p>
-<ul>
-<li><a href="https://www.dropbox.com/" target="_blank" rel="external">Dropbox</a></li>
-<li><a href="https://www.icloud.com/" target="_blank" rel="external">iCloud</a></li>
-<li><a href="https://drive.google.com/" target="_blank" rel="external">Google Drive</a></li>
-<li><a href="https://skydrive.live.com/" target="_blank" rel="external">SkyDrive</a></li>
-<li><a href="https://one.ubuntu.com/" target="_blank" rel="external">Ubuntu One</a></li>
-<li><a href="https://www.box.com/" target="_blank" rel="external">Box</a></li>
-<li><a href="https://mega.co.nz/" target="_blank" rel="external">Mega</a></li>
-</ul>
-<p>There are many more <a href="http://en.wikipedia.org/wiki/Comparison_of_online_backup_services" target="_blank" rel="external">file hosting services</a> or <a href="http://en.wikipedia.org/wiki/Comparison_of_online_backup_services" target="_blank" rel="external">online backup services</a>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -536,6 +528,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
     <li><a href="/categories/starters/">Starters</a><small>1</small></li>
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
+  
+    <li><a href="/categories/test/">Test</a><small>1</small></li>
   
     <li><a href="/categories/tools/">Tools</a><small>24</small></li>
   
@@ -653,6 +647,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
     <li><a href="/tags/chat/">chat</a><small>1</small></li>
   
@@ -962,7 +958,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
   
-    <li><a href="/tags/mocha/">mocha</a><small>1</small></li>
+    <li><a href="/tags/mocha/">mocha</a><small>2</small></li>
   
     <li><a href="/tags/module/">module</a><small>1</small></li>
   
