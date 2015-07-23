@@ -64,6 +64,70 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-02-04T12:00:00.000Z"><a href="/2015/02/04/docker-save-load-and-deploy/">Feb 4, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/02/04/docker-save-load-and-deploy/">Docker Save, Load and Deploy</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Need to deploy private Docker containers without a private registry? Try <code>docker save</code> and <code>docker load</code>.</p>
+<p>Working set:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ docker images</div><div class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</div><div class="line">realguess/jq        latest              <span class="number">1</span>f3f837970bf        <span class="number">3</span> months ago        <span class="number">6.107</span> MB</div><div class="line">realguess/jq        <span class="number">1.4</span>                 <span class="number">6071</span>e18eae76        <span class="number">3</span> months ago        <span class="number">6.107</span> MB</div><div class="line">busybox             ubuntu-<span class="number">14.04</span>        f6169d24347d        <span class="number">6</span> weeks ago         <span class="number">5.609</span> MB</div></pre></td></tr></table></figure>
+
+<p>Actions to perform:</p>
+<ol>
+<li>Save an image with a single tag</li>
+<li>Save an image with multiple tags</li>
+<li>Save multiple images</li>
+</ol>
+<p>Save a single tagged image:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker save realguess/jq:latest &gt; realguess-jq-latest.tar</div></pre></td></tr></table></figure>
+
+<p>Save a single image with all tags:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker save realguess/jq &gt; realguess-jq.tar</div></pre></td></tr></table></figure>
+
+<p>The tagged one is slightly less in size:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ls -lh realguess*.tar</div><div class="line">-rw-rw-r-- <span class="number">1</span> chao chao <span class="number">6.0</span>M Feb <span class="number">1</span> <span class="number">12</span>:<span class="number">00</span> realguess-jq-latest.tar</div><div class="line">-rw-rw-r-- <span class="number">1</span> chao chao <span class="number">6.5</span>M Feb <span class="number">1</span> <span class="number">12</span>:<span class="number">00</span> realguess-jq.tar</div></pre></td></tr></table></figure>
+
+<p>Save multiple images:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker save busybox realguess/jq &gt; busy-realguess-jq-box.tar</div></pre></td></tr></table></figure>
+
+<p>The size is almost twice as much comparing to a single image tar:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ls -lh busy*</div><div class="line">-rw-rw-r--  <span class="number">1</span> chao chao  <span class="number">12</span>M Feb <span class="number">1</span> <span class="number">12</span>:<span class="number">00</span> busy-realguess-jq-box.tar</div></pre></td></tr></table></figure>
+
+<p>Compress it:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ out=busy-realguess-jq-box.tar && docker save busybox realguess/jq &gt; <span class="variable">$out</span> && gzip <span class="variable">$out</span></div></pre></td></tr></table></figure>
+
+<p>Much better in size:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ls -lh busy*</div><div class="line">-rw-rw-r-- <span class="number">1</span> chao chao <span class="number">5.7</span>M Feb <span class="number">1</span> <span class="number">12</span>:<span class="number">00</span> busy-realguess-jq-box.tar.gz</div></pre></td></tr></table></figure>
+
+<p>Do the reverse, load the tarred Docker images with <a href="https://docs.docker.com/reference/commandline/cli/#load" target="_blank" rel="external">docker load</a>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-02-01T12:00:00.000Z"><a href="/2015/02/01/statistics-in-january-2015/">Feb 1, 2015</a></time>
       
       
@@ -511,59 +575,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-12-10T12:00:00.000Z"><a href="/2014/12/10/use-ssh-directly-instead-of-vagrant-ssh-command/">Dec 10, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/12/10/use-ssh-directly-instead-of-vagrant-ssh-command/">Use SSH Directly Instead of Vagrant SSH Command</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a> command <code>vagrant ssh</code> connects to the running virtual machine via SSH. SSH arguments can also be added:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh -h</div><div class="line">Usage: vagrant ssh [options] [name] [-- extra ssh args]</div><div class="line"></div><div class="line">Options:</div><div class="line"></div><div class="line">    -c, --command COMMAND            Execute an SSH command directly</div><div class="line">    -p, --plain                      Plain mode, leaves authentication up to user</div><div class="line">    -h, --help                       Print this help</div></pre></td></tr></table></figure>
-
-<p>For example, execute a single command:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="tag">vagrant</span> <span class="tag">ssh</span> <span class="tag">-c</span> <span class="tag">date</span></div><div class="line"><span class="tag">Wed</span> <span class="tag">Dec</span> 10 12<span class="pseudo">:00</span><span class="pseudo">:00</span> <span class="tag">UTC</span> 2014</div><div class="line"><span class="tag">Connection</span> <span class="tag">to</span> 127<span class="class">.0</span><span class="class">.0</span><span class="class">.1</span> <span class="tag">closed</span>.</div></pre></td></tr></table></figure>
-
-<p>or:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="tag">vagrant</span> <span class="tag">ssh</span> <span class="tag">--</span> <span class="tag">date</span></div><div class="line"><span class="tag">Wed</span> <span class="tag">Dec</span> 10 12<span class="pseudo">:00</span><span class="pseudo">:00</span> <span class="tag">UTC</span> 2014</div></pre></td></tr></table></figure>
-
-<p>which prints no connection closed message.</p>
-<p>Another example:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh -- 'cat /etc/hosts'</div><div class="line">127.0.0.1 localhost</div><div class="line"></div><div class="line"># The following lines are desirable for IPv6 capable hosts</div><div class="line">::1 ip6-localhost ip6-loopback</div><div class="line">fe00::0 ip6-localnet</div><div class="line">ff00::0 ip6-mcastprefix</div><div class="line">ff02::1 ip6-allnodes</div><div class="line">ff02::2 ip6-allrouters</div><div class="line">ff02::3 ip6-allhosts</div></pre></td></tr></table></figure>
-
-<p>However, interactive applications cannot be used in this way:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh -- top</div><div class="line">TERM environment variable not set.</div></pre></td></tr></table></figure>
-
-<p>Well, we already have a virtual machine running, we can just use SSH directly.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/12/10/use-ssh-directly-instead-of-vagrant-ssh-command/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -595,7 +606,7 @@
   
     <li><a href="/categories/linux/">Linux</a><small>1</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>8</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>9</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -777,6 +788,8 @@
     <li><a href="/tags/container/">container</a><small>1</small></li>
   
     <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
+  
+    <li><a href="/tags/context/">context</a><small>1</small></li>
   
     <li><a href="/tags/control-character/">control-character</a><small>1</small></li>
   
@@ -1018,6 +1031,8 @@
   
     <li><a href="/tags/load/">load</a><small>1</small></li>
   
+    <li><a href="/tags/lodash/">lodash</a><small>1</small></li>
+  
     <li><a href="/tags/log/">log</a><small>1</small></li>
   
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
@@ -1041,6 +1056,8 @@
     <li><a href="/tags/mocha/">mocha</a><small>2</small></li>
   
     <li><a href="/tags/module/">module</a><small>1</small></li>
+  
+    <li><a href="/tags/module-caching/">module-caching</a><small>1</small></li>
   
     <li><a href="/tags/mongodb/">mongodb</a><small>1</small></li>
   
@@ -1261,6 +1278,8 @@
     <li><a href="/tags/teardown/">teardown</a><small>1</small></li>
   
     <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
+  
+    <li><a href="/tags/template/">template</a><small>1</small></li>
   
     <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
   

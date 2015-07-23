@@ -68,6 +68,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-06-22T13:48:50.000Z"><a href="/2014/06/22/get-rid-of-200e-control-character-in-vim/">Jun 22, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/22/get-rid-of-200e-control-character-in-vim/">Get Rid of &#39;&lt;200e&gt;&#39; Control Characters in VIM</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>The <a href="http://en.wikipedia.org/wiki/Left-to-right_mark" target="_blank" rel="external">left-to-right mark</a> character is an invisible control character. If you open up a text file in VIM containing such a character, you will see it as <code>&lt;200e&gt;</code> in Unicode.</p>
+<p>If you want to get rid of all occurrences of this control character, you can do:</p>
+<pre><code><span class="symbol">:%s/&lt;ctrl&gt;+&lt;shift&gt;+u200e&lt;enter&gt;//g</span>
+</code></pre><p>That’s <code>&lt;ctrl&gt;+&lt;shift&gt;+u</code> to enable entering the character by Unicode code points, followed by the actual character code and <code>&lt;enter&gt;</code> key. It will loke like this:</p>
+<pre><code><span class="symbol">:%s/&lt;</span><span class="number">200</span>e&gt;<span class="regexp">//g</span>
+</code></pre><p>However, not all terminals are supported.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-06-21T21:24:54.000Z"><a href="/2014/06/21/tiny-http-servers/">Jun 21, 2014</a></time>
       
       
@@ -708,66 +746,6 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-05-11T14:11:43.000Z"><a href="/2014/05/11/sharpening-the-ax-before-chopping-down-a-tree/">May 11, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/05/11/sharpening-the-ax-before-chopping-down-a-tree/">Sharpening the Ax Before Chopping Down a Tree</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I was helping to examine a server that was impacted by <a href="http://heartbleed.com/" target="_blank" rel="external">Heartbleed</a>. According to the developer who was patching the server, he had updated the <a href="http://www.openssl.org/" target="_blank" rel="external">OpenSSL</a> library to the following:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ openssl version -a</div><div class="line">OpenSSL 1.0.1g 7 Apr 2014</div><div class="line">built on: Fri Apr 18 11:04:34 EDT 2014</div><div class="line">platform: linux-x86_64</div><div class="line">options: bn(64,64) rc4(16x,int) des(idx,cisc,16,int) idea(int) </div><div class="line">blowfish(idx) </div><div class="line">compiler: gcc -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H </div><div class="line">-<span class="ruby"><span class="constant">Wa</span>,--noexecstack -m64 -<span class="constant">DL_ENDIAN</span> -<span class="constant">DTERMIO</span> -<span class="constant">O3</span> -<span class="constant">Wall</span> -<span class="constant">DOPENSSL_IA32_SSE2</span></span></div><div class="line"> -<span class="ruby"><span class="constant">DOPENSSL_BN_ASM_MONT</span> -<span class="constant">DOPENSSL_BN_ASM_MONT5</span> -<span class="constant">DOPENSSL_BN_ASM_GF2m</span> </span></div><div class="line">-<span class="ruby"><span class="constant">DSHA1_ASM</span> -<span class="constant">DSHA256_ASM</span> -<span class="constant">DSHA512_ASM</span> -<span class="constant">DMD5_ASM</span> -<span class="constant">DAES_ASM</span> -<span class="constant">DVPAES_ASM</span> </span></div><div class="line">-<span class="ruby"><span class="constant">DBSAES_ASM</span> -<span class="constant">DWHIRLPOOL_ASM</span> -<span class="constant">DGHASH_ASM</span></span></div><div class="line">OPENSSLDIR: "/usr/ssl"</div></pre></td></tr></table></figure>
-
-<p>And the developer claimed: “According to <a href="http://heartbleed.com/" target="_blank" rel="external">http://heartbleed.com/</a>. OpenSSL 1.0.1g is NOT vulnerable. Also I have restarted all services on this server.”</p>
-<p>So, OpenSSL has been updated and the all services have been restarted, but why does the problem still persist?</p>
-<p>I took a look at the command history he ran:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">wget http://www.openssl.org/<span class="built_in">source</span>/openssl-<span class="number">1.0</span>.<span class="number">1</span>g.tar.gz</div><div class="line">ls</div><div class="line">tar xvzf openssl-<span class="number">1.0</span>.<span class="number">1</span>g.tar.gz</div><div class="line"><span class="built_in">cd</span> openssl-<span class="number">1.0</span>.<span class="number">1</span>g/</div><div class="line"><span class="built_in">sudo</span> ./config --prefix=/usr</div><div class="line"><span class="built_in">sudo</span> make</div><div class="line"><span class="built_in">sudo</span> make install</div><div class="line"><span class="keyword">exit</span></div><div class="line">openssl version <span class="operator">-a</span></div><div class="line"><span class="built_in">sudo</span> reboot</div></pre></td></tr></table></figure>
-
-<p>The OpenSSL library has been built from the source, which is fine, but the problem is that the Nginx server was still using the old library distributed by Ubuntu:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ ldd `which nginx` | <span class="keyword">grep</span> ssl</div><div class="line">        libssl.<span class="keyword">so</span>.<span class="number">1.0</span>.<span class="number">0</span> =&gt; /lib/x86_64-linux-gnu/libssl.<span class="keyword">so</span>.<span class="number">1.0</span>.<span class="number">0</span> (<span class="number">0</span>x00007fafe82a3000)</div><div class="line">$ strings /lib/x86_64-linux-gnu/libssl.<span class="keyword">so</span>.<span class="number">1.0</span>.<span class="number">0</span> | <span class="keyword">grep</span> <span class="string">'^OpenSSL '</span></div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span><span class="keyword">c</span> <span class="number">10</span> May <span class="number">2012</span></div></pre></td></tr></table></figure>
-
-<p>In effect, there were two versions of OpenSSL library installed in the system, one was built from the source, and another one was managed by <code>dpkg</code>:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ dpkg -l openssl</div><div class="line"><span class="header">||/ Name                          Version             Architecture</span></div><div class="line">+++-=============================-===================-===================</div><div class="line">ii  openssl                       1.0.1c-4ubuntu8.2   amd64</div></pre></td></tr></table></figure>
-
-<p>However, the bigger problem is the version of the operating system:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ lsb_release -a</div><div class="line">No LSB modules are available.</div><div class="line">Distributor ID: Ubuntu</div><div class="line"><span class="label">Description:</span>    Ubuntu <span class="number">13.04</span></div><div class="line"><span class="label">Release:</span>        <span class="number">13.04</span></div><div class="line"><span class="label">Codename:</span>       raring</div></pre></td></tr></table></figure>
-
-<p>Ubuntu 13.04 is not supported anymore according to <a href="https://wiki.ubuntu.com/Releases" target="_blank" rel="external">https://wiki.ubuntu.com/Releases</a>. The developer probably issued <code>apt-get upgrade</code>, but nothing to be updated, because Ubuntu stopped supporting the release. Therefore, no security update. And Ubuntu 13.04 is not listed in <a href="http://www.ubuntu.com/usn/usn-2165-1/" target="_blank" rel="external">Ubuntu Security Notice USN-2165-1</a>. So, the developer opted for building the library from the source. After installation from the source, the binary <code>openssl</code> was overridden by the source build, and the command <code>openssl version</code> showed the latest and patched version <code>1.0.1g</code>.</p>
-<p>To fix the problem, we need to reinstall the package first:</p>
-<pre><code>$ sudo apt-get <span class="operator"><span class="keyword">install</span> <span class="comment">--reinstall openssl</span></span>
-</code></pre><p>Now, this will revert control back to <code>apt-get</code> and overwrite the binary <code>/usr/bin/openssl</code>:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ openssl version -a</div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span>c <span class="number">10</span> May <span class="number">2012</span></div><div class="line">built on: Wed Jan  <span class="number">8</span> <span class="number">20</span>:<span class="number">51</span>:<span class="number">55</span> UTC <span class="number">2014</span></div><div class="line">platform: debian-amd64</div><div class="line">options:  bn(<span class="number">64</span>,<span class="number">64</span>) rc4(<span class="number">16</span>x,int) des(idx,cisc,<span class="number">16</span>,int) blowfish(idx) </div><div class="line">compiler: cc -fPIC -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -m64 -DL_ENDIAN -DTERMIO -g -O2 -fstack-protector <span class="variable">--param=</span><span class="variable">ssp-buffer-size=</span><span class="number">4</span> -Wformat <span class="variable">-Werror=</span>format-security <span class="variable">-D_FORTIFY_SOURCE=</span><span class="number">2</span> -Wl,-Bsymbolic-functions -Wl,-z,relro -Wa,--noexecstack -Wall -DOPENSSL_NO_TLS1_2_CLIENT <span class="variable">-DOPENSSL_MAX_TLS1_2_CIPHER_LENGTH=</span><span class="number">50</span> <span class="variable">-DMD32_REG_T=</span>int -DOPENSSL_IA32_SSE2 -DOPENSSL_BN_ASM_MONT -DOPENSSL_BN_ASM_MONT5 -DOPENSSL_BN_ASM_GF2m -DSHA1_ASM -DSHA256_ASM -DSHA512_ASM -DMD5_ASM -DAES_ASM -DVPAES_ASM -DBSAES_ASM -DWHIRLPOOL_ASM -DGHASH_ASM</div><div class="line">OPENSSLDIR: <span class="string">"/usr/lib/ssl"</span></div></pre></td></tr></table></figure>
-
-<p>And then we must perform the distribution upgrade to the latest long term support version, in order to continue receiving updates.</p>
-<p>The lesson I have learned from this is that if you are going the wrong direction, no matter how hard you work, you are not going to make it. Make sure to take the initial investment, and really understand the true cause of the problem before attempting to resolve the issue. And don’t blindly follow the procedure. Understand it first, and adapt to your specific situation. As Abraham Lincoln once said:</p>
-<blockquote>
-<p>“If I have nine hours to chop down a tree, I’d spend the first six sharpening my ax.”</p>
-</blockquote>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -800,7 +778,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/categories/linux/">Linux</a><small>1</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>8</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>9</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -982,6 +960,8 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
     <li><a href="/tags/container/">container</a><small>1</small></li>
   
     <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
+  
+    <li><a href="/tags/context/">context</a><small>1</small></li>
   
     <li><a href="/tags/control-character/">control-character</a><small>1</small></li>
   
@@ -1223,6 +1203,8 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/load/">load</a><small>1</small></li>
   
+    <li><a href="/tags/lodash/">lodash</a><small>1</small></li>
+  
     <li><a href="/tags/log/">log</a><small>1</small></li>
   
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
@@ -1246,6 +1228,8 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
     <li><a href="/tags/mocha/">mocha</a><small>2</small></li>
   
     <li><a href="/tags/module/">module</a><small>1</small></li>
+  
+    <li><a href="/tags/module-caching/">module-caching</a><small>1</small></li>
   
     <li><a href="/tags/mongodb/">mongodb</a><small>1</small></li>
   
@@ -1466,6 +1450,8 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
     <li><a href="/tags/teardown/">teardown</a><small>1</small></li>
   
     <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
+  
+    <li><a href="/tags/template/">template</a><small>1</small></li>
   
     <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
   
