@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-01-19T19:54:25.000Z"><a href="/2014/01/19/not-ready-for-xiaomi/">Jan 19, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/19/not-ready-for-xiaomi/">Not Ready for Xiaomi</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When I was in the United States, I have heard of many good news about <a href="http://www.xiaomi.com/en" target="_blank" rel="external">Xiaomi</a>, a Chinese smartphone company. And people are comparing the founder <a href="http://www.weibo.com/leijun" target="_blank" rel="external">Lei Jun</a> to Steve Jobs. I was very excited when I got to China and eager to get my hand on a <a href="http://www.xiaomi.com/en/mi3" target="_blank" rel="external">Mi3</a>.</p>
+<p><img src="/img/2014-01-19/mi3.jpg" alt="Mi3"></p>
+<p>Well, I didn’t get it, not saying that I did not try, maybe I didn’t try hard enough. But in some situations, this might be a good thing.</p>
+<p>The phones were quickly sold out within minutes. The official number of phones sold is remarkable according the manufacturer. But first do you trust these numbers? Maybe I just dislike the marketing technique more. I have read many reviews, people are saying that the marketing technique is awful. While they keep up the demand by limiting the supply from the company website. You can actually buy higher price ones from other retailers.</p>
+<p>Another problem is the quality of the phone. When I first asked my friend for the opinion of buying, he simply replied “trash”. When I asked another friend, she told me that she had two previous version Xiaomi phones, and they both broke down. I have used two iPhones and I have never had any problem with it.</p>
+<p>It boils down to quality vs. quantity. Selling by creating a tricky marketing technique and with <a href="http://en.miui.com/thread-12840-1-1.html" target="_blank" rel="external">misleading</a> information to boost the quantity without really focusing on the quality is sad. Without changing the DNA, the company is not going far, no matter how much money raises.</p>
+<p>I am just happy with my Nexus for now.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-17T14:13:03.000Z"><a href="/2014/01/17/a-new-nodejs-web-framework-koa/">Jan 17, 2014</a></time>
       
       
@@ -616,60 +655,6 @@ Binary <span class="keyword">file</span> encrypted.txt matches
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-06T10:55:55.000Z"><a href="/2013/12/06/amazon-route-53-via-command-line/">Dec 6, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/06/amazon-route-53-via-command-line/">Amazon Route 53 via Command Line</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Retrieve a list of hosted zones:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53 list-hosted-zones          </div><div class="line">{</div><div class="line">  <span class="string">"HostedZones"</span><span class="symbol">:</span> [</div><div class="line">    {</div><div class="line">        <span class="string">"ResourceRecordSetCount"</span><span class="symbol">:</span> <span class="number">4</span>,</div><div class="line">        <span class="string">"CallerReference"</span><span class="symbol">:</span> <span class="string">"12345678-ABCD-EFGH-IJKL-ABCDEFGHIJKL"</span>,</div><div class="line">        <span class="string">"Config"</span><span class="symbol">:</span> {},</div><div class="line">        <span class="string">"Id"</span><span class="symbol">:</span> <span class="string">"/hostedzone/1234567890ABC"</span>,</div><div class="line">        <span class="string">"Name"</span><span class="symbol">:</span> <span class="string">"realguess.net."</span></div><div class="line">    }</div><div class="line">  ], </div><div class="line">  <span class="string">"IsTruncated"</span><span class="symbol">:</span> <span class="keyword">false</span>, </div><div class="line">  <span class="string">"MaxItems"</span><span class="symbol">:</span> <span class="string">"100"</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Get a single hosted zone with delegation set (four Route 53 name servers that were assigned to the hosted zone):</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="built_in">get</span>-hosted-zone <span class="comment">--id 1234567890ABC</span></div><div class="line">{</div><div class="line">  <span class="string">"HostedZone"</span>: {</div><div class="line">    <span class="string">"ResourceRecordSetCount"</span>: <span class="number">4</span>,</div><div class="line">    <span class="string">"CallerReference"</span>: <span class="string">"12345678-ABCD-EFGH-IJKL-ABCDEFGHIJKL"</span>,</div><div class="line">    <span class="string">"Config"</span>: {},</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"/hostedzone/1234567890ABC"</span>,</div><div class="line">    <span class="string">"Name"</span>: <span class="string">"realguess.net."</span></div><div class="line">  },</div><div class="line">  <span class="string">"DelegationSet"</span>: {</div><div class="line">    <span class="string">"NameServers"</span>: [</div><div class="line">      <span class="string">"ns-1727.awsdns-23.co.uk"</span>,</div><div class="line">      <span class="string">"ns-1312.awsdns-36.org"</span>,</div><div class="line">      <span class="string">"ns-402.awsdns-50.com"</span>,</div><div class="line">      <span class="string">"ns-587.awsdns-09.net"</span></div><div class="line">    ]</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>List all resource record sets in a hosted zone:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="type">list</span>-resource-<span class="type">record</span>-sets <span class="comment">--hosted-zone-id 1234567890ABC</span></div><div class="line">{</div><div class="line">  <span class="string">"IsTruncated"</span>: <span class="constant">false</span>,</div><div class="line">  <span class="string">"ResourceRecordSets"</span>: [</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">172800</span></div><div class="line">    },</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1727.awsdns-23.co.uk."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1312.awsdns-36.org."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-402.awsdns-50.com."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-587.awsdns-09.net."</span></div><div class="line">        }</div><div class="line">      ], </div><div class="line">      <span class="string">"Type"</span>: <span class="string">"NS"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">172800</span></div><div class="line">    }, </div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1727.awsdns-23.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"</span></div><div class="line">        }</div><div class="line">      ], </div><div class="line">      <span class="string">"Type"</span>: <span class="string">"SOA"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">900</span></div><div class="line">    },</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"www.realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">86400</span></div><div class="line">    }</div><div class="line">  ],</div><div class="line">  <span class="string">"MaxItems"</span>: <span class="string">"100"</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Retrieve a single record set:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="type">list</span>-resource-<span class="type">record</span>-sets <span class="comment">--hosted-zone-id 1234567890ABC \</span></div><div class="line">  <span class="comment">--start-record-name www.realguess.net --start-record-type A --max-items 1</span></div><div class="line">{</div><div class="line">  <span class="string">"IsTruncated"</span>: <span class="constant">false</span>,</div><div class="line">  <span class="string">"ResourceRecordSets"</span>: [</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"www.realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">86400</span></div><div class="line">    }</div><div class="line">  ],</div><div class="line">  <span class="string">"MaxItems"</span>: <span class="string">"1"</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>In order to create a new record set, first create a JSON file to describe the new record:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">Comment</span>": <span class="value"><span class="string">"A new record set for the zone."</span></span>,</div><div class="line">  "<span class="attribute">Changes</span>": <span class="value">[</span></div><div class="line">    {</div><div class="line">      "<span class="attribute">Action</span>": <span class="value"><span class="string">"CREATE"</span></span>,</div><div class="line">      "<span class="attribute">ResourceRecordSet</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">Name</span>": <span class="value"><span class="string">"api.realguess.net."</span></span>,</div><div class="line">        "<span class="attribute">Type</span>": <span class="value"><span class="string">"CNAME"</span></span>,</div><div class="line">        "<span class="attribute">TTL</span>": <span class="value"><span class="number">60</span></span>,</div><div class="line">        "<span class="attribute">ResourceRecords</span>": <span class="value">[</span></div><div class="line">          {</div><div class="line">            "<span class="attribute">Value</span>": <span class="value"><span class="string">"www.realguess.net"</span></span></div><div class="line">          }</div><div class="line">        ]</div><div class="line">      }</div><div class="line">    }</div><div class="line">  ]</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Add a new record set (note that the JSON file must use <code>file://</code> starting path):</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53 change-resource-record-sets --hosted-zone-id <span class="number">1234567890</span>ABC \</div><div class="line">  --change-batch <span class="symbol">file:</span>/<span class="regexp">//path</span><span class="regexp">/to/record</span>.json</div><div class="line">{</div><div class="line">  <span class="string">"ChangeInfo"</span><span class="symbol">:</span> {</div><div class="line">    <span class="string">"Status"</span><span class="symbol">:</span> <span class="string">"PENDING"</span>,</div><div class="line">    <span class="string">"Comment"</span><span class="symbol">:</span> <span class="string">"A new record set for the zone."</span>,</div><div class="line">    <span class="string">"SubmittedAt"</span><span class="symbol">:</span> <span class="string">"2013-12-06T00:00:00.000Z"</span>,</div><div class="line">    <span class="string">"Id"</span><span class="symbol">:</span> <span class="string">"/change/CHANGEID123"</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>The status of adding the new record is currently <em>pending</em>. Poll the server to get the updated status:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ aws route53 get-<span class="operator"><span class="keyword">change</span> <span class="comment">--id CHANGEID123</span></span></div><div class="line">{</div><div class="line">  <span class="string">"ChangeInfo"</span>: {</div><div class="line">    <span class="string">"Status"</span>: <span class="string">"INSYNC"</span>,</div><div class="line">    <span class="string">"Comment"</span>: <span class="string">"A new record set for the zone."</span>,</div><div class="line">    <span class="string">"SubmittedAt"</span>: <span class="string">"2013-12-06T00:00:00.000Z"</span>,</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"/change/CHANGEID123"</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>A new record has been created and has been propagated to all hosts.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -716,7 +701,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
-    <li><a href="/categories/test/">Test</a><small>1</small></li>
+    <li><a href="/categories/test/">Test</a><small>2</small></li>
   
     <li><a href="/categories/tools/">Tools</a><small>24</small></li>
   
@@ -1149,7 +1134,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
   
-    <li><a href="/tags/mocha/">mocha</a><small>2</small></li>
+    <li><a href="/tags/mocha/">mocha</a><small>3</small></li>
   
     <li><a href="/tags/module/">module</a><small>1</small></li>
   
@@ -1347,6 +1332,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
+    <li><a href="/tags/structure/">structure</a><small>1</small></li>
+  
     <li><a href="/tags/subscription/">subscription</a><small>1</small></li>
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
@@ -1420,6 +1407,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
     <li><a href="/tags/united-states/">united-states</a><small>1</small></li>
   
     <li><a href="/tags/unix/">unix</a><small>1</small></li>
+  
+    <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
     <li><a href="/tags/update/">update</a><small>1</small></li>
   

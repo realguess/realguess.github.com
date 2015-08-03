@@ -64,6 +64,53 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-05-29T15:10:10.000Z"><a href="/2013/05/29/character-by-character-diff/">May 29, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/05/29/character-by-character-diff/">Character by Character Diff</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I have two very long JSON strings. In a glance, they are the same, but their<br>MD5 hashes are not. The <code>diff</code> tool is line based, but those two JSON strings<br>are single line without newline character. So, I really need a tool that can<br><code>diff</code> character by character instead of line by line and with highlighting.<br>What I have found is <code>vimdiff</code>.</p>
+<p>Must have <code>vim</code> installed not just <code>vi</code>:</p>
+<pre><code>The program 'vimdiff' can be found in the following packages:
+ <span class="keyword">*</span> vim
+ <span class="keyword">*</span> vim-gnome
+ <span class="keyword">*</span> vim-tiny
+ <span class="keyword">*</span> vim-athena
+ <span class="keyword">*</span> vim-gtk
+ <span class="keyword">*</span> vim-nox
+Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
+</code></pre><p>What I have found out by using <code>vimdiff</code> is that both JSON strings are the<br>same if converting to objects, but the ordering of properties are different,<br>which is very difficult to tell by eyeballing.</p>
+<p>References:</p>
+<ul>
+<li><a href="http://unix.stackexchange.com/questions/11128/diff-within-a-line" target="_blank" rel="external">http://unix.stackexchange.com/questions/11128/diff-within-a-line</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-05-25T18:26:38.000Z"><a href="/2013/05/25/hello-world/">May 25, 2013</a></time>
       
       
@@ -223,7 +270,7 @@
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
-    <li><a href="/categories/test/">Test</a><small>1</small></li>
+    <li><a href="/categories/test/">Test</a><small>2</small></li>
   
     <li><a href="/categories/tools/">Tools</a><small>24</small></li>
   
@@ -656,7 +703,7 @@
   
     <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
   
-    <li><a href="/tags/mocha/">mocha</a><small>2</small></li>
+    <li><a href="/tags/mocha/">mocha</a><small>3</small></li>
   
     <li><a href="/tags/module/">module</a><small>1</small></li>
   
@@ -854,6 +901,8 @@
   
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
+    <li><a href="/tags/structure/">structure</a><small>1</small></li>
+  
     <li><a href="/tags/subscription/">subscription</a><small>1</small></li>
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
@@ -927,6 +976,8 @@
     <li><a href="/tags/united-states/">united-states</a><small>1</small></li>
   
     <li><a href="/tags/unix/">unix</a><small>1</small></li>
+  
+    <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
     <li><a href="/tags/update/">update</a><small>1</small></li>
   

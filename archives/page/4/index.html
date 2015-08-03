@@ -68,6 +68,53 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-12-13T12:00:00.000Z"><a href="/2014/12/13/update-outdated-npm-packages/">Dec 13, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/12/13/update-outdated-npm-packages/">Update Outdated NPM Packages</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://www.npmjs.com/" target="_blank" rel="external">NPM</a> provides a command to check for outdated packages:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm <span class="built_in">help</span> outdated</div></pre></td></tr></table></figure>
+
+<p>However, by default, the command checks the entire dependency tree, not only the modules specified in <code>package.json</code>, but also the dependencies of those modules. If we only care about the top-level packages, we can add <code>--depth</code> option to show just that:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm outdated --depth <span class="number">0</span></div></pre></td></tr></table></figure>
+
+<p>This is similar to listing installed packages:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm list --depth <span class="number">0</span></div></pre></td></tr></table></figure>
+
+<p>Using the option, it will not print out the nested dependency tree, but only the top-level. The option is similar to <code>tree -L 1</code>, but zero indexed instead of one.</p>
+<p>Another interesting thing about <code>outdated</code> command is the color coding in the output:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/12/13/update-outdated-npm-packages/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-12-10T12:00:00.000Z"><a href="/2014/12/10/use-ssh-directly-instead-of-vagrant-ssh-command/">Dec 10, 2014</a></time>
       
       
@@ -487,43 +534,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-11-02T12:00:00.000Z"><a href="/2014/11/02/synchronous-console-methods/">Nov 2, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/11/02/synchronous-console-methods/">Synchronous Console Methods</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In Node v0.10.x, <em>the console functions are synchronous when the destination is a terminal or a file (to avoid lost messages in case of premature exit) and asynchronous when it’s a pipe (to avoid blocking for long periods of time).</em> See <a href="http://nodejs.org/api/console.html" target="_blank" rel="external">console</a>. We can test it with the following script:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/11/02/synchronous-console-methods/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -570,7 +580,7 @@
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
-    <li><a href="/categories/test/">Test</a><small>1</small></li>
+    <li><a href="/categories/test/">Test</a><small>2</small></li>
   
     <li><a href="/categories/tools/">Tools</a><small>24</small></li>
   
@@ -1003,7 +1013,7 @@
   
     <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
   
-    <li><a href="/tags/mocha/">mocha</a><small>2</small></li>
+    <li><a href="/tags/mocha/">mocha</a><small>3</small></li>
   
     <li><a href="/tags/module/">module</a><small>1</small></li>
   
@@ -1201,6 +1211,8 @@
   
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
+    <li><a href="/tags/structure/">structure</a><small>1</small></li>
+  
     <li><a href="/tags/subscription/">subscription</a><small>1</small></li>
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
@@ -1274,6 +1286,8 @@
     <li><a href="/tags/united-states/">united-states</a><small>1</small></li>
   
     <li><a href="/tags/unix/">unix</a><small>1</small></li>
+  
+    <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
     <li><a href="/tags/update/">update</a><small>1</small></li>
   

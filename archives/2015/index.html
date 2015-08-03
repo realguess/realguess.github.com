@@ -68,6 +68,52 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-08-03T12:00:00.000Z"><a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/">Aug 3, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/">Rules on Structuring the Test Directory Structure with Mocha</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When writing tests, the framework I use for <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> is <a href="http://mochajs.org/" target="_blank" rel="external">Mocha</a> (reviewed version: v2.2.x). But how should I structure the <code>./test</code> directory? I first started by grouping related tests into directory, for example:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ tree ./test</div><div class="line">./test</div><div class="line">├── posts</div><div class="line">│   └── main.js</div><div class="line">└── users</div><div class="line">    └── main.js</div></pre></td></tr></table></figure>
+
+<p>You can use <code>mocha --recursive</code> to run all test suites.</p>
+<p>However, it’s unlikely that all files in the test directory are test suites. You might need to define some shared utilities, data generation scripts, or even setup files. You don’t want these files to be executed by Mocha. You can get away by using:</p>
+<ul>
+<li><code>mocha --grep</code> or <code>mocha --fgrep</code></li>
+<li>Use <code>find</code> and <code>xargs</code> to locate the files to be executed by Mocha</li>
+</ul>
+<p>But these are getting more and more complex. You want something simple and dumb frankly. Therefore, a better approach is to follow the two guidelines. One is the default behavior of Mocha:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-07-22T12:00:00.000Z"><a href="/2015/07/22/run-lodash-in-context-to-change-template-settings/">Jul 22, 2015</a></time>
       
       
@@ -448,63 +494,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-03-29T12:00:00.000Z"><a href="/2015/03/29/supertest-listen-at-random-port/">Mar 29, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/03/29/supertest-listen-at-random-port/">SuperTest: Listen at Random Port</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In the example section of <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> (<em>v0.15.0</em>), it mentions something about <em>ephemeral port</em>:</p>
-<blockquote>
-<p>You may pass an <code>http.Server</code>, or a <code>Function</code> to <code>request()</code> - if the server is not already listening for connections then it is bound to an ephemeral port for you so there is no need to keep track of ports. - <a href="https://github.com/visionmedia/supertest#example" target="_blank" rel="external">https://github.com/visionmedia/supertest#example</a></p>
-</blockquote>
-<p>Let’s dissect this sentence. There are a few key concepts to grasp:</p>
-<ol>
-<li>The <code>request</code> function will accept either a function or an <code>http.Server</code> object.</li>
-<li>When does the server not listening for connections?</li>
-<li>What is an ephemeral port?</li>
-</ol>
-<p>Taking a peek at the <code>index.js</code> file in <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> source code, it is easy to see that it accepts both function and <code>http.Server</code> object, but prefer latter:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// See `index.js` in [SuperTest] source code.</span></div><div class="line"><span class="keyword">if</span> (<span class="string">'function'</span> == <span class="keyword">typeof</span> app) app = http.createServer(app);</div><div class="line"></div><div class="line"><span class="comment">// See `lib/test.js` in [SuperTest] source code.</span></div><div class="line">Test.prototype.serverAddress = <span class="function"><span class="keyword">function</span> <span class="params">(app, path)</span> </span>{</div><div class="line">  <span class="keyword">var</span> addr = app.address();</div><div class="line">  <span class="keyword">if</span> (!addr) <span class="keyword">this</span>._server = app.listen(<span class="number">0</span>);</div><div class="line">  <span class="keyword">var</span> port = app.address().port;</div><div class="line">  <span class="keyword">var</span> protocol = app <span class="keyword">instanceof</span> htts.Server ? <span class="string">'https'</span> : <span class="string">'http'</span>;</div><div class="line">  <span class="keyword">return</span> protocol + <span class="string">'://1270.0.0.1:'</span> + port + path;</div><div class="line">});</div></pre></td></tr></table></figure>
-
-<p>Why it does this? This has to do with <a href="http://expressjs.com/" target="_blank" rel="external">Express</a>:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'http'</span>).createServer()</div><div class="line"><span class="string">'object'</span></div><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'express'</span>)()</div><div class="line"><span class="string">'function'</span></div><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'koa'</span>)()</div><div class="line"><span class="string">'object'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="built_in">require</span>(<span class="string">'express'</span>)()).address()</div><div class="line"><span class="literal">null</span></div></pre></td></tr></table></figure>
-
-<p>Only when initiating an <a href="http://expressjs.com/" target="_blank" rel="external">Express</a> app, it returns a function, not an object. And follows up on <code>lib/test.js</code>, when <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> detects the created server is yet to bind to any port number, it will invoke <code>app.listen(0)</code>, so called <em>ephemeral port</em>. In fact, it is just a random port.</p>
-<p>When something is <em>ephemeral</em>, it last for a very short time. When allowing a server to accept connections, we usually do is setting the server to listen on a specific port:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.listen(<span class="number">3001</span>);</div></pre></td></tr></table></figure>
-
-<p>What if setting this to <code>0</code> like above or omit this port number?</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/03/29/supertest-listen-at-random-port/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -549,7 +538,7 @@
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
-    <li><a href="/categories/test/">Test</a><small>1</small></li>
+    <li><a href="/categories/test/">Test</a><small>2</small></li>
   
     <li><a href="/categories/tools/">Tools</a><small>24</small></li>
   
@@ -982,7 +971,7 @@
   
     <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
   
-    <li><a href="/tags/mocha/">mocha</a><small>2</small></li>
+    <li><a href="/tags/mocha/">mocha</a><small>3</small></li>
   
     <li><a href="/tags/module/">module</a><small>1</small></li>
   
@@ -1180,6 +1169,8 @@
   
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
+    <li><a href="/tags/structure/">structure</a><small>1</small></li>
+  
     <li><a href="/tags/subscription/">subscription</a><small>1</small></li>
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
@@ -1253,6 +1244,8 @@
     <li><a href="/tags/united-states/">united-states</a><small>1</small></li>
   
     <li><a href="/tags/unix/">unix</a><small>1</small></li>
+  
+    <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
     <li><a href="/tags/update/">update</a><small>1</small></li>
   

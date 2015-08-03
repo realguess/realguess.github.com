@@ -68,6 +68,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-06-28T10:10:21.000Z"><a href="/2014/06/28/getter-and-setter-methods-without-function-identifier-restriction/">Jun 28, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/28/getter-and-setter-methods-without-function-identifier-restriction/">Getter and Setter Methods without Function Identifier Restriction</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>A JavaScript identifier must start with either a letter, underscore, or dollar sign:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="function"><span class="keyword">function</span> 7/11<span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected number</div><div class="line">&gt; <span class="function"><span class="keyword">function</span> '7/11'<span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected string</div><div class="line">&gt; <span class="keyword">var</span> <span class="number">7</span>/<span class="number">11</span> = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected number</div><div class="line">&gt; <span class="keyword">var</span> <span class="string">'7/11'</span> = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected string</div></pre></td></tr></table></figure>
+
+<p>But object property does have such a limitation:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">var</span> obj = { <span class="string">'7/11'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{} }</div><div class="line">&gt; obj[<span class="string">'7/11'</span>]</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">()</span></span>{}</div></pre></td></tr></table></figure>
+
+<p>And it works with accessor properties or getter and setter methods:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">var</span> obj = { get <span class="string">'7/11'</span>(){ <span class="keyword">return</span> <span class="string">'7/11'</span>; } }</div><div class="line">&gt; obj[<span class="string">'7/11'</span>]</div><div class="line"><span class="string">"7/11"</span></div></pre></td></tr></table></figure>
+
+<p>The syntax <code>get &#39;7/11&#39;(){}</code> looks like <code>function &#39;7/11&#39;(){}</code>, but it is not, getter and setter are still object properties. That is why it works. That’s another reason to use JavaScript object.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-06-22T13:48:50.000Z"><a href="/2014/06/22/get-rid-of-200e-control-character-in-vim/">Jun 22, 2014</a></time>
       
       
@@ -666,86 +708,6 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-05-18T14:49:04.000Z"><a href="/2014/05/18/command-line-json-processing/">May 18, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/05/18/command-line-json-processing/">Command Line JSON Processing</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>What is the best command line tool to process JSON?</p>
-<p>Hmm… Okay, let’s try different command line JSON processing tools with the following use case to decide which one is the best to use.</p>
-<p>Here is the use case: <code>JSON | filter | shell</code>. A program outputs JSON data, pipes into a JSON command line processing tool to filter data, and then send to a shell command to do more work.</p>
-<p>Here is a snippet of sample JSON data:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  {</div><div class="line">    "<span class="attribute">id</span>": <span class="value"><span class="number">1</span></span>,</div><div class="line">    "<span class="attribute">username</span>": <span class="value"><span class="string">"foo"</span></span>,</div><div class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"Foo Foo"</span></span></div><div class="line">  },</div><div class="line">  {</div><div class="line">    "<span class="attribute">id</span>": <span class="value"><span class="number">2</span></span>,</div><div class="line">    "<span class="attribute">username</span>": <span class="value"><span class="string">"bar"</span></span>,</div><div class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"Bar Bar"</span></span></div><div class="line">  }</div><div class="line">]</div></pre></td></tr></table></figure>
-
-<p>Or in one-liner <code>data.json</code>:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[{"<span class="attribute">id</span>":<span class="value"><span class="number">1</span></span>,"<span class="attribute">username</span>":<span class="value"><span class="string">"foo"</span></span>,"<span class="attribute">name</span>":<span class="value"><span class="string">"Foo Foo"</span></span>},{"<span class="attribute">id</span>":<span class="value"><span class="number">2</span></span>,"<span class="attribute">username</span>":<span class="value"><span class="string">"bar"</span></span>,"<span class="attribute">name</span>":<span class="value"><span class="string">"Bar Bar"</span></span>}]</div></pre></td></tr></table></figure>
-
-<p>The command line JSON processor should filter each element of the array and convert it into its own line:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">{"<span class="attribute">name</span>":<span class="value"><span class="string">"Foo Foo"</span></span>}</div><div class="line">{"<span class="attribute">name</span>":<span class="value"><span class="string">"Bar Bar"</span></span>}</div></pre></td></tr></table></figure>
-
-<p>The result will be piped as the input line by line into a shell script <code>echo.bash</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"ECHO: '"</span><span class="variable">$line</span><span class="string">"'"</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
-
-<p>The final output should be:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ECHO: <span class="string">'{"</span>name<span class="string">":"</span>Foo Foo<span class="string">"}'</span></div><div class="line">ECHO: <span class="string">'{"</span>name<span class="string">":"</span>Bar Bar<span class="string">"}'</span></div></pre></td></tr></table></figure>
-
-<h2 id="Custom_Solution">Custom Solution</h2>
-<p>Before start looking for existing tools, let’s see how difficult it is to write a custom solution.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Filter and convert array element into its own line.</span></div><div class="line"><span class="keyword">var</span> rl = <span class="built_in">require</span>(<span class="string">'readline'</span>).createInterface({</div><div class="line">  input : process.stdin,</div><div class="line">  output: process.stdout,</div><div class="line">});</div><div class="line"></div><div class="line">rl.on(<span class="string">'line'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(line)</span> </span>{</div><div class="line">  <span class="built_in">JSON</span>.parse(line).forEach(<span class="function"><span class="keyword">function</span> <span class="params">(item)</span> </span>{</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'{"name":"'</span> + item.name + <span class="string">'"}'</span>);</div><div class="line">  });</div><div class="line">}).on(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="comment">// Shh...</span></div><div class="line">});</div></pre></td></tr></table></figure>
-
-<p>Perform a test run:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ cat <span class="typedef"><span class="keyword">data</span>.json | node filter.js  | bash echo.bash </span></div><div class="line"><span class="type">ECHO</span>: '{<span class="string">"name"</span>:<span class="string">"Foo Foo"</span>}'</div><div class="line"><span class="type">ECHO</span>: '{<span class="string">"name"</span>:<span class="string">"Bar Bar"</span>}'</div></pre></td></tr></table></figure>
-
-<p>Well, it works. In essence, we are writing a simple JSON parser. Unless you want to keep the footprint small, you don’t want to write another JSON parser. And why bother to reinvent the wheel? Let’s start look at the existing solutions.</p>
-<h2 id="Node_Modules">Node Modules</h2>
-<p>Let’s start with the tools from NPM registry:</p>
-<pre><code>$ npm <span class="built_in">search</span> json <span class="keyword">command</span>
-</code></pre><p>Here are a few candidates that appears to be matching from the description:</p>
-<ul>
-<li><a href="https://github.com/bjorne/jku" target="_blank" rel="external">jku</a> - Jku is a command-line tool to filter and/or modifiy a JSON stream. It is heavily inspired by jq. (2 stars and not active, last update 8 months ago).</li>
-<li><a href="https://github.com/zpoley/json-command" target="_blank" rel="external">json</a> or <a href="https://github.com/zpoley/json-command" target="_blank" rel="external">json-command</a> - JSON command line procesing toolkit. (122 stars and 14 forks, last update 9 months ago)</li>
-<li><a href="https://github.com/misterfifths/jutil" target="_blank" rel="external">jutil</a> - Command-line utilities for manipulating JSON. (88 stars and 2 forks, last update more than 2 years ago)</li>
-</ul>
-<p>Not a lot of choice, and modules are not active. This might be that because there is already a really good solution, <a href="https://github.com/stedolan/jq" target="_blank" rel="external">jq</a>, which has 2493 stars and 145 forks, and the last update was 6 days ago.</p>
-<h2 id="jq">jq</h2>
-<blockquote>
-<p>jq is like <code>sed</code> for JSON data - you can use it to slice and filter and map and transform structured data with the same ease that <code>sed</code>, <code>awk</code>, <code>grep</code> and friends let you play with text. - <a href="https://github.com/stedolan/jq" target="_blank" rel="external">jq</a></p>
-</blockquote>
-<p>Instead of NPM install, do:</p>
-<pre><code>$ <span class="built_in">sudo</span> apt-get -y install jq
-</code></pre><p>Since we don’t need color or prettified, just line by line. So, here is the command chain:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ cat <span class="typedef"><span class="keyword">data</span>.json | jq -c -<span class="type">M</span> '.[] | <span class="container">{<span class="title">name</span>}</span>'  | bash echo.bash</span></div><div class="line"><span class="type">ECHO</span>: '{<span class="string">"name"</span>:<span class="string">"Foo Foo"</span>}'</div><div class="line"><span class="type">ECHO</span>: '{<span class="string">"name"</span>:<span class="string">"Bar Bar"</span>}'</div></pre></td></tr></table></figure>
-
-<p><a href="https://github.com/stedolan/jq" target="_blank" rel="external">jq</a> can do much more than just the example just shown. It has zero runtime dependencies, and flexible to deal with not just array but object as well.</p>
-<h2 id="Conclusion">Conclusion</h2>
-<p><a href="https://github.com/stedolan/jq" target="_blank" rel="external">jq</a> is clearly the winner here, with the least dependency, the most functionality and more popularity, as well as a comprehensive documentation.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -792,7 +754,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
-    <li><a href="/categories/test/">Test</a><small>1</small></li>
+    <li><a href="/categories/test/">Test</a><small>2</small></li>
   
     <li><a href="/categories/tools/">Tools</a><small>24</small></li>
   
@@ -1225,7 +1187,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
   
-    <li><a href="/tags/mocha/">mocha</a><small>2</small></li>
+    <li><a href="/tags/mocha/">mocha</a><small>3</small></li>
   
     <li><a href="/tags/module/">module</a><small>1</small></li>
   
@@ -1423,6 +1385,8 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
+    <li><a href="/tags/structure/">structure</a><small>1</small></li>
+  
     <li><a href="/tags/subscription/">subscription</a><small>1</small></li>
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
@@ -1496,6 +1460,8 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
     <li><a href="/tags/united-states/">united-states</a><small>1</small></li>
   
     <li><a href="/tags/unix/">unix</a><small>1</small></li>
+  
+    <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
     <li><a href="/tags/update/">update</a><small>1</small></li>
   

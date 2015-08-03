@@ -64,6 +64,43 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-11-02T12:00:00.000Z"><a href="/2014/11/02/synchronous-console-methods/">Nov 2, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/02/synchronous-console-methods/">Synchronous Console Methods</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In Node v0.10.x, <em>the console functions are synchronous when the destination is a terminal or a file (to avoid lost messages in case of premature exit) and asynchronous when it’s a pipe (to avoid blocking for long periods of time).</em> See <a href="http://nodejs.org/api/console.html" target="_blank" rel="external">console</a>. We can test it with the following script:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/11/02/synchronous-console-methods/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-11-01T12:00:00.000Z"><a href="/2014/11/01/stumbled-upon-lean-coffee/">Nov 1, 2014</a></time>
       
       
@@ -541,48 +578,6 @@ undefined
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-28T10:10:21.000Z"><a href="/2014/06/28/getter-and-setter-methods-without-function-identifier-restriction/">Jun 28, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/28/getter-and-setter-methods-without-function-identifier-restriction/">Getter and Setter Methods without Function Identifier Restriction</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>A JavaScript identifier must start with either a letter, underscore, or dollar sign:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="function"><span class="keyword">function</span> 7/11<span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected number</div><div class="line">&gt; <span class="function"><span class="keyword">function</span> '7/11'<span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected string</div><div class="line">&gt; <span class="keyword">var</span> <span class="number">7</span>/<span class="number">11</span> = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected number</div><div class="line">&gt; <span class="keyword">var</span> <span class="string">'7/11'</span> = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}</div><div class="line"><span class="built_in">SyntaxError</span>: Unexpected string</div></pre></td></tr></table></figure>
-
-<p>But object property does have such a limitation:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">var</span> obj = { <span class="string">'7/11'</span>: <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{} }</div><div class="line">&gt; obj[<span class="string">'7/11'</span>]</div><div class="line"><span class="function"><span class="keyword">function</span> <span class="params">()</span></span>{}</div></pre></td></tr></table></figure>
-
-<p>And it works with accessor properties or getter and setter methods:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">var</span> obj = { get <span class="string">'7/11'</span>(){ <span class="keyword">return</span> <span class="string">'7/11'</span>; } }</div><div class="line">&gt; obj[<span class="string">'7/11'</span>]</div><div class="line"><span class="string">"7/11"</span></div></pre></td></tr></table></figure>
-
-<p>The syntax <code>get &#39;7/11&#39;(){}</code> looks like <code>function &#39;7/11&#39;(){}</code>, but it is not, getter and setter are still object properties. That is why it works. That’s another reason to use JavaScript object.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -628,7 +623,7 @@ undefined
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
-    <li><a href="/categories/test/">Test</a><small>1</small></li>
+    <li><a href="/categories/test/">Test</a><small>2</small></li>
   
     <li><a href="/categories/tools/">Tools</a><small>24</small></li>
   
@@ -1061,7 +1056,7 @@ undefined
   
     <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
   
-    <li><a href="/tags/mocha/">mocha</a><small>2</small></li>
+    <li><a href="/tags/mocha/">mocha</a><small>3</small></li>
   
     <li><a href="/tags/module/">module</a><small>1</small></li>
   
@@ -1259,6 +1254,8 @@ undefined
   
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
+    <li><a href="/tags/structure/">structure</a><small>1</small></li>
+  
     <li><a href="/tags/subscription/">subscription</a><small>1</small></li>
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
@@ -1332,6 +1329,8 @@ undefined
     <li><a href="/tags/united-states/">united-states</a><small>1</small></li>
   
     <li><a href="/tags/unix/">unix</a><small>1</small></li>
+  
+    <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
     <li><a href="/tags/update/">update</a><small>1</small></li>
   

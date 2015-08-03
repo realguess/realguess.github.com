@@ -68,6 +68,52 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-08-03T12:00:00.000Z"><a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/">Aug 3, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/">Rules on Structuring the Test Directory Structure with Mocha</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When writing tests, the framework I use for <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> is <a href="http://mochajs.org/" target="_blank" rel="external">Mocha</a> (reviewed version: v2.2.x). But how should I structure the <code>./test</code> directory? I first started by grouping related tests into directory, for example:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ tree ./test</div><div class="line">./test</div><div class="line">├── posts</div><div class="line">│   └── main.js</div><div class="line">└── users</div><div class="line">    └── main.js</div></pre></td></tr></table></figure>
+
+<p>You can use <code>mocha --recursive</code> to run all test suites.</p>
+<p>However, it’s unlikely that all files in the test directory are test suites. You might need to define some shared utilities, data generation scripts, or even setup files. You don’t want these files to be executed by Mocha. You can get away by using:</p>
+<ul>
+<li><code>mocha --grep</code> or <code>mocha --fgrep</code></li>
+<li>Use <code>find</code> and <code>xargs</code> to locate the files to be executed by Mocha</li>
+</ul>
+<p>But these are getting more and more complex. You want something simple and dumb frankly. Therefore, a better approach is to follow the two guidelines. One is the default behavior of Mocha:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-07-17T12:00:00.000Z"><a href="/2015/07/17/use-custom-message-in-chai/">Jul 17, 2015</a></time>
       
       
@@ -150,7 +196,7 @@
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
-    <li><a href="/categories/test/">Test</a><small>1</small></li>
+    <li><a href="/categories/test/">Test</a><small>2</small></li>
   
     <li><a href="/categories/tools/">Tools</a><small>24</small></li>
   
@@ -583,7 +629,7 @@
   
     <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
   
-    <li><a href="/tags/mocha/">mocha</a><small>2</small></li>
+    <li><a href="/tags/mocha/">mocha</a><small>3</small></li>
   
     <li><a href="/tags/module/">module</a><small>1</small></li>
   
@@ -781,6 +827,8 @@
   
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
+    <li><a href="/tags/structure/">structure</a><small>1</small></li>
+  
     <li><a href="/tags/subscription/">subscription</a><small>1</small></li>
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
@@ -854,6 +902,8 @@
     <li><a href="/tags/united-states/">united-states</a><small>1</small></li>
   
     <li><a href="/tags/unix/">unix</a><small>1</small></li>
+  
+    <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
     <li><a href="/tags/update/">update</a><small>1</small></li>
   
