@@ -64,6 +64,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-03-29T22:58:55.000Z"><a href="/2014/03/29/passing-environment-variables-from-cron-to-shell-script/">Mar 29, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/29/passing-environment-variables-from-cron-to-shell-script/">Passing Environment Variables from Cron to Shell Script</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In Debian system with Vixie cron, <a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">environment variables can be defined</a> in the crontab:</p>
+<pre><code>MESSAGE=Hello World
+<span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /bin/sh ~/script.sh &gt;&gt; /tmp/script.log
+</code></pre><p>Now, can the same environment variable <code>MESSAGE</code> be passed to the shell script <code>~/script.sh</code> that being scheduled to run every minute? Let’s just give a try by adding the following line to <code>script.sh</code>:</p>
+<pre><code><span class="built_in">echo</span> <span class="string">"ECHO: <span class="variable">${MESSAGE}</span>"</span>
+</code></pre><p><code>tail -f /tmp/script.log</code>:</p>
+<pre><code><span class="attribute">ECHO</span>: <span class="string">Hello World</span>
+<span class="attribute">ECHO</span>: <span class="string">Hello World</span>
+<span class="attribute">ECHO</span>: <span class="string">Hello World</span>
+</code></pre><p>Therefore, the shell script will pick up the environment variables defined in crontab. This really is a convenience.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-03-29T10:44:53.000Z"><a href="/2014/03/29/amazon-aws-command-line-interface-cli/">Mar 29, 2014</a></time>
       
       
@@ -667,43 +709,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-19T23:05:04.000Z"><a href="/2014/01/19/difference-between-http-head-and-get/">Jan 19, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/19/difference-between-http-head-and-get/">Difference between HTTP HEAD and GET</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <blockquote>
-<p>The HEAD method is identical to GET except that the server MUST NOT return a message-body in the response. The metainformation contained in the HTTP headers in response to a HEAD request SHOULD be identical to the information sent in response to a GET request. - <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank" rel="external">Method Definitions</a></p>
-</blockquote>
-<p>I was a little bit confused when I encoutered the HTTP status code <code>204</code>, which states that the response MUST NOT include a message body. The <code>HEAD</code> method contains no body content as well. Should I use <code>204</code> instead of <code>200</code>?</p>
-<p>The answer is <strong>NO</strong>. <code>GET</code> method should always return HTTP status code of 200. Since <code>HEAD</code> method is idential to <code>GET</code>, it should return <code>200</code> as well. Just keep in mind that the cost of processing both <code>HEAD</code> and <code>GET</code> requests are almost the same.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -729,6 +734,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
   
+    <li><a href="/categories/coding/">Coding</a><small>4</small></li>
+  
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
@@ -741,7 +748,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/productivity/">Productivity</a><small>1</small></li>
   
-    <li><a href="/categories/programming/">Programming</a><small>3</small></li>
+    <li><a href="/categories/programming/">Programming</a><small>0</small></li>
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
   
@@ -870,6 +877,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
+    <li><a href="/tags/changelog/">changelog</a><small>1</small></li>
+  
     <li><a href="/tags/chat/">chat</a><small>1</small></li>
   
     <li><a href="/tags/chrome/">chrome</a><small>1</small></li>
@@ -888,7 +897,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
   
-    <li><a href="/tags/coding-style/">coding-style</a><small>1</small></li>
+    <li><a href="/tags/coding-style/">coding-style</a><small>2</small></li>
   
     <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
   
@@ -1268,6 +1277,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/profile/">profile</a><small>1</small></li>
   
+    <li><a href="/tags/programming-style/">programming-style</a><small>1</small></li>
+  
     <li><a href="/tags/provision/">provision</a><small>1</small></li>
   
     <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
@@ -1371,6 +1382,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/starter/">starter</a><small>1</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   

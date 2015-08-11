@@ -68,6 +68,47 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-12-09T18:09:08.000Z"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Dec 9, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Insert Text to the Beginning of a File</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>It is easy to append some text to the end of another file:</p>
+<pre><code><span class="input"><span class="prompt">$ cat foo &gt;&gt;</span> bar</span>
+</code></pre><p>or even just portion of a file:</p>
+<pre><code><span class="input"><span class="prompt">$ head -n 2 foo &gt;&gt;</span> bar</span>
+</code></pre><p>but how about to the beginning of a file? Well, it is not that bad to do either:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">"<span class="variable">$(cat foo bar)</span>"</span> &gt; bar
+</code></pre><p>just a portion of a file:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">"<span class="variable">$(head -n 2 foo)</span>\n<span class="variable">$(cat bar)</span>"</span> &gt; bar
+</code></pre><p>Now you can easily add some text such as copyright information to the beginning of another file with one command.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-12-06T10:55:55.000Z"><a href="/2013/12/06/amazon-route-53-via-command-line/">Dec 6, 2013</a></time>
       
       
@@ -570,58 +611,6 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-08T15:59:36.000Z"><a href="/2013/11/08/preserve-command-history-in-node-repl/">Nov 8, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/08/preserve-command-history-in-node-repl/">Preserve command history in Node REPL</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Node <a href="http://nodejs.org/api/repl.html" target="_blank" rel="external">REPL</a> (Read-Eval-Print-Loop) is a standalone JavaScript interpreter for Node. To invoke it, simply type:</p>
-<pre><code><span class="variable">$ </span>node
-</code></pre><p>However, after exit and re-enter the REPL, all the previous commands are lost. This behaves very much different from what we expect from shell.</p>
-<p>To maintain a persistent history, we can use <a href="http://utopia.knoware.nl/~hlub/uck/rlwrap/rlwrap.html" target="_blank" rel="external">rlwrap</a> as suggested in this <a href="http://stackoverflow.com/a/18513951" target="_blank" rel="external">answer</a>.</p>
-<p>Install <a href="http://utopia.knoware.nl/~hlub/uck/rlwrap/rlwrap.html" target="_blank" rel="external">rlwrap</a>:</p>
-<pre><code>$ <span class="built_in">sudo</span> apt-get install rlwrap
-</code></pre><p>Create an alias:</p>
-<pre><code>alias <span class="variable">node=</span>'env <span class="variable">NODE_NO_READLINE=</span><span class="number">1</span> rlwrap -s <span class="number">1000</span> -S <span class="string">"node&gt; "</span> node'
-</code></pre><p>Persistent history file is saved in:</p>
-<pre><code>~/.node_history
-</code></pre><p>However, if by perserving the command history, Node REPL loses familiarity of color output and tab completion. This is a <a href="http://stackoverflow.com/a/9219349" target="_blank" rel="external">trade-off</a>. To get around this problem, we can roll our own REPL or use an alternative. The best alternative I have found so far is also the one I am already using: <a href="http://coffeescript.org/#changelog" target="_blank" rel="external">CoffeeScript</a> (see 1.6.3 change log). There is a history command built-in:</p>
-<pre><code>$ coffee
-coffee&gt; .help
-.break  Sometimes you <span class="built_in">get</span> stuck, this gets you out
-.<span class="built_in">clear</span>  Break, <span class="operator">and</span> also <span class="built_in">clear</span> <span class="operator">the</span> <span class="built_in">local</span> context
-.exit   Exit <span class="operator">the</span> repl
-.help   Show repl options
-.history        Show <span class="command"><span class="keyword">command</span> <span class="title">history</span></span>
-.<span class="built_in">load</span>   Load JS <span class="built_in">from</span> <span class="operator">a</span> <span class="built_in">file</span> <span class="keyword">into</span> <span class="operator">the</span> REPL session
-.save   Save all evaluated commands <span class="operator">in</span> this REPL session <span class="built_in">to</span> <span class="operator">a</span> <span class="built_in">file</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -648,6 +637,8 @@ coffee&gt; .help
   
     <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
   
+    <li><a href="/categories/coding/">Coding</a><small>4</small></li>
+  
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
@@ -660,7 +651,7 @@ coffee&gt; .help
   
     <li><a href="/categories/productivity/">Productivity</a><small>1</small></li>
   
-    <li><a href="/categories/programming/">Programming</a><small>3</small></li>
+    <li><a href="/categories/programming/">Programming</a><small>0</small></li>
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
   
@@ -789,6 +780,8 @@ coffee&gt; .help
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
+    <li><a href="/tags/changelog/">changelog</a><small>1</small></li>
+  
     <li><a href="/tags/chat/">chat</a><small>1</small></li>
   
     <li><a href="/tags/chrome/">chrome</a><small>1</small></li>
@@ -807,7 +800,7 @@ coffee&gt; .help
   
     <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
   
-    <li><a href="/tags/coding-style/">coding-style</a><small>1</small></li>
+    <li><a href="/tags/coding-style/">coding-style</a><small>2</small></li>
   
     <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
   
@@ -1187,6 +1180,8 @@ coffee&gt; .help
   
     <li><a href="/tags/profile/">profile</a><small>1</small></li>
   
+    <li><a href="/tags/programming-style/">programming-style</a><small>1</small></li>
+  
     <li><a href="/tags/provision/">provision</a><small>1</small></li>
   
     <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
@@ -1290,6 +1285,8 @@ coffee&gt; .help
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/starter/">starter</a><small>1</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   

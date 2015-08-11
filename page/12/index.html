@@ -64,6 +64,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-05-30T12:41:29.000Z"><a href="/2013/05/30/configure-grunt-contrib-jshint-options-with-multiple-targets/">May 30, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/05/30/configure-grunt-contrib-jshint-options-with-multiple-targets/">Configure grunt-contrib-jshint options with multiple targets</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When linting, different JSHint options are needed for front-end and back-end<br>JavaScript. We can specify different targets in <a href="https://github.com/gruntjs/grunt-contrib-jshint" target="_blank" rel="external">grunt-contrib-jshint</a>. But<br>there is something to be careful:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">jshint: {</div><div class="line">  <span class="comment">// Task level options</span></div><div class="line">  options: {</div><div class="line">    jshintrc: <span class="string">'./.jshintrc'</span></div><div class="line">  },</div><div class="line">  node: {</div><div class="line">    <span class="comment">// Target level options</span></div><div class="line">    options: {</div><div class="line">      node: <span class="literal">true</span></div><div class="line">    }</div><div class="line">  },</div><div class="line">  jquery: {</div><div class="line">    <span class="comment">// Target level options</span></div><div class="line">    options: {</div><div class="line">      globals: {</div><div class="line">        jQuery: <span class="literal">true</span></div><div class="line">      }</div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>I thought the target level options will merge with the task level, but it does<br>not happen. Need to dig deeper to figure out why <code>jshintrc</code> option is not merged<br>with JSHint options. A quick fix is to load the JSHint JSON file directly:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">jshint: {</div><div class="line">  <span class="comment">// Task level options</span></div><div class="line">  options: grunt.file.readJSON(<span class="string">'./.jshintrc'</span>),</div><div class="line">  node: {</div><div class="line">    <span class="comment">// Target level options</span></div><div class="line">    options: {</div><div class="line">      node: <span class="literal">true</span></div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>In this case, if <code>jshint:node</code> target was run, the merged options will be parsed<br>to JSHint.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-05-29T15:10:10.000Z"><a href="/2013/05/29/character-by-character-diff/">May 29, 2013</a></time>
       
       
@@ -250,6 +289,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
   
+    <li><a href="/categories/coding/">Coding</a><small>4</small></li>
+  
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
@@ -262,7 +303,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/categories/productivity/">Productivity</a><small>1</small></li>
   
-    <li><a href="/categories/programming/">Programming</a><small>3</small></li>
+    <li><a href="/categories/programming/">Programming</a><small>0</small></li>
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
   
@@ -391,6 +432,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
+    <li><a href="/tags/changelog/">changelog</a><small>1</small></li>
+  
     <li><a href="/tags/chat/">chat</a><small>1</small></li>
   
     <li><a href="/tags/chrome/">chrome</a><small>1</small></li>
@@ -409,7 +452,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
   
-    <li><a href="/tags/coding-style/">coding-style</a><small>1</small></li>
+    <li><a href="/tags/coding-style/">coding-style</a><small>2</small></li>
   
     <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
   
@@ -789,6 +832,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/profile/">profile</a><small>1</small></li>
   
+    <li><a href="/tags/programming-style/">programming-style</a><small>1</small></li>
+  
     <li><a href="/tags/provision/">provision</a><small>1</small></li>
   
     <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
@@ -892,6 +937,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/starter/">starter</a><small>1</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
