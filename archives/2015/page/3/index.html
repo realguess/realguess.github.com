@@ -68,6 +68,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-02-11T12:00:00.000Z"><a href="/2015/02/11/install-docker-and-then-run-docker-commands-without-sudo/">Feb 11, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/02/11/install-docker-and-then-run-docker-commands-without-sudo/">Install Docker and then Run Docker Commands without Sudo</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Commands:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.io/ubuntu/ | <span class="built_in">sudo</span> sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span> -G docker <span class="variable">$USER</span></div><div class="line">$ <span class="built_in">sudo</span> service docker restart</div><div class="line">$ logout</div></pre></td></tr></table></figure>
+
+<p>Explanation:</p>
+<ol>
+<li>One line command installation</li>
+<li>Add the user to the group <code>docker</code></li>
+<li>Restart the daemon</li>
+<li>Make sure to logout and log back in, in order to sudoless Docker taking effect.</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-02-08T12:00:00.000Z"><a href="/2015/02/08/how-to-correctly-use-environment-variables-on-the-command-line/">Feb 8, 2015</a></time>
       
       
@@ -450,7 +492,7 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
   
-    <li><a href="/categories/linux/">Linux</a><small>1</small></li>
+    <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
     <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>9</small></li>
   
@@ -652,6 +694,8 @@
     <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
   
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
+  
+    <li><a href="/tags/curl/">curl</a><small>1</small></li>
   
     <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
   
@@ -973,6 +1017,8 @@
   
     <li><a href="/tags/ping/">ping</a><small>1</small></li>
   
+    <li><a href="/tags/pipe/">pipe</a><small>1</small></li>
+  
     <li><a href="/tags/pm2/">pm2</a><small>1</small></li>
   
     <li><a href="/tags/port/">port</a><small>2</small></li>
@@ -1098,6 +1144,8 @@
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
     <li><a href="/tags/stats/">stats</a><small>5</small></li>
+  
+    <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
     <li><a href="/tags/stream/">stream</a><small>1</small></li>
   

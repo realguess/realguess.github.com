@@ -64,6 +64,43 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-06-02T23:53:52.000Z"><a href="/2013/06/02/source-maps-by-uglifyjs-2-with-new-prefix/">Jun 2, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/06/02/source-maps-by-uglifyjs-2-with-new-prefix/">Source Maps by UglifyJS 2 with New Prefix</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Living on the bleeding edge means more to learn. I was learning about creating source maps by using <a href="https://github.com/mishoo/UglifyJS2" target="_blank" rel="external">UglifyJS</a>. For some reason, the uncompressed JavaScript source codes were not able to load. After some <code>diff</code> with a working version from <a href="http://net.tutsplus.com/tutorials/tools-and-tips/source-maps-101/" target="_blank" rel="external">Source Maps 101</a>, the problem is just resulting of one character difference. With newly updated <a href="https://github.com/mishoo/UglifyJS2" target="_blank" rel="external">UglifyJS</a> v2.3.6, <a href="https://github.com/mishoo/UglifyJS2/commit/1dbffd48ea49ee278454d6b1c632b7ba4bbf1868" target="_blank" rel="external">SourceMapping pragma has changed to //#</a>:</p>
+<pre><code>//<span class="comment"># sourceMappingURL=script.uglify.js.map</span>
+</code></pre><p>but my Chrome browser lags behind. It recognizes source maps as <code>//@</code>:</p>
+<pre><code>//@ <span class="variable">sourceMappingURL=</span>script.uglify.js.<span class="built_in">map</span>
+</code></pre><p>I did not use the latest or dev build, the current Chrome browser I am using is yet to support <code>//#</code>. What I really need is <a href="http://www.paulirish.com/2012/chrome-canary-for-developers/" target="_blank" rel="external">Chrome Canary</a>. Unfortunately, it is not available for Linux :(.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-05-30T12:41:29.000Z"><a href="/2013/05/30/configure-grunt-contrib-jshint-options-with-multiple-targets/">May 30, 2013</a></time>
       
       
@@ -295,7 +332,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
   
-    <li><a href="/categories/linux/">Linux</a><small>1</small></li>
+    <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
     <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>9</small></li>
   
@@ -497,6 +534,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
     <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
   
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
+  
+    <li><a href="/tags/curl/">curl</a><small>1</small></li>
   
     <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
   
@@ -818,6 +857,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/ping/">ping</a><small>1</small></li>
   
+    <li><a href="/tags/pipe/">pipe</a><small>1</small></li>
+  
     <li><a href="/tags/pm2/">pm2</a><small>1</small></li>
   
     <li><a href="/tags/port/">port</a><small>2</small></li>
@@ -943,6 +984,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
     <li><a href="/tags/stats/">stats</a><small>5</small></li>
+  
+    <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
     <li><a href="/tags/stream/">stream</a><small>1</small></li>
   
