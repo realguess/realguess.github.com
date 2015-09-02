@@ -68,6 +68,55 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-12-18T15:12:43.000Z"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Dec 18, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Set Filename Path with process.cwd()</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When working with <a href="http://nodejs.org/api/fs.html" target="_blank" rel="external">file system</a> in Node, you will need a fully qualified filename to do things like reading the content of a file:</p>
+<pre><code><span class="built_in">require</span>(<span class="string">'fs'</span>).readFile(filename, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{});
+</code></pre><p>If you have the following directory structure:</p>
+<pre><code>.
+├── app.js
+├── <span class="typedef"><span class="keyword">data</span></span>
+│   └── file.txt
+└── lib
+    └── reader.js
+</code></pre><p>There are two ways to read the content of <code>data/file.txt</code> from <code>lib/reader.js</code>:</p>
+<p>Use the current directory of the script <code>__dirname</code>:</p>
+<pre><code><span class="title">filename</span> = __dirname + '/../<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
+</code></pre><p>or with <code>path.join</code> to normalize the resulting path:</p>
+<pre><code>filename = path.<span class="keyword">join</span>(__dirname, <span class="string">'../data/file.txt'</span>);
+</code></pre><p>The second method is to use the current working directory of the process <code>process.cwd()</code>:</p>
+<pre><code><span class="title">filename</span> = process.cwd() + '/<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
+</code></pre><p>The second approach is more portable. If you move <code>lib/reader.js</code> to <code>lib/utils/reader.js</code>, no code change will be needed. But make sure the directory of the Node process is the application root directory where <code>node app.js</code> is being issued.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-12-17T18:05:38.000Z"><a href="/2013/12/17/small-markdown-features-on-ghost-blogging-platform/">Dec 17, 2013</a></time>
       
       
@@ -546,48 +595,6 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-14T15:27:59.000Z"><a href="/2013/11/14/get-yesterdays-date-by-date-command/">Nov 14, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/14/get-yesterdays-date-by-date-command/">Get Yesterday&#39;s Date by date Command</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>By using Linux <code>date</code> command, we can get today’s date in the following format:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">date</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">14</span></div></pre></td></tr></table></figure>
-
-<p>To get yesterday’s date, we can use the <code>--date</code> or <code>-d</code> option:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">% <span class="keyword">date</span> -d <span class="string">'yesterday'</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">13</span></div><div class="line">% <span class="keyword">date</span> -d <span class="string">'-1 day'</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">13</span></div><div class="line">% <span class="keyword">date</span> -d <span class="string">'1 day ago'</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">13</span></div></pre></td></tr></table></figure>
-
-<p>As the manual explains:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DATE STRING</div><div class="line">       The --date=STRING is a mostly free format human  readable  date  string</div><div class="line">       such  as  "Sun, 29 Feb 2004 16:21:42 -0800" or "2004-02-29 16:21:42" or</div><div class="line">       even "next Thursday".  A date string may contain items indicating  cal‐</div><div class="line">       endar  date,  time of day, time zone, day of week, relative time, rela‐</div><div class="line">       tive date, and numbers.  An empty string indicates the beginning of the</div><div class="line">       day.   The date string format is more complex than is easily documented</div><div class="line">       here but is fully described in the info documentation.</div></pre></td></tr></table></figure>
-
-<p>Just be careful when you are trying to get the date from last month.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -622,7 +629,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>9</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>10</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -989,7 +996,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>2</small></li>
+    <li><a href="/tags/install/">install</a><small>3</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -997,7 +1004,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/interpreter/">interpreter</a><small>1</small></li>
   
-    <li><a href="/tags/iojs/">iojs</a><small>2</small></li>
+    <li><a href="/tags/iojs/">iojs</a><small>3</small></li>
   
     <li><a href="/tags/ip-address/">ip-address</a><small>3</small></li>
   
@@ -1099,7 +1106,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>14</small></li>
+    <li><a href="/tags/node/">node</a><small>15</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   

@@ -68,6 +68,64 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-02T12:00:00.000Z"><a href="/2015/09/02/various-node-js-installation-methods/">Sep 2, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/02/various-node-js-installation-methods/">Various Node.js Installation Methods</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>From <a href="https://iojs.org/" target="_blank" rel="external">io.js</a> back to <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a>, time to update my installation guide.</p>
+<h2 id="Install_via_Package_Manager">Install via Package Manager</h2>
+<p>Install in Ubuntu directly via apt:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ apt-get install -y nodejs</div></pre></td></tr></table></figure>
+
+<p>However, it will not give you the latest version. So, use an alternative method.</p>
+<p>For Node.js v0.12:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>L https://deb.nodesource.com/setup_0.<span class="number">12</span> | <span class="built_in">sudo</span> bash -</div><div class="line">$ <span class="built_in">sudo</span> apt-get install -y nodejs</div></pre></td></tr></table></figure>
+
+<p>For io.js v3.x:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>L https://deb.nodesource.com/setup_iojs_3.x | <span class="built_in">sudo</span> bash -</div><div class="line">$ <span class="built_in">sudo</span> apt-get install -y iojs</div></pre></td></tr></table></figure>
+
+<h2 id="Install_from_the_Source">Install from the Source</h2>
+<p>Install build tools:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> apt-get install -y build-essential</div></pre></td></tr></table></figure>
+
+<p>Clone the Node.js repository from GitHub:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git clone https://github.com/nodejs/node.git</div></pre></td></tr></table></figure>
+
+<p>Future Node.js releases will be from this repo: <a href="https://github.com/nodejs/node" target="_blank" rel="external">https://github.com/nodejs/node</a>.</p>
+<p>Check out a specific version:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> node && git checkout v3.<span class="number">2.0</span></div></pre></td></tr></table></figure>
+
+<p>Install globally:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./configure && make && <span class="built_in">sudo</span> make install</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-02-11T12:00:00.000Z"><a href="/2015/02/11/install-docker-and-then-run-docker-commands-without-sudo/">Feb 11, 2015</a></time>
       
       
@@ -196,7 +254,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>9</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>10</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -563,7 +621,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>2</small></li>
+    <li><a href="/tags/install/">install</a><small>3</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -571,7 +629,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/interpreter/">interpreter</a><small>1</small></li>
   
-    <li><a href="/tags/iojs/">iojs</a><small>2</small></li>
+    <li><a href="/tags/iojs/">iojs</a><small>3</small></li>
   
     <li><a href="/tags/ip-address/">ip-address</a><small>3</small></li>
   
@@ -673,7 +731,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>14</small></li>
+    <li><a href="/tags/node/">node</a><small>15</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
