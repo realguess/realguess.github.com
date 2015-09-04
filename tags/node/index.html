@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-04T12:00:00.000Z"><a href="/2015/09/04/node-js-http-server-one-liner/">Sep 4, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/04/node-js-http-server-one-liner/">Node.js HTTP Server One Liner</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>One liner to create a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> HTTP server:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">'OK'</span>); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>Print out the process ID instead:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">''</span> + process.pid); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>This is useful with the worker process when implementing the <a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a> module.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-02T12:00:00.000Z"><a href="/2015/09/02/various-node-js-installation-methods/">Sep 2, 2015</a></time>
       
       
@@ -126,6 +165,50 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-07-22T12:00:00.000Z"><a href="/2015/07/22/run-lodash-in-context-to-change-template-settings/">Jul 22, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/22/run-lodash-in-context-to-change-template-settings/">Run LoDash in Context to Change Template Settings</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://lodash.com/" target="_blank" rel="external">LoDash</a> has <code>_.template</code> function:</p>
+<blockquote>
+<p>Creates a compiled template function that can interpolate data properties in “interpolate” delimiters, HTML-escape interpolated data properties in “escape” delimiters, and execute JavaScript in “evaluate” delimiters. Data properties may be accessed as free variables in the template. If a setting object is provided it takes precedence over _.templateSettings values.</p>
+</blockquote>
+<p>The template settings affect the behavior of <a href="https://lodash.com/" target="_blank" rel="external">LoDash</a>, and due to Node’s <a href="https://nodejs.org/api/modules.html#modules_caching" target="_blank" rel="external">module caching</a>, this will affect the entire application. This will likely cause unexpected error, especially you are writing a module or a library, and the application that requires the module will also use LoDash but with a different template setting:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SyntaxError: Unexpected token =</div></pre></td></tr></table></figure>
+
+<p>The rule of thumb: <strong>Don’t do it!</strong></p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/07/22/run-lodash-in-context-to-change-template-settings/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-07-11T12:00:00.000Z"><a href="/2015/07/11/what-is-the-this-binding-in-async-seq-and-compose-functions/">Jul 11, 2015</a></time>
       
       
@@ -146,6 +229,45 @@
           <div class="alignleft">
             <a href="/2015/07/11/what-is-the-this-binding-in-async-seq-and-compose-functions/#more" class="more-link">Read More</a>
           </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-07-06T12:00:00.000Z"><a href="/2015/07/06/fields-in-package-json-for-private-and-unlicensed-modules/">Jul 6, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/06/fields-in-package-json-for-private-and-unlicensed-modules/">Fields in &#39;package.json&#39; for Private and Unlicensed Modules</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>If you not include the <code>license</code> field in <code>package.json</code>, <a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a> will keep bugging you:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">INFO: package.json</div><div class="line">INFO: api@<span class="number">0.1</span>.<span class="number">8</span> No license field.</div></pre></td></tr></table></figure>
+
+<p>If your module is private, just add the following two fields to <code>package.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"UNLICENSED"</span></span>,</div><div class="line">  "<span class="attribute">private</span>": <span class="value"><span class="literal">true</span></span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>See NPM <code>package.json</code> <a href="https://docs.npmjs.com/files/package.json#license" target="_blank" rel="external">license</a>.</p>
+
+      
+    </div>
+    <footer>
+      
         
         
       
@@ -203,17 +325,84 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2014-11-02T12:00:00.000Z"><a href="/2014/11/02/synchronous-console-methods/">Nov 2, 2014</a></time>
+        <time datetime="2015-04-01T12:00:00.000Z"><a href="/2015/04/01/test-execution-order-in-mocha/">Apr 1, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2014/11/02/synchronous-console-methods/">Synchronous Console Methods</a></h1>
+    <h1 class="title"><a href="/2015/04/01/test-execution-order-in-mocha/">Test Execution Order in Mocha</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>In Node v0.10.x, <em>the console functions are synchronous when the destination is a terminal or a file (to avoid lost messages in case of premature exit) and asynchronous when it’s a pipe (to avoid blocking for long periods of time).</em> See <a href="http://nodejs.org/api/console.html" target="_blank" rel="external">console</a>. We can test it with the following script:</p>
+        <p>In synchronous tests, both <code>describe</code> and <code>it</code> statements are executed in the order they are laid out.</p>
+<p>Test <code>Foo</code> should run before <code>Bar</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'Suite'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  it(<span class="string">'Foo'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  });</div><div class="line"></div><div class="line">  it(<span class="string">'Bar'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Suite <code>Foo</code> should run before <code>Bar</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'Foo'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">});</div><div class="line"></div><div class="line">describe(<span class="string">'Bar'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>In asynchronous tests, the same ordering applies.</p>
+<p>Test Foo should run before Bar even Foo takes much longer to execute, and Suite B should also run after Suite A:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> should = <span class="built_in">require</span>(<span class="string">'should'</span>);</div><div class="line"></div><div class="line">describe(<span class="string">'Suite A'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  it(<span class="string">'Foo'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(done)</span> </span>{</div><div class="line">    setTimeout(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">      (<span class="literal">true</span>).should.equal(<span class="literal">true</span>);</div><div class="line">      done();</div><div class="line">    }, <span class="number">1000</span>);</div><div class="line">  });</div><div class="line"></div><div class="line">  it(<span class="string">'Bar'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    (<span class="literal">true</span>).should.equal(<span class="literal">true</span>);</div><div class="line">  });</div><div class="line">});</div><div class="line"></div><div class="line">describe(<span class="string">'Suite B'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  it(<span class="string">'Foo'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    (<span class="literal">true</span>).should.equal(<span class="literal">true</span>);</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Result:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Suite <span class="literal">A</span></div><div class="line">  ✓ Foo (<span class="number">1002</span>ms)</div><div class="line">  ✓ Bar </div><div class="line"></div><div class="line">Suite B</div><div class="line">  ✓ Foo </div><div class="line"></div><div class="line"></div><div class="line"><span class="number">3</span> passing (<span class="number">1</span>s)</div></pre></td></tr></table></figure>
+
+<p>This is the great feature in <a href="http://mochajs.org/" target="_blank" rel="external">Mocha</a>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-03-29T12:00:00.000Z"><a href="/2015/03/29/supertest-listen-at-random-port/">Mar 29, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/29/supertest-listen-at-random-port/">SuperTest: Listen at Random Port</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In the example section of <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> (<em>v0.15.0</em>), it mentions something about <em>ephemeral port</em>:</p>
+<blockquote>
+<p>You may pass an <code>http.Server</code>, or a <code>Function</code> to <code>request()</code> - if the server is not already listening for connections then it is bound to an ephemeral port for you so there is no need to keep track of ports. - <a href="https://github.com/visionmedia/supertest#example" target="_blank" rel="external">https://github.com/visionmedia/supertest#example</a></p>
+</blockquote>
+<p>Let’s dissect this sentence. There are a few key concepts to grasp:</p>
+<ol>
+<li>The <code>request</code> function will accept either a function or an <code>http.Server</code> object.</li>
+<li>When does the server not listening for connections?</li>
+<li>What is an ephemeral port?</li>
+</ol>
+<p>Taking a peek at the <code>index.js</code> file in <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> source code, it is easy to see that it accepts both function and <code>http.Server</code> object, but prefer latter:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// See `index.js` in [SuperTest] source code.</span></div><div class="line"><span class="keyword">if</span> (<span class="string">'function'</span> == <span class="keyword">typeof</span> app) app = http.createServer(app);</div><div class="line"></div><div class="line"><span class="comment">// See `lib/test.js` in [SuperTest] source code.</span></div><div class="line">Test.prototype.serverAddress = <span class="function"><span class="keyword">function</span> <span class="params">(app, path)</span> </span>{</div><div class="line">  <span class="keyword">var</span> addr = app.address();</div><div class="line">  <span class="keyword">if</span> (!addr) <span class="keyword">this</span>._server = app.listen(<span class="number">0</span>);</div><div class="line">  <span class="keyword">var</span> port = app.address().port;</div><div class="line">  <span class="keyword">var</span> protocol = app <span class="keyword">instanceof</span> htts.Server ? <span class="string">'https'</span> : <span class="string">'http'</span>;</div><div class="line">  <span class="keyword">return</span> protocol + <span class="string">'://1270.0.0.1:'</span> + port + path;</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Why it does this? This has to do with <a href="http://expressjs.com/" target="_blank" rel="external">Express</a>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'http'</span>).createServer()</div><div class="line"><span class="string">'object'</span></div><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'express'</span>)()</div><div class="line"><span class="string">'function'</span></div><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'koa'</span>)()</div><div class="line"><span class="string">'object'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="built_in">require</span>(<span class="string">'express'</span>)()).address()</div><div class="line"><span class="literal">null</span></div></pre></td></tr></table></figure>
+
+<p>Only when initiating an <a href="http://expressjs.com/" target="_blank" rel="external">Express</a> app, it returns a function, not an object. And follows up on <code>lib/test.js</code>, when <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> detects the created server is yet to bind to any port number, it will invoke <code>app.listen(0)</code>, so called <em>ephemeral port</em>. In fact, it is just a random port.</p>
+<p>When something is <em>ephemeral</em>, it last for a very short time. When allowing a server to accept connections, we usually do is setting the server to listen on a specific port:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.listen(<span class="number">3001</span>);</div></pre></td></tr></table></figure>
+
+<p>What if setting this to <code>0</code> like above or omit this port number?</p>
 
       
     </div>
@@ -221,7 +410,7 @@
       
         
           <div class="alignleft">
-            <a href="/2014/11/02/synchronous-console-methods/#more" class="more-link">Read More</a>
+            <a href="/2015/03/29/supertest-listen-at-random-port/#more" class="more-link">Read More</a>
           </div>
         
         
@@ -240,242 +429,43 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2014-09-20T11:22:33.000Z"><a href="/2014/09/20/dirname-does-not-follow-symlink/">Sep 20, 2014</a></time>
+        <time datetime="2015-03-28T12:00:00.000Z"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Mar 28, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2014/09/20/dirname-does-not-follow-symlink/">Dirname Does Not Follow Symlink</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Node’s global object <a href="http://nodejs.org/api/globals.html#globals_dirname" target="_blank" rel="external">__dirname</a> returns the name of the directory that the currently executing script resides in. However, if a directory is symbolic linked or a symlink, it still return the original path.</p>
-<p>For example, the following directory structure:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="input"><span class="prompt">/tmp/dirname/</span></span></div><div class="line">├── foo</div><div class="line">│   └── app.js</div><div class="line">└── lib</div><div class="line">    ├── bar -&gt; ../foo</div><div class="line">    └── util.js</div><div class="line"></div><div class="line"><span class="number">3</span> directories, <span class="number">2</span> files</div></pre></td></tr></table></figure>
-
-<p>The <code>app.js</code> contains the following line:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">console.<span class="built_in">log</span>(__dirname);</div></pre></td></tr></table></figure>
-
-<p>Run the script:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd /tmp/<span class="keyword">dirname</span>/foo && node app.js</div><div class="line">/tmp/<span class="keyword">dirname</span>/foo</div></pre></td></tr></table></figure>
-
-<p>You get the directory the <code>app.js</code> script is residing it. But if you do the same from the symlinked directory:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd <span class="regexp">/tmp/</span>dirname<span class="regexp">/lib/</span>bar && node app.js</div><div class="line"><span class="regexp">/tmp/</span>dirname<span class="regexp">/foo</span></div></pre></td></tr></table></figure>
-
-<p>Well, you get the same answer, even the current working directory is different:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd <span class="regexp">/tmp/</span>dirname<span class="regexp">/lib/</span>bar && pwd</div><div class="line"><span class="regexp">/tmp/</span>dirname<span class="regexp">/lib/</span>bar</div></pre></td></tr></table></figure>
-
-<p>The return of <code>__dirname</code> does not follow symbolic link.</p>
-<p>So, have to be extra careful when requiring files that is symbolic linked. If you think you are in <code>lib/bar</code> directory and try to require the <code>util.js</code> script in <code>app.js</code>:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">var</span> path <span class="subst">=</span> <span class="keyword">require</span>(<span class="string">'path'</span>);</div><div class="line">console<span class="built_in">.</span><span class="keyword">log</span>(<span class="keyword">require</span>(<span class="string">'../util'</span>));</div><div class="line">console<span class="built_in">.</span><span class="keyword">log</span>(<span class="keyword">require</span>(path<span class="built_in">.</span><span class="keyword">join</span>(__dirname, <span class="string">'..'</span>, <span class="string">'util'</span>)));</div></pre></td></tr></table></figure>
-
-<p>Both statements will throw module not found error. Path join does not help either.</p>
-<p>The best practice is to avoid symlinks and relative directory requiring. Instead, set up required as modules, and install them in <code>node_modules</code> directory, then they will become top-level modules.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-21T21:24:54.000Z"><a href="/2014/06/21/tiny-http-servers/">Jun 21, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/21/tiny-http-servers/">Tiny HTTP Servers</a></h1>
+    <h1 class="title"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Locate HTTP Port Number from http.Server Instance</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>This is a simple way to run a tiny web server via command line:</p>
-<pre><code>$ <span class="keyword">python</span> -<span class="keyword">m</span> SimpleHTTPServer <span class="number">8080</span>
-</code></pre><p>which will server static files from the current directory.</p>
-<p>There is <a href="https://github.com/moserrya/knod" target="_blank" rel="external">Knod</a> for Ruby, and of course there is one for Node: <a href="https://github.com/nodeapps/http-server" target="_blank" rel="external">http-server</a>.</p>
-<p>To install:</p>
-<pre><code>$ sudo npm <span class="operator"><span class="keyword">install</span> -g http-<span class="keyword">server</span></span>
-</code></pre><p>To run:</p>
-<pre><code><span class="variable">$ </span>http-server
-</code></pre><p>Server will be accessible via <a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a>.</p>
+        <p>This is a bare minimal HTTP server:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer().listen(port);</div></pre></td></tr></table></figure>
 
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-05-20T13:49:37.000Z"><a href="/2014/05/20/node-version-manager/">May 20, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/05/20/node-version-manager/">Node Version Manager</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://github.com/creationix/nvm" target="_blank" rel="external">Node Version Manager</a> is a simple bash script to manage multiple active <a href="http://nodejs.org/" target="_blank" rel="external">Node</a> versions. <em>Why do you want to use it?</em> If you like me, you want to try out the latest unstable version of the Node, but you still need to use the older and stable versions to develop and maintain your projects, then you should use <a href="https://github.com/creationix/nvm" target="_blank" rel="external">NVM</a>.</p>
-<p>You can find out more information on <a href="https://github.com/creationix/nvm" target="_blank" rel="external">NVM GitHub page</a>, below are just my take on installing and using it.</p>
-<h2 id="Install">Install</h2>
-<p>You can install NVM via the install script, but always do it the hard way by installing it manually:</p>
-<pre><code><span class="variable">$ </span>git clone <span class="symbol">https:</span>/<span class="regexp">/github.com/creationix</span><span class="regexp">/nvm.git ~/</span>.nvm
-</code></pre><p>Check out the latest version:</p>
-<pre><code>$ <span class="built_in">cd</span> ~/.nvm &amp;&amp; git checkout v0.<span class="number">7.0</span>
-</code></pre><p>Enable NVM:</p>
-<pre><code>$ <span class="keyword">source</span> ~/.nvm/nvm.<span class="keyword">sh</span>
-</code></pre><p>Add this to <code>~/.bashrc</code> to make it available upon login:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">"\n# Enable NVM"</span>           &gt;&gt; ~/.bashrc
-$ <span class="built_in">echo</span> <span class="string">'source $HOME/.nvm/nvm.sh'</span> &gt;&gt; ~/.bashrc
-</code></pre><p>Enable Bash completion:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">'source $HOME/.nvm/bash_completion'</span> &gt;&gt; ~/.bashrc
-</code></pre><p>Try it by opening a new terminal:</p>
-<pre><code><span class="variable">$ </span>nvm
-</code></pre><h2 id="Usage">Usage</h2>
-<p>Get help:</p>
-<pre><code>$ nvm <span class="built_in">help</span>
-</code></pre><p>Show current NVM version:</p>
-<pre><code>$ nvm --<span class="keyword">version</span>
-</code></pre><p>Display the currently active Node version:</p>
-<pre><code>$ nvm <span class="literal">current</span>
-</code></pre><p>Install Node v0.10.28:</p>
-<pre><code><span class="variable">$ </span>nvm install <span class="number">0</span>.<span class="number">10.28</span>
-</code></pre><p>The installed Node version will reside in <code>~/.nvm/v0.10.28</code>.</p>
-<p>List installed versions:</p>
-<pre><code>$ nvm <span class="keyword">ls</span>
-    .nvm
-v0.<span class="number">10.28</span>
-</code></pre><p>Use a specific Node version:</p>
-<pre><code><span class="variable">$ </span>which node
-/usr/local/bin/node
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">11.13</span>
-<span class="variable">$ </span>nvm <span class="keyword">use</span> <span class="number">0</span>.<span class="number">10.28</span>
-<span class="constant">Now </span>using node v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>which node
-/home/chao/.nvm/v<span class="number">0</span>.<span class="number">10.28</span>/bin/node
-</code></pre><p>Basically, NVM modified the search path.</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="variable">$PATH</span>
-/home/chao/.nvm/v0.<span class="number">10.28</span>/bin
-</code></pre><p>To roll back:</p>
-<pre><code><span class="char">$ </span>nvm deactivate
-/home/chao/.nvm/*/bin removed from <span class="char">$P</span>ATH
-/home/chao/.nvm/*/share/man removed from <span class="char">$M</span>ANPATH
-/home/chao/.nvm/*/lib/node_modules removed from <span class="char">$N</span>ODE_PATH
-</code></pre><p>List Node versions available to install:</p>
-<pre><code>$ nvm <span class="keyword">ls</span>-remote
-</code></pre><p>Use <code>.nvmrc</code> file:</p>
-<pre><code><span class="input"><span class="prompt">$ echo '0.10.28' &gt;&gt;</span> .nvmrc</span>
-<span class="variable">$ </span>nvm use
-<span class="constant">Found</span> <span class="string">'/home/chao/.nvmrc'</span> with version &lt;<span class="number">0</span>.<span class="number">10.28</span>&gt;
-<span class="constant">Now</span> using node v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">10.28</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-04-02T00:30:00.000Z"><a href="/2014/04/02/difference-between-require-and-fs-in-loading-files/">Apr 2, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/04/02/difference-between-require-and-fs-in-loading-files/">Difference between require and fs in Loading Files</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Node has a simple module loading system by using <code>require</code>.</p>
+<p>If the <code>port</code> number is evaluated to be <em>falsy</em>, such as <code>0</code>, <code>null</code>, <code>undefined</code> or an empty string, a random port will be assigned.</p>
 <blockquote>
-<p>A module prefixed with <code>&#39;/&#39;</code> is an absolute path to the file. For example, <code>require(&#39;/home/marco/foo.js&#39;)</code> will load the file at <code>/home/marco/foo.js</code>.</p>
-<p>A module prefixed with <code>&#39;./&#39;</code> is relative to the file calling <code>require()</code>. That is, <code>circle.js</code> must be in the same directory as <code>foo.js</code> for <code>require(&#39;./circle&#39;)</code> to find it.</p>
-<p>Without a leading <code>&#39;/&#39;</code> or <code>&#39;./&#39;</code> to indicate a file, the module is either a “core module” or is loaded from a <code>node_modules</code> folder.</p>
-<p><a href="http://nodejs.org/api/modules.html#modules_file_modules" target="_blank" rel="external">http://nodejs.org/api/modules.html#modules_file_modules</a></p>
+<p>Begin accepting connections on the specified <code>port</code> and <code>hostname</code>. If the <code>hostname</code> is omitted, the server will accept connections on any IPv6 address (::) when IPv6 is available, or any IPv4 address (0.0.0.0) otherwise. <strong>A port value of zero will assign a random port.</strong> - <a href="https://iojs.org/api/http.html#http_server_listen_port_hostname_backlog_callback" target="_blank" rel="external">https://iojs.org/api/http.html#http_server_listen_port_hostname_backlog_callback</a></p>
 </blockquote>
-<p>We can also use it to load JSON files by simply specifying the file path. File path can be relative or absolute. Giving the following file structure:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── app.js</div><div class="line">├── <span class="typedef"><span class="keyword">data</span></span></div><div class="line">│   └── file.json</div><div class="line">└── lib</div><div class="line">    └── util.js</div></pre></td></tr></table></figure>
+<p>We can use command line tool such as <code>netstat</code> to find out the port number:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ netstat -ltpn | grep node</div><div class="line">tcp6     <span class="number">0</span>    <span class="number">0</span> :::<span class="number">44055</span>             :::*            LISTEN      <span class="number">5624</span>/node</div></pre></td></tr></table></figure>
 
-<p>Let’s say the root path of the application is <code>/home/marco</code>. Use relative path from the file <code>lib/util.js</code>:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> json = <span class="built_in">require</span>(<span class="string">'../data/file.json'</span>);</div></pre></td></tr></table></figure>
+<p>However, it will be very convenient without relying on external tools.</p>
+<p>Luckily, we can find out the port number by using the <code>address</code> method:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer().listen().address()</div></pre></td></tr></table></figure>
 
-<p>This will load the JSON content from <code>data/file.json</code>, because the require system knows that the file is relative to the calling file <code>lib/util.js</code>. But when using <a href="http://nodejs.org/api/fs.html" target="_blank" rel="external">file system</a> functions, relative path is not treat the same way:</p>
-<blockquote>
-<p>Relative path to filename can be used, remember however that this path will be relative to <code>process.cwd()</code>. - <a href="http://nodejs.org/api/fs.html" target="_blank" rel="external">File System</a></p>
-</blockquote>
-<p><code>process.cwd()</code> returns the current working directory, not the root directory of the application nor the directory of the calling file. For example:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> data = fs.readFileSync(<span class="string">'../data/file.json'</span>);</div></pre></td></tr></table></figure>
+<p>The result will be similar to:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">{ address: <span class="string">'::'</span>, family: <span class="string">'IPv6'</span>, port: <span class="number">44055</span> }</div></pre></td></tr></table></figure>
 
-<p>If your current working directory is <code>/home/marco/myapp</code>, the application root directory, you will get the following error message:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">fs.js:<span class="number">410</span></div><div class="line">  <span class="keyword">return</span> binding.open(pathModule._makeLong(path), stringToFlags(flags), mode);</div><div class="line">                 ^</div><div class="line"><span class="keyword">Error</span>: ENOENT, no such file <span class="keyword">or</span> directory <span class="comment">'../data/file.json'</span></div><div class="line">    at <span class="built_in">Object</span>.fs.openSync (fs.js:<span class="number">410</span>:<span class="number">18</span>)</div><div class="line">    at <span class="built_in">Object</span>.fs.readFileSync (fs.js:<span class="number">276</span>:<span class="number">15</span>)</div></pre></td></tr></table></figure>
-
-<p>Because <code>process.cwd()</code> is <code>/home/marco/myapp</code>, and reading file relative to this directory with <code>../data/file.json</code>, Node will expect file path to be <code>/home/marco/data/file.json</code>. Therefore, the error is thrown.</p>
-<p>The difference between <code>require</code> and <code>fs</code> in loading files is that if the relative path is used in <code>require</code>, it is relative to the file calling the <code>require</code>. If the relative path is used in <code>fs</code>, it is relative to <code>process.cwd()</code>.</p>
-<p>To fix the error in file system functions, we should always use absolute path. One thing we can do is:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> data = fs.readFileSync(__dirname + <span class="string">'/../data/file.json'</span>);</div></pre></td></tr></table></figure>
-
-<p><code>__dirname</code> is “the name of the directory that the currently executing script is resides in” [<a href="http://nodejs.org/api/globals.html#globals_dirname" target="_blank" rel="external">dirname</a>], and it has no trailing slash. The the structure looks odd, even though it works, but it might not work in all systems.</p>
-<p>The correct solution here is to use <code>path.join</code> from <a href="http://nodejs.org/api/path.html" target="_blank" rel="external">Path</a>:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> data = fs.readFileSync(path.join(__dirname, <span class="string">'../data/file.json'</span>));</div></pre></td></tr></table></figure>
-
-<p>The <code>path</code> module “contains utilities for handling and transforming file paths”. The <code>path.join</code> function will call <code>path.normalize</code> to “normalize a string path, taking care of <code>..</code> and <code>.</code> paths” [<a href="http://nodejs.org/api/path.html#path_path_normalize_p" target="_blank" rel="external">normalize</a>], also see function <code>normalizeArray</code> in <a href="https://github.com/joyent/node/blob/master/lib/path.js" target="_blank" rel="external">https://github.com/joyent/node/blob/master/lib/path.js</a> on how the paths are normalized.</p>
-<p>In conclusion:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Use `require` to load JSON file.</span></div><div class="line"><span class="keyword">var</span> json = <span class="built_in">require</span>(<span class="string">'../data/file.json'</span>);</div><div class="line"></div><div class="line"><span class="comment">// Use `fs` to load JSON file.</span></div><div class="line"><span class="keyword">var</span> data = fs.readFileSync(path.join(__dirname, <span class="string">'../data/file.json'</span>));</div><div class="line"><span class="keyword">var</span> json = <span class="built_in">JSON</span>.parse(data.toString());</div></pre></td></tr></table></figure>
-
+<p>Furthermore, it works with all popular libraries that create an <code>http.Server</code> instance:</p>
 
       
     </div>
     <footer>
       
+        
+          <div class="alignleft">
+            <a href="/2015/03/28/locate-http-port-number-from-http-server-instance/#more" class="more-link">Read More</a>
+          </div>
         
         
       
@@ -493,229 +483,31 @@ v<span class="number">0</span>.<span class="number">10.28</span>
     <header>
       
         <div class="icon"></div>
-        <time datetime="2014-02-11T22:42:55.000Z"><a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">Feb 11, 2014</a></time>
+        <time datetime="2015-03-18T12:00:00.000Z"><a href="/2015/03/18/use-array-of-middleware-in-koa-router/">Mar 18, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">Defining Correct Environment for CoffeeScript in Cron</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I have written a bunch of CoffeeScript scripts that I would like to run them regularly. <a href="http://en.wikipedia.org/wiki/Cron" target="_blank" rel="external">Cron</a> is certainly the right choice in many situation.</p>
-<p>The default executable path recognized by cron is limited:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> echo $PATH &gt; /tmp/log/cron.log
-</code></pre><p>This cron job will recognize the following path:</p>
-<pre><code><span class="regexp">/usr/</span>bin:<span class="regexp">/bin</span>
-</code></pre><p>However the default executable path for Node.js is usually at:</p>
-<pre><code>$ which node
-<span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>node
-</code></pre><p>Therefore, if you attempt to run a cron job:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> node -v &gt; /tmp/log/cron.log 2&gt; /tmp/log/cron.err.log
-</code></pre><p>It will return an error, where the executable is not found:</p>
-<pre><code><span class="attribute">bin/sh</span>: <span class="string">1: node: not found</span>
-</code></pre><p>The easiest way to solve it is by specifying the fully qualified path:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/local/bin/node -v &gt; /tmp/log/cron.log
-</code></pre><p>To ensure the process is installed, we can check the file existence and permission before launching it:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> test -x /usr/local/bin/node &amp;&amp; /usr/local/bin/node -v
-</code></pre><p>But when working with CoffeeScript, the same method does not working:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/local/bin/coffee -v 2&gt; /tmp/log/cron.err.log
-</code></pre><p>Because CoffeeScript binary (<code>coffee</code>) use the following format:</p>
-<pre><code><span class="shebang">#!/usr/bin/env node</span>
-</code></pre><p>Which does not specify fully qualified path on the shebang line, and will result in:</p>
-<pre><code>/usr/bin/env: node: No such <span class="built_in">file</span> <span class="operator">or</span> <span class="built_in">directory</span>
-</code></pre><p>We can compile CoffeeScript into JavaScript and use fully qualified <code>node</code> executable. But this is not necessary. Since we are using Debian based system, which uses Vixie cron. It allows environment variables to be defined. We can make Cron aware of the custom path in environment variable:</p>
-<pre><code>* * * * * <span class="constant">PATH</span>=<span class="variable">$PATH</span><span class="symbol">:/usr/local/bin</span> coffee -v &gt; <span class="regexp">/tmp/log</span><span class="regexp">/cron.log</span>
-</code></pre><p>Now the executable path include the one where both <code>node</code> and <code>coffee</code> commands reside.</p>
-<p>We can also move it to its own line. But Cron is not shell, it does not expand the variable, so you have to specify all paths:</p>
-<pre><code><span class="comment"># Error: `PATH=$PATH:/usr/local/bin`</span>
-<span class="constant">PATH</span>=<span class="regexp">/usr/bin</span><span class="symbol">:/bin</span><span class="symbol">:/usr/local/bin</span>
-<span class="input"><span class="prompt">* * * * * coffee -v &gt;</span> /tmp/log/cron.log</span>
-</code></pre><p>The good practice is to set environment variables in a script:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># This script is intended to be run as a cron job.</span></div><div class="line"></div><div class="line">PATH=<span class="variable">$PATH</span>:/usr/local/bin</div><div class="line">coffee -v</div></pre></td></tr></table></figure>
-
-<p>and run the script as a cron job:</p>
-<pre><code>* * * * * /path/<span class="keyword">to</span>/script &gt; /tmp/<span class="built_in">log</span>/cron.<span class="built_in">log</span> <span class="number">2</span>&gt;&gt; /tmp/<span class="built_in">log</span>/cron.<span class="built_in">err</span>.<span class="built_in">log</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-17T14:13:03.000Z"><a href="/2014/01/17/a-new-nodejs-web-framework-koa/">Jan 17, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/17/a-new-nodejs-web-framework-koa/">A New NodeJS Web Framework - Koa</a></h1>
+    <h1 class="title"><a href="/2015/03/18/use-array-of-middleware-in-koa-router/">Use Array of Middleware in Koa Router</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Taking the first spin on <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>, a new web framework designed by the team behind <a href="http://expressjs.com/" target="_blank" rel="external">Express</a>.</p>
-<h2 id="Requirements">Requirements</h2>
-<ol>
-<li>Node v0.11.9 or higher is required for generator support.</li>
-<li><code>--harmony</code> flag must be used when running Node.</li>
-</ol>
-<p>Without the <code>--harmony</code> flag, genertor function cannot be defined:</p>
-<pre><code><span class="function"><span class="keyword">function</span> *<span class="title">fn</span>(</span>) {
-           ^
-SyntaxError: Unexpected token *
-    at exports.runInThisContext (vm.js:<span class="number">69</span>:<span class="number">16</span>)
-    at <span class="keyword">Module</span>._compile (<span class="keyword">module</span>.js:<span class="number">432</span>:<span class="number">25</span>)
-    at Object.<span class="keyword">Module</span>._extensions..js (<span class="keyword">module</span>.js:<span class="number">467</span>:<span class="number">10</span>)
-    at <span class="keyword">Module</span>.load (<span class="keyword">module</span>.js:<span class="number">349</span>:<span class="number">32</span>)
-    at <span class="function"><span class="keyword">Function</span>.<span class="title">Module</span>.<span class="title">_load</span> (</span><span class="keyword">module</span>.js:<span class="number">305</span>:<span class="number">12</span>)
-    at <span class="function"><span class="keyword">Function</span>.<span class="title">Module</span>.<span class="title">runMain</span> (</span><span class="keyword">module</span>.js:<span class="number">490</span>:<span class="number">10</span>)
-    at startup (node.js:<span class="number">123</span>:<span class="number">16</span>)
-    at node.js:<span class="number">1031</span>:<span class="number">3</span>
-</code></pre><p>So, set the <code>--harmony</code> flag in shell alias:</p>
-<pre><code><span class="variable">$ </span><span class="keyword">alias</span> node=<span class="string">'node --harmony'</span>
-</code></pre><p>To know more:</p>
-<pre><code>$ man node
---harmony (enable all harmony features (except <span class="keyword">typeof</span>))
-      type: <span class="keyword">bool</span>  <span class="keyword">default</span>: <span class="keyword">false</span>
-</code></pre><p><em>Harmony</em> is the codename of ECMAScript 6, the next version of the standard.</p>
-<h2 id="Install">Install</h2>
-<pre><code><span class="variable">$ </span>npm install koa
-</code></pre><p>The footprint of the framework is small. Therefore, there is no executable binary like Express, and we do not need to install it globally.</p>
-<h2 id="Dependencies">Dependencies</h2>
-<p>Dependencies on version 0.2.1:</p>
-<pre><code><span class="string">"dependencies"</span>: {
-  <span class="string">"accepts"</span>: <span class="string">"~1.0.0"</span>,
-  <span class="string">"type-is"</span>: <span class="string">"~1.0.0"</span>,
-  <span class="string">"on-socket-error"</span>: <span class="string">"~1.0.1"</span>,
-  <span class="string">"co"</span>: <span class="string">"~3.0.1"</span>,
-  <span class="string">"debug"</span>: <span class="string">"*"</span>,
-  <span class="string">"mime"</span>: <span class="string">"~1.2.11"</span>,
-  <span class="string">"fresh"</span>: <span class="string">"~0.2.0"</span>,
-  <span class="string">"koa-compose"</span>: <span class="string">"~2.1.0"</span>,
-  <span class="string">"cookies"</span>: <span class="string">"~0.3.7"</span>,
-  <span class="string">"keygrip"</span>: <span class="string">"~1.0.0"</span>
-}
-</code></pre><h2 id="Middleware">Middleware</h2>
-<p>Middleware system is the core of either Express or Koa based application. This needs a separate post. Here just describes the difference in design.</p>
-<p>In a simple assembly design, each unit passes control to the next one until the last one terminates and responses to the request:</p>
-<pre><code>    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-<span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">o</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-</code></pre><p>Express middleware passes control to the next one like an assembly line, but each unit is capable of responding to the request:</p>
-<pre><code>       <span class="comment">o</span>           <span class="comment">o</span>           <span class="comment">o</span>
-       <span class="comment">|</span>           <span class="comment">|</span>           <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-<span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-</code></pre><p>Koa provides a traceback via generator, each unit is capable of working on the request twice instead of once as previous two designs. It is stack alike, where the first generator will also be the last one prior to responding to request:</p>
-<pre><code>       <span class="comment">o</span>
-       <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-<span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-       <span class="comment">^</span>          <span class="comment">|</span> <span class="comment">^</span>         <span class="comment">|</span>
-       <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span> <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-</code></pre><p>This is sort of an assembly loop, where the starting station is also be the ending station.</p>
-<h2 id="Usage">Usage</h2>
-<p>Here is one liner:</p>
-<pre><code><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{ <span class="keyword">this</span>.body = <span class="string">'OK'</span>; }).listen(<span class="number">3000</span>);
-</code></pre><p><code>app.use</code> requires a generator function or <code>function *()</code>. Koa middleware uses <code>this</code> (context) instead of <code>req</code> and <code>res</code> in Express. It also encapsulates Node’s <code>request</code> and <code>response</code> objects. For example, <code>this</code> or context has the following properties:</p>
-<pre><code>[ <span class="string">'request'</span>,     <span class="comment">// Koa request</span>
-  <span class="string">'response'</span>,    <span class="comment">// Koa response</span>
-  <span class="string">'app'</span>,
-  <span class="string">'req'</span>,         <span class="comment">// Node request</span>
-  <span class="string">'res'</span>,         <span class="comment">// Node response</span>
-  <span class="string">'onerror'</span>,
-  <span class="string">'originalUrl'</span>,
-  <span class="string">'cookies'</span>,
-  <span class="string">'accept'</span> ]
-</code></pre><h3 id="Status_and_Body">Status and Body</h3>
-<p>Status can be used as a flag indicating whether a request has been processed or not:</p>
-<pre><code>app.use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{
-  <span class="built_in">console</span>.log(<span class="keyword">this</span>.status); <span class="comment">// undefined</span>
-  <span class="keyword">this</span>.body = <span class="string">'processed'</span>;
-  <span class="built_in">console</span>.log(<span class="keyword">this</span>.status); <span class="comment">// 200</span>
-});
-</code></pre><p>When the <code>body</code> is populated, <code>status</code> is automatically updated, probably via the <code>nextTick</code> method. So, we can use it as the flag to design a response such as a custom not found response.</p>
-<h3 id="Not_Found">Not Found</h3>
-<p>Create a custom <code>Not Found</code> in JSON content type:</p>
-<pre><code>app.use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{
-  <span class="keyword">yield</span> next; <span class="comment">// The operation is yet to start.</span>
-  <span class="keyword">if</span> (<span class="keyword">this</span>.status) { <span class="keyword">return</span>; }
+        <p><a href="https://github.com/alexmingoia/koa-router" target="_blank" rel="external">Koa Router</a> <em>v4.2</em> does not support an array of middleware, multiple middleware must be entered one by one:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.get(<span class="string">'/foo'</span>, middleware1, middleware2);</div></pre></td></tr></table></figure>
 
-  <span class="keyword">this</span>.status = <span class="number">404</span>;
-  <span class="keyword">this</span>.body = { message: <span class="string">'Cannot find what you are looking for :('</span> };
-});
-app.use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{}); <span class="comment">// Do nothing to simulate not found.</span>
-</code></pre><h3 id="Error_Handling">Error Handling</h3>
-<p>Koa app is capable of catching the error event:</p>
-<pre><code>app.on(<span class="string">'error'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(err, ctx)</span> </span>{
-  <span class="comment">// Log errors.</span>
-});
-</code></pre><p>where <code>ctx</code> is a context instance. But you cannot modify the response body. This is more for server side logging and debugging purpose. The <code>500 Internal Server Error</code> will be returned to the client.</p>
-<p>We can use <code>try..catch</code> to define a custom error handling middleware:</p>
-<pre><code>app.use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{
-  <span class="keyword">try</span> {
-    <span class="keyword">yield</span> next;
-  } <span class="keyword">catch</span> (err) {
-    <span class="keyword">this</span>.status = err.status || <span class="number">500</span>;
-    <span class="keyword">this</span>.body   = { message: err.message || <span class="string">'Bad stuff happened!'</span> };
-    <span class="keyword">this</span>.app.emit(<span class="string">'error'</span>, err, <span class="keyword">this</span>); <span class="comment">// Enable error event handling</span>
-  }
-});
-</code></pre><p>Make sure to emit the error event and let the server log the error.</p>
-<p>All non-operational middleware (e.g., not found or error) should be defined first, so it can be traced back as the last guards before sending response back.</p>
-<h3 id="Routing">Routing</h3>
-<p>Out of the box, Koa does not support routing, but it can be achieved via routing middleware, see <a href="https://github.com/koajs/koa/wiki" target="_blank" rel="external">examples</a>.</p>
-<h2 id="Examples">Examples</h2>
-<p>Define an app with only one middleware generator function:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'foo'</span>);</div><div class="line">  <span class="keyword">this</span>.status = <span class="number">204</span>;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+<p>Using an array is much cleaner than multiple arguments.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.get(<span class="string">'/foo'</span>, [middleware1, middleware2]);</div></pre></td></tr></table></figure>
 
-<p>Instead of using status code <code>200</code>, we use <code>204</code> here, because the response contains no body. If using <code>200</code>, the server does not know the total content length, will result in <code>Transfer-Encoding: chunked</code> header instead of <code>Content-Length</code>. See <a href="http://en.wikipedia.org/wiki/Chunked_transfer_encoding" target="_blank" rel="external">chunked transfer encoding</a>.</p>
-<p>This app simply prints out <code>foo</code> on the server side, and respond to a client with status code <code>204</code> and an empty body. We can even omit the <code>next</code> parameter, since we are not using it.</p>
-<p>Now let’s use two middleware generator functions:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Response: foo</span></div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo'</span>;</div><div class="line">}</div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">bar</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'bar'</span>;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).use(bar).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+<p>But the above will throw error:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Error: GET: `middleware` must be a function, not `object`</div></pre></td></tr></table></figure>
 
-<p>Since generator <code>foo</code> sets the body, generator <code>bar</code> will never be reached. We can change that by adding the <code>yield</code>: </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Response: bar</span></div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}</div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">bar</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'bar'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).use(bar).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+<p>This can be easily fixed by using <a href="https://github.com/koajs/compose" target="_blank" rel="external">Koa Compose</a>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> app = <span class="built_in">require</span>(<span class="string">'koa'</span>)();</div><div class="line"><span class="keyword">var</span> router = <span class="built_in">require</span>(<span class="string">'koa-router'</span>);</div><div class="line"><span class="keyword">var</span> compose = <span class="built_in">require</span>(<span class="string">'koa-compose'</span>);</div><div class="line"></div><div class="line">app.use(router(app));</div><div class="line"></div><div class="line">app.get(<span class="string">'/foo'</span>, compose([</div><div class="line">  <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">    <span class="keyword">this</span>.body = {};</div><div class="line">    <span class="keyword">yield</span> next;</div><div class="line">  },</div><div class="line">  <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">    <span class="keyword">this</span>.body.foo = <span class="string">'foo'</span>;</div><div class="line">    <span class="keyword">yield</span> next;</div><div class="line">  },</div><div class="line">  <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">    <span class="keyword">this</span>.body.bar = <span class="string">'bar'</span>;</div><div class="line">    <span class="keyword">yield</span> next;</div><div class="line">  }</div><div class="line">]));</div></pre></td></tr></table></figure>
 
-<p>This looks alot like Express, <code>yeild next</code> is similar to <code>next()</code>. Request travels through the middleware system first via <code>foo</code> then <code>bar</code>. But actually by using generator, it also returns back to <code>foo</code> as <code>foo-&gt;bar-&gt;foo</code>:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Response: foo again</span></div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo again'</span>;</div><div class="line">}</div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">bar</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'bar'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).use(bar).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+<p>Hence:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.get(<span class="string">'/foo'</span>, compose([middleware1, middleware2]));</div></pre></td></tr></table></figure>
 
-<p>This is similar to a stack alike request model, where the first middleware should also be the last middleware to touch the request. There is a no-op middleware in the end to catch the last <code>yield next</code> produced by <code>bar</code> middleware generator and traces back the stack.</p>
-<h2 id="Debugging">Debugging</h2>
-<p>Set environment variable <code>DEBUG=koa*</code> to enable Koa specific debugging information in development environment:</p>
-<pre><code><span class="attribute">$ DEBUG</span>=<span class="string">koa* node app.js</span>
-</code></pre><p>You will see a list of middleware. If a middleware is an anonymous function, we can set <code>._name</code> to define a custom name:</p>
-<pre><code><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{
-  <span class="comment">// Middleware definition starts here.</span>
-}
-foo._name = <span class="string">'bar'</span>;
-app.<span class="keyword">use</span>(foo);
-</code></pre><p>The middleware name will be <code>bar</code> instead of <code>foo</code>.</p>
-<h2 id="Resources">Resources</h2>
-<ol>
-<li><a href="http://koajs.com/" target="_blank" rel="external">Koa</a></li>
-<li><a href="https://github.com/koajs/koa" target="_blank" rel="external">Koa | GitHub</a></li>
-<li><a href="https://github.com/koajs/koa/blob/master/docs/guide.md" target="_blank" rel="external">Koa Quick Guide</a></li>
-<li><a href="https://github.com/koajs/koa/wiki" target="_blank" rel="external">Koa Middleware List</a></li>
-</ol>
 
       
     </div>
@@ -754,7 +546,7 @@ app.<span class="keyword">use</span>(foo);
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>3</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -762,9 +554,11 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
   
+    <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
+  
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>10</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -774,7 +568,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
   
-    <li><a href="/categories/starters/">Starters</a><small>1</small></li>
+    <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
@@ -1113,7 +907,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>3</small></li>
+    <li><a href="/tags/http/">http</a><small>4</small></li>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
@@ -1241,7 +1035,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>15</small></li>
+    <li><a href="/tags/node/">node</a><small>22</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1266,6 +1060,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/object/">object</a><small>3</small></li>
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
+  
+    <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
   
@@ -1371,7 +1167,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
   
-    <li><a href="/tags/server/">server</a><small>1</small></li>
+    <li><a href="/tags/server/">server</a><small>2</small></li>
   
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
@@ -1409,7 +1205,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>1</small></li>
+    <li><a href="/tags/starter/">starter</a><small>3</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
@@ -1451,7 +1247,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
   
-    <li><a href="/tags/template/">template</a><small>1</small></li>
+    <li><a href="/tags/template/">template</a><small>2</small></li>
   
     <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
   

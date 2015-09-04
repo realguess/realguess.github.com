@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-04-23T19:05:44.000Z"><a href="/2014/04/23/obtain-username-from-custom-domain-in-tumblr/">Apr 23, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/04/23/obtain-username-from-custom-domain-in-tumblr/">Obtain Username from Custom Domain in Tumblr</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Users frequently have custom domain for their blogs in Tumblr. If you need to know the [Tumblr] username from the custom domain, just need to grab the value from the header field <code>X-Tumblr-User</code>:</p>
+<pre><code>$ curl -Is blog.foursquare.com | grep -i x-tumblr-<span class="literal">user</span>
+X-Tumblr-User: foursquare
+</code></pre><p>Another example:</p>
+<pre><code>$ curl -Is blog.birchbox.com | grep -i x-tumblr-<span class="literal">user</span>
+X-Tumblr-User: birchbox
+</code></pre><p>Now you can use the username to make some API calls to Tumblr.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-04-11T02:00:00.000Z"><a href="/2014/04/11/nota-bene/">Apr 11, 2014</a></time>
       
       
@@ -661,72 +700,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-02-11T22:42:55.000Z"><a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">Feb 11, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">Defining Correct Environment for CoffeeScript in Cron</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I have written a bunch of CoffeeScript scripts that I would like to run them regularly. <a href="http://en.wikipedia.org/wiki/Cron" target="_blank" rel="external">Cron</a> is certainly the right choice in many situation.</p>
-<p>The default executable path recognized by cron is limited:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> echo $PATH &gt; /tmp/log/cron.log
-</code></pre><p>This cron job will recognize the following path:</p>
-<pre><code><span class="regexp">/usr/</span>bin:<span class="regexp">/bin</span>
-</code></pre><p>However the default executable path for Node.js is usually at:</p>
-<pre><code>$ which node
-<span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>node
-</code></pre><p>Therefore, if you attempt to run a cron job:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> node -v &gt; /tmp/log/cron.log 2&gt; /tmp/log/cron.err.log
-</code></pre><p>It will return an error, where the executable is not found:</p>
-<pre><code><span class="attribute">bin/sh</span>: <span class="string">1: node: not found</span>
-</code></pre><p>The easiest way to solve it is by specifying the fully qualified path:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/local/bin/node -v &gt; /tmp/log/cron.log
-</code></pre><p>To ensure the process is installed, we can check the file existence and permission before launching it:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> test -x /usr/local/bin/node &amp;&amp; /usr/local/bin/node -v
-</code></pre><p>But when working with CoffeeScript, the same method does not working:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/local/bin/coffee -v 2&gt; /tmp/log/cron.err.log
-</code></pre><p>Because CoffeeScript binary (<code>coffee</code>) use the following format:</p>
-<pre><code><span class="shebang">#!/usr/bin/env node</span>
-</code></pre><p>Which does not specify fully qualified path on the shebang line, and will result in:</p>
-<pre><code>/usr/bin/env: node: No such <span class="built_in">file</span> <span class="operator">or</span> <span class="built_in">directory</span>
-</code></pre><p>We can compile CoffeeScript into JavaScript and use fully qualified <code>node</code> executable. But this is not necessary. Since we are using Debian based system, which uses Vixie cron. It allows environment variables to be defined. We can make Cron aware of the custom path in environment variable:</p>
-<pre><code>* * * * * <span class="constant">PATH</span>=<span class="variable">$PATH</span><span class="symbol">:/usr/local/bin</span> coffee -v &gt; <span class="regexp">/tmp/log</span><span class="regexp">/cron.log</span>
-</code></pre><p>Now the executable path include the one where both <code>node</code> and <code>coffee</code> commands reside.</p>
-<p>We can also move it to its own line. But Cron is not shell, it does not expand the variable, so you have to specify all paths:</p>
-<pre><code><span class="comment"># Error: `PATH=$PATH:/usr/local/bin`</span>
-<span class="constant">PATH</span>=<span class="regexp">/usr/bin</span><span class="symbol">:/bin</span><span class="symbol">:/usr/local/bin</span>
-<span class="input"><span class="prompt">* * * * * coffee -v &gt;</span> /tmp/log/cron.log</span>
-</code></pre><p>The good practice is to set environment variables in a script:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># This script is intended to be run as a cron job.</span></div><div class="line"></div><div class="line">PATH=<span class="variable">$PATH</span>:/usr/local/bin</div><div class="line">coffee -v</div></pre></td></tr></table></figure>
-
-<p>and run the script as a cron job:</p>
-<pre><code>* * * * * /path/<span class="keyword">to</span>/script &gt; /tmp/<span class="built_in">log</span>/cron.<span class="built_in">log</span> <span class="number">2</span>&gt;&gt; /tmp/<span class="built_in">log</span>/cron.<span class="built_in">err</span>.<span class="built_in">log</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -751,7 +724,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>3</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -759,9 +732,11 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
   
+    <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
+  
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>10</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -771,7 +746,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
   
-    <li><a href="/categories/starters/">Starters</a><small>1</small></li>
+    <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
@@ -1110,7 +1085,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>3</small></li>
+    <li><a href="/tags/http/">http</a><small>4</small></li>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
@@ -1238,7 +1213,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>15</small></li>
+    <li><a href="/tags/node/">node</a><small>22</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1263,6 +1238,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
     <li><a href="/tags/object/">object</a><small>3</small></li>
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
+  
+    <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
   
@@ -1368,7 +1345,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
   
-    <li><a href="/tags/server/">server</a><small>1</small></li>
+    <li><a href="/tags/server/">server</a><small>2</small></li>
   
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
@@ -1406,7 +1383,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>1</small></li>
+    <li><a href="/tags/starter/">starter</a><small>3</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
@@ -1448,7 +1425,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
   
-    <li><a href="/tags/template/">template</a><small>1</small></li>
+    <li><a href="/tags/template/">template</a><small>2</small></li>
   
     <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
   

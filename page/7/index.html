@@ -64,6 +64,87 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-06-08T09:36:42.000Z"><a href="/2014/06/08/understand-setup-and-teardown-with-jasmine-testing-framework/">Jun 8, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/08/understand-setup-and-teardown-with-jasmine-testing-framework/">Understand Setup and Teardown with Jasmine Testing Framework</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In <a href="http://jasmine.github.io/" target="_blank" rel="external">Jasmine</a>, the testing structure of setup, test, and teardown is done by using <code>beforeEach/it+/afterEach</code>. Global <code>beforeEach</code> and <code>afterEach</code> functions are called once before each spec in the <code>describe</code>.</p>
+<p>Let’s walk through a few examples.</p>
+<p>Before describing any example, set up a function to watch how the value changes from executing one spec to another. <a href="http://wiki.ecmascript.org/doku.php?id=harmony:observe" target="_blank" rel="external">Object.observe</a> is yet to be available in Firefox, but we can use something similar with <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/watch" target="_blank" rel="external">Object.watch</a>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Specific to Firefox only.</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">watchHandler</span><span class="params">(prop, oldVal, newVal)</span> </span>{</div><div class="line">  <span class="built_in">console</span>.log(prop + <span class="string">' changed from '</span> + oldVal + <span class="string">' to '</span> + newVal);</div><div class="line">  <span class="keyword">return</span> newVal;</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>The first example is to perform the setup without using <code>beforeEach</code>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'Without "beforeEach"'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> obj   = {};</div><div class="line">  <span class="keyword">var</span> prop  = <span class="string">'foo1'</span>;</div><div class="line">  obj[prop] = <span class="number">0</span>;</div><div class="line">  obj.watch(prop, watchHandler); <span class="comment">// Firefox only</span></div><div class="line"></div><div class="line">  <span class="comment">// Setup</span></div><div class="line">  obj[prop] += <span class="number">1</span>;</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should be equal to 1'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">1</span>);</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should not be equal to 2'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).not.toBe(<span class="number">2</span>);</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>The <code>obj</code> property <code>foo1</code> was changed once:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo1 changed from 0 to 1'</span></div></pre></td></tr></table></figure>
+
+<p>If using <code>beforeEach</code> to perform setup before each spec:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'With "beforeEach"'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> obj   = {};</div><div class="line">  <span class="keyword">var</span> prop  = <span class="string">'foo2'</span>;</div><div class="line">  obj[prop] = <span class="number">0</span>;</div><div class="line">  obj.watch(prop, watchHandler); <span class="comment">// Firefox only</span></div><div class="line"></div><div class="line">  <span class="comment">// Setup</span></div><div class="line">  beforeEach(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    obj[prop] += <span class="number">1</span>; <span class="comment">// Should be invoked twice.</span></div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should be equal to 1'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">1</span>);</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should be equal to 2'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">2</span>);</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Then we should expect the value to be updated twice. There are two specs, and for each spec, the <code>beforeEach</code> will be invoked:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo2 changed from 0 to 1'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo2 changed from 1 to 2'</span></div></pre></td></tr></table></figure>
+
+<p>If we change the values inside a spec without using <code>beforeEach</code>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'Without "beforeEach" but updating in spec'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> obj   = {};</div><div class="line">  <span class="keyword">var</span> prop  = <span class="string">'foo3'</span>;</div><div class="line">  obj[prop] = <span class="number">0</span>;</div><div class="line">  obj.watch(prop, watchHandler); <span class="comment">// Firefox only</span></div><div class="line"></div><div class="line">  <span class="comment">// Setup</span></div><div class="line">  obj[prop] += <span class="number">1</span>;</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should be equal to 1'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">1</span>);</div><div class="line">    obj[prop] += <span class="number">1</span>;</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should be equal to 2'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">2</span>);</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>The value has been incremented to 2 inside the first spec before the execution of the second spec:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo3 changed from 0 to 1'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo3 changed from 1 to 2'</span></div></pre></td></tr></table></figure>
+
+<p>With using <code>beforeEach</code>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'With "beforeEach" and updating in spec'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> obj   = {};</div><div class="line">  <span class="keyword">var</span> prop  = <span class="string">'foo4'</span>;</div><div class="line">  obj[prop] = <span class="number">0</span>;</div><div class="line">  obj.watch(prop, watchHandler); <span class="comment">// Firefox only</span></div><div class="line"></div><div class="line">  <span class="comment">// Setup</span></div><div class="line">  beforeEach(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    obj[prop] += <span class="number">1</span>;</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should be equal to 1'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">1</span>);</div><div class="line">    obj[prop] += <span class="number">1</span>;</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should be equal to 3'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">3</span>);</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Now, before each spec, the value was incremented, and inside the first spec, the value was also incremented:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo4 changed from 0 to 1'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo4 changed from 1 to 2'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo4 changed from 2 to 3'</span></div></pre></td></tr></table></figure>
+
+<p>To ensure the value stays the same before each spec, we can use <code>afterEach</code>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'Reset with "afterEach"'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> obj   = {};</div><div class="line">  <span class="keyword">var</span> prop  = <span class="string">'foo5'</span>;</div><div class="line">  obj[prop] = <span class="number">0</span>;</div><div class="line">  obj.watch(prop, watchHandler); <span class="comment">// Firefox only</span></div><div class="line"></div><div class="line">  <span class="comment">// Setup</span></div><div class="line">  beforeEach(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    obj[prop] += <span class="number">1</span>;</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should be equal to 1'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">1</span>);</div><div class="line">    obj[prop] += <span class="number">1</span>;</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should still be equal to 1'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">1</span>);</div><div class="line">  });</div><div class="line"></div><div class="line">  <span class="comment">// Teardown</span></div><div class="line">  afterEach(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    obj[prop] = <span class="number">0</span>;</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>After each spec, the value has been reset, and before the start of next spec, the value has been incremented from original value <code>0</code> to <code>1</code> again:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo5 changed from 0 to 1'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo5 changed from 1 to 2'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo5 changed from 2 to 0'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo5 changed from 0 to 1'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo5 changed from 1 to 0'</span></div></pre></td></tr></table></figure>
+
+<p>The locations of <code>beforeEach</code> and <code>afterEach</code> do not matter:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'Reverse the order of "beforeEach" and "afterEach"'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> obj   = {};</div><div class="line">  <span class="keyword">var</span> prop  = <span class="string">'foo6'</span>;</div><div class="line">  obj[prop] = <span class="number">0</span>;</div><div class="line">  obj.watch(prop, watchHandler); <span class="comment">// Firefox only</span></div><div class="line"></div><div class="line">  <span class="comment">// Teardown</span></div><div class="line">  afterEach(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    obj[prop] = <span class="number">0</span>;</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should be equal to 1'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">1</span>);</div><div class="line">    obj[prop] += <span class="number">1</span>;</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should still be equal to 1'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    expect(obj[prop]).toBe(<span class="number">1</span>);</div><div class="line">  });</div><div class="line"></div><div class="line">  <span class="comment">// Setup</span></div><div class="line">  beforeEach(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    obj[prop] += <span class="number">1</span>;</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Here we switch the setup and teardown, but the result is the same:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo6 changed from 0 to 1'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo6 changed from 1 to 2'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo6 changed from 2 to 0'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo6 changed from 0 to 1'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo6 changed from 1 to 0'</span></div></pre></td></tr></table></figure>
+
+<p>Because the content of the suite is read before any of specs is executed.</p>
+<p>Asynchronous setup, test, and teardown:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'Async with "beforeEach" and "afterEach"'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> obj   = {};</div><div class="line">  <span class="keyword">var</span> prop  = <span class="string">'foo7'</span>;</div><div class="line">  obj[prop] = <span class="number">0</span>;</div><div class="line">  obj.watch(prop, watchHandler); <span class="comment">// Firefox only</span></div><div class="line"></div><div class="line">  <span class="comment">// Setup</span></div><div class="line">  beforeEach(<span class="function"><span class="keyword">function</span> <span class="params">(done)</span> </span>{</div><div class="line">    setTimeout(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">      obj[prop] += <span class="number">1</span>;</div><div class="line">      done();</div><div class="line">    }, <span class="number">100</span>);</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should be equal to 1'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(done)</span> </span>{</div><div class="line">    setTimeout(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">      expect(obj[prop]).toBe(<span class="number">1</span>);</div><div class="line">      obj[prop] += <span class="number">1</span>;</div><div class="line">      done();</div><div class="line">    }, <span class="number">100</span>);</div><div class="line">  });</div><div class="line"></div><div class="line">  it(prop + <span class="string">' should still be equal to 1'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(done)</span> </span>{</div><div class="line">    setTimeout(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">      expect(obj[prop]).toBe(<span class="number">1</span>);</div><div class="line">      done();</div><div class="line">    }, <span class="number">100</span>);</div><div class="line">  });</div><div class="line"></div><div class="line">  <span class="comment">// Teardown</span></div><div class="line">  afterEach(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    setTimeout(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">      obj[prop] = <span class="number">0</span>;</div><div class="line">    }, <span class="number">100</span>);</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Work the same:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo7 changed from 0 to 1'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo7 changed from 1 to 2'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo7 changed from 2 to 0'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo7 changed from 0 to 1'</span></div><div class="line"><span class="keyword">LOG</span>: <span class="string">'foo7 changed from 1 to 0'</span></div></pre></td></tr></table></figure>
+
+<p>Here is the <a href="https://gist.github.com/realguess/71b89263ebb11521cf49" target="_blank" rel="external">gist</a> for all examples shown above.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-05-24T22:17:41.000Z"><a href="/2014/05/24/amazon-s3-delimiter-and-prefix/">May 24, 2014</a></time>
       
       
@@ -765,45 +846,6 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-04-23T19:05:44.000Z"><a href="/2014/04/23/obtain-username-from-custom-domain-in-tumblr/">Apr 23, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/04/23/obtain-username-from-custom-domain-in-tumblr/">Obtain Username from Custom Domain in Tumblr</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Users frequently have custom domain for their blogs in Tumblr. If you need to know the [Tumblr] username from the custom domain, just need to grab the value from the header field <code>X-Tumblr-User</code>:</p>
-<pre><code>$ curl -Is blog.foursquare.com | grep -i x-tumblr-<span class="literal">user</span>
-X-Tumblr-User: foursquare
-</code></pre><p>Another example:</p>
-<pre><code>$ curl -Is blog.birchbox.com | grep -i x-tumblr-<span class="literal">user</span>
-X-Tumblr-User: birchbox
-</code></pre><p>Now you can use the username to make some API calls to Tumblr.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -827,7 +869,7 @@ X-Tumblr-User: birchbox
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>3</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -835,9 +877,11 @@ X-Tumblr-User: birchbox
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
   
+    <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
+  
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>10</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -847,7 +891,7 @@ X-Tumblr-User: birchbox
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
   
-    <li><a href="/categories/starters/">Starters</a><small>1</small></li>
+    <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
@@ -1186,7 +1230,7 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>3</small></li>
+    <li><a href="/tags/http/">http</a><small>4</small></li>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
@@ -1314,7 +1358,7 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>15</small></li>
+    <li><a href="/tags/node/">node</a><small>22</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1339,6 +1383,8 @@ X-Tumblr-User: birchbox
     <li><a href="/tags/object/">object</a><small>3</small></li>
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
+  
+    <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
   
@@ -1444,7 +1490,7 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
   
-    <li><a href="/tags/server/">server</a><small>1</small></li>
+    <li><a href="/tags/server/">server</a><small>2</small></li>
   
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
@@ -1482,7 +1528,7 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>1</small></li>
+    <li><a href="/tags/starter/">starter</a><small>3</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
@@ -1524,7 +1570,7 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
   
-    <li><a href="/tags/template/">template</a><small>1</small></li>
+    <li><a href="/tags/template/">template</a><small>2</small></li>
   
     <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
   

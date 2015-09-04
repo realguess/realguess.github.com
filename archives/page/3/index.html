@@ -68,6 +68,52 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-02-21T12:00:00.000Z"><a href="/2015/02/21/git-branch-description/">Feb 21, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/02/21/git-branch-description/">Git Branch Description</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Branch is cheap, use it often. But when you create too many, knowing which is for what becomes a management problem. Here are two solutions:</p>
+<ol>
+<li>Use <code>--edit-description</code> to provide more than just a simple branch name</li>
+<li>Delete all merged branches</li>
+</ol>
+<p>For the first solution:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git branch --edit-description</div><div class="line">$ git config branch.master.description</div></pre></td></tr></table></figure>
+
+<p>Also see:</p>
+<ul>
+<li><a href="http://labs.sixdimensions.com/blog/2015-02-19/taking-advantage-git-branch-descriptions/" target="_blank" rel="external">Taking Advantage of Git Branch Descriptions</a></li>
+<li><a href="http://bahmutov.calepin.co/git-branches-with-descriptions-really.html" target="_blank" rel="external">Git branches with descriptions, really</a></li>
+</ul>
+<p>I prefer the second approach.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-02-19T12:00:00.000Z"><a href="/2015/02/19/why-startup/">Feb 19, 2015</a></time>
       
       
@@ -502,65 +548,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-12-31T12:00:00.000Z"><a href="/2014/12/31/mount-multiple-data-volumes-and-multiple-data-volume-containers-in-docker/">Dec 31, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/12/31/mount-multiple-data-volumes-and-multiple-data-volume-containers-in-docker/">Mount Multiple Data Volumes and Multiple Data Volume Containers in Docker</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><strong>Multiple Data Volumes from a Single Container</strong></p>
-<p>Create and run multiple data volumes in a container:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run <span class="operator">-d</span> --name vol -v /vol1 -v /vol2 ubuntu</div></pre></td></tr></table></figure>
-
-<p>Mount the data volumes in a new container:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name foo --volumes-from=vol ubuntu</div></pre></td></tr></table></figure>
-
-<p>Both volumes will be mounted under the root directory as <code>/vol1</code> and <code>/vol2</code>.</p>
-<p><strong>Multiple Data Volume Containers</strong></p>
-<p>Create and run multiple data volume containers:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> {<span class="number">1</span>..<span class="number">2</span>}; <span class="keyword">do</span> docker run <span class="operator">-d</span> --name vol<span class="variable">${i}</span> -v /vol<span class="variable">${i}</span> ubuntu; <span class="keyword">done</span></div></pre></td></tr></table></figure>
-
-<p>Mount multiple data volume containers:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name foo --volumes-from=vol1 --volumes-from=vol2 ubuntu</div></pre></td></tr></table></figure>
-
-<p>Now there are also two volumes mounted under the root directory as <code>/vol1</code> and <code>/vol2</code>, one from each container.</p>
-<p><strong>Multiple Data Volume Containers But Sharing the Same Data Volume Name</strong></p>
-<p>Create multiple data volume containers with the same data volume name <code>/vol</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> {<span class="number">1</span>..<span class="number">2</span>}; <span class="keyword">do</span> docker run <span class="operator">-d</span> --name vol<span class="variable">${i}</span> -v /vol ubuntu; <span class="keyword">done</span></div></pre></td></tr></table></figure>
-
-<p>Mount multiple data volume containers:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name foo --volumes-from=vol1 --volumes-from=vol2 ubuntu</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/12/31/mount-multiple-data-volumes-and-multiple-data-volume-containers-in-docker/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -585,7 +572,7 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>3</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -593,9 +580,11 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
   
+    <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
+  
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>10</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -605,7 +594,7 @@
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
   
-    <li><a href="/categories/starters/">Starters</a><small>1</small></li>
+    <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
@@ -944,7 +933,7 @@
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>3</small></li>
+    <li><a href="/tags/http/">http</a><small>4</small></li>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
@@ -1072,7 +1061,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>15</small></li>
+    <li><a href="/tags/node/">node</a><small>22</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1097,6 +1086,8 @@
     <li><a href="/tags/object/">object</a><small>3</small></li>
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
+  
+    <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
   
@@ -1202,7 +1193,7 @@
   
     <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
   
-    <li><a href="/tags/server/">server</a><small>1</small></li>
+    <li><a href="/tags/server/">server</a><small>2</small></li>
   
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
@@ -1240,7 +1231,7 @@
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>1</small></li>
+    <li><a href="/tags/starter/">starter</a><small>3</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
@@ -1282,7 +1273,7 @@
   
     <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
   
-    <li><a href="/tags/template/">template</a><small>1</small></li>
+    <li><a href="/tags/template/">template</a><small>2</small></li>
   
     <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
   

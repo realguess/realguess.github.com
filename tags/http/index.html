@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-04T12:00:00.000Z"><a href="/2015/09/04/node-js-http-server-one-liner/">Sep 4, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/04/node-js-http-server-one-liner/">Node.js HTTP Server One Liner</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>One liner to create a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> HTTP server:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">'OK'</span>); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>Print out the process ID instead:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">''</span> + process.pid); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>This is useful with the worker process when implementing the <a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a> module.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-03-29T12:00:00.000Z"><a href="/2015/03/29/supertest-listen-at-random-port/">Mar 29, 2015</a></time>
       
       
@@ -230,7 +269,7 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>3</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -238,9 +277,11 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
   
+    <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
+  
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>10</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -250,7 +291,7 @@
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
   
-    <li><a href="/categories/starters/">Starters</a><small>1</small></li>
+    <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
@@ -589,7 +630,7 @@
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>3</small></li>
+    <li><a href="/tags/http/">http</a><small>4</small></li>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
@@ -717,7 +758,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>15</small></li>
+    <li><a href="/tags/node/">node</a><small>22</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -742,6 +783,8 @@
     <li><a href="/tags/object/">object</a><small>3</small></li>
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
+  
+    <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
   
@@ -847,7 +890,7 @@
   
     <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
   
-    <li><a href="/tags/server/">server</a><small>1</small></li>
+    <li><a href="/tags/server/">server</a><small>2</small></li>
   
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
@@ -885,7 +928,7 @@
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>1</small></li>
+    <li><a href="/tags/starter/">starter</a><small>3</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
@@ -927,7 +970,7 @@
   
     <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
   
-    <li><a href="/tags/template/">template</a><small>1</small></li>
+    <li><a href="/tags/template/">template</a><small>2</small></li>
   
     <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
   

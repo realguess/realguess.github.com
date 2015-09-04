@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Node.js and io.js | realguess</title>
+  <title>JavaScript | realguess</title>
   <meta name="author" content="Chao Huang">
   
   <meta name="description" content="Just a blog about every detail encountered.">
@@ -58,7 +58,46 @@
 <div class="clearfix"></div></header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
-<h2 class="archive-title category">Node.js and io.js</h2>
+<h2 class="archive-title category">JavaScript</h2>
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-09-04T12:00:00.000Z"><a href="/2015/09/04/node-js-http-server-one-liner/">Sep 4, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/04/node-js-http-server-one-liner/">Node.js HTTP Server One Liner</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>One liner to create a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> HTTP server:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">'OK'</span>); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>Print out the process ID instead:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">''</span> + process.pid); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>This is useful with the worker process when implementing the <a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a> module.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
 
 
   
@@ -486,44 +525,11 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-03-14T12:00:00.000Z"><a href="/2015/03/14/use-pm2-with-io-js/">Mar 14, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/03/14/use-pm2-with-io-js/">Use PM2 with io.js</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>If you have both <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> and <a href="https://iojs.org/" target="_blank" rel="external">io.js</a> installed, <a href="https://github.com/Unitech/PM2" target="_blank" rel="external">PM2</a> will run Node.js by default. To start the app with io.js, use <code>--interpreter</code> flag:</p>
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ pm2 start app.js --name web --interpreter iojs</div><div class="line">[<span class="link_label">PM2</span>][<span class="link_reference">WARN</span>] We've notice that you are running the node script, but currently</div><div class="line">using a iojs interpreter, may be you need inspect the --interpreter option.</div><div class="line">[PM2] Process app.js launched</div><div class="line">┌──────────┬────┬──────┬──────┬────────┬─────────┬────────┬─────────────┬──────────┐</div><div class="line">│ App name │ id │ mode │ pid  │ status │ restart │ uptime │ memory      │ watching │</div><div class="line">├──────────┼────┼──────┼──────┼────────┼─────────┼────────┼─────────────┼──────────┤</div><div class="line">│ web      │ 2  │ fork │ 5074 │ online │ 0       │ 0s     │ 20.172 MB   │ disabled │</div><div class="line">└──────────┴────┴──────┴──────┴────────┴─────────┴────────┴─────────────┴──────────┘</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
+  
+    <a href="/categories/javascript/page/2/" class="alignright next">Next</a>
   
   <div class="clearfix"></div>
 </nav>
@@ -541,7 +547,7 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>3</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -549,9 +555,11 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
   
+    <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
+  
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>10</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -561,7 +569,7 @@
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
   
-    <li><a href="/categories/starters/">Starters</a><small>1</small></li>
+    <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
@@ -900,7 +908,7 @@
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>3</small></li>
+    <li><a href="/tags/http/">http</a><small>4</small></li>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
@@ -1028,7 +1036,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>15</small></li>
+    <li><a href="/tags/node/">node</a><small>22</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1053,6 +1061,8 @@
     <li><a href="/tags/object/">object</a><small>3</small></li>
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
+  
+    <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
   
@@ -1158,7 +1168,7 @@
   
     <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
   
-    <li><a href="/tags/server/">server</a><small>1</small></li>
+    <li><a href="/tags/server/">server</a><small>2</small></li>
   
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
@@ -1196,7 +1206,7 @@
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>1</small></li>
+    <li><a href="/tags/starter/">starter</a><small>3</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
@@ -1238,7 +1248,7 @@
   
     <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
   
-    <li><a href="/tags/template/">template</a><small>1</small></li>
+    <li><a href="/tags/template/">template</a><small>2</small></li>
   
     <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
   

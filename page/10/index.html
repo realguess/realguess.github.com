@@ -64,6 +64,55 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-12-19T16:56:13.000Z"><a href="/2013/12/19/split-json-file-into-multiple-parts/">Dec 19, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/19/split-json-file-into-multiple-parts/">Split JSON File into Multiple Parts</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><code>mongoexport</code> allows us to export documents from MongoDB into a JSON file:</p>
+<pre><code>$ mongoexport <span class="operator">-d</span> mydb -c mycollection -o myfile.json --jsonArray
+</code></pre><p>The <code>--jsonArray</code> option writes the entire content of the export as a single JSON array. Sometimes, the size of individual file is quite large, we need to break it down into small pieces, because most web servers will have a limit on how much data can be submitted at once. However, with the option, the entire document is a single line. Any line processing command cannot be easily used. (If you are looking to do so, you can use <code>jq</code> to <a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">split a large JSON file into smaller pieces</a>.) We can omit the option (default behavior) and have the export utility to dump it one document at a time. The entire exported JSON file is technically not in correct JSON format, but each line, which represents a MongoDB document, is valid JSON, and can be used to do some command line processing.</p>
+<p>To break a large file into many smaller pieces, we can use <code>split</code> command:</p>
+<pre><code>$ split -l <span class="number">10</span> <span class="typedef"><span class="keyword">data</span>.json</span>
+</code></pre><p>The <code>-l</code> or <code>--lines</code> option limits each file with a maximum of 10 lines.</p>
+<p>Another way we can use <code>-C</code> or <code>--line-bytes</code> option to put at most 1k bytes of lines per output file:</p>
+<pre><code>$ split <span class="operator">-d</span> <span class="operator">-a</span> <span class="number">3</span> -C <span class="number">1</span>k data.json
+</code></pre><p>One thing needs to make sure is that the size of each line is no more than the maximum size specified by the option, otherwise, partial lines will be generated.</p>
+<p>It is good to keep all those parts in their own directory:</p>
+<pre><code>$ mkdir pieces &amp;&amp; <span class="built_in">cd</span> pieces &amp;&amp; split <span class="operator">-d</span> <span class="operator">-a</span> <span class="number">3</span> -C <span class="number">1</span>k ../data.json &amp;&amp; <span class="built_in">cd</span> ..
+</code></pre><p>Unless breaking the file into one line at a time, otherwise, we need to convert individual JSON file into correct JSON format:</p>
+<pre><code><span class="formula">$ find pieces/* -exec sh -c <span class="command">\
+</span>&gt; "awk 'BEGIN<span class="special">{</span>l=<span class="command">\"</span><span class="special">[</span><span class="command">\"</span><span class="special">}</span><span class="special">{</span>print l;l=<span class="command">\$</span>0<span class="command">\"</span>,<span class="command">\"</span><span class="special">}</span>END<span class="special">{</span>print<span class="command">\$</span>0<span class="command">\"</span><span class="command">\n</span><span class="special">]</span><span class="command">\"</span><span class="special">}</span>' <span class="command">\
+</span>&gt; <span class="special">{</span><span class="special">}</span> &gt; <span class="special">{</span><span class="special">}</span>.json <span class="special">&amp;</span><span class="special">&amp;</span> rm <span class="special">{</span><span class="special">}</span>" <span class="command">\;</span></span>
+</code></pre><p>The output JSON file will contains an array of MongoDB documents. The main idea of the AWK script is to print out previous line as it reads the current line. <code>BEGIN { l = &quot;[&quot; }</code> defines the first line as the opening square bracket, and the <code>END { print $0&quot;\n&quot; }</code> prints the last line of the file and the closing square bracket.</p>
+<p>There bounds to be a better way. Just need to keep looking.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-12-18T15:12:43.000Z"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Dec 18, 2013</a></time>
       
       
@@ -533,64 +582,6 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-17T12:30:17.000Z"><a href="/2013/11/17/why-shebang/">Nov 17, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/17/why-shebang/">Why Shebang?</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Frequently the initial two characters on the initial line of a script are: <code>#!</code>.</p>
-<p><em>Why <a href="http://en.wikipedia.org/wiki/Shebang_(Unix)" target="_blank" rel="external">Shebang</a>?</em> Well, simple reason, because shell needs to know which interpreter to use when executing the script.</p>
-<blockquote>
-<p>The sha-bang (<code>#!</code>) at the head of a script tells your system that this file is a set of commands to be fed to the command interpreter indicated. The <code>#!</code> is actually a two-byte magic number, a special marker that designates a file type, or in this case an executable shell script (type man magic for more details on this fascinating topic). Immediately following the sha-bang is a path name. This is the path to the program that interprets the commands in the script, whether it be a shell, a programming language, or a utility. This command interpreter then executes the commands in the script, starting at the top (the line following the sha-bang line), and ignoring comments. - <a href="http://tldp.org/LDP/abs/html/sha-bang.html" target="_blank" rel="external">Starting Off With a Sha-Bang</a></p>
-</blockquote>
-<p>The shebang line is usually ignored by the interpreter because the <code>#</code> character is a comment marker in many scripting languages. Even the actual script is written with a different commenting character, such as in JavaScript:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env node</span></div><div class="line"><span class="comment">// JavaScript stuff starts here.</span></div></pre></td></tr></table></figure>
-
-<p>Because the first line is interpreted by the shell, and the rest is passed into JavaScript interpreter, in this case, Node.</p>
-<p>The syntax of shebang:</p>
-<pre><code><span class="shebang">#! interpreter [optional-arg]</span>
-</code></pre><p>Whether there is a space between shebang character and the interpreter or not, it does not matter.</p>
-<p>The interpreter must usually be an absolute path to a program that is not itself a script. The following are example interpreters:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#! /bin/sh</span></div><div class="line"><span class="shebang">#! /bin/bash</span></div></pre></td></tr></table></figure>
-
-<p>More examples are via <code>head -n 1 /etc/init.d/*</code>.</p>
-<blockquote>
-<p>The optional‑arg should either not be included or it should be a string that is meant to be a single argument (for reasons of portability, it should not contain any whitespace). - <a href="http://en.wikipedia.org/wiki/Shebang_(Unix)" target="_blank" rel="external">Shebang_(Unix)</a></p>
-</blockquote>
-<p>We also frequently see the following shebang:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div></pre></td></tr></table></figure>
-
-<p>That has to do with portability. Not every system install <code>node</code> or <code>bash</code> command in the same path. <code>/usr/bin/env</code> will search through user’s <code>$PATH</code>, and correctly locate the executable.</p>
-<p>To conclude for Node, here is the format I am using:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#! <span class="regexp">/usr/</span>bin/env node</div><div class="line"></div><div class="line"><span class="comment">// Title</span></div><div class="line"><span class="comment">// =====</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Markdown style description starts here.</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -614,7 +605,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>2</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>3</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -622,9 +613,11 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/categories/devops/">DevOps</a><small>1</small></li>
   
+    <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
+  
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
-    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>10</small></li>
+    <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
     <li><a href="/categories/pathfinder/">Pathfinder</a><small>1</small></li>
   
@@ -634,7 +627,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/categories/security/">Security</a><small>1</small></li>
   
-    <li><a href="/categories/starters/">Starters</a><small>1</small></li>
+    <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
     <li><a href="/categories/statistics/">Statistics</a><small>5</small></li>
   
@@ -973,7 +966,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>3</small></li>
+    <li><a href="/tags/http/">http</a><small>4</small></li>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
@@ -1101,7 +1094,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>15</small></li>
+    <li><a href="/tags/node/">node</a><small>22</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1126,6 +1119,8 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
     <li><a href="/tags/object/">object</a><small>3</small></li>
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
+  
+    <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
   
@@ -1231,7 +1226,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
   
-    <li><a href="/tags/server/">server</a><small>1</small></li>
+    <li><a href="/tags/server/">server</a><small>2</small></li>
   
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
@@ -1269,7 +1264,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>1</small></li>
+    <li><a href="/tags/starter/">starter</a><small>3</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
@@ -1311,7 +1306,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/techcrunch/">techcrunch</a><small>1</small></li>
   
-    <li><a href="/tags/template/">template</a><small>1</small></li>
+    <li><a href="/tags/template/">template</a><small>2</small></li>
   
     <li><a href="/tags/terminal/">terminal</a><small>1</small></li>
   
