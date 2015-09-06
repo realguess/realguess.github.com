@@ -68,6 +68,333 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-06T12:00:00.000Z"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Sep 6, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Upgrade Vagrant in Windows from Command Line without Prompt</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>To determine whether your <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a> is out of date or not, issue:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ vagrant version</div><div class="line">Installed Version: <span class="number">1.7</span>.<span class="number">4</span></div><div class="line">Latest Version: <span class="number">1.7</span>.<span class="number">4</span></div><div class="line"></div><div class="line">You<span class="string">'re running an up-to-date version of Vagrant!</span></div></pre></td></tr></table></figure>
+
+<p>If yours is out of date, you can download it from its <a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="external">download</a> page. However, being a lazy programmer, that’s still too many clicks. I want to figure out a way to update or install Vagrant from the command line without prompt.</p>
+<p>And here you go!</p>
+<p>Vagrant binaries are distributed by <a href="https://bintray.com/" target="_blank" rel="external">Bintray</a>, its format is:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://dl.bintray.com/mitchellh/vagrant/vagrant_{version}.msi</div></pre></td></tr></table></figure>
+
+<p>For example:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi</div></pre></td></tr></table></figure>
+
+<p>After you issue <code>vagrant version</code>, you know the correct version to upgrade, then download it:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://dl.bintray.com/mitchellh/vagrant/vagrant_1.<span class="number">7.4</span>.msi &gt; vagrant.msi</div></pre></td></tr></table></figure>
+
+<p>Install it by <code>msiexec</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ msiexec /i C:\Users\Chao\Downloads\vagrant.msi /passive /norestart</div></pre></td></tr></table></figure>
+
+<p>Make sure to use the full path instead of relative <code>.\vagrant.msi</code>, and Vagrant should be installed in the default location <code>C:\HashiCorp\Vagrant</code>. To find out all possible options, Just type <code>msiexec</code> command only.</p>
+<p>Saving a few clicks!</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-04-02T12:00:00.000Z"><a href="/2015/04/02/require-modules-from-the-command-line/">Apr 2, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/02/require-modules-from-the-command-line/">Require Modules from the Command Line</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://iojs.org/" target="_blank" rel="external">io.js</a> v1.6.0 introduces a new command line option: <code>-r</code> or <code>--require</code>, which can be used to pre-load modules at startup, see:</p>
+<p><a href="https://github.com/iojs/io.js/blob/v1.x/CHANGELOG.md#2015-03-19-version-160-chrisdickinson" target="_blank" rel="external">https://github.com/iojs/io.js/blob/v1.x/CHANGELOG.md#2015-03-19-version-160-chrisdickinson</a></p>
+<p>I can think of one interesting use case: overriding the default behavior or <code>console.log</code> to perform deep inspection:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// console.js</span></div><div class="line"><span class="keyword">var</span> util = <span class="built_in">require</span>(<span class="string">'util'</span>);</div><div class="line"><span class="keyword">var</span> log = <span class="built_in">console</span>.log;</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log = <span class="function"><span class="keyword">function</span> <span class="params">(obj)</span> </span>{</div><div class="line">  log(util.inspect(obj, { colors: <span class="literal">true</span>, depth: <span class="literal">null</span> }));</div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>Now I can pre-load this script to have all console log show in better format:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ iojs -r /path/to/console.js app.js</div></pre></td></tr></table></figure>
+
+<p>Time to find out more use cases.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-03-15T12:00:00.000Z"><a href="/2015/03/15/several-cli-ways-to-find-out-your-public-ip-address/">Mar 15, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/15/several-cli-ways-to-find-out-your-public-ip-address/">Several CLI Ways to Find Out Your Public IP Address</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Need to know your public IP address? Use one of the following:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span> checkip.amazonaws.com</div><div class="line">$ curl <span class="operator">-s</span> ipinfo.io/ip</div><div class="line">$ curl <span class="operator">-s</span> www.trackip.net/ip</div><div class="line">$ curl <span class="operator">-s</span> whatsmyip.me</div><div class="line">$ curl <span class="operator">-s</span> whatismyip.akamai.com</div><div class="line">$ curl <span class="operator">-s</span> icanhazip.com</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-02-08T12:00:00.000Z"><a href="/2015/02/08/how-to-correctly-use-environment-variables-on-the-command-line/">Feb 8, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/02/08/how-to-correctly-use-environment-variables-on-the-command-line/">How to Correctly Use Environment Variables on the Command Line</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I always forget about how to use shell environment variable correctly. I think because I did not grasp the key concept. For example, here is the wrong approach:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ FOO=foo BAR=bar <span class="built_in">echo</span> foo is <span class="variable">${FOO}</span> and bar is <span class="variable">${BAR}</span></div><div class="line">foo is and bar is</div></pre></td></tr></table></figure>
+
+<p>The correct answer I was hoping for is:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">foo is foo and bar is bar</div></pre></td></tr></table></figure>
+
+<p>Because what I frequently do is use environment variable inside shell script:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># script.sh</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> foo is <span class="variable">${FOO}</span> and bar is <span class="variable">${BAR}</span></div></pre></td></tr></table></figure>
+
+<p>then do:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ FOO=foo BAR=bar ./script.sh</div><div class="line">foo is foo and bar is bar</div></pre></td></tr></table></figure>
+
+<p>This works as expected because the environment variables are passed into the subshell that executing the script.</p>
+<p>But why not the first or the wrong approach?</p>
+<p>The reason is that <strong>shell expands the variable before the command being executed</strong>. To shell, the first approach looks like:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ FOO=foo BAR=bar <span class="built_in">echo</span> foo is and bar is</div></pre></td></tr></table></figure>
+
+<p>The environment variables <code>FOO</code> and <code>BAR</code> were expanded before the command was executed. Hence, no values were printed.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/02/08/how-to-correctly-use-environment-variables-on-the-command-line/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-01-07T12:00:00.000Z"><a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/">Jan 7, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/">Use CLI s3api to Retrieve Metadata of Amazon S3 Object</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In <a href="http://docs.aws.amazon.com/cli/latest/reference/s3/index.html#available-commands" target="_blank" rel="external">Amazon S3 CLI</a>, there are only a handful commands:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp      ls      mb      mv      rb      rm      sync    website</div></pre></td></tr></table></figure>
+
+<p>We can use <code>cp</code> command to retrieve S3 object:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp s3://mybucket/myfile.json myfile.json</div></pre></td></tr></table></figure>
+
+<p>But if only the metadata of the object, such as <code>ETag</code> or <code>Content-Type</code> is needed, the S3 CLI does not have any command to do that.</p>
+<p>Now enter <a href="http://docs.aws.amazon.com/cli/latest/reference/s3api/index.html" target="_blank" rel="external">S3API CLI</a>. Not only the CLI commands can retrieve S3 objects, but also associated <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html#object-metadata" target="_blank" rel="external">metadata</a>. For example, retrieve S3 object similar to <code>aws s3 cp</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3api get-object --bucket mybucket --key myfile.json</div></pre></td></tr></table></figure>
+
+<p>Just need the metadata of the object, use <code>head-object</code>, which retrieves metadata without the object itself, as HTTP HEAD method:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-12-27T12:00:00.000Z"><a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/">Dec 27, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/">Revoke and Grant Public IP Addresses to Amazon EC2 Instances Via AWS Command Line Interface (CLI)</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>If you work from place to place, such as from one coffee shop to another, and you need access to your Amazon EC2 instances, but you don’t want to allow traffics from all IP addresses. You can use the EC2 <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">Security Groups</a> to allow the IP addresses from those locations. But once you move on to a different location, you want to delete the IP address from the previous location. The process to do these manually and over and over again quickly becomes cumbersome. Here is a command line method that quickly removes all other locations and allows only the traffic from your current location.</p>
+<p>The steps are:</p>
+<ol>
+<li>Revoke all existing sources to a particular port</li>
+<li>Grant access to the port only from the current IP address</li>
+</ol>
+<p>Assume the following:</p>
+<ul>
+<li>Profile: <code>default</code></li>
+<li>Security group: <code>mygroup</code></li>
+<li>Protocol: <code>tcp</code></li>
+<li>Port: <code>22</code></li>
+</ul>
+<p>First, revoke access to the port from all IP addresses:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ aws ec2 describe-security-groups \</div><div class="line">    --profile default \</div><div class="line">    --group-names mygroup \</div><div class="line">    --query <span class="string">'SecurityGroups[0].IpPermissions[?ToPort==`22`].IpRanges[].CidrIp'</span> | \</div><div class="line">  jq .[] | \</div><div class="line">  xargs -n <span class="number">1</span> aws ec2 revoke-security-group-ingress \</div><div class="line">    --profile default \</div><div class="line">    --group-name mygroup \</div><div class="line">    --protocol tcp \</div><div class="line">    --port <span class="number">22</span> \</div><div class="line">    --cidr</div></pre></td></tr></table></figure>
+
+<p>The <code>aws ec2 describe-security-groups</code> command before the first pipe returns JSON formatted data, filtered via <a href="http://jmespath.org/" target="_blank" rel="external">JMESPath</a> query, which is supported by <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS CLI</a>, for example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  <span class="string">"XXX.XXX.XXX.XXX/32"</span>,</div><div class="line">  <span class="string">"XXX.XXX.XXX.XXX/32"</span></div><div class="line">]</div></pre></td></tr></table></figure>
+
+<p><a href="http://stedolan.github.io/jq/" target="_blank" rel="external">jq</a> command simply converts an array of JSON to line by line strings, which <code>xarg</code> takes in, loops through and deletes one IP address at a time.</p>
+<p>After this step, all IP addresses originally allowed are all revoked. Next step is to grant access to the port from a single IP address:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-11-28T12:00:00.000Z"><a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/">Nov 28, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/">Delete All Messages in an Amazon SQS Queue via AWS CLI</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://aws.amazon.com/sqs/" target="_blank" rel="external">Amazon SQS</a> or Simple Queue Service is a fast, reliable, scalable, fully managed message queuing service. There is also <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS CLI</a> or Command Line Interface available to use with the service.</p>
+<p>If you have a lot of messages in a queue, this command will show the approximate number:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ aws sqs get-queue-attributes \</div><div class="line">  --queue-url <span class="variable">$url</span> \</div><div class="line">  --attribute-names ApproximateNumberOfMessages</div></pre></td></tr></table></figure>
+
+<p>Where <code>$url</code> is the URL to the Amazon SQS queue.</p>
+<p>There is no command to delete all messages yet, but you can chain a few commands together to make it work:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-05-18T14:49:04.000Z"><a href="/2014/05/18/command-line-json-processing/">May 18, 2014</a></time>
       
       
@@ -126,6 +453,97 @@
 <p><a href="https://github.com/stedolan/jq" target="_blank" rel="external">jq</a> can do much more than just the example just shown. It has zero runtime dependencies, and flexible to deal with not just array but object as well.</p>
 <h2 id="Conclusion">Conclusion</h2>
 <p><a href="https://github.com/stedolan/jq" target="_blank" rel="external">jq</a> is clearly the winner here, with the least dependency, the most functionality and more popularity, as well as a comprehensive documentation.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-03-29T10:44:53.000Z"><a href="/2014/03/29/amazon-aws-command-line-interface-cli/">Mar 29, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/29/amazon-aws-command-line-interface-cli/">Amazon AWS Command Line Interface (CLI)</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>This is a brief guide for installing <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS Command Line Interface (CLI)</a> on Ubuntu Linux.</p>
+<blockquote>
+<p>The AWS Command Line Interface (CLI)] is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts. [2]</p>
+</blockquote>
+<p>The point here is <strong>unified</strong>, one tool to run all Amazon AWS services.</p>
+<h2 id="Install">Install</h2>
+<p><em>The installation procedure applies to Ubuntu Linux with Zsh and Bash.</em></p>
+<p>Install <a href="http://www.pip-installer.org/en/latest/" target="_blank" rel="external">pip</a>, a Python package manager:</p>
+<pre><code>$ sudo apt-<span class="built_in">get</span> install <span class="keyword">python</span>-pip
+</code></pre><p>Install <em>awscli</em>:</p>
+<pre><code>$ <span class="built_in">sudo</span> pip install awscli
+</code></pre><p>Install autocompletion:</p>
+<pre><code>$ which aws_zsh_completer.<span class="keyword">sh</span>
+/usr/local/bin/aws_zsh_completer.<span class="keyword">sh</span>
+$ <span class="keyword">source</span> aws_zsh_completer.<span class="keyword">sh</span>
+</code></pre><p>Add this line to <code>~/.zshrc</code> as well.</p>
+<p>Or for Bash <code>~/.bashrc</code>:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">'\n# Enable AWS CLI autocompletion'</span> &gt;&gt; ~/.bashrc
+$ <span class="built_in">echo</span> <span class="string">'complete -C aws_completer aws'</span> &gt;&gt; ~/.bashrc
+$ <span class="built_in">source</span> ~/.bashrc
+</code></pre><p>Test installation:</p>
+<pre><code><span class="variable">$ </span>which aws
+/usr/local/bin/aws
+<span class="variable">$ </span>aws help
+</code></pre><p>Test autocompletion:</p>
+<pre><code>$ aws &lt;<span class="keyword">tab</span>&gt;&lt;<span class="keyword">tab</span>&gt;
+</code></pre><p>You should see a list of all available AWS commands.</p>
+<h2 id="Usage">Usage</h2>
+<p>Before using aws-cli, you need to tell it about your AWS credentials. There are three ways to specify AWS credentials:</p>
+<ol>
+<li>Environment variables</li>
+<li>Config file</li>
+<li>IAM Role</li>
+</ol>
+<p>Using config file is preferred, which is a simple <a href="http://en.wikipedia.org/wiki/INI_file" target="_blank" rel="external">ini</a> file format to be stored in <code>~/.aws/config</code>. A soft link can be used to link it or just tell awscli where to find it:</p>
+<pre><code><span class="variable">$ </span>export <span class="constant">AWS_CONFIG_FILE</span>=<span class="regexp">/path/to</span><span class="regexp">/config_file</span>
+</code></pre><p>It is better to use IAM roles with any of the AWS services:</p>
+<blockquote>
+<p>The final option for credentials is highly recommended if you are using aws-cli on an EC2 instance. IAM Roles are a great way to have credentials installed automatically on your instance. If you are using IAM Roles, aws-cli will find them and use them automatically. [4]</p>
+</blockquote>
+<p>The default output is in JSON format. Other formats are tab-delimited text and ASCII-formatted table. For example, using <code>--query</code> filter and table output:</p>
+<pre><code><span class="formula">$ aws ec2 describe-instances --query 'Reservations<span class="special">[</span>*<span class="special">]</span>.Instances<span class="special">[</span>*<span class="special">]</span>.<span class="special">{</span> <span class="command">\
+</span>  ID:InstanceId, TYPE:InstanceType, ZONE:Placement.AvailabilityZone, <span class="command">\
+</span>  SECURITY:SecurityGroups<span class="special">[</span>0<span class="special">]</span>.GroupId, KEY:KeyName, VPC:VpcId, <span class="command">\
+</span>  STATE:State.Name<span class="special">}</span>' --output table</span>
+</code></pre><p>This will print a nice looking table of all EC2 instances.</p>
+<p>The command line options also accept JSON format. But when passing in large blocks of data, referring a JSON file is much easier. Both local file and remote URL can be used.</p>
+<h2 id="Upgrade">Upgrade</h2>
+<p>Check the installed and the latest versions:</p>
+<pre><code>$ pip <span class="built_in">search</span> awscli
+</code></pre><p>Upgrade AWS CLI to the latest version:</p>
+<pre><code>$ sudo pip <span class="operator"><span class="keyword">install</span> <span class="comment">--upgrade awscli</span></span>
+</code></pre><h2 id="References">References</h2>
+<ol>
+<li><a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS Command Line Interface</a></li>
+<li><a href="http://docs.aws.amazon.com/cli/latest/userguide/" target="_blank" rel="external">User Guide</a></li>
+<li><a href="http://docs.aws.amazon.com/cli/latest/reference/" target="_blank" rel="external">Reference</a></li>
+<li><a href="https://github.com/aws/aws-cli/" target="_blank" rel="external">GitHub repository</a></li>
+</ol>
 
       
     </div>
@@ -216,13 +634,13 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>3</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>7</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>3</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>4</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -244,7 +662,7 @@
   
     <li><a href="/categories/test/">Test</a><small>2</small></li>
   
-    <li><a href="/categories/tools/">Tools</a><small>23</small></li>
+    <li><a href="/categories/tools/">Tools</a><small>19</small></li>
   
     <li><a href="/categories/travel/">Travel</a><small>1</small></li>
   
@@ -341,6 +759,8 @@
   
     <li><a href="/tags/binding/">binding</a><small>1</small></li>
   
+    <li><a href="/tags/bintray/">bintray</a><small>1</small></li>
+  
     <li><a href="/tags/bitbucket/">bitbucket</a><small>2</small></li>
   
     <li><a href="/tags/blog/">blog</a><small>4</small></li>
@@ -371,7 +791,7 @@
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>7</small></li>
+    <li><a href="/tags/cli/">cli</a><small>10</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -395,9 +815,9 @@
   
     <li><a href="/tags/command-history/">command-history</a><small>1</small></li>
   
-    <li><a href="/tags/command-line/">command-line</a><small>2</small></li>
+    <li><a href="/tags/command-line/">command-line</a><small>10</small></li>
   
-    <li><a href="/tags/command-line-interface/">command-line-interface</a><small>1</small></li>
+    <li><a href="/tags/command-line-interface/">command-line-interface</a><small>0</small></li>
   
     <li><a href="/tags/compare/">compare</a><small>1</small></li>
   
@@ -599,7 +1019,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>4</small></li>
+    <li><a href="/tags/install/">install</a><small>5</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -692,6 +1112,8 @@
     <li><a href="/tags/mongodb/">mongodb</a><small>1</small></li>
   
     <li><a href="/tags/mongoexport/">mongoexport</a><small>1</small></li>
+  
+    <li><a href="/tags/msiexec/">msiexec</a><small>1</small></li>
   
     <li><a href="/tags/multi-parts/">multi-parts</a><small>1</small></li>
   
@@ -973,7 +1395,7 @@
   
     <li><a href="/tags/update/">update</a><small>1</small></li>
   
-    <li><a href="/tags/upgrade/">upgrade</a><small>1</small></li>
+    <li><a href="/tags/upgrade/">upgrade</a><small>2</small></li>
   
     <li><a href="/tags/upload/">upload</a><small>1</small></li>
   
@@ -981,7 +1403,7 @@
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>4</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>5</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   
@@ -1007,7 +1429,7 @@
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
   
-    <li><a href="/tags/windows/">windows</a><small>1</small></li>
+    <li><a href="/tags/windows/">windows</a><small>2</small></li>
   
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
   

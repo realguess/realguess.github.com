@@ -64,6 +64,56 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-12-01T12:00:00.000Z"><a href="/2014/12/01/statistics-in-november-2014/">Dec 1, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/12/01/statistics-in-november-2014/">Statistics in November 2014</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In November 2014, there are 836 <em>unique visitors</em> making 930 <em>visits</em> resulting in 1,091 <em>pageviews</em>, about 36 <em>daily pageviews</em>.</p>
+<p>As today, <a href="http://www.alexa.com/siteinfo/realguess.net" target="_blank" rel="external">my blog</a> is still estimated by <a href="http://www.alexa.com/" target="_blank" rel="external">Alexa</a>. It ranks my blog 911,093 globally and 183,366 in the United States.</p>
+<p><strong>Where are my visitors located?</strong></p>
+<p>34.09% of visits are from the United States, and the second place is from India with 7.20%. </p>
+<p><strong>Where do my visitors come from?</strong></p>
+<p>Google is the top traffic source with 83.98% of all visits. Social is almost non-existing.</p>
+<p><strong>What devices and operating systems are my visitors using?</strong></p>
+<p>43.76% are using Windows, then followed closely by Macintosh with 37.31%. 97.85% visitors are using desktop devices.</p>
+<p><strong>What is the top post?</strong></p>
+<p>The most popular post is <a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">Split a Large JSON File into Smaller Pieces</a>, it is even popular than the site’s main index page.</p>
+<p><strong>How is my site speed?</strong></p>
+<p>The average page load time is 4.66 seconds. There is one sample coming from China resulted in almost 16 seconds of load time, ouch! That really drags down the average.</p>
+<p><strong>Is my blog getting more and more visitors?</strong></p>
+<p>Yes! The month-to-month gain is 11.32%, and year-to-year gain is 1,270.49%, more than a thousand fold. Well, I just got started by then.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/12/01/statistics-in-november-2014/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-11-29T12:00:00.000Z"><a href="/2014/11/29/deregister-imessage/">Nov 29, 2014</a></time>
       
       
@@ -433,48 +483,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-09-28T12:00:00.000Z"><a href="/2014/09/28/patch-shellshock-vulnerability/">Sep 28, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/09/28/patch-shellshock-vulnerability/">Patch ShellShock Vulnerability</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>ShellShock is a Bash vulnerability, which allows bypassing environment restrictions in certain environments. See <a href="http://www.ubuntu.com/usn/USN-2363-1/" target="_blank" rel="external">Ubuntu Security Notice USN-2363-1</a>. And for more detailed description, see <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-7169" target="_blank" rel="external">CVE-2014-7169</a>.</p>
-<p>This Bash bug can be potentially bigger than the <a href="http://heartbleed.com/" target="_blank" rel="external">Heartbleed</a> bug, because Bash shell is usually the default shell for the user, and many commands will also spawn Bash to execute. See this answer <a href="http://askubuntu.com/a/528102" target="_blank" rel="external">http://askubuntu.com/a/528102</a> from StackOverflow.</p>
-<p>Running the following command will determine if the system is vulnerable or not:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>env x=<span class="string">'() { :;}; echo vulnerable'</span> bash -c <span class="string">"echo this is a test"</span></div></pre></td></tr></table></figure>
-
-<p><em>Source: <a href="http://t.co/nfDCUdRnb5" target="_blank" rel="external">http://t.co/nfDCUdRnb5</a></em></p>
-<p>Luckily, this is relatively easy to patch. Simple <code>apt-get update &amp;&amp; apt-get upgrade</code> will patch the Bash with the latest security fix. For example, this is a patched Bash version:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ bash --<span class="keyword">version</span></div><div class="line">GNU bash, <span class="keyword">version</span> <span class="number">4.2</span>.<span class="number">25</span>(<span class="number">1</span>)-release</div></pre></td></tr></table></figure>
-
-<p>This is for Ubuntu 12.04 LTS. If you are running Ubuntu 14.04 LTS, you have to<br>upgrade to <a href="http://www.ubuntu.com/usn/USN-2363-2/" target="_blank" rel="external">Bash 4.3-7ubuntu1.3</a>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -498,13 +506,13 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>3</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>7</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>3</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>4</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -526,7 +534,7 @@
   
     <li><a href="/categories/test/">Test</a><small>2</small></li>
   
-    <li><a href="/categories/tools/">Tools</a><small>23</small></li>
+    <li><a href="/categories/tools/">Tools</a><small>19</small></li>
   
     <li><a href="/categories/travel/">Travel</a><small>1</small></li>
   
@@ -623,6 +631,8 @@
   
     <li><a href="/tags/binding/">binding</a><small>1</small></li>
   
+    <li><a href="/tags/bintray/">bintray</a><small>1</small></li>
+  
     <li><a href="/tags/bitbucket/">bitbucket</a><small>2</small></li>
   
     <li><a href="/tags/blog/">blog</a><small>4</small></li>
@@ -653,7 +663,7 @@
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>7</small></li>
+    <li><a href="/tags/cli/">cli</a><small>10</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -677,9 +687,9 @@
   
     <li><a href="/tags/command-history/">command-history</a><small>1</small></li>
   
-    <li><a href="/tags/command-line/">command-line</a><small>2</small></li>
+    <li><a href="/tags/command-line/">command-line</a><small>10</small></li>
   
-    <li><a href="/tags/command-line-interface/">command-line-interface</a><small>1</small></li>
+    <li><a href="/tags/command-line-interface/">command-line-interface</a><small>0</small></li>
   
     <li><a href="/tags/compare/">compare</a><small>1</small></li>
   
@@ -881,7 +891,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>4</small></li>
+    <li><a href="/tags/install/">install</a><small>5</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -974,6 +984,8 @@
     <li><a href="/tags/mongodb/">mongodb</a><small>1</small></li>
   
     <li><a href="/tags/mongoexport/">mongoexport</a><small>1</small></li>
+  
+    <li><a href="/tags/msiexec/">msiexec</a><small>1</small></li>
   
     <li><a href="/tags/multi-parts/">multi-parts</a><small>1</small></li>
   
@@ -1255,7 +1267,7 @@
   
     <li><a href="/tags/update/">update</a><small>1</small></li>
   
-    <li><a href="/tags/upgrade/">upgrade</a><small>1</small></li>
+    <li><a href="/tags/upgrade/">upgrade</a><small>2</small></li>
   
     <li><a href="/tags/upload/">upload</a><small>1</small></li>
   
@@ -1263,7 +1275,7 @@
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>4</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>5</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   
@@ -1289,7 +1301,7 @@
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
   
-    <li><a href="/tags/windows/">windows</a><small>1</small></li>
+    <li><a href="/tags/windows/">windows</a><small>2</small></li>
   
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
   

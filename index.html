@@ -64,6 +64,57 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-06T12:00:00.000Z"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Sep 6, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Upgrade Vagrant in Windows from Command Line without Prompt</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>To determine whether your <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a> is out of date or not, issue:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ vagrant version</div><div class="line">Installed Version: <span class="number">1.7</span>.<span class="number">4</span></div><div class="line">Latest Version: <span class="number">1.7</span>.<span class="number">4</span></div><div class="line"></div><div class="line">You<span class="string">'re running an up-to-date version of Vagrant!</span></div></pre></td></tr></table></figure>
+
+<p>If yours is out of date, you can download it from its <a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="external">download</a> page. However, being a lazy programmer, that’s still too many clicks. I want to figure out a way to update or install Vagrant from the command line without prompt.</p>
+<p>And here you go!</p>
+<p>Vagrant binaries are distributed by <a href="https://bintray.com/" target="_blank" rel="external">Bintray</a>, its format is:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://dl.bintray.com/mitchellh/vagrant/vagrant_{version}.msi</div></pre></td></tr></table></figure>
+
+<p>For example:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi</div></pre></td></tr></table></figure>
+
+<p>After you issue <code>vagrant version</code>, you know the correct version to upgrade, then download it:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://dl.bintray.com/mitchellh/vagrant/vagrant_1.<span class="number">7.4</span>.msi &gt; vagrant.msi</div></pre></td></tr></table></figure>
+
+<p>Install it by <code>msiexec</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ msiexec /i C:\Users\Chao\Downloads\vagrant.msi /passive /norestart</div></pre></td></tr></table></figure>
+
+<p>Make sure to use the full path instead of relative <code>.\vagrant.msi</code>, and Vagrant should be installed in the default location <code>C:\HashiCorp\Vagrant</code>. To find out all possible options, Just type <code>msiexec</code> command only.</p>
+<p>Saving a few clicks!</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-05T12:00:00.000Z"><a href="/2015/09/05/install-docker-on-google-cloud-platform-with-ubuntu-vivid-15-04/">Sep 5, 2015</a></time>
       
       
@@ -460,45 +511,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-07-06T12:00:00.000Z"><a href="/2015/07/06/fields-in-package-json-for-private-and-unlicensed-modules/">Jul 6, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/07/06/fields-in-package-json-for-private-and-unlicensed-modules/">Fields in &#39;package.json&#39; for Private and Unlicensed Modules</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>If you not include the <code>license</code> field in <code>package.json</code>, <a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a> will keep bugging you:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">INFO: package.json</div><div class="line">INFO: api@<span class="number">0.1</span>.<span class="number">8</span> No license field.</div></pre></td></tr></table></figure>
-
-<p>If your module is private, just add the following two fields to <code>package.json</code>:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"UNLICENSED"</span></span>,</div><div class="line">  "<span class="attribute">private</span>": <span class="value"><span class="literal">true</span></span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>See NPM <code>package.json</code> <a href="https://docs.npmjs.com/files/package.json#license" target="_blank" rel="external">license</a>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -520,13 +532,13 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>3</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>7</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>3</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>4</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -548,7 +560,7 @@
   
     <li><a href="/categories/test/">Test</a><small>2</small></li>
   
-    <li><a href="/categories/tools/">Tools</a><small>23</small></li>
+    <li><a href="/categories/tools/">Tools</a><small>19</small></li>
   
     <li><a href="/categories/travel/">Travel</a><small>1</small></li>
   
@@ -645,6 +657,8 @@
   
     <li><a href="/tags/binding/">binding</a><small>1</small></li>
   
+    <li><a href="/tags/bintray/">bintray</a><small>1</small></li>
+  
     <li><a href="/tags/bitbucket/">bitbucket</a><small>2</small></li>
   
     <li><a href="/tags/blog/">blog</a><small>4</small></li>
@@ -675,7 +689,7 @@
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>7</small></li>
+    <li><a href="/tags/cli/">cli</a><small>10</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -699,9 +713,9 @@
   
     <li><a href="/tags/command-history/">command-history</a><small>1</small></li>
   
-    <li><a href="/tags/command-line/">command-line</a><small>2</small></li>
+    <li><a href="/tags/command-line/">command-line</a><small>10</small></li>
   
-    <li><a href="/tags/command-line-interface/">command-line-interface</a><small>1</small></li>
+    <li><a href="/tags/command-line-interface/">command-line-interface</a><small>0</small></li>
   
     <li><a href="/tags/compare/">compare</a><small>1</small></li>
   
@@ -903,7 +917,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>4</small></li>
+    <li><a href="/tags/install/">install</a><small>5</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -996,6 +1010,8 @@
     <li><a href="/tags/mongodb/">mongodb</a><small>1</small></li>
   
     <li><a href="/tags/mongoexport/">mongoexport</a><small>1</small></li>
+  
+    <li><a href="/tags/msiexec/">msiexec</a><small>1</small></li>
   
     <li><a href="/tags/multi-parts/">multi-parts</a><small>1</small></li>
   
@@ -1277,7 +1293,7 @@
   
     <li><a href="/tags/update/">update</a><small>1</small></li>
   
-    <li><a href="/tags/upgrade/">upgrade</a><small>1</small></li>
+    <li><a href="/tags/upgrade/">upgrade</a><small>2</small></li>
   
     <li><a href="/tags/upload/">upload</a><small>1</small></li>
   
@@ -1285,7 +1301,7 @@
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>4</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>5</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   
@@ -1311,7 +1327,7 @@
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
   
-    <li><a href="/tags/windows/">windows</a><small>1</small></li>
+    <li><a href="/tags/windows/">windows</a><small>2</small></li>
   
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
   
