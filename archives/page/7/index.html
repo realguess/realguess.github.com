@@ -68,6 +68,59 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-06-21T11:58:22.000Z"><a href="/2014/06/21/avoid-assigning-undefined-to-an-object-property/">Jun 21, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/21/avoid-assigning-undefined-to-an-object-property/">Avoid Assigning undefined to an Object Property</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>A property value should be any JavaScript value except for <code>undefined</code>. If you do something like this (albeit it is legal):</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = { bar: <span class="literal">undefined</span> };</div></pre></td></tr></table></figure>
+
+<p>will leads to confusing code. Because when accessing the property value:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(foo.bar); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
+
+<p>It will returns <code>undefined</code>. But you are not sure if it means the property exists or not or the value of the property is set to <code>undefined</code>. Therefore, you should do:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = { bar: <span class="literal">null</span> };</div></pre></td></tr></table></figure>
+
+<p>This indicates that the property is expected, and with the value of <code>null</code>.</p>
+<p>You do be able to check the existence of a property by:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.keys(foo); <span class="comment">// ['bar']</span></div><div class="line">foo.hasOwnProperty(<span class="string">'bar'</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
+
+<p>But more importantly, if you serialize the object with <code>JSON.stringify</code>, properties with <code>undefined</code> will be omitted:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">JSON</span>.stringify({ bar: <span class="literal">undefined</span> }); <span class="comment">// '{}'</span></div></pre></td></tr></table></figure>
+
+<p>According to <a href="http://www.json.org/" target="_blank" rel="external">JSON specification</a>, <em>a value can be a <code>string</code> in double quotes, or a <code>number</code>, or <code>true</code> or <code>false</code> or <code>null</code>, or an <code>object</code> or an <code>array</code></em>. <code>undefined</code> is not a valid JSON value.</p>
+<p><code>null</code> is fine:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">JSON</span>.stringify({ bar: <span class="literal">null</span> }); <span class="comment">// '{"bar":null}'</span></div></pre></td></tr></table></figure>
+
+<p>So, for the best practice, avoid assigning <code>undefined</code> to a property of an object. Use <code>null</code> to indicate the expected property without a value. This will increase portability when using JSON to serialize.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-06-16T14:13:29.000Z"><a href="/2014/06/16/proxy-github-files-for-hotlinking/">Jun 16, 2014</a></time>
       
       
@@ -712,64 +765,6 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-04-29T12:26:48.000Z"><a href="/2014/04/29/update-github-pages-deprecated-ip-addresses-with-zone-apex-domain/">Apr 29, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/04/29/update-github-pages-deprecated-ip-addresses-with-zone-apex-domain/">Update GitHub Pages Deprecated IP Addresses with Zone Apex Domain</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Recently, I have received a warning email from GitHub:</p>
-<blockquote>
-<p>GitHub Pages recently underwent some improvements (<a href="https://github.com/blog/1715-faster-more-awesome-github-pages" target="_blank" rel="external">https://github.com/blog/1715-faster-more-awesome-github-pages</a>) to make your site faster and more awesome, but we’ve noticed that realguess.net isn’t properly configured to take advantage of these new features. While your site will continue to work just fine, updating your domain’s configuration offers some additional speed and performance benefits. Instructions on updating your site’s IP address can be found at <a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages#step-2-configure-dns-records" target="_blank" rel="external">https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages#step-2-configure-dns-records</a>, and of course, you can always get in touch with a human at support@github.com. For the more technical minded folks who want to skip the help docs: your site’s DNS records are pointed to a deprecated IP address.</p>
-</blockquote>
-<p>What are the improvements on <a href="https://pages.github.com/" target="_blank" rel="external">GitHub Pages</a>? Here are the two major improvements [<a href="https://github.com/blog/1715-faster-more-awesome-github-pages" target="_blank" rel="external">1</a>]:</p>
-<ul>
-<li>Pages are served via CDN (Content Delivery Network)</li>
-<li>DoS (Denial of Service) protection</li>
-</ul>
-<p>But my site wasn’t properly configured to take advantage of speed and performance due to that the “DNS records are pointed to a deprecated IP address”.</p>
-<p><em>What are the IP addresses that GitHub Pages uses before but have been deprecated now?</em></p>
-<p>The domain <code>realguess.net</code> is an custom zone apex domain (also called bare, naked, or root domain). The domain <code>blog.realguess.net</code> is not a zone apex domain, but a subdomain. “A custom subdomain will not be affected by changes in the underlying IP addresses of GitHub’s servers.” [<a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages" target="_blank" rel="external">2</a>] But, I am not using a subdomain. I have configured the zone apex domain to point to currently deprecated IP addresses. “If you are using an A record that points to 207.97.227.245 or 204.232.175.78, you will need to update your DNS settings, as we no longer serve Pages directly from those servers.” [<a href="https://help.github.com/articles/my-custom-domain-isn-t-working" target="_blank" rel="external">3</a>] So, these IP addresses are deprecated, and need to update the current DNS from:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ dig realguess.<span class="winutils">net</span> +nostats +nocomments +nocmd</div><div class="line">;realguess.<span class="winutils">net</span>.                 <span class="flow">IN</span>      A</div><div class="line">realguess.<span class="winutils">net</span>.          <span class="number">86400</span>   <span class="flow">IN</span>      A       <span class="number">204</span>.<span class="number">232</span>.<span class="number">175</span>.<span class="number">78</span></div></pre></td></tr></table></figure>
-
-<p>to the new ones pointed by <code>username.github.io</code>:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ dig realguess.github.io +nostats +nocomments +nocmd</div><div class="line">;realguess.github.io.           <span class="keyword">IN</span>      A</div><div class="line">realguess.github.io.    <span class="number">3600</span>    <span class="keyword">IN</span>      CNAME   github.<span class="keyword">map</span>.fastly.net.</div><div class="line">github.<span class="keyword">map</span>.fastly.net.  <span class="number">28</span>      <span class="keyword">IN</span>      A       <span class="number">199.27</span><span class="number">.73</span><span class="number">.133</span></div></pre></td></tr></table></figure>
-
-<p>And the new IP address are:</p>
-<pre><code>192.30.252.153
-192.30.252.154
-</code></pre><p>Using a subdomain is a better solution, so I don’t need to care about the changing GitHub Pages IP addresses in the future. But I don’t think the frequency of IP address updating is going to be very often. So, I will stick with my zone apex domain.</p>
-<ol>
-<li><a href="https://github.com/blog/1715-faster-more-awesome-github-pages" target="_blank" rel="external">Faster, More Awesome GitHub Pages</a></li>
-<li><a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages" target="_blank" rel="external">Setting up a custom domain with GitHub Pages</a></li>
-<li><a href="https://help.github.com/articles/my-custom-domain-isn-t-working" target="_blank" rel="external">My custom domain isn’t working</a></li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -800,7 +795,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>4</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>5</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -1097,6 +1092,8 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
+    <li><a href="/tags/gce/">gce</a><small>1</small></li>
+  
     <li><a href="/tags/gcloud/">gcloud</a><small>2</small></li>
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
@@ -1127,7 +1124,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
-    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>1</small></li>
+    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>2</small></li>
   
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
@@ -1179,7 +1176,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>5</small></li>
+    <li><a href="/tags/install/">install</a><small>6</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -1429,7 +1426,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/settings/">settings</a><small>1</small></li>
   
-    <li><a href="/tags/setup/">setup</a><small>1</small></li>
+    <li><a href="/tags/setup/">setup</a><small>2</small></li>
   
     <li><a href="/tags/shabang/">shabang</a><small>1</small></li>
   
@@ -1563,7 +1560,13 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>5</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>6</small></li>
+  
+    <li><a href="/tags/vagrant-box/">vagrant-box</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant-google/">vagrant-google</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant-plugin/">vagrant-plugin</a><small>1</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   

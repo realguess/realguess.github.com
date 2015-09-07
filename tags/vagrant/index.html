@@ -68,6 +68,79 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/setup-development-environment-with-vagrant-on-google-compute-engine/">Sep 7, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/07/setup-development-environment-with-vagrant-on-google-compute-engine/">Setup Development Environment with Vagrant on Google Compute Engine</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>We usually use <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a> to provision and manage <a href="https://www.virtualbox.org/" target="_blank" rel="external">VirtualBox</a> virtual machines or VMs. And Vagrant only ships with VirtualBox support by default. But Vagrant can do much more. VirtualBox is just one of <a href="https://docs.vagrantup.com/v2/providers/index.html" target="_blank" rel="external">providers</a>, additional providers can be added via the <a href="https://docs.vagrantup.com/v2/plugins/index.html" target="_blank" rel="external">Vagrant plugin system</a>. Here, we are going to use <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> as the provider and setup a disposable development environment.</p>
+<p>Basic steps involve:</p>
+<ol>
+<li>Install Vagrant</li>
+<li>Install vagrant-google plugin</li>
+<li>Add SSH keys to metadata server</li>
+<li>Add Vagrant box</li>
+<li>Add a Vagrantfile and override the defaults from the box</li>
+<li>Provision the machine</li>
+</ol>
+<p>First, install Vagrant (exampled by <a href="https://www.debian.org/" target="_blank" rel="external">Debian</a> systems such as <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a>):</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ file=/tmp/vagrant.deb version=<span class="number">1.7</span>.<span class="number">4</span> && \</div><div class="line">  curl <span class="operator">-s</span>SL https://dl.bintray.com/mitchellh/vagrant/vagrant_<span class="variable">${version}</span>_x86_64.deb &gt; <span class="variable">${file}</span> && \</div><div class="line">  <span class="built_in">sudo</span> dpkg -i <span class="variable">${file}</span> && \</div><div class="line">  rm <span class="variable">${file}</span> && \</div><div class="line">  vagrant version</div></pre></td></tr></table></figure>
+
+<p>Install dependencies for building Debian packages, which are needed for the plugin:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> apt-get install -y build-essential</div></pre></td></tr></table></figure>
+
+<p>Install <a href="https://github.com/mitchellh/vagrant-google" target="_blank" rel="external">vagrant-google</a> plugin:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vagrant plugin install vagrant-google</div><div class="line">Installing the <span class="string">'vagrant-google'</span> plugin. This can take a few minutes...</div><div class="line">Installed the plugin <span class="string">'vagrant-google (0.2.1)'</span>!</div></pre></td></tr></table></figure>
+
+<p>In order to SSH into the VM, we need to add public key to the instance which will be provisioned. In Google Compute Engine, this is done via <a href="https://cloud.google.com/compute/docs/metadata" target="_blank" rel="external">metadata</a> server at the project level.</p>
+<p>Add the username to prefix the SSH key, so the Compute Engine will pick it up and create the corresponding user:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span> -n <span class="string">'chao:'</span> &gt; /tmp/id_rsa.pub</div><div class="line">$ cat ~/.ssh/id_rsa.pub &gt;&gt; /tmp/id_rsa.pub</div></pre></td></tr></table></figure>
+
+<p>Now the concatenated one will have the username:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">chao</span><span class="pseudo">:ssh-rsa</span> <span class="tag">AAAAB3</span>... <span class="tag">chao</span><span class="at_rule">@<span class="keyword">ubuntu</span></span></div></pre></td></tr></table></figure>
+
+<p>Setting up SSH keys at the project level:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ gcloud compute project-info add-metadata --metadata-from-file \</div><div class="line">  sshKeys=/tmp/id_rsa.pub</div></pre></td></tr></table></figure>
+
+<p><a href="https://cloud.google.com/sdk/" target="_blank" rel="external">Google Cloud SDK</a> or <code>gcloud</code> command should be installed already. Now it’s time to configure the machine to be provisioned.</p>
+<p>The plugin provides a Vagrant <a href="https://docs.vagrantup.com/v2/boxes.html" target="_blank" rel="external">box</a>, which is a package format for Vagrant environments. It is not necessary to create a new box, we can just override the defaults by the <code>Vagrantfile</code>. So add the provider-specific box:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant box add gce https://github.com/mitchellh/vagrant-google/raw/master/google.box</div></pre></td></tr></table></figure>
+
+<p>Make sure the box is added:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant box list</div></pre></td></tr></table></figure>
+
+<p>Add a <code>Vagrantfile</code> and override the defaults:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/09/07/setup-development-environment-with-vagrant-on-google-compute-engine/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-06T12:00:00.000Z"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Sep 6, 2015</a></time>
       
       
@@ -338,7 +411,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>4</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>5</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -635,6 +708,8 @@
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
+    <li><a href="/tags/gce/">gce</a><small>1</small></li>
+  
     <li><a href="/tags/gcloud/">gcloud</a><small>2</small></li>
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
@@ -665,7 +740,7 @@
   
     <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
-    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>1</small></li>
+    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>2</small></li>
   
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
@@ -717,7 +792,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>5</small></li>
+    <li><a href="/tags/install/">install</a><small>6</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -967,7 +1042,7 @@
   
     <li><a href="/tags/settings/">settings</a><small>1</small></li>
   
-    <li><a href="/tags/setup/">setup</a><small>1</small></li>
+    <li><a href="/tags/setup/">setup</a><small>2</small></li>
   
     <li><a href="/tags/shabang/">shabang</a><small>1</small></li>
   
@@ -1101,7 +1176,13 @@
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>5</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>6</small></li>
+  
+    <li><a href="/tags/vagrant-box/">vagrant-box</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant-google/">vagrant-google</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant-plugin/">vagrant-plugin</a><small>1</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   

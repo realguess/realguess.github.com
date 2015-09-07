@@ -64,6 +64,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-10-15T08:13:42.000Z"><a href="/2014/10/15/hello-comcast-why-is-my-internet-so-slow/">Oct 15, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/15/hello-comcast-why-is-my-internet-so-slow/">Hello Comcast, Why is My Internet So Slow?</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Have you ever seen your home Internet speed topping 50MB/s?</p>
+<p>Here is a comparison between <a href="http://www.comcast.com/" target="_blank" rel="external">Comcast</a> in the United States and <a href="http://www.cht.com.tw/" target="_blank" rel="external">Chunghwa Telecom</a> in Taiwan:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/10/15/hello-comcast-why-is-my-internet-so-slow/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-09-28T12:00:00.000Z"><a href="/2014/09/28/patch-shellshock-vulnerability/">Sep 28, 2014</a></time>
       
       
@@ -549,59 +587,6 @@ undefined
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-21T11:58:22.000Z"><a href="/2014/06/21/avoid-assigning-undefined-to-an-object-property/">Jun 21, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/21/avoid-assigning-undefined-to-an-object-property/">Avoid Assigning undefined to an Object Property</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>A property value should be any JavaScript value except for <code>undefined</code>. If you do something like this (albeit it is legal):</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = { bar: <span class="literal">undefined</span> };</div></pre></td></tr></table></figure>
-
-<p>will leads to confusing code. Because when accessing the property value:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(foo.bar); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
-
-<p>It will returns <code>undefined</code>. But you are not sure if it means the property exists or not or the value of the property is set to <code>undefined</code>. Therefore, you should do:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = { bar: <span class="literal">null</span> };</div></pre></td></tr></table></figure>
-
-<p>This indicates that the property is expected, and with the value of <code>null</code>.</p>
-<p>You do be able to check the existence of a property by:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.keys(foo); <span class="comment">// ['bar']</span></div><div class="line">foo.hasOwnProperty(<span class="string">'bar'</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
-
-<p>But more importantly, if you serialize the object with <code>JSON.stringify</code>, properties with <code>undefined</code> will be omitted:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">JSON</span>.stringify({ bar: <span class="literal">undefined</span> }); <span class="comment">// '{}'</span></div></pre></td></tr></table></figure>
-
-<p>According to <a href="http://www.json.org/" target="_blank" rel="external">JSON specification</a>, <em>a value can be a <code>string</code> in double quotes, or a <code>number</code>, or <code>true</code> or <code>false</code> or <code>null</code>, or an <code>object</code> or an <code>array</code></em>. <code>undefined</code> is not a valid JSON value.</p>
-<p><code>null</code> is fine:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">JSON</span>.stringify({ bar: <span class="literal">null</span> }); <span class="comment">// '{"bar":null}'</span></div></pre></td></tr></table></figure>
-
-<p>So, for the best practice, avoid assigning <code>undefined</code> to a property of an object. Use <code>null</code> to indicate the expected property without a value. This will increase portability when using JSON to serialize.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -631,7 +616,7 @@ undefined
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>4</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>5</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -928,6 +913,8 @@ undefined
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
+    <li><a href="/tags/gce/">gce</a><small>1</small></li>
+  
     <li><a href="/tags/gcloud/">gcloud</a><small>2</small></li>
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
@@ -958,7 +945,7 @@ undefined
   
     <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
-    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>1</small></li>
+    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>2</small></li>
   
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
@@ -1010,7 +997,7 @@ undefined
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>5</small></li>
+    <li><a href="/tags/install/">install</a><small>6</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -1260,7 +1247,7 @@ undefined
   
     <li><a href="/tags/settings/">settings</a><small>1</small></li>
   
-    <li><a href="/tags/setup/">setup</a><small>1</small></li>
+    <li><a href="/tags/setup/">setup</a><small>2</small></li>
   
     <li><a href="/tags/shabang/">shabang</a><small>1</small></li>
   
@@ -1394,7 +1381,13 @@ undefined
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>5</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>6</small></li>
+  
+    <li><a href="/tags/vagrant-box/">vagrant-box</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant-google/">vagrant-google</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant-plugin/">vagrant-plugin</a><small>1</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   

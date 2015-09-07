@@ -64,6 +64,60 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-10-02T22:23:58.000Z"><a href="/2013/10/02/javascript-parseint(array)-only-converts-the-first-element/">Oct 2, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/10/02/javascript-parseint(array)-only-converts-the-first-element/">JavaScript parseInt(array) Only Converts the First Element</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Converting from one type to another frequently causes bugs or unexpected result if you’re not careful. For example, when converting a string to an integer, we use the following function:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> num = <span class="built_in">parseInt</span>(string, radix);</div></pre></td></tr></table></figure>
+
+<p>Accidentally, I used an array of numeric strings in place of string for conversion.</p>
+<p>As stated in <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt" target="_blank" rel="external">MDN parseInt</a>:</p>
+<blockquote>
+<p>If string is not a string, then it is converted to one. Leading whitespace in the string is ignored.</p>
+</blockquote>
+<p>The array is converted to string.</p>
+<p>If the array has only one element, then there won’t be any problem:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[<span class="number">10</span>].toString()</div><div class="line">&gt; <span class="string">'10'</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'10'</span>, <span class="number">10</span>)</div><div class="line">&gt; <span class="number">10</span></div></pre></td></tr></table></figure>
+
+<p>But when there are more than one element, only the first element will be parsed:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[<span class="number">10</span>, <span class="number">5</span>].toString()</div><div class="line">&gt; <span class="string">'10,5'</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'10,5'</span>, <span class="number">10</span>)</div><div class="line">&gt; <span class="number">10</span></div></pre></td></tr></table></figure>
+
+<p>Therefore, you have to be very careful when processing query parameter like:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?<span class="variable">year=</span><span class="number">2013</span>&<span class="variable">year=</span><span class="number">2012</span></div></pre></td></tr></table></figure>
+
+<p>In many cases, it will be converted to:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">year: [<span class="string">'2013'</span>, <span class="string">'2012'</span>]</div></pre></td></tr></table></figure>
+
+<p>After running through <code>parseInt</code>, it will result in <code>2013</code>, might not be what you are looking for.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-08-03T22:25:31.000Z"><a href="/2013/08/03/set-your-goals/">Aug 3, 2013</a></time>
       
       
@@ -438,53 +492,13 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-01-23T19:00:00.000Z"><a href="/2013/01/23/github-flavored-markdown/">Jan 23, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/01/23/github-flavored-markdown/">GitHub Flavored Markdown</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>If I use GitHub to host my blog, and write the content in <a href="http://daringfireball.net/projects/markdown/syntax" target="_blank" rel="external">Markdown</a>, then we not use <a href="http://github.github.com/github-flavored-markdown/" target="_blank" rel="external">GitHub Flavored Markdown</a>. There are a few difference that are most relevant to me.</p>
-<p>Fenced code blocks with syntax highlighting instead of four spaces:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{</div><div class="line">  <span class="comment">// Do something</span></div><div class="line">}());</div></pre></td></tr></table></figure>
-
-<p>instead of four spaces:</p>
-<pre><code><span class="list">(<span class="title">function</span><span class="list">()</span>{
-  // Do something
-}<span class="list">()</span>)</span><span class="comment">;</span>
-</code></pre><p>Which is essentially the same, but GitHub flavored is better, since sometimes I write code block in Google Docs, and the syntax highlighting.</p>
-<p>And don’t forget that <a href="http://www.emoji-cheat-sheet.com/" target="_blank" rel="external">emoji emoticons</a> are supported. :smile: :smiley: :laughing:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
     <a href="/page/11/" class="alignleft prev">Prev</a>
   
+  
+    <a href="/page/13/" class="alignright next">Next</a>
   
   <div class="clearfix"></div>
 </nav></div></div>
@@ -507,7 +521,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>4</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>5</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -804,6 +818,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
+    <li><a href="/tags/gce/">gce</a><small>1</small></li>
+  
     <li><a href="/tags/gcloud/">gcloud</a><small>2</small></li>
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
@@ -834,7 +850,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
-    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>1</small></li>
+    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>2</small></li>
   
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
@@ -886,7 +902,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>5</small></li>
+    <li><a href="/tags/install/">install</a><small>6</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -1136,7 +1152,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/settings/">settings</a><small>1</small></li>
   
-    <li><a href="/tags/setup/">setup</a><small>1</small></li>
+    <li><a href="/tags/setup/">setup</a><small>2</small></li>
   
     <li><a href="/tags/shabang/">shabang</a><small>1</small></li>
   
@@ -1270,7 +1286,13 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>5</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>6</small></li>
+  
+    <li><a href="/tags/vagrant-box/">vagrant-box</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant-google/">vagrant-google</a><small>1</small></li>
+  
+    <li><a href="/tags/vagrant-plugin/">vagrant-plugin</a><small>1</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   
