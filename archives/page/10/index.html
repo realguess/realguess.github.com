@@ -68,6 +68,70 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-01-09T09:18:19.000Z"><a href="/2014/01/09/working-with-big-number-in-javascript/">Jan 9, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/09/working-with-big-number-in-javascript/">Working with Big Number in JavaScript</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>JavaScript is only capable of handling 53-bit numbers, if you are working with a big number such as <a href="https://dev.twitter.com/docs/twitter-ids-json-and-snowflake" target="_blank" rel="external">Twitter ID</a>, which is using 64-bit number, then you need to find an external library to do that, otherwise, there will be precision lost:</p>
+<pre><code>&gt; num = <span class="number">420938523475451904</span>
+<span class="input"><span class="prompt">420938523475451900
+&gt;</span> num = <span class="number">420938523475451904</span> + <span class="number">1</span></span>
+<span class="input"><span class="prompt">420938523475451900
+&gt;</span> num = <span class="number">420938523475451904</span> - <span class="number">1</span></span>
+<span class="number">420938523475451900</span>
+</code></pre><p>Here is one library to use in Node environment, install <a href="https://github.com/MikeMcl/big.js/" target="_blank" rel="external">Big.js</a>:</p>
+<pre><code><span class="variable">$ </span>npm install big.js
+</code></pre><p>Load the module:</p>
+<pre><code>&gt; BigNum = <span class="built_in">require</span>(<span class="string">'big.js'</span>)
+{ [<span class="built_in">Function</span>: Big] DP: <span class="number">20</span>, RM: <span class="number">1</span> }
+</code></pre><p>Use string to create the big number:</p>
+<pre><code>&gt; num = <span class="constant">BigNum</span>(<span class="string">'420938523475451904'</span>)
+<span class="input"><span class="prompt">{ s: 1,
+  e: 17,
+  c: [ 4, 2, 0, 9, 3, 8, 5, 2, 3, 4, 7, 5, 4, 5, 1, 9, 0, 4 ] }
+&gt;</span> num.toString()</span>
+<span class="string">'420938523475451904'</span>
+</code></pre><p>Perform addition:</p>
+<pre><code>&gt; num.<span class="keyword">plus</span>(<span class="number">1</span>).toString()
+<span class="string">'420938523475451905'</span>
+</code></pre><p>Perform substraction:</p>
+<pre><code>&gt; num.<span class="keyword">minus</span>(<span class="number">1</span>).toString()
+<span class="string">'420938523475451903'</span>
+</code></pre><p>There are other packages that yet to be tested:</p>
+<ul>
+<li><a href="https://github.com/MikeMcl/bignumber.js/" target="_blank" rel="external">bignumber.js</a></li>
+<li><a href="https://github.com/rauschma/strint" target="_blank" rel="external">strint.js</a></li>
+<li><a href="http://jsfromhell.com/classes/bignumber" target="_blank" rel="external">bignumber</a></li>
+<li><a href="https://github.com/jtobey/javascript-bignum" target="_blank" rel="external">JavaScript bignumber</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-05T14:18:22.000Z"><a href="/2014/01/05/use-vim-cryptographic-features-to-encrypt-important-text-files/">Jan 5, 2014</a></time>
       
       
@@ -488,53 +552,6 @@ Binary <span class="keyword">file</span> encrypted.txt matches
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-29T12:00:30.000Z"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Nov 29, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Written in CoffeeScript, Required in JavaScript</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>If you are writing in CoffeeScript, then requiring another module written in CoffeeScript works the same as as both scripts are in JavaScript:</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cm = <span class="built_in">require</span> <span class="string">'coffee-module'</span></div></pre></td></tr></table></figure>
-
-<p>But if you are writing in JavaScript, and the dependent module is in CoffeeScript, you have to include CoffeeScript as a dependency with require statement:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'coffee-script'</span>);</div><div class="line"><span class="keyword">var</span> cm = <span class="built_in">require</span>(<span class="string">'coffee-module'</span>);</div></pre></td></tr></table></figure>
-
-<p>For better compatibility, source codes written in CoffeeScript should be compiled into JavaScript. But what is the best practice? You don’t want to maintain two languages. When to compile? Here is two options:</p>
-<ol>
-<li>Compile before publish the module</li>
-<li>Compile after module install</li>
-</ol>
-<p>The advantage of the first approach is that there is no dependency on CoffeeScript. The module has been compiled into JavaScript prior to submitting to module registry. However, this approach requires two repositories, one is source code repository, and another one is the published module repository. If you are working on a private project, it is less likely that you will publish your module to an public NPM registry or running your own private one. It is more likely to have a single source code repository. Therefore, the second approach might be better in this situation. However, <code>coffee-script</code> must be added in <code>dependency</code>, or it must be installed globally with <code>coffee</code> command available during <code>preinstall</code> phase. Although this approach is not recommended in <a href="https://npmjs.org/doc/misc/npm-scripts.html" target="_blank" rel="external">npm-scripts</a>, before setting up a private NPM registry, this is the way to go.</p>
-<p>Here is the required fields in <code>package.json</code>:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">scripts</span>": <span class="value">{</span></div><div class="line">    "<span class="attribute">preinstall</span>": <span class="value"><span class="string">"coffee --compile --bare --output lib/ src/"</span></span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -565,7 +582,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>5</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>6</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -814,7 +831,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>6</small></li>
+    <li><a href="/tags/docker/">docker</a><small>7</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
@@ -946,7 +963,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>6</small></li>
+    <li><a href="/tags/install/">install</a><small>7</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -1300,11 +1317,13 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/trigger/">trigger</a><small>1</small></li>
   
+    <li><a href="/tags/trusty/">trusty</a><small>1</small></li>
+  
     <li><a href="/tags/tumblr/">tumblr</a><small>1</small></li>
   
     <li><a href="/tags/twitter/">twitter</a><small>1</small></li>
   
-    <li><a href="/tags/ubuntu/">ubuntu</a><small>4</small></li>
+    <li><a href="/tags/ubuntu/">ubuntu</a><small>5</small></li>
   
     <li><a href="/tags/uglifyjs/">uglifyjs</a><small>1</small></li>
   
