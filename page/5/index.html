@@ -64,6 +64,53 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-12-13T12:00:00.000Z"><a href="/2014/12/13/update-outdated-npm-packages/">Dec 13, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/12/13/update-outdated-npm-packages/">Update Outdated NPM Packages</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://www.npmjs.com/" target="_blank" rel="external">NPM</a> provides a command to check for outdated packages:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm <span class="built_in">help</span> outdated</div></pre></td></tr></table></figure>
+
+<p>However, by default, the command checks the entire dependency tree, not only the modules specified in <code>package.json</code>, but also the dependencies of those modules. If we only care about the top-level packages, we can add <code>--depth</code> option to show just that:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm outdated --depth <span class="number">0</span></div></pre></td></tr></table></figure>
+
+<p>This is similar to listing installed packages:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ npm list --depth <span class="number">0</span></div></pre></td></tr></table></figure>
+
+<p>Using the option, it will not print out the nested dependency tree, but only the top-level. The option is similar to <code>tree -L 1</code>, but zero indexed instead of one.</p>
+<p>Another interesting thing about <code>outdated</code> command is the color coding in the output:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/12/13/update-outdated-npm-packages/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-12-10T12:00:00.000Z"><a href="/2014/12/10/use-ssh-directly-instead-of-vagrant-ssh-command/">Dec 10, 2014</a></time>
       
       
@@ -483,43 +530,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-11-02T12:00:00.000Z"><a href="/2014/11/02/synchronous-console-methods/">Nov 2, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/11/02/synchronous-console-methods/">Synchronous Console Methods</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In Node v0.10.x, <em>the console functions are synchronous when the destination is a terminal or a file (to avoid lost messages in case of premature exit) and asynchronous when it’s a pipe (to avoid blocking for long periods of time).</em> See <a href="http://nodejs.org/api/console.html" target="_blank" rel="external">console</a>. We can test it with the following script:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/11/02/synchronous-console-methods/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -543,7 +553,7 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>8</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>9</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -774,6 +784,8 @@
   
     <li><a href="/tags/datagram/">datagram</a><small>1</small></li>
   
+    <li><a href="/tags/dataset/">dataset</a><small>1</small></li>
+  
     <li><a href="/tags/datastore/">datastore</a><small>1</small></li>
   
     <li><a href="/tags/date/">date</a><small>1</small></li>
@@ -882,7 +894,7 @@
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
   
-    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>1</small></li>
+    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>2</small></li>
   
     <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
   
@@ -1224,7 +1236,7 @@
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>3</small></li>
+    <li><a href="/tags/starter/">starter</a><small>4</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   

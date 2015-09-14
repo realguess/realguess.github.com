@@ -68,6 +68,52 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-02-07T12:00:00.000Z"><a href="/2015/02/07/launch-byobu-automatically-on-vagrant-ssh/">Feb 7, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/02/07/launch-byobu-automatically-on-vagrant-ssh/">Launch Byobu Automatically on Vagrant SSH</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I can <a href="/2014/12/10/use-ssh-directly-instead-of-vagrant-ssh-command/">use SSH directly instead of Vagrant SSH command</a> for interactive programs such as <code>top</code> or running <code>tmux</code> sessions. But I frequently just want to run <a href="http://tmux.sourceforge.net/" target="_blank" rel="external">Tmux</a> or <a href="http://byobu.co/" target="_blank" rel="external">Byobu</a> upon login. I can do:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh -F ssh-config vagrant -t byobu</div></pre></td></tr></table></figure>
+
+<p>But still too much trouble to go through all SSH configuration steps. So, I ended up with two-step process:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh</div></pre></td></tr></table></figure>
+
+<p>Now inside the guest machine, I immediately type:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ byobu</div></pre></td></tr></table></figure>
+
+<p>To bring up new Tmux session or attach existing sessions.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/02/07/launch-byobu-automatically-on-vagrant-ssh/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-02-04T12:00:00.000Z"><a href="/2015/02/04/docker-save-load-and-deploy/">Feb 4, 2015</a></time>
       
       
@@ -342,7 +388,7 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>8</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>9</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -573,6 +619,8 @@
   
     <li><a href="/tags/datagram/">datagram</a><small>1</small></li>
   
+    <li><a href="/tags/dataset/">dataset</a><small>1</small></li>
+  
     <li><a href="/tags/datastore/">datastore</a><small>1</small></li>
   
     <li><a href="/tags/date/">date</a><small>1</small></li>
@@ -681,7 +729,7 @@
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
   
-    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>1</small></li>
+    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>2</small></li>
   
     <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
   
@@ -1023,7 +1071,7 @@
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>3</small></li>
+    <li><a href="/tags/starter/">starter</a><small>4</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
