@@ -68,6 +68,75 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-03-22T13:20:10.000Z"><a href="/2014/03/22/writing-custom-yeoman-generator/">Mar 22, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/22/writing-custom-yeoman-generator/">Writing Custom Yeoman Generator</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Writing a custom <a href="http://yeoman.io/" target="_blank" rel="external">Yeoman</a> generator, you need to install <a href="https://github.com/yeoman/generator-generator" target="_blank" rel="external">generator-generator</a> first.</p>
+<blockquote>
+<p>(generator-generator) Scaffolds out a new basic Yeoman generator with some sensible defaults.</p>
+</blockquote>
+<p>So it creates some basic structure for writing your own custom generators. It is a generator for writing Node generator application.</p>
+<p>First Install generator-generator:</p>
+<pre><code>$ <span class="built_in">sudo</span> npm install -g generator-generator
+</code></pre><p>Then generate some basic files for writing your own generator by issuing:</p>
+<pre><code><span class="variable">$ </span>yo generator
+</code></pre><p>You can use generator-generator to write both a custom generator and a custom sub-generator. What is sub-generator? For example, Angular directive or service is a sub-generator.</p>
+<p>Use naming convention <code>generator-[name]</code>.</p>
+<p>Create a directory for your new generator:</p>
+<pre><code><span class="variable">$ </span>mkdir -p ~<span class="regexp">/generators/generator</span>-hello &amp;&amp; cd <span class="variable">$_</span>
+</code></pre><p>Make sure entering the newly created directory (<code>cd $_</code>), otherwise all files generated will be placed under the current directory. Then, scaffold your generator:</p>
+<pre><code><span class="variable">$ </span>yo generator
+</code></pre><p>As versions yo@1.1.2 and generator-generator@0.4.3, the generator creates the following directories and files:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── app</div><div class="line">│   ├── index.js</div><div class="line">│   └── templates</div><div class="line">├── <span class="string">.editorconfig</span></div><div class="line">├── <span class="string">.gitattributes</span></div><div class="line">├── <span class="string">.gitignore</span></div><div class="line">├── <span class="string">.jshintrc</span></div><div class="line">├── node_modules</div><div class="line">│   ├── <span class="string">.bin</span></div><div class="line">│   ├── chalk</div><div class="line">│   ├── mocha</div><div class="line">│   └── yeoman-generator</div><div class="line">├── package.json</div><div class="line">├── README.md</div><div class="line">├── <span class="keyword">test</span></div><div class="line">│   ├── <span class="keyword">test</span>-creation.js</div><div class="line">│   └── <span class="keyword">test</span>-load.js</div><div class="line">└── <span class="string">.travis</span>.yml</div><div class="line"></div><div class="line"><span class="number">8</span> directories, <span class="number">10</span> files</div></pre></td></tr></table></figure>
+
+<p>You might want to make your initial commit:</p>
+<pre><code>$ git init &amp;&amp; git <span class="built_in">add</span> <span class="string">'*'</span> &amp;&amp; git commit -<span class="keyword">m</span> <span class="string">'Initial commit'</span>
+</code></pre><p>While in development, make it accessible globally:</p>
+<pre><code>$ <span class="built_in">sudo</span> npm link
+</code></pre><p>This is similar to:</p>
+<pre><code>$ <span class="built_in">sudo</span> npm install -g [generator-name]
+</code></pre><p>They both will be discoverable from <code>/usr/local/lib/node_modules</code>.</p>
+<p>There isn’t much going on there, we need to customize our own generator. The main file is <code>./app/index.js</code>.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> HelloGenerator = yeoman.generators.Base.extend({</div><div class="line">});</div><div class="line"><span class="built_in">module</span>.exports = HelloGenerator;</div></pre></td></tr></table></figure>
+
+<p>The <code>HelloGenerator</code> extends <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> generator. There are four properties (functions) that it has extended: <code>init</code>, <code>askFor</code>, <code>app</code>, and <code>projectfiles</code>.</p>
+<p>All these functions will be invoked by Yeoman one by one in order (the order is important), meaning that <code>init</code> will be called first to perform initialization, and then <code>askFor</code> will be called to get user prompts, then <code>app</code> and <code>projectfiles</code> will be called afterward to build the application.</p>
+<p>However, it is not a must to have four properties, it just brings more structure and modularity. In fact, you can merge all four functions into a single one.</p>
+<p>The method name does not matter. Just don’t name it <code>prompt</code> because you will override the existing property inherited from <code>yeoman.generators.Base</code>. </p>
+<p>If we need to declare a “private” property, just appending it with an underscore as a hidden property, e.g. <code>_dontAskFor: function(){}</code>, or if you just use it in the same file, you can simply define a global <code>function myFunc()</code>.</p>
+<p>Personal, I don’t think it is necessary to break it into many functions, three are enough, initialization, prompting user for input, and generating files.</p>
+<p>When choosing property names, the <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> object contains many properties which is not a good idea to be overridden, such as <code>[&quot;append&quot;, &quot;help&quot;, &quot;log&quot;, &quot;prompt&quot;, &quot;remote&quot;]</code>. This design has limitation on choosing a right property name. For example, I was thinking about using <code>prompt</code> instead of <code>askFor</code>, but <code>prompt</code> is an inherited property. Therefore, it is a good idea to keep fewer properties in <code>HelloGenerator</code>. Three are enough. All these properties can be accessible from the context <code>this</code>. From <code>this</code> object you can access everything from <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> object to newly defined <code>_dontAskFor</code> hidden property.</p>
+<p>Time to test the custom generator:</p>
+<pre><code>$ <span class="built_in">cd</span> /tmp &amp;&amp; mkdir hello &amp;&amp; yo <span class="variable">$_</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-03-07T22:30:00.000Z"><a href="/2014/03/07/traveling-from-the-big-apple-to-the-big-easy-via-amtrak-crescent/">Mar 7, 2014</a></time>
       
       
@@ -587,185 +656,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-17T14:13:03.000Z"><a href="/2014/01/17/a-new-nodejs-web-framework-koa/">Jan 17, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/17/a-new-nodejs-web-framework-koa/">A New NodeJS Web Framework - Koa</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Taking the first spin on <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>, a new web framework designed by the team behind <a href="http://expressjs.com/" target="_blank" rel="external">Express</a>.</p>
-<h2 id="Requirements">Requirements</h2>
-<ol>
-<li>Node v0.11.9 or higher is required for generator support.</li>
-<li><code>--harmony</code> flag must be used when running Node.</li>
-</ol>
-<p>Without the <code>--harmony</code> flag, genertor function cannot be defined:</p>
-<pre><code><span class="function"><span class="keyword">function</span> *<span class="title">fn</span>(</span>) {
-           ^
-SyntaxError: Unexpected token *
-    at exports.runInThisContext (vm.js:<span class="number">69</span>:<span class="number">16</span>)
-    at <span class="keyword">Module</span>._compile (<span class="keyword">module</span>.js:<span class="number">432</span>:<span class="number">25</span>)
-    at Object.<span class="keyword">Module</span>._extensions..js (<span class="keyword">module</span>.js:<span class="number">467</span>:<span class="number">10</span>)
-    at <span class="keyword">Module</span>.load (<span class="keyword">module</span>.js:<span class="number">349</span>:<span class="number">32</span>)
-    at <span class="function"><span class="keyword">Function</span>.<span class="title">Module</span>.<span class="title">_load</span> (</span><span class="keyword">module</span>.js:<span class="number">305</span>:<span class="number">12</span>)
-    at <span class="function"><span class="keyword">Function</span>.<span class="title">Module</span>.<span class="title">runMain</span> (</span><span class="keyword">module</span>.js:<span class="number">490</span>:<span class="number">10</span>)
-    at startup (node.js:<span class="number">123</span>:<span class="number">16</span>)
-    at node.js:<span class="number">1031</span>:<span class="number">3</span>
-</code></pre><p>So, set the <code>--harmony</code> flag in shell alias:</p>
-<pre><code><span class="variable">$ </span><span class="keyword">alias</span> node=<span class="string">'node --harmony'</span>
-</code></pre><p>To know more:</p>
-<pre><code>$ man node
---harmony (enable all harmony features (except <span class="keyword">typeof</span>))
-      type: <span class="keyword">bool</span>  <span class="keyword">default</span>: <span class="keyword">false</span>
-</code></pre><p><em>Harmony</em> is the codename of ECMAScript 6, the next version of the standard.</p>
-<h2 id="Install">Install</h2>
-<pre><code><span class="variable">$ </span>npm install koa
-</code></pre><p>The footprint of the framework is small. Therefore, there is no executable binary like Express, and we do not need to install it globally.</p>
-<h2 id="Dependencies">Dependencies</h2>
-<p>Dependencies on version 0.2.1:</p>
-<pre><code><span class="string">"dependencies"</span>: {
-  <span class="string">"accepts"</span>: <span class="string">"~1.0.0"</span>,
-  <span class="string">"type-is"</span>: <span class="string">"~1.0.0"</span>,
-  <span class="string">"on-socket-error"</span>: <span class="string">"~1.0.1"</span>,
-  <span class="string">"co"</span>: <span class="string">"~3.0.1"</span>,
-  <span class="string">"debug"</span>: <span class="string">"*"</span>,
-  <span class="string">"mime"</span>: <span class="string">"~1.2.11"</span>,
-  <span class="string">"fresh"</span>: <span class="string">"~0.2.0"</span>,
-  <span class="string">"koa-compose"</span>: <span class="string">"~2.1.0"</span>,
-  <span class="string">"cookies"</span>: <span class="string">"~0.3.7"</span>,
-  <span class="string">"keygrip"</span>: <span class="string">"~1.0.0"</span>
-}
-</code></pre><h2 id="Middleware">Middleware</h2>
-<p>Middleware system is the core of either Express or Koa based application. This needs a separate post. Here just describes the difference in design.</p>
-<p>In a simple assembly design, each unit passes control to the next one until the last one terminates and responses to the request:</p>
-<pre><code>    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-<span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">o</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-</code></pre><p>Express middleware passes control to the next one like an assembly line, but each unit is capable of responding to the request:</p>
-<pre><code>       <span class="comment">o</span>           <span class="comment">o</span>           <span class="comment">o</span>
-       <span class="comment">|</span>           <span class="comment">|</span>           <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-<span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-</code></pre><p>Koa provides a traceback via generator, each unit is capable of working on the request twice instead of once as previous two designs. It is stack alike, where the first generator will also be the last one prior to responding to request:</p>
-<pre><code>       <span class="comment">o</span>
-       <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-<span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-       <span class="comment">^</span>          <span class="comment">|</span> <span class="comment">^</span>         <span class="comment">|</span>
-       <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span> <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-</code></pre><p>This is sort of an assembly loop, where the starting station is also be the ending station.</p>
-<h2 id="Usage">Usage</h2>
-<p>Here is one liner:</p>
-<pre><code><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{ <span class="keyword">this</span>.body = <span class="string">'OK'</span>; }).listen(<span class="number">3000</span>);
-</code></pre><p><code>app.use</code> requires a generator function or <code>function *()</code>. Koa middleware uses <code>this</code> (context) instead of <code>req</code> and <code>res</code> in Express. It also encapsulates Node’s <code>request</code> and <code>response</code> objects. For example, <code>this</code> or context has the following properties:</p>
-<pre><code>[ <span class="string">'request'</span>,     <span class="comment">// Koa request</span>
-  <span class="string">'response'</span>,    <span class="comment">// Koa response</span>
-  <span class="string">'app'</span>,
-  <span class="string">'req'</span>,         <span class="comment">// Node request</span>
-  <span class="string">'res'</span>,         <span class="comment">// Node response</span>
-  <span class="string">'onerror'</span>,
-  <span class="string">'originalUrl'</span>,
-  <span class="string">'cookies'</span>,
-  <span class="string">'accept'</span> ]
-</code></pre><h3 id="Status_and_Body">Status and Body</h3>
-<p>Status can be used as a flag indicating whether a request has been processed or not:</p>
-<pre><code>app.use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{
-  <span class="built_in">console</span>.log(<span class="keyword">this</span>.status); <span class="comment">// undefined</span>
-  <span class="keyword">this</span>.body = <span class="string">'processed'</span>;
-  <span class="built_in">console</span>.log(<span class="keyword">this</span>.status); <span class="comment">// 200</span>
-});
-</code></pre><p>When the <code>body</code> is populated, <code>status</code> is automatically updated, probably via the <code>nextTick</code> method. So, we can use it as the flag to design a response such as a custom not found response.</p>
-<h3 id="Not_Found">Not Found</h3>
-<p>Create a custom <code>Not Found</code> in JSON content type:</p>
-<pre><code>app.use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{
-  <span class="keyword">yield</span> next; <span class="comment">// The operation is yet to start.</span>
-  <span class="keyword">if</span> (<span class="keyword">this</span>.status) { <span class="keyword">return</span>; }
-
-  <span class="keyword">this</span>.status = <span class="number">404</span>;
-  <span class="keyword">this</span>.body = { message: <span class="string">'Cannot find what you are looking for :('</span> };
-});
-app.use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{}); <span class="comment">// Do nothing to simulate not found.</span>
-</code></pre><h3 id="Error_Handling">Error Handling</h3>
-<p>Koa app is capable of catching the error event:</p>
-<pre><code>app.on(<span class="string">'error'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(err, ctx)</span> </span>{
-  <span class="comment">// Log errors.</span>
-});
-</code></pre><p>where <code>ctx</code> is a context instance. But you cannot modify the response body. This is more for server side logging and debugging purpose. The <code>500 Internal Server Error</code> will be returned to the client.</p>
-<p>We can use <code>try..catch</code> to define a custom error handling middleware:</p>
-<pre><code>app.use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{
-  <span class="keyword">try</span> {
-    <span class="keyword">yield</span> next;
-  } <span class="keyword">catch</span> (err) {
-    <span class="keyword">this</span>.status = err.status || <span class="number">500</span>;
-    <span class="keyword">this</span>.body   = { message: err.message || <span class="string">'Bad stuff happened!'</span> };
-    <span class="keyword">this</span>.app.emit(<span class="string">'error'</span>, err, <span class="keyword">this</span>); <span class="comment">// Enable error event handling</span>
-  }
-});
-</code></pre><p>Make sure to emit the error event and let the server log the error.</p>
-<p>All non-operational middleware (e.g., not found or error) should be defined first, so it can be traced back as the last guards before sending response back.</p>
-<h3 id="Routing">Routing</h3>
-<p>Out of the box, Koa does not support routing, but it can be achieved via routing middleware, see <a href="https://github.com/koajs/koa/wiki" target="_blank" rel="external">examples</a>.</p>
-<h2 id="Examples">Examples</h2>
-<p>Define an app with only one middleware generator function:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'foo'</span>);</div><div class="line">  <span class="keyword">this</span>.status = <span class="number">204</span>;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>Instead of using status code <code>200</code>, we use <code>204</code> here, because the response contains no body. If using <code>200</code>, the server does not know the total content length, will result in <code>Transfer-Encoding: chunked</code> header instead of <code>Content-Length</code>. See <a href="http://en.wikipedia.org/wiki/Chunked_transfer_encoding" target="_blank" rel="external">chunked transfer encoding</a>.</p>
-<p>This app simply prints out <code>foo</code> on the server side, and respond to a client with status code <code>204</code> and an empty body. We can even omit the <code>next</code> parameter, since we are not using it.</p>
-<p>Now let’s use two middleware generator functions:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Response: foo</span></div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo'</span>;</div><div class="line">}</div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">bar</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'bar'</span>;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).use(bar).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>Since generator <code>foo</code> sets the body, generator <code>bar</code> will never be reached. We can change that by adding the <code>yield</code>: </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Response: bar</span></div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}</div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">bar</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'bar'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).use(bar).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>This looks alot like Express, <code>yeild next</code> is similar to <code>next()</code>. Request travels through the middleware system first via <code>foo</code> then <code>bar</code>. But actually by using generator, it also returns back to <code>foo</code> as <code>foo-&gt;bar-&gt;foo</code>:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Response: foo again</span></div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo again'</span>;</div><div class="line">}</div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">bar</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'bar'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).use(bar).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>This is similar to a stack alike request model, where the first middleware should also be the last middleware to touch the request. There is a no-op middleware in the end to catch the last <code>yield next</code> produced by <code>bar</code> middleware generator and traces back the stack.</p>
-<h2 id="Debugging">Debugging</h2>
-<p>Set environment variable <code>DEBUG=koa*</code> to enable Koa specific debugging information in development environment:</p>
-<pre><code><span class="attribute">$ DEBUG</span>=<span class="string">koa* node app.js</span>
-</code></pre><p>You will see a list of middleware. If a middleware is an anonymous function, we can set <code>._name</code> to define a custom name:</p>
-<pre><code><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{
-  <span class="comment">// Middleware definition starts here.</span>
-}
-foo._name = <span class="string">'bar'</span>;
-app.<span class="keyword">use</span>(foo);
-</code></pre><p>The middleware name will be <code>bar</code> instead of <code>foo</code>.</p>
-<h2 id="Resources">Resources</h2>
-<ol>
-<li><a href="http://koajs.com/" target="_blank" rel="external">Koa</a></li>
-<li><a href="https://github.com/koajs/koa" target="_blank" rel="external">Koa | GitHub</a></li>
-<li><a href="https://github.com/koajs/koa/blob/master/docs/guide.md" target="_blank" rel="external">Koa Quick Guide</a></li>
-<li><a href="https://github.com/koajs/koa/wiki" target="_blank" rel="external">Koa Middleware List</a></li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -790,7 +680,7 @@ app.<span class="keyword">use</span>(foo);
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>7</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>8</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -931,6 +821,8 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/browser-sync/">browser-sync</a><small>1</small></li>
   
+    <li><a href="/tags/buffer/">buffer</a><small>1</small></li>
+  
     <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
@@ -1015,9 +907,15 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/data-volume/">data-volume</a><small>1</small></li>
   
+    <li><a href="/tags/database/">database</a><small>1</small></li>
+  
     <li><a href="/tags/datagram/">datagram</a><small>1</small></li>
   
+    <li><a href="/tags/datastore/">datastore</a><small>1</small></li>
+  
     <li><a href="/tags/date/">date</a><small>1</small></li>
+  
+    <li><a href="/tags/db/">db</a><small>1</small></li>
   
     <li><a href="/tags/debian/">debian</a><small>1</small></li>
   
@@ -1120,6 +1018,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
   
@@ -1242,6 +1142,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/lodash/">lodash</a><small>1</small></li>
   
     <li><a href="/tags/log/">log</a><small>1</small></li>
+  
+    <li><a href="/tags/lorem-ipsum/">lorem-ipsum</a><small>1</small></li>
   
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
@@ -1469,6 +1371,8 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/stream/">stream</a><small>1</small></li>
   
+    <li><a href="/tags/string/">string</a><small>1</small></li>
+  
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
     <li><a href="/tags/structure/">structure</a><small>1</small></li>
@@ -1570,6 +1474,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/vagrant-google/">vagrant-google</a><small>1</small></li>
   
     <li><a href="/tags/vagrant-plugin/">vagrant-plugin</a><small>1</small></li>
+  
+    <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   

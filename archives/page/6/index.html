@@ -68,6 +68,43 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-11-01T12:00:00.000Z"><a href="/2014/11/01/stumbled-upon-lean-coffee/">Nov 1, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/01/stumbled-upon-lean-coffee/">Stumbled Upon Lean Coffee</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Stumbled upon <a href="http://leancoffee.org/" target="_blank" rel="external">Lean Coffee</a>. <a href="http://theleanstartup.com/" target="_blank" rel="external">Lean</a> movement adventures into coffee brewing? No, it is about structured, but agenda-less meeting with participants generated topics, or <em>lean meeting</em>. It is not truly agenda-less, but the topics of the meeting agenda are participant-sourced and participant-judged or voted. So, instead of top-down, but more democratic and bottom-up approach.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/11/01/stumbled-upon-lean-coffee/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-10-25T15:37:25.000Z"><a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/">Oct 25, 2014</a></time>
       
       
@@ -550,44 +587,6 @@ undefined
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-22T13:48:50.000Z"><a href="/2014/06/22/get-rid-of-200e-control-character-in-vim/">Jun 22, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/22/get-rid-of-200e-control-character-in-vim/">Get Rid of &#39;&lt;200e&gt;&#39; Control Characters in VIM</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>The <a href="http://en.wikipedia.org/wiki/Left-to-right_mark" target="_blank" rel="external">left-to-right mark</a> character is an invisible control character. If you open up a text file in VIM containing such a character, you will see it as <code>&lt;200e&gt;</code> in Unicode.</p>
-<p>If you want to get rid of all occurrences of this control character, you can do:</p>
-<pre><code><span class="symbol">:%s/&lt;ctrl&gt;+&lt;shift&gt;+u200e&lt;enter&gt;//g</span>
-</code></pre><p>That’s <code>&lt;ctrl&gt;+&lt;shift&gt;+u</code> to enable entering the character by Unicode code points, followed by the actual character code and <code>&lt;enter&gt;</code> key. It will loke like this:</p>
-<pre><code><span class="symbol">:%s/&lt;</span><span class="number">200</span>e&gt;<span class="regexp">//g</span>
-</code></pre><p>However, not all terminals are supported.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -612,7 +611,7 @@ undefined
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>7</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>8</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -753,6 +752,8 @@ undefined
   
     <li><a href="/tags/browser-sync/">browser-sync</a><small>1</small></li>
   
+    <li><a href="/tags/buffer/">buffer</a><small>1</small></li>
+  
     <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
@@ -837,9 +838,15 @@ undefined
   
     <li><a href="/tags/data-volume/">data-volume</a><small>1</small></li>
   
+    <li><a href="/tags/database/">database</a><small>1</small></li>
+  
     <li><a href="/tags/datagram/">datagram</a><small>1</small></li>
   
+    <li><a href="/tags/datastore/">datastore</a><small>1</small></li>
+  
     <li><a href="/tags/date/">date</a><small>1</small></li>
+  
+    <li><a href="/tags/db/">db</a><small>1</small></li>
   
     <li><a href="/tags/debian/">debian</a><small>1</small></li>
   
@@ -942,6 +949,8 @@ undefined
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
   
@@ -1064,6 +1073,8 @@ undefined
     <li><a href="/tags/lodash/">lodash</a><small>1</small></li>
   
     <li><a href="/tags/log/">log</a><small>1</small></li>
+  
+    <li><a href="/tags/lorem-ipsum/">lorem-ipsum</a><small>1</small></li>
   
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
@@ -1291,6 +1302,8 @@ undefined
   
     <li><a href="/tags/stream/">stream</a><small>1</small></li>
   
+    <li><a href="/tags/string/">string</a><small>1</small></li>
+  
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
     <li><a href="/tags/structure/">structure</a><small>1</small></li>
@@ -1392,6 +1405,8 @@ undefined
     <li><a href="/tags/vagrant-google/">vagrant-google</a><small>1</small></li>
   
     <li><a href="/tags/vagrant-plugin/">vagrant-plugin</a><small>1</small></li>
+  
+    <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   

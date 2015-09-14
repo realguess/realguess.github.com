@@ -68,6 +68,66 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-05-11T14:11:43.000Z"><a href="/2014/05/11/sharpening-the-ax-before-chopping-down-a-tree/">May 11, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/05/11/sharpening-the-ax-before-chopping-down-a-tree/">Sharpening the Ax Before Chopping Down a Tree</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I was helping to examine a server that was impacted by <a href="http://heartbleed.com/" target="_blank" rel="external">Heartbleed</a>. According to the developer who was patching the server, he had updated the <a href="http://www.openssl.org/" target="_blank" rel="external">OpenSSL</a> library to the following:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ openssl version -a</div><div class="line">OpenSSL 1.0.1g 7 Apr 2014</div><div class="line">built on: Fri Apr 18 11:04:34 EDT 2014</div><div class="line">platform: linux-x86_64</div><div class="line">options: bn(64,64) rc4(16x,int) des(idx,cisc,16,int) idea(int) </div><div class="line">blowfish(idx) </div><div class="line">compiler: gcc -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H </div><div class="line">-<span class="ruby"><span class="constant">Wa</span>,--noexecstack -m64 -<span class="constant">DL_ENDIAN</span> -<span class="constant">DTERMIO</span> -<span class="constant">O3</span> -<span class="constant">Wall</span> -<span class="constant">DOPENSSL_IA32_SSE2</span></span></div><div class="line"> -<span class="ruby"><span class="constant">DOPENSSL_BN_ASM_MONT</span> -<span class="constant">DOPENSSL_BN_ASM_MONT5</span> -<span class="constant">DOPENSSL_BN_ASM_GF2m</span> </span></div><div class="line">-<span class="ruby"><span class="constant">DSHA1_ASM</span> -<span class="constant">DSHA256_ASM</span> -<span class="constant">DSHA512_ASM</span> -<span class="constant">DMD5_ASM</span> -<span class="constant">DAES_ASM</span> -<span class="constant">DVPAES_ASM</span> </span></div><div class="line">-<span class="ruby"><span class="constant">DBSAES_ASM</span> -<span class="constant">DWHIRLPOOL_ASM</span> -<span class="constant">DGHASH_ASM</span></span></div><div class="line">OPENSSLDIR: "/usr/ssl"</div></pre></td></tr></table></figure>
+
+<p>And the developer claimed: “According to <a href="http://heartbleed.com/" target="_blank" rel="external">http://heartbleed.com/</a>. OpenSSL 1.0.1g is NOT vulnerable. Also I have restarted all services on this server.”</p>
+<p>So, OpenSSL has been updated and the all services have been restarted, but why does the problem still persist?</p>
+<p>I took a look at the command history he ran:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">wget http://www.openssl.org/<span class="built_in">source</span>/openssl-<span class="number">1.0</span>.<span class="number">1</span>g.tar.gz</div><div class="line">ls</div><div class="line">tar xvzf openssl-<span class="number">1.0</span>.<span class="number">1</span>g.tar.gz</div><div class="line"><span class="built_in">cd</span> openssl-<span class="number">1.0</span>.<span class="number">1</span>g/</div><div class="line"><span class="built_in">sudo</span> ./config --prefix=/usr</div><div class="line"><span class="built_in">sudo</span> make</div><div class="line"><span class="built_in">sudo</span> make install</div><div class="line"><span class="keyword">exit</span></div><div class="line">openssl version <span class="operator">-a</span></div><div class="line"><span class="built_in">sudo</span> reboot</div></pre></td></tr></table></figure>
+
+<p>The OpenSSL library has been built from the source, which is fine, but the problem is that the Nginx server was still using the old library distributed by Ubuntu:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ ldd `which nginx` | <span class="keyword">grep</span> ssl</div><div class="line">        libssl.<span class="keyword">so</span>.<span class="number">1.0</span>.<span class="number">0</span> =&gt; /lib/x86_64-linux-gnu/libssl.<span class="keyword">so</span>.<span class="number">1.0</span>.<span class="number">0</span> (<span class="number">0</span>x00007fafe82a3000)</div><div class="line">$ strings /lib/x86_64-linux-gnu/libssl.<span class="keyword">so</span>.<span class="number">1.0</span>.<span class="number">0</span> | <span class="keyword">grep</span> <span class="string">'^OpenSSL '</span></div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span><span class="keyword">c</span> <span class="number">10</span> May <span class="number">2012</span></div></pre></td></tr></table></figure>
+
+<p>In effect, there were two versions of OpenSSL library installed in the system, one was built from the source, and another one was managed by <code>dpkg</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ dpkg -l openssl</div><div class="line"><span class="header">||/ Name                          Version             Architecture</span></div><div class="line">+++-=============================-===================-===================</div><div class="line">ii  openssl                       1.0.1c-4ubuntu8.2   amd64</div></pre></td></tr></table></figure>
+
+<p>However, the bigger problem is the version of the operating system:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ lsb_release -a</div><div class="line">No LSB modules are available.</div><div class="line">Distributor ID: Ubuntu</div><div class="line"><span class="label">Description:</span>    Ubuntu <span class="number">13.04</span></div><div class="line"><span class="label">Release:</span>        <span class="number">13.04</span></div><div class="line"><span class="label">Codename:</span>       raring</div></pre></td></tr></table></figure>
+
+<p>Ubuntu 13.04 is not supported anymore according to <a href="https://wiki.ubuntu.com/Releases" target="_blank" rel="external">https://wiki.ubuntu.com/Releases</a>. The developer probably issued <code>apt-get upgrade</code>, but nothing to be updated, because Ubuntu stopped supporting the release. Therefore, no security update. And Ubuntu 13.04 is not listed in <a href="http://www.ubuntu.com/usn/usn-2165-1/" target="_blank" rel="external">Ubuntu Security Notice USN-2165-1</a>. So, the developer opted for building the library from the source. After installation from the source, the binary <code>openssl</code> was overridden by the source build, and the command <code>openssl version</code> showed the latest and patched version <code>1.0.1g</code>.</p>
+<p>To fix the problem, we need to reinstall the package first:</p>
+<pre><code>$ sudo apt-get <span class="operator"><span class="keyword">install</span> <span class="comment">--reinstall openssl</span></span>
+</code></pre><p>Now, this will revert control back to <code>apt-get</code> and overwrite the binary <code>/usr/bin/openssl</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ openssl version -a</div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span>c <span class="number">10</span> May <span class="number">2012</span></div><div class="line">built on: Wed Jan  <span class="number">8</span> <span class="number">20</span>:<span class="number">51</span>:<span class="number">55</span> UTC <span class="number">2014</span></div><div class="line">platform: debian-amd64</div><div class="line">options:  bn(<span class="number">64</span>,<span class="number">64</span>) rc4(<span class="number">16</span>x,int) des(idx,cisc,<span class="number">16</span>,int) blowfish(idx) </div><div class="line">compiler: cc -fPIC -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -m64 -DL_ENDIAN -DTERMIO -g -O2 -fstack-protector <span class="variable">--param=</span><span class="variable">ssp-buffer-size=</span><span class="number">4</span> -Wformat <span class="variable">-Werror=</span>format-security <span class="variable">-D_FORTIFY_SOURCE=</span><span class="number">2</span> -Wl,-Bsymbolic-functions -Wl,-z,relro -Wa,--noexecstack -Wall -DOPENSSL_NO_TLS1_2_CLIENT <span class="variable">-DOPENSSL_MAX_TLS1_2_CIPHER_LENGTH=</span><span class="number">50</span> <span class="variable">-DMD32_REG_T=</span>int -DOPENSSL_IA32_SSE2 -DOPENSSL_BN_ASM_MONT -DOPENSSL_BN_ASM_MONT5 -DOPENSSL_BN_ASM_GF2m -DSHA1_ASM -DSHA256_ASM -DSHA512_ASM -DMD5_ASM -DAES_ASM -DVPAES_ASM -DBSAES_ASM -DWHIRLPOOL_ASM -DGHASH_ASM</div><div class="line">OPENSSLDIR: <span class="string">"/usr/lib/ssl"</span></div></pre></td></tr></table></figure>
+
+<p>And then we must perform the distribution upgrade to the latest long term support version, in order to continue receiving updates.</p>
+<p>The lesson I have learned from this is that if you are going the wrong direction, no matter how hard you work, you are not going to make it. Make sure to take the initial investment, and really understand the true cause of the problem before attempting to resolve the issue. And don’t blindly follow the procedure. Understand it first, and adapt to your specific situation. As Abraham Lincoln once said:</p>
+<blockquote>
+<p>“If I have nine hours to chop down a tree, I’d spend the first six sharpening my ax.”</p>
+</blockquote>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-05-10T21:37:20.000Z"><a href="/2014/05/10/anonymous-like/">May 10, 2014</a></time>
       
       
@@ -606,75 +666,6 @@ $ <span class="built_in">source</span> ~/.bashrc
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-03-22T13:20:10.000Z"><a href="/2014/03/22/writing-custom-yeoman-generator/">Mar 22, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/03/22/writing-custom-yeoman-generator/">Writing Custom Yeoman Generator</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Writing a custom <a href="http://yeoman.io/" target="_blank" rel="external">Yeoman</a> generator, you need to install <a href="https://github.com/yeoman/generator-generator" target="_blank" rel="external">generator-generator</a> first.</p>
-<blockquote>
-<p>(generator-generator) Scaffolds out a new basic Yeoman generator with some sensible defaults.</p>
-</blockquote>
-<p>So it creates some basic structure for writing your own custom generators. It is a generator for writing Node generator application.</p>
-<p>First Install generator-generator:</p>
-<pre><code>$ <span class="built_in">sudo</span> npm install -g generator-generator
-</code></pre><p>Then generate some basic files for writing your own generator by issuing:</p>
-<pre><code><span class="variable">$ </span>yo generator
-</code></pre><p>You can use generator-generator to write both a custom generator and a custom sub-generator. What is sub-generator? For example, Angular directive or service is a sub-generator.</p>
-<p>Use naming convention <code>generator-[name]</code>.</p>
-<p>Create a directory for your new generator:</p>
-<pre><code><span class="variable">$ </span>mkdir -p ~<span class="regexp">/generators/generator</span>-hello &amp;&amp; cd <span class="variable">$_</span>
-</code></pre><p>Make sure entering the newly created directory (<code>cd $_</code>), otherwise all files generated will be placed under the current directory. Then, scaffold your generator:</p>
-<pre><code><span class="variable">$ </span>yo generator
-</code></pre><p>As versions yo@1.1.2 and generator-generator@0.4.3, the generator creates the following directories and files:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── app</div><div class="line">│   ├── index.js</div><div class="line">│   └── templates</div><div class="line">├── <span class="string">.editorconfig</span></div><div class="line">├── <span class="string">.gitattributes</span></div><div class="line">├── <span class="string">.gitignore</span></div><div class="line">├── <span class="string">.jshintrc</span></div><div class="line">├── node_modules</div><div class="line">│   ├── <span class="string">.bin</span></div><div class="line">│   ├── chalk</div><div class="line">│   ├── mocha</div><div class="line">│   └── yeoman-generator</div><div class="line">├── package.json</div><div class="line">├── README.md</div><div class="line">├── <span class="keyword">test</span></div><div class="line">│   ├── <span class="keyword">test</span>-creation.js</div><div class="line">│   └── <span class="keyword">test</span>-load.js</div><div class="line">└── <span class="string">.travis</span>.yml</div><div class="line"></div><div class="line"><span class="number">8</span> directories, <span class="number">10</span> files</div></pre></td></tr></table></figure>
-
-<p>You might want to make your initial commit:</p>
-<pre><code>$ git init &amp;&amp; git <span class="built_in">add</span> <span class="string">'*'</span> &amp;&amp; git commit -<span class="keyword">m</span> <span class="string">'Initial commit'</span>
-</code></pre><p>While in development, make it accessible globally:</p>
-<pre><code>$ <span class="built_in">sudo</span> npm link
-</code></pre><p>This is similar to:</p>
-<pre><code>$ <span class="built_in">sudo</span> npm install -g [generator-name]
-</code></pre><p>They both will be discoverable from <code>/usr/local/lib/node_modules</code>.</p>
-<p>There isn’t much going on there, we need to customize our own generator. The main file is <code>./app/index.js</code>.</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> HelloGenerator = yeoman.generators.Base.extend({</div><div class="line">});</div><div class="line"><span class="built_in">module</span>.exports = HelloGenerator;</div></pre></td></tr></table></figure>
-
-<p>The <code>HelloGenerator</code> extends <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> generator. There are four properties (functions) that it has extended: <code>init</code>, <code>askFor</code>, <code>app</code>, and <code>projectfiles</code>.</p>
-<p>All these functions will be invoked by Yeoman one by one in order (the order is important), meaning that <code>init</code> will be called first to perform initialization, and then <code>askFor</code> will be called to get user prompts, then <code>app</code> and <code>projectfiles</code> will be called afterward to build the application.</p>
-<p>However, it is not a must to have four properties, it just brings more structure and modularity. In fact, you can merge all four functions into a single one.</p>
-<p>The method name does not matter. Just don’t name it <code>prompt</code> because you will override the existing property inherited from <code>yeoman.generators.Base</code>. </p>
-<p>If we need to declare a “private” property, just appending it with an underscore as a hidden property, e.g. <code>_dontAskFor: function(){}</code>, or if you just use it in the same file, you can simply define a global <code>function myFunc()</code>.</p>
-<p>Personal, I don’t think it is necessary to break it into many functions, three are enough, initialization, prompting user for input, and generating files.</p>
-<p>When choosing property names, the <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> object contains many properties which is not a good idea to be overridden, such as <code>[&quot;append&quot;, &quot;help&quot;, &quot;log&quot;, &quot;prompt&quot;, &quot;remote&quot;]</code>. This design has limitation on choosing a right property name. For example, I was thinking about using <code>prompt</code> instead of <code>askFor</code>, but <code>prompt</code> is an inherited property. Therefore, it is a good idea to keep fewer properties in <code>HelloGenerator</code>. Three are enough. All these properties can be accessible from the context <code>this</code>. From <code>this</code> object you can access everything from <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> object to newly defined <code>_dontAskFor</code> hidden property.</p>
-<p>Time to test the custom generator:</p>
-<pre><code>$ <span class="built_in">cd</span> /tmp &amp;&amp; mkdir hello &amp;&amp; yo <span class="variable">$_</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -699,7 +690,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>7</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>8</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -840,6 +831,8 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/browser-sync/">browser-sync</a><small>1</small></li>
   
+    <li><a href="/tags/buffer/">buffer</a><small>1</small></li>
+  
     <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
@@ -924,9 +917,15 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/data-volume/">data-volume</a><small>1</small></li>
   
+    <li><a href="/tags/database/">database</a><small>1</small></li>
+  
     <li><a href="/tags/datagram/">datagram</a><small>1</small></li>
   
+    <li><a href="/tags/datastore/">datastore</a><small>1</small></li>
+  
     <li><a href="/tags/date/">date</a><small>1</small></li>
+  
+    <li><a href="/tags/db/">db</a><small>1</small></li>
   
     <li><a href="/tags/debian/">debian</a><small>1</small></li>
   
@@ -1029,6 +1028,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
   
@@ -1151,6 +1152,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/lodash/">lodash</a><small>1</small></li>
   
     <li><a href="/tags/log/">log</a><small>1</small></li>
+  
+    <li><a href="/tags/lorem-ipsum/">lorem-ipsum</a><small>1</small></li>
   
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
@@ -1378,6 +1381,8 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/stream/">stream</a><small>1</small></li>
   
+    <li><a href="/tags/string/">string</a><small>1</small></li>
+  
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
     <li><a href="/tags/structure/">structure</a><small>1</small></li>
@@ -1479,6 +1484,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/vagrant-google/">vagrant-google</a><small>1</small></li>
   
     <li><a href="/tags/vagrant-plugin/">vagrant-plugin</a><small>1</small></li>
+  
+    <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   

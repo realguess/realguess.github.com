@@ -68,6 +68,60 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-03-28T12:00:00.000Z"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Mar 28, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Locate HTTP Port Number from http.Server Instance</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>This is a bare minimal HTTP server:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer().listen(port);</div></pre></td></tr></table></figure>
+
+<p>If the <code>port</code> number is evaluated to be <em>falsy</em>, such as <code>0</code>, <code>null</code>, <code>undefined</code> or an empty string, a random port will be assigned.</p>
+<blockquote>
+<p>Begin accepting connections on the specified <code>port</code> and <code>hostname</code>. If the <code>hostname</code> is omitted, the server will accept connections on any IPv6 address (::) when IPv6 is available, or any IPv4 address (0.0.0.0) otherwise. <strong>A port value of zero will assign a random port.</strong> - <a href="https://iojs.org/api/http.html#http_server_listen_port_hostname_backlog_callback" target="_blank" rel="external">https://iojs.org/api/http.html#http_server_listen_port_hostname_backlog_callback</a></p>
+</blockquote>
+<p>We can use command line tool such as <code>netstat</code> to find out the port number:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ netstat -ltpn | grep node</div><div class="line">tcp6     <span class="number">0</span>    <span class="number">0</span> :::<span class="number">44055</span>             :::*            LISTEN      <span class="number">5624</span>/node</div></pre></td></tr></table></figure>
+
+<p>However, it will be very convenient without relying on external tools.</p>
+<p>Luckily, we can find out the port number by using the <code>address</code> method:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer().listen().address()</div></pre></td></tr></table></figure>
+
+<p>The result will be similar to:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">{ address: <span class="string">'::'</span>, family: <span class="string">'IPv6'</span>, port: <span class="number">44055</span> }</div></pre></td></tr></table></figure>
+
+<p>Furthermore, it works with all popular libraries that create an <code>http.Server</code> instance:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/03/28/locate-http-port-number-from-http-server-instance/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-03-18T12:00:00.000Z"><a href="/2015/03/18/use-array-of-middleware-in-koa-router/">Mar 18, 2015</a></time>
       
       
@@ -450,70 +504,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-02-04T12:00:00.000Z"><a href="/2015/02/04/docker-save-load-and-deploy/">Feb 4, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/02/04/docker-save-load-and-deploy/">Docker Save, Load and Deploy</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Need to deploy private Docker containers without a private registry? Try <code>docker save</code> and <code>docker load</code>.</p>
-<p>Working set:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ docker images</div><div class="line">REPOSITORY          TAG                 IMAGE ID            CREATED             VIRTUAL SIZE</div><div class="line">realguess/jq        latest              <span class="number">1</span>f3f837970bf        <span class="number">3</span> months ago        <span class="number">6.107</span> MB</div><div class="line">realguess/jq        <span class="number">1.4</span>                 <span class="number">6071</span>e18eae76        <span class="number">3</span> months ago        <span class="number">6.107</span> MB</div><div class="line">busybox             ubuntu-<span class="number">14.04</span>        f6169d24347d        <span class="number">6</span> weeks ago         <span class="number">5.609</span> MB</div></pre></td></tr></table></figure>
-
-<p>Actions to perform:</p>
-<ol>
-<li>Save an image with a single tag</li>
-<li>Save an image with multiple tags</li>
-<li>Save multiple images</li>
-</ol>
-<p>Save a single tagged image:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker save realguess/jq:latest &gt; realguess-jq-latest.tar</div></pre></td></tr></table></figure>
-
-<p>Save a single image with all tags:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker save realguess/jq &gt; realguess-jq.tar</div></pre></td></tr></table></figure>
-
-<p>The tagged one is slightly less in size:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ls -lh realguess*.tar</div><div class="line">-rw-rw-r-- <span class="number">1</span> chao chao <span class="number">6.0</span>M Feb <span class="number">1</span> <span class="number">12</span>:<span class="number">00</span> realguess-jq-latest.tar</div><div class="line">-rw-rw-r-- <span class="number">1</span> chao chao <span class="number">6.5</span>M Feb <span class="number">1</span> <span class="number">12</span>:<span class="number">00</span> realguess-jq.tar</div></pre></td></tr></table></figure>
-
-<p>Save multiple images:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker save busybox realguess/jq &gt; busy-realguess-jq-box.tar</div></pre></td></tr></table></figure>
-
-<p>The size is almost twice as much comparing to a single image tar:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ls -lh busy*</div><div class="line">-rw-rw-r--  <span class="number">1</span> chao chao  <span class="number">12</span>M Feb <span class="number">1</span> <span class="number">12</span>:<span class="number">00</span> busy-realguess-jq-box.tar</div></pre></td></tr></table></figure>
-
-<p>Compress it:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ out=busy-realguess-jq-box.tar && docker save busybox realguess/jq &gt; <span class="variable">$out</span> && gzip <span class="variable">$out</span></div></pre></td></tr></table></figure>
-
-<p>Much better in size:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ls -lh busy*</div><div class="line">-rw-rw-r-- <span class="number">1</span> chao chao <span class="number">5.7</span>M Feb <span class="number">1</span> <span class="number">12</span>:<span class="number">00</span> busy-realguess-jq-box.tar.gz</div></pre></td></tr></table></figure>
-
-<p>Do the reverse, load the tarred Docker images with <a href="https://docs.docker.com/reference/commandline/cli/#load" target="_blank" rel="external">docker load</a>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -538,7 +528,7 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>7</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>8</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -679,6 +669,8 @@
   
     <li><a href="/tags/browser-sync/">browser-sync</a><small>1</small></li>
   
+    <li><a href="/tags/buffer/">buffer</a><small>1</small></li>
+  
     <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
@@ -763,9 +755,15 @@
   
     <li><a href="/tags/data-volume/">data-volume</a><small>1</small></li>
   
+    <li><a href="/tags/database/">database</a><small>1</small></li>
+  
     <li><a href="/tags/datagram/">datagram</a><small>1</small></li>
   
+    <li><a href="/tags/datastore/">datastore</a><small>1</small></li>
+  
     <li><a href="/tags/date/">date</a><small>1</small></li>
+  
+    <li><a href="/tags/db/">db</a><small>1</small></li>
   
     <li><a href="/tags/debian/">debian</a><small>1</small></li>
   
@@ -868,6 +866,8 @@
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
   
@@ -990,6 +990,8 @@
     <li><a href="/tags/lodash/">lodash</a><small>1</small></li>
   
     <li><a href="/tags/log/">log</a><small>1</small></li>
+  
+    <li><a href="/tags/lorem-ipsum/">lorem-ipsum</a><small>1</small></li>
   
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
@@ -1217,6 +1219,8 @@
   
     <li><a href="/tags/stream/">stream</a><small>1</small></li>
   
+    <li><a href="/tags/string/">string</a><small>1</small></li>
+  
     <li><a href="/tags/stringify/">stringify</a><small>1</small></li>
   
     <li><a href="/tags/structure/">structure</a><small>1</small></li>
@@ -1318,6 +1322,8 @@
     <li><a href="/tags/vagrant-google/">vagrant-google</a><small>1</small></li>
   
     <li><a href="/tags/vagrant-plugin/">vagrant-plugin</a><small>1</small></li>
+  
+    <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
     <li><a href="/tags/version/">version</a><small>1</small></li>
   
