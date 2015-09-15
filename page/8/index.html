@@ -64,6 +64,61 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-05-18T22:05:34.000Z"><a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">May 18, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">Split a Large JSON file into Smaller Pieces</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In the <a href="/2013/12/19/split-json-file-into-multiple-parts/">previous post</a>, I have written about how to split a large JSON file into multiple parts, but that was limited to the default behavior of <code>mongoexport</code>, where each line in the output file represents a JSON string. If you have to deal with a large JSON file, such as the one generated with <code>--jsonArray</code> option in <code>mongoexport</code>, you can to parse the file incrementally or streaming.</p>
+<p>I have downloaded a large JOSN <a href="https://health.data.ny.gov/api/views/vafa-pf2s/rows.json?accessType=DOWNLOAD" target="_blank" rel="external">data set</a> (about 144MB) from <a href="http://catalog.data.gov/dataset/genealogical-research-death-index-beginning-1957" target="_blank" rel="external">Data.gov</a>. If you try to read the entire data set into memory:</p>
+<pre><code>&gt; <span class="keyword">var</span> json = <span class="built_in">require</span>(<span class="string">'./data.json'</span>)
+Killed
+</code></pre><p>The process is not able to handle it. Use streaming is necessary. And luckily, our <a href="/2014/05/18/command-line-json-processing/">command line JSON processing</a> tool, <a href="http://stedolan.github.io/jq/" target="_blank" rel="external">jq</a>, supports streaming.</p>
+<p>The parts we are interested are encapsulated in an array under <code>data</code> property of the data set. We are going to split each element of the array into its own file.</p>
+<p>Don’t try to use <code>-f</code> option in <em>jq</em> to read file from the command line, it will read everything into a memory. Instead, do <code>cat data.json | jq</code>.</p>
+<pre><code>$ <span class="built_in">mkdir</span> parts
+$ <span class="keyword">cat</span> data.json | jq -<span class="keyword">c</span> -M <span class="string">'.data[]'</span> | \
+  <span class="keyword">while</span> <span class="keyword">read</span> <span class="built_in">line</span>; <span class="keyword">do</span> <span class="keyword">echo</span> $<span class="built_in">line</span> &gt; parts/$(date +%<span class="keyword">s</span>%<span class="keyword">N</span>).json; done
+</code></pre><p>The entire data set is piped into <em>jq</em> to filter and compress each array element. Each element is printed in one line, and each line is saved into its own JSON file by using UNIX timestamp plus nanosecond as the filename. All pieces are saved into <code>parts/</code> directory.</p>
+<p>But there is one problem with embedded JSON string, which has to do with <code>echo</code>, due to backslash. For example, if echoing the following string:</p>
+<pre><code>{<span class="string">"name"</span>:<span class="string">"{\"first\":\"Foo\",\"last\":\"Foo\"}"</span>,<span class="string">"username"</span>:<span class="string">"foo"</span>,<span class="string">"id"</span>:<span class="number">1</span>}
+</code></pre><p>It will be printed as an invalid JSON:</p>
+<pre><code>{<span class="string">"name"</span><span class="symbol">:<span class="string">"{"</span>first<span class="string">":"</span>Foo<span class="string">","</span>last<span class="string">":"</span>Foo<span class="string">"}"</span></span>,<span class="string">"username"</span><span class="symbol">:<span class="string">"foo"</span></span>,<span class="string">"id"</span><span class="symbol">:</span><span class="number">1</span>}
+</code></pre><p>Backslashes are stripped. To fix this problem, we can simply double backslash:</p>
+<pre><code>$ <span class="keyword">cat</span> data.json | jq -<span class="keyword">c</span> -M <span class="string">'.data[]'</span> | sed <span class="string">'s/\\"/\\\\"/g'</span> | \
+  <span class="keyword">while</span> <span class="keyword">read</span> <span class="built_in">line</span>; <span class="keyword">do</span> <span class="keyword">echo</span> $<span class="built_in">line</span> &gt; parts/$(date +%<span class="keyword">s</span>%<span class="keyword">N</span>).json; done
+</code></pre><p>You can even try <code>curl</code> the remote JSON file instead using <code>cat</code> from the downloaded file. But you might want to try with a smaller file first, because, with my slow machine, it took me nearly an hour to finish splitting into 678,733 parts:</p>
+<pre><code>real    <span class="number">49</span>m35.<span class="number">780</span>s
+<span class="literal">user</span>    <span class="number">2</span>m42.<span class="number">888</span>s
+sys     <span class="number">6</span>m48.<span class="number">048</span>s
+</code></pre><p>To take it a little bit further, the next step is to decide how many lines or array elements to write into a single file.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-05-18T14:49:04.000Z"><a href="/2014/05/18/command-line-json-processing/">May 18, 2014</a></time>
       
       
@@ -609,48 +664,6 @@ X-Tumblr-User: birchbox
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-03-29T22:58:55.000Z"><a href="/2014/03/29/passing-environment-variables-from-cron-to-shell-script/">Mar 29, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/03/29/passing-environment-variables-from-cron-to-shell-script/">Passing Environment Variables from Cron to Shell Script</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In Debian system with Vixie cron, <a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">environment variables can be defined</a> in the crontab:</p>
-<pre><code>MESSAGE=Hello World
-<span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /bin/sh ~/script.sh &gt;&gt; /tmp/script.log
-</code></pre><p>Now, can the same environment variable <code>MESSAGE</code> be passed to the shell script <code>~/script.sh</code> that being scheduled to run every minute? Let’s just give a try by adding the following line to <code>script.sh</code>:</p>
-<pre><code><span class="built_in">echo</span> <span class="string">"ECHO: <span class="variable">${MESSAGE}</span>"</span>
-</code></pre><p><code>tail -f /tmp/script.log</code>:</p>
-<pre><code><span class="attribute">ECHO</span>: <span class="string">Hello World</span>
-<span class="attribute">ECHO</span>: <span class="string">Hello World</span>
-<span class="attribute">ECHO</span>: <span class="string">Hello World</span>
-</code></pre><p>Therefore, the shell script will pick up the environment variables defined in crontab. This really is a convenience.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -674,7 +687,7 @@ X-Tumblr-User: birchbox
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>9</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>10</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -881,6 +894,8 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/cors/">cors</a><small>1</small></li>
   
+    <li><a href="/tags/create-indexes/">create-indexes</a><small>1</small></li>
+  
     <li><a href="/tags/crescent/">crescent</a><small>1</small></li>
   
     <li><a href="/tags/crlf/">crlf</a><small>1</small></li>
@@ -927,6 +942,8 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/diff/">diff</a><small>2</small></li>
   
+    <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
+  
     <li><a href="/tags/directory/">directory</a><small>1</small></li>
   
     <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
@@ -961,6 +978,8 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
   
+    <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
+  
     <li><a href="/tags/express/">express</a><small>3</small></li>
   
     <li><a href="/tags/extended-pattern-matching/">extended-pattern-matching</a><small>1</small></li>
@@ -989,7 +1008,7 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/gce/">gce</a><small>1</small></li>
   
-    <li><a href="/tags/gcloud/">gcloud</a><small>2</small></li>
+    <li><a href="/tags/gcloud/">gcloud</a><small>3</small></li>
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
   
@@ -1015,7 +1034,7 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
   
-    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>2</small></li>
+    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
     <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
   
@@ -1070,6 +1089,8 @@ X-Tumblr-User: birchbox
     <li><a href="/tags/imessage/">imessage</a><small>1</small></li>
   
     <li><a href="/tags/immediately-invoked-function-expression/">immediately-invoked-function-expression</a><small>2</small></li>
+  
+    <li><a href="/tags/index/">index</a><small>1</small></li>
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
@@ -1502,6 +1523,8 @@ X-Tumblr-User: birchbox
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
+  
+    <li><a href="/tags/yaml/">yaml</a><small>1</small></li>
   
     <li><a href="/tags/yeoman/">yeoman</a><small>1</small></li>
   

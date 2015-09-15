@@ -68,6 +68,52 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-15T12:00:00.000Z"><a href="/2015/09/15/scaffold-an-explicit-document-to-avoid-error-when-creating-indexes-in-google-cloud-datastore/">Sep 15, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/15/scaffold-an-explicit-document-to-avoid-error-when-creating-indexes-in-google-cloud-datastore/">Scaffold an Explicit Document to Avoid Error When Creating Indexes in Google Cloud Datastore</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When working with <a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a>, I would like to design each <a href="https://cloud.google.com/datastore/docs/concepts/entities#Datastore_Kinds_and_identifiers" target="_blank" rel="external">kind</a> (collection or table) with its own schema and index files:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── index.yml</div><div class="line">└── schema.yml</div></pre></td></tr></table></figure>
+
+<p>But not every kind has to have something in the <code>index.yml</code> file. So, what to do? Will the index creation command accept an empty <code>index.yml</code> file with zero byte? Let’s give try:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ gcloud preview datastore create-indexes index.yml</div><div class="line"></div><div class="line">ERROR: (gcloud.preview.datastore.create-indexes) An error occurred <span class="keyword">while</span> parsing file: [/home/chao/kind/index.yml]</div><div class="line">The file is empty</div></pre></td></tr></table></figure>
+
+<p>No, it does not like it. Then, what’s the minimum required? The answer is an <a href="http://www.yaml.org/spec/1.2/spec.html#id2801301" target="_blank" rel="external">explicit document</a> with an empty document content:</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span></div></pre></td></tr></table></figure>
+
+<p>The three dashes form a <a href="http://www.yaml.org/spec/1.2/spec.html#marker/directives%20end/" target="_blank" rel="external">directives end marker</a> line. <a href="http://www.yaml.org/" target="_blank" rel="external">YAML</a> uses three dashes to separate directives from document content.</p>
+<p>When creating indexes with the file, it will proceed without errors or warnings:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ gcloud preview datastore create-indexes index.yml</div><div class="line"></div><div class="line">You are about to update the following configurations:</div><div class="line">- myproj/index  From: [/home/chao/kind/index.yml]</div><div class="line">Do you want to <span class="keyword">continue</span> (Y/n)?</div></pre></td></tr></table></figure>
+
+<p>Therefore, to avoid error, when scaffold an <code>index.yml</code> file for indexing, use an explicit document with an empty document content.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
       
       
@@ -169,7 +215,7 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>9</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>10</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -376,6 +422,8 @@
   
     <li><a href="/tags/cors/">cors</a><small>1</small></li>
   
+    <li><a href="/tags/create-indexes/">create-indexes</a><small>1</small></li>
+  
     <li><a href="/tags/crescent/">crescent</a><small>1</small></li>
   
     <li><a href="/tags/crlf/">crlf</a><small>1</small></li>
@@ -422,6 +470,8 @@
   
     <li><a href="/tags/diff/">diff</a><small>2</small></li>
   
+    <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
+  
     <li><a href="/tags/directory/">directory</a><small>1</small></li>
   
     <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
@@ -456,6 +506,8 @@
   
     <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
   
+    <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
+  
     <li><a href="/tags/express/">express</a><small>3</small></li>
   
     <li><a href="/tags/extended-pattern-matching/">extended-pattern-matching</a><small>1</small></li>
@@ -484,7 +536,7 @@
   
     <li><a href="/tags/gce/">gce</a><small>1</small></li>
   
-    <li><a href="/tags/gcloud/">gcloud</a><small>2</small></li>
+    <li><a href="/tags/gcloud/">gcloud</a><small>3</small></li>
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
   
@@ -510,7 +562,7 @@
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
   
-    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>2</small></li>
+    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
     <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
   
@@ -565,6 +617,8 @@
     <li><a href="/tags/imessage/">imessage</a><small>1</small></li>
   
     <li><a href="/tags/immediately-invoked-function-expression/">immediately-invoked-function-expression</a><small>2</small></li>
+  
+    <li><a href="/tags/index/">index</a><small>1</small></li>
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
@@ -997,6 +1051,8 @@
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
+  
+    <li><a href="/tags/yaml/">yaml</a><small>1</small></li>
   
     <li><a href="/tags/yeoman/">yeoman</a><small>1</small></li>
   

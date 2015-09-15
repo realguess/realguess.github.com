@@ -64,6 +64,60 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-02-08T12:00:00.000Z"><a href="/2015/02/08/how-to-correctly-use-environment-variables-on-the-command-line/">Feb 8, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/02/08/how-to-correctly-use-environment-variables-on-the-command-line/">How to Correctly Use Environment Variables on the Command Line</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I always forget about how to use shell environment variable correctly. I think because I did not grasp the key concept. For example, here is the wrong approach:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ FOO=foo BAR=bar <span class="built_in">echo</span> foo is <span class="variable">${FOO}</span> and bar is <span class="variable">${BAR}</span></div><div class="line">foo is and bar is</div></pre></td></tr></table></figure>
+
+<p>The correct answer I was hoping for is:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">foo is foo and bar is bar</div></pre></td></tr></table></figure>
+
+<p>Because what I frequently do is use environment variable inside shell script:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># script.sh</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> foo is <span class="variable">${FOO}</span> and bar is <span class="variable">${BAR}</span></div></pre></td></tr></table></figure>
+
+<p>then do:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ FOO=foo BAR=bar ./script.sh</div><div class="line">foo is foo and bar is bar</div></pre></td></tr></table></figure>
+
+<p>This works as expected because the environment variables are passed into the subshell that executing the script.</p>
+<p>But why not the first or the wrong approach?</p>
+<p>The reason is that <strong>shell expands the variable before the command being executed</strong>. To shell, the first approach looks like:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ FOO=foo BAR=bar <span class="built_in">echo</span> foo is and bar is</div></pre></td></tr></table></figure>
+
+<p>The environment variables <code>FOO</code> and <code>BAR</code> were expanded before the command was executed. Hence, no values were printed.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/02/08/how-to-correctly-use-environment-variables-on-the-command-line/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-02-07T12:00:00.000Z"><a href="/2015/02/07/launch-byobu-automatically-on-vagrant-ssh/">Feb 7, 2015</a></time>
       
       
@@ -539,41 +593,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-12-20T12:00:00.000Z"><a href="/2014/12/20/diff-two-commits-in-bitbucket/">Dec 20, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/12/20/diff-two-commits-in-bitbucket/">Diff Two Commits in BitBucket</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Compare two different commits in <a href="https://bitbucket.org/" target="_blank" rel="external">BitBucket</a>, not just against previous commit:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://bitbucket.org/<span class="list">{user}</span>/<span class="list">{repo}</span>/branches/compare/<span class="list">{new-commit}</span>..<span class="list">{old-commit}</span></div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -597,7 +616,7 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>9</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>10</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>4</small></li>
   
@@ -804,6 +823,8 @@
   
     <li><a href="/tags/cors/">cors</a><small>1</small></li>
   
+    <li><a href="/tags/create-indexes/">create-indexes</a><small>1</small></li>
+  
     <li><a href="/tags/crescent/">crescent</a><small>1</small></li>
   
     <li><a href="/tags/crlf/">crlf</a><small>1</small></li>
@@ -850,6 +871,8 @@
   
     <li><a href="/tags/diff/">diff</a><small>2</small></li>
   
+    <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
+  
     <li><a href="/tags/directory/">directory</a><small>1</small></li>
   
     <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
@@ -884,6 +907,8 @@
   
     <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
   
+    <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
+  
     <li><a href="/tags/express/">express</a><small>3</small></li>
   
     <li><a href="/tags/extended-pattern-matching/">extended-pattern-matching</a><small>1</small></li>
@@ -912,7 +937,7 @@
   
     <li><a href="/tags/gce/">gce</a><small>1</small></li>
   
-    <li><a href="/tags/gcloud/">gcloud</a><small>2</small></li>
+    <li><a href="/tags/gcloud/">gcloud</a><small>3</small></li>
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
   
@@ -938,7 +963,7 @@
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
   
-    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>2</small></li>
+    <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
     <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
   
@@ -993,6 +1018,8 @@
     <li><a href="/tags/imessage/">imessage</a><small>1</small></li>
   
     <li><a href="/tags/immediately-invoked-function-expression/">immediately-invoked-function-expression</a><small>2</small></li>
+  
+    <li><a href="/tags/index/">index</a><small>1</small></li>
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
@@ -1425,6 +1452,8 @@
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
+  
+    <li><a href="/tags/yaml/">yaml</a><small>1</small></li>
   
     <li><a href="/tags/yeoman/">yeoman</a><small>1</small></li>
   
