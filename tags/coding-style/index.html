@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
+<ol>
+<li>Having multiple images means more configuration files to manage and update.</li>
+<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
+<li>Steeper learning curve for new developers.</li>
+</ol>
+<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-08-11T12:00:00.000Z"><a href="/2015/08/11/changelog-starter/">Aug 11, 2015</a></time>
       
       
@@ -168,7 +207,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>6</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>7</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -333,7 +372,7 @@
   
     <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
   
-    <li><a href="/tags/coding-style/">coding-style</a><small>2</small></li>
+    <li><a href="/tags/coding-style/">coding-style</a><small>3</small></li>
   
     <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
   
@@ -431,7 +470,9 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>7</small></li>
+    <li><a href="/tags/docker/">docker</a><small>8</small></li>
+  
+    <li><a href="/tags/dockerfile/">dockerfile</a><small>1</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
@@ -747,7 +788,7 @@
   
     <li><a href="/tags/profile/">profile</a><small>1</small></li>
   
-    <li><a href="/tags/programming-style/">programming-style</a><small>1</small></li>
+    <li><a href="/tags/programming-style/">programming-style</a><small>0</small></li>
   
     <li><a href="/tags/provision/">provision</a><small>1</small></li>
   
