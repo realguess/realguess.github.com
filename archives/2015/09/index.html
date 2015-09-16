@@ -68,6 +68,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
+
+<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
       
       
@@ -486,67 +524,11 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-02T12:00:00.000Z"><a href="/2015/09/02/various-node-js-installation-methods/">Sep 2, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/02/various-node-js-installation-methods/">Various Node.js Installation Methods</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>From <a href="https://iojs.org/" target="_blank" rel="external">io.js</a> back to <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a>, time to update my installation guide.</p>
-<h2 id="Install_via_Package_Manager">Install via Package Manager</h2>
-<p>Install in Ubuntu directly via apt:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> apt-get install -y nodejs</div></pre></td></tr></table></figure>
-
-<p>However, it will not give you the latest version. So, use an alternative method.</p>
-<p>For Node.js v0.12:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>L https://deb.nodesource.com/setup_0.<span class="number">12</span> | <span class="built_in">sudo</span> bash -</div><div class="line">$ <span class="built_in">sudo</span> apt-get install -y nodejs</div></pre></td></tr></table></figure>
-
-<p>For io.js v3.x:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>L https://deb.nodesource.com/setup_iojs_3.x | <span class="built_in">sudo</span> bash -</div><div class="line">$ <span class="built_in">sudo</span> apt-get install -y iojs</div></pre></td></tr></table></figure>
-
-<h2 id="Install_from_the_Source">Install from the Source</h2>
-<p>Install build tools:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> apt-get install -y build-essential</div></pre></td></tr></table></figure>
-
-<p>Clone the Node.js repository from GitHub:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git clone https://github.com/nodejs/node.git</div></pre></td></tr></table></figure>
-
-<p>Future Node.js releases will be from this repo: <a href="https://github.com/nodejs/node" target="_blank" rel="external">https://github.com/nodejs/node</a>.</p>
-<p>Check out a specific version:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">cd</span> node && git checkout v3.<span class="number">2.0</span></div></pre></td></tr></table></figure>
-
-<p>Install globally:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ./configure && make && <span class="built_in">sudo</span> make install</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
+  
+    <a href="/archives/2015/09/page/2/" class="alignright next">Next</a>
   
   <div class="clearfix"></div>
 </nav>
@@ -570,7 +552,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>7</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -653,7 +635,7 @@
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
   
-    <li><a href="/tags/apt-get/">apt-get</a><small>1</small></li>
+    <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
     <li><a href="/tags/array/">array</a><small>3</small></li>
   
@@ -885,7 +867,7 @@
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gce/">gce</a><small>1</small></li>
+    <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
     <li><a href="/tags/gcloud/">gcloud</a><small>3</small></li>
   
@@ -919,7 +901,7 @@
   
     <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
-    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>2</small></li>
+    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>3</small></li>
   
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
@@ -1034,6 +1016,8 @@
     <li><a href="/tags/livereload/">livereload</a><small>2</small></li>
   
     <li><a href="/tags/load/">load</a><small>1</small></li>
+  
+    <li><a href="/tags/lock/">lock</a><small>1</small></li>
   
     <li><a href="/tags/lodash/">lodash</a><small>1</small></li>
   
@@ -1353,7 +1337,7 @@
   
     <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
-    <li><a href="/tags/update/">update</a><small>1</small></li>
+    <li><a href="/tags/update/">update</a><small>2</small></li>
   
     <li><a href="/tags/upgrade/">upgrade</a><small>2</small></li>
   
@@ -1363,7 +1347,7 @@
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>6</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>7</small></li>
   
     <li><a href="/tags/vagrant-box/">vagrant-box</a><small>1</small></li>
   

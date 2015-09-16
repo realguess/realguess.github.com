@@ -64,6 +64,63 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-12-27T12:00:00.000Z"><a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/">Dec 27, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/">Revoke and Grant Public IP Addresses to Amazon EC2 Instances Via AWS Command Line Interface (CLI)</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>If you work from place to place, such as from one coffee shop to another, and you need access to your Amazon EC2 instances, but you don’t want to allow traffics from all IP addresses. You can use the EC2 <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">Security Groups</a> to allow the IP addresses from those locations. But once you move on to a different location, you want to delete the IP address from the previous location. The process to do these manually and over and over again quickly becomes cumbersome. Here is a command line method that quickly removes all other locations and allows only the traffic from your current location.</p>
+<p>The steps are:</p>
+<ol>
+<li>Revoke all existing sources to a particular port</li>
+<li>Grant access to the port only from the current IP address</li>
+</ol>
+<p>Assume the following:</p>
+<ul>
+<li>Profile: <code>default</code></li>
+<li>Security group: <code>mygroup</code></li>
+<li>Protocol: <code>tcp</code></li>
+<li>Port: <code>22</code></li>
+</ul>
+<p>First, revoke access to the port from all IP addresses:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ aws ec2 describe-security-groups \</div><div class="line">    --profile default \</div><div class="line">    --group-names mygroup \</div><div class="line">    --query <span class="string">'SecurityGroups[0].IpPermissions[?ToPort==`22`].IpRanges[].CidrIp'</span> | \</div><div class="line">  jq .[] | \</div><div class="line">  xargs -n <span class="number">1</span> aws ec2 revoke-security-group-ingress \</div><div class="line">    --profile default \</div><div class="line">    --group-name mygroup \</div><div class="line">    --protocol tcp \</div><div class="line">    --port <span class="number">22</span> \</div><div class="line">    --cidr</div></pre></td></tr></table></figure>
+
+<p>The <code>aws ec2 describe-security-groups</code> command before the first pipe returns JSON formatted data, filtered via <a href="http://jmespath.org/" target="_blank" rel="external">JMESPath</a> query, which is supported by <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS CLI</a>, for example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  <span class="string">"XXX.XXX.XXX.XXX/32"</span>,</div><div class="line">  <span class="string">"XXX.XXX.XXX.XXX/32"</span></div><div class="line">]</div></pre></td></tr></table></figure>
+
+<p><a href="http://stedolan.github.io/jq/" target="_blank" rel="external">jq</a> command simply converts an array of JSON to line by line strings, which <code>xarg</code> takes in, loops through and deletes one IP address at a time.</p>
+<p>After this step, all IP addresses originally allowed are all revoked. Next step is to grant access to the port from a single IP address:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-12-21T12:00:00.000Z"><a href="/2014/12/21/ansible-update-servers-to-the-latest-and-reboot/">Dec 21, 2014</a></time>
       
       
@@ -480,52 +537,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-11-23T12:00:00.000Z"><a href="/2014/11/23/restart-upstart-instances-on-system-reboot/">Nov 23, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/11/23/restart-upstart-instances-on-system-reboot/">Restart Upstart Instances on System Reboot</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>A single <a href="http://upstart.ubuntu.com/" target="_blank" rel="external">Upstart</a> job can have multiple instances running:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> start my-job port=<span class="number">4000</span></div><div class="line">$ <span class="built_in">sudo</span> start my-job port=<span class="number">4001</span></div><div class="line">$ <span class="built_in">sudo</span> start my-job port=<span class="number">4002</span></div></pre></td></tr></table></figure>
-
-<p>However, when the operating system reboots, the job with multiple instances will fail to start, due to instance information is not provided to the job. We can fix this problem by adding a <code>for</code> loop in the <code>script</code> section:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">start on (local-filesystems and net-device-up IFACE!=lo)</div><div class="line">stop  on shutdown</div><div class="line"></div><div class="line">script</div><div class="line">  <span class="keyword">for</span> i <span class="keyword">in</span> `seq <span class="number">4000</span> <span class="number">4002</span>`</div><div class="line">  <span class="keyword">do</span></div><div class="line">    <span class="keyword">exec</span> /path/to/my/job</div><div class="line">  <span class="keyword">done</span></div><div class="line">end script</div></pre></td></tr></table></figure>
-
-<p>With this Upstart job, we do not need to provide instance information:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> start my-job</div></pre></td></tr></table></figure>
-
-<p>Therefore, during system restart, the job will initiate automatically.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/11/23/restart-upstart-instances-on-system-reboot/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -555,7 +566,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>7</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -638,7 +649,7 @@
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
   
-    <li><a href="/tags/apt-get/">apt-get</a><small>1</small></li>
+    <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
     <li><a href="/tags/array/">array</a><small>3</small></li>
   
@@ -870,7 +881,7 @@
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gce/">gce</a><small>1</small></li>
+    <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
     <li><a href="/tags/gcloud/">gcloud</a><small>3</small></li>
   
@@ -904,7 +915,7 @@
   
     <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
-    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>2</small></li>
+    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>3</small></li>
   
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
@@ -1019,6 +1030,8 @@
     <li><a href="/tags/livereload/">livereload</a><small>2</small></li>
   
     <li><a href="/tags/load/">load</a><small>1</small></li>
+  
+    <li><a href="/tags/lock/">lock</a><small>1</small></li>
   
     <li><a href="/tags/lodash/">lodash</a><small>1</small></li>
   
@@ -1338,7 +1351,7 @@
   
     <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
-    <li><a href="/tags/update/">update</a><small>1</small></li>
+    <li><a href="/tags/update/">update</a><small>2</small></li>
   
     <li><a href="/tags/upgrade/">upgrade</a><small>2</small></li>
   
@@ -1348,7 +1361,7 @@
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>6</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>7</small></li>
   
     <li><a href="/tags/vagrant-box/">vagrant-box</a><small>1</small></li>
   

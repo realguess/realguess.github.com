@@ -68,6 +68,42 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-04-11T02:00:00.000Z"><a href="/2014/04/11/nota-bene/">Apr 11, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/04/11/nota-bene/">Nota Bene</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Everyday, there are always new things to learn, even just at reading the comments from <code>/etc/apt/sources.list</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">## N.B. software <span class="keyword">from</span> this repository <span class="keyword">is</span> ENTIRELY UNSUPPORTED <span class="keyword">by</span> the Ubuntu</div><div class="line">## team, <span class="keyword">and</span> may <span class="keyword">not</span> be under a free licence. Please satisfy yourself <span class="keyword">as</span> <span class="keyword">to</span></div><div class="line">## your rights <span class="keyword">to</span> use the software. Also, please note that software <span class="keyword">in</span></div><div class="line">## multiverse WILL <span class="keyword">NOT</span> receive any review <span class="keyword">or</span> updates <span class="keyword">from</span> the Ubuntu</div><div class="line">## security team.</div></pre></td></tr></table></figure>
+
+<p>“N.B.” is an abbreviation for <a href="http://en.wikipedia.org/wiki/Nota_bene" target="_blank" rel="external">nota bene</a>, a Latin expression meaning “note well”. N.B. every detail matters.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-04-02T00:30:00.000Z"><a href="/2014/04/02/difference-between-require-and-fs-in-loading-files/">Apr 2, 2014</a></time>
       
       
@@ -691,52 +727,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-24T21:19:23.000Z"><a href="/2014/01/24/null/">Jan 24, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/24/null/">null</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In JavaScript, you assign value <code>null</code> to an object property to indicate that the property is defined but with no value. But using <code>null</code> outside the JavaScript domain becomes tricky. For example, in URL query parameters:</p>
-<pre><code>?<span class="variable">foo=</span><span class="constant">null</span>&amp;<span class="variable">bar=</span>bar
-</code></pre><p>after parsing the query:</p>
-<pre><code>{
-  "<span class="attribute">foo</span>": <span class="value"><span class="string">"null"</span></span>,
-  "<span class="attribute">bar</span>": <span class="value"><span class="string">"bar"</span>
-</span>}
-</code></pre><p>Should the value of <code>foo</code> be parsed from <code>&quot;null&quot;</code> string into <code>null</code> object? Unless you know the context.</p>
-<p>Using <code>null</code> in both schema design and URL query gave me a few headaches. So, I have decided to use string and throw away <code>null</code>.  As string is the most basic data type across many applications. For simplier design and greater compatibility and portability, use empty string instead of <code>null</code>.</p>
-<p>Therefore, the value of query parameter <code>foo</code> should be:</p>
-<pre><code>?<span class="variable">foo=</span><span class="constant">null</span>&amp;<span class="variable">bar=</span>bar // <span class="string">"null"</span>
-?<span class="variable">foo=</span>&amp;<span class="variable">bar=</span>bar     // <span class="string">""</span>
-</code></pre><p>and:</p>
-<pre><code><span class="string">"null"</span> <span class="exclamation_mark">!</span>== <span class="string">""</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -767,7 +757,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>7</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -850,7 +840,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
   
-    <li><a href="/tags/apt-get/">apt-get</a><small>1</small></li>
+    <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
     <li><a href="/tags/array/">array</a><small>3</small></li>
   
@@ -1082,7 +1072,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gce/">gce</a><small>1</small></li>
+    <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
     <li><a href="/tags/gcloud/">gcloud</a><small>3</small></li>
   
@@ -1116,7 +1106,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
-    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>2</small></li>
+    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>3</small></li>
   
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
@@ -1231,6 +1221,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
     <li><a href="/tags/livereload/">livereload</a><small>2</small></li>
   
     <li><a href="/tags/load/">load</a><small>1</small></li>
+  
+    <li><a href="/tags/lock/">lock</a><small>1</small></li>
   
     <li><a href="/tags/lodash/">lodash</a><small>1</small></li>
   
@@ -1550,7 +1542,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
-    <li><a href="/tags/update/">update</a><small>1</small></li>
+    <li><a href="/tags/update/">update</a><small>2</small></li>
   
     <li><a href="/tags/upgrade/">upgrade</a><small>2</small></li>
   
@@ -1560,7 +1552,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>6</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>7</small></li>
   
     <li><a href="/tags/vagrant-box/">vagrant-box</a><small>1</small></li>
   

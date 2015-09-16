@@ -64,6 +64,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-14T15:27:59.000Z"><a href="/2013/11/14/get-yesterdays-date-by-date-command/">Nov 14, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/14/get-yesterdays-date-by-date-command/">Get Yesterday&#39;s Date by date Command</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>By using Linux <code>date</code> command, we can get today’s date in the following format:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">date</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">14</span></div></pre></td></tr></table></figure>
+
+<p>To get yesterday’s date, we can use the <code>--date</code> or <code>-d</code> option:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">% <span class="keyword">date</span> -d <span class="string">'yesterday'</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">13</span></div><div class="line">% <span class="keyword">date</span> -d <span class="string">'-1 day'</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">13</span></div><div class="line">% <span class="keyword">date</span> -d <span class="string">'1 day ago'</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">13</span></div></pre></td></tr></table></figure>
+
+<p>As the manual explains:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DATE STRING</div><div class="line">       The --date=STRING is a mostly free format human  readable  date  string</div><div class="line">       such  as  "Sun, 29 Feb 2004 16:21:42 -0800" or "2004-02-29 16:21:42" or</div><div class="line">       even "next Thursday".  A date string may contain items indicating  cal‐</div><div class="line">       endar  date,  time of day, time zone, day of week, relative time, rela‐</div><div class="line">       tive date, and numbers.  An empty string indicates the beginning of the</div><div class="line">       day.   The date string format is more complex than is easily documented</div><div class="line">       here but is fully described in the info documentation.</div></pre></td></tr></table></figure>
+
+<p>Just be careful when you are trying to get the date from last month.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-12T12:32:34.000Z"><a href="/2013/11/12/live-browser-reload-and-command-execution-on-file-change/">Nov 12, 2013</a></time>
       
       
@@ -481,45 +523,6 @@ coffee&gt; .help
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-06-09T09:55:23.000Z"><a href="/2013/06/09/repeat-character-serveral-times-in-javascript/">Jun 9, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/06/09/repeat-character-serveral-times-in-javascript/">Repeat Character Serveral Times in JavaScript</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In <a href="http://daringfireball.net/projects/markdown/" target="_blank" rel="external">Markdown</a>, a header can be written as:</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="header">Header</span></div><div class="line">======</div></pre></td></tr></table></figure>
-
-<p>This is a Setext-style headers, which are <em>‘underlined’ using equal signs (for<br>first-level headers) and dashes (for second-level headers)</em>. In order to<br>generate those underlined equal signs, a simple loop could be used to repeat<br>the character <code>=</code> several times. By the way, it is not necessary to have exact<br>number of the equal signs as the header length, but it just looks better. But<br>there is <a href="http://stackoverflow.com/a/1877479/594696" target="_blank" rel="external">another way</a>:</p>
-<figure class="highlight JavaScript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>(heading.length + <span class="number">1</span>).join(<span class="string">'='</span>)</div></pre></td></tr></table></figure>
-
-<p>It is using the JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" target="_blank" rel="external">Array</a> global object to construct an empty Array<br>with the specified array length. Clever indeed!</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -549,7 +552,7 @@ coffee&gt; .help
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>7</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
   
@@ -632,7 +635,7 @@ coffee&gt; .help
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
   
-    <li><a href="/tags/apt-get/">apt-get</a><small>1</small></li>
+    <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
     <li><a href="/tags/array/">array</a><small>3</small></li>
   
@@ -864,7 +867,7 @@ coffee&gt; .help
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gce/">gce</a><small>1</small></li>
+    <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
     <li><a href="/tags/gcloud/">gcloud</a><small>3</small></li>
   
@@ -898,7 +901,7 @@ coffee&gt; .help
   
     <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
-    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>2</small></li>
+    <li><a href="/tags/google-compute-engine/">google-compute-engine</a><small>3</small></li>
   
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
@@ -1013,6 +1016,8 @@ coffee&gt; .help
     <li><a href="/tags/livereload/">livereload</a><small>2</small></li>
   
     <li><a href="/tags/load/">load</a><small>1</small></li>
+  
+    <li><a href="/tags/lock/">lock</a><small>1</small></li>
   
     <li><a href="/tags/lodash/">lodash</a><small>1</small></li>
   
@@ -1332,7 +1337,7 @@ coffee&gt; .help
   
     <li><a href="/tags/unix-philosophy/">unix-philosophy</a><small>1</small></li>
   
-    <li><a href="/tags/update/">update</a><small>1</small></li>
+    <li><a href="/tags/update/">update</a><small>2</small></li>
   
     <li><a href="/tags/upgrade/">upgrade</a><small>2</small></li>
   
@@ -1342,7 +1347,7 @@ coffee&gt; .help
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>6</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>7</small></li>
   
     <li><a href="/tags/vagrant-box/">vagrant-box</a><small>1</small></li>
   
