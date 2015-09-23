@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-04T12:00:00.000Z"><a href="/2015/09/04/node-js-http-server-one-liner/">Sep 4, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/04/node-js-http-server-one-liner/">Node.js HTTP Server One Liner</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>One liner to create a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> HTTP server:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">'OK'</span>); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>Print out the process ID instead:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">''</span> + process.pid); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>This is useful with the worker process when implementing the <a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a> module.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-02T12:00:00.000Z"><a href="/2015/09/02/various-node-js-installation-methods/">Sep 2, 2015</a></time>
       
       
@@ -144,7 +183,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>10</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>4</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>5</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -313,7 +352,7 @@
   
     <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
   
-    <li><a href="/tags/coding-style/">coding-style</a><small>3</small></li>
+    <li><a href="/tags/coding-style/">coding-style</a><small>4</small></li>
   
     <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
   
@@ -757,6 +796,8 @@
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   
+    <li><a href="/tags/release/">release</a><small>1</small></li>
+  
     <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
   
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
@@ -793,7 +834,7 @@
   
     <li><a href="/tags/semantics/">semantics</a><small>1</small></li>
   
-    <li><a href="/tags/semver/">semver</a><small>1</small></li>
+    <li><a href="/tags/semver/">semver</a><small>2</small></li>
   
     <li><a href="/tags/seq/">seq</a><small>1</small></li>
   
@@ -953,7 +994,7 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>1</small></li>
+    <li><a href="/tags/version/">version</a><small>2</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

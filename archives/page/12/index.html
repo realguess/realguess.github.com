@@ -68,6 +68,64 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-17T12:30:17.000Z"><a href="/2013/11/17/why-shebang/">Nov 17, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/17/why-shebang/">Why Shebang?</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Frequently the initial two characters on the initial line of a script are: <code>#!</code>.</p>
+<p><em>Why <a href="http://en.wikipedia.org/wiki/Shebang_(Unix)" target="_blank" rel="external">Shebang</a>?</em> Well, simple reason, because shell needs to know which interpreter to use when executing the script.</p>
+<blockquote>
+<p>The sha-bang (<code>#!</code>) at the head of a script tells your system that this file is a set of commands to be fed to the command interpreter indicated. The <code>#!</code> is actually a two-byte magic number, a special marker that designates a file type, or in this case an executable shell script (type man magic for more details on this fascinating topic). Immediately following the sha-bang is a path name. This is the path to the program that interprets the commands in the script, whether it be a shell, a programming language, or a utility. This command interpreter then executes the commands in the script, starting at the top (the line following the sha-bang line), and ignoring comments. - <a href="http://tldp.org/LDP/abs/html/sha-bang.html" target="_blank" rel="external">Starting Off With a Sha-Bang</a></p>
+</blockquote>
+<p>The shebang line is usually ignored by the interpreter because the <code>#</code> character is a comment marker in many scripting languages. Even the actual script is written with a different commenting character, such as in JavaScript:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env node</span></div><div class="line"><span class="comment">// JavaScript stuff starts here.</span></div></pre></td></tr></table></figure>
+
+<p>Because the first line is interpreted by the shell, and the rest is passed into JavaScript interpreter, in this case, Node.</p>
+<p>The syntax of shebang:</p>
+<pre><code><span class="shebang">#! interpreter [optional-arg]</span>
+</code></pre><p>Whether there is a space between shebang character and the interpreter or not, it does not matter.</p>
+<p>The interpreter must usually be an absolute path to a program that is not itself a script. The following are example interpreters:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#! /bin/sh</span></div><div class="line"><span class="shebang">#! /bin/bash</span></div></pre></td></tr></table></figure>
+
+<p>More examples are via <code>head -n 1 /etc/init.d/*</code>.</p>
+<blockquote>
+<p>The optional‑arg should either not be included or it should be a string that is meant to be a single argument (for reasons of portability, it should not contain any whitespace). - <a href="http://en.wikipedia.org/wiki/Shebang_(Unix)" target="_blank" rel="external">Shebang_(Unix)</a></p>
+</blockquote>
+<p>We also frequently see the following shebang:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div></pre></td></tr></table></figure>
+
+<p>That has to do with portability. Not every system install <code>node</code> or <code>bash</code> command in the same path. <code>/usr/bin/env</code> will search through user’s <code>$PATH</code>, and correctly locate the executable.</p>
+<p>To conclude for Node, here is the format I am using:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#! <span class="regexp">/usr/</span>bin/env node</div><div class="line"></div><div class="line"><span class="comment">// Title</span></div><div class="line"><span class="comment">// =====</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Markdown style description starts here.</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-14T15:27:59.000Z"><a href="/2013/11/14/get-yesterdays-date-by-date-command/">Nov 14, 2013</a></time>
       
       
@@ -470,63 +528,6 @@ coffee&gt; .help
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-06-29T09:11:46.000Z"><a href="/2013/06/29/share-javascript-code-between-browser-(front-end)-and-node-(back-end)/">Jun 29, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/06/29/share-javascript-code-between-browser-(front-end)-and-node-(back-end)/">Share JavaScript Code between Browser (front-end) and Node (back-end)</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>One of the benefits coding in JavaScript is the ability to share code between<br>browser (front-end) and <a href="http://nodejs.org/" target="_blank" rel="external">Node</a> (back-end) environments.</p>
-<p>To share code between two different environment, first need to understand what<br>are specific to browser and what are specific to Node. Shared code should be<br>agnostic to both environments.</p>
-<p>In browser environment, there is an obvious one: <code>window</code> object. In Node<br>environment, there are a few objects that are not globally defined in browser:<br><code>global</code>, <code>process</code>, <code>module</code>, <code>exports</code> and more, see <a href="http://nodejs.org/api/globals.html" target="_blank" rel="external">global objects</a>. All<br>these variables work, but <code>exports</code> is preferred.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="string">'Hi '</span> + (<span class="keyword">typeof</span> <span class="built_in">window</span> !== <span class="string">'undefined'</span> ? <span class="string">'browser!'</span> : <span class="string">'Node!'</span>));</div></pre></td></tr></table></figure>
-
-<p>Once environment is identified, then it is just the matter of writing style,<br>either browser style or Node style.</p>
-<p>For example, writing in Node style by passing the <code>exports</code> as the parameter:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">(exports)</span> </span>{</div><div class="line">  <span class="keyword">var</span> foo = exports.foo = {};</div><div class="line"></div><div class="line">  <span class="comment">// Node style code goes here.</span></div><div class="line">}(<span class="keyword">typeof</span> exports === <span class="string">'undefined'</span> ? <span class="keyword">this</span> : exports));</div></pre></td></tr></table></figure>
-
-<p>By using browser style, here is an example from the <a href="http://underscorejs.org/docs/underscore.html" target="_blank" rel="external">annotated source code</a> of<br><a href="http://underscorejs.org/" target="_blank" rel="external">Underscore</a>:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Export the Underscore object for Node.js, with backwards-compatibility</span></div><div class="line"><span class="comment">// for the old require() API. If we're in the browser, add _ as a global</span></div><div class="line"><span class="comment">// object via a string identifier, for Closure Compiler "advanced" mode.</span></div><div class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">'undefined'</span>) {</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">module</span> !== <span class="string">'undefined'</span> && <span class="built_in">module</span>.exports) {</div><div class="line">    exports = <span class="built_in">module</span>.exports = _;</div><div class="line">  }</div><div class="line">  exports._ = _;</div><div class="line">} <span class="keyword">else</span> {</div><div class="line">  root._ = _;</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>To make it easier without concerning the backward compatibility:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> foo = {};</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">'undefined'</span>) {</div><div class="line">    exports.foo = foo;</div><div class="line">  } <span class="keyword">else</span> {</div><div class="line">    <span class="keyword">this</span>.foo = foo;</div><div class="line">  }</div><div class="line"></div><div class="line">  <span class="comment">// Browser style code goes here.</span></div><div class="line">}).call(<span class="keyword">this</span>);</div></pre></td></tr></table></figure>
-
-<p><code>this</code> is the same as <code>window</code> object in the browser environment.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">(window)</span> </span>{</div><div class="line">  <span class="comment">// Browser style code goes here.</span></div><div class="line">}(<span class="keyword">this</span>));</div></pre></td></tr></table></figure>
-
-<p>One more thing, writing in <a href="coffeescript.org">CoffeeScript</a> is even better, because the compiled<br>code is already wrapped in closure, fewer indentation is needed.</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">foo = {}</div><div class="line"><span class="keyword">if</span> exports <span class="keyword">isnt</span> <span class="string">'undefined'</span></div><div class="line">  exports.foo = foo</div><div class="line"><span class="keyword">else</span></div><div class="line">  <span class="keyword">this</span>.foo = foo</div><div class="line"></div><div class="line"><span class="comment"># Browser style code goes here.</span></div></pre></td></tr></table></figure>
-
-<p>Compile to JavaScript by <a href="coffeescript.org">CoffeeScript</a> 1.6.3:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> foo;</div><div class="line"></div><div class="line">  foo = {};</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (exports !== <span class="string">'undefined'</span>) {</div><div class="line">    exports.foo = foo;</div><div class="line">  } <span class="keyword">else</span> {</div><div class="line">    <span class="keyword">this</span>.foo = foo;</div><div class="line">  }</div><div class="line"></div><div class="line">}).call(<span class="keyword">this</span>);</div></pre></td></tr></table></figure>
-
-<p>Everything will be encapsulated inside the <code>foo</code> object.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -553,7 +554,7 @@ coffee&gt; .help
   
     <li><a href="/categories/cloud/">Cloud</a><small>10</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>4</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>5</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -722,7 +723,7 @@ coffee&gt; .help
   
     <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
   
-    <li><a href="/tags/coding-style/">coding-style</a><small>3</small></li>
+    <li><a href="/tags/coding-style/">coding-style</a><small>4</small></li>
   
     <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
   
@@ -1166,6 +1167,8 @@ coffee&gt; .help
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   
+    <li><a href="/tags/release/">release</a><small>1</small></li>
+  
     <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
   
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
@@ -1202,7 +1205,7 @@ coffee&gt; .help
   
     <li><a href="/tags/semantics/">semantics</a><small>1</small></li>
   
-    <li><a href="/tags/semver/">semver</a><small>1</small></li>
+    <li><a href="/tags/semver/">semver</a><small>2</small></li>
   
     <li><a href="/tags/seq/">seq</a><small>1</small></li>
   
@@ -1362,7 +1365,7 @@ coffee&gt; .help
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>1</small></li>
+    <li><a href="/tags/version/">version</a><small>2</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

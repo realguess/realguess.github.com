@@ -68,6 +68,65 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-12-31T12:00:00.000Z"><a href="/2014/12/31/mount-multiple-data-volumes-and-multiple-data-volume-containers-in-docker/">Dec 31, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/12/31/mount-multiple-data-volumes-and-multiple-data-volume-containers-in-docker/">Mount Multiple Data Volumes and Multiple Data Volume Containers in Docker</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><strong>Multiple Data Volumes from a Single Container</strong></p>
+<p>Create and run multiple data volumes in a container:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run <span class="operator">-d</span> --name vol -v /vol1 -v /vol2 ubuntu</div></pre></td></tr></table></figure>
+
+<p>Mount the data volumes in a new container:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name foo --volumes-from=vol ubuntu</div></pre></td></tr></table></figure>
+
+<p>Both volumes will be mounted under the root directory as <code>/vol1</code> and <code>/vol2</code>.</p>
+<p><strong>Multiple Data Volume Containers</strong></p>
+<p>Create and run multiple data volume containers:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> {<span class="number">1</span>..<span class="number">2</span>}; <span class="keyword">do</span> docker run <span class="operator">-d</span> --name vol<span class="variable">${i}</span> -v /vol<span class="variable">${i}</span> ubuntu; <span class="keyword">done</span></div></pre></td></tr></table></figure>
+
+<p>Mount multiple data volume containers:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name foo --volumes-from=vol1 --volumes-from=vol2 ubuntu</div></pre></td></tr></table></figure>
+
+<p>Now there are also two volumes mounted under the root directory as <code>/vol1</code> and <code>/vol2</code>, one from each container.</p>
+<p><strong>Multiple Data Volume Containers But Sharing the Same Data Volume Name</strong></p>
+<p>Create multiple data volume containers with the same data volume name <code>/vol</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> {<span class="number">1</span>..<span class="number">2</span>}; <span class="keyword">do</span> docker run <span class="operator">-d</span> --name vol<span class="variable">${i}</span> -v /vol ubuntu; <span class="keyword">done</span></div></pre></td></tr></table></figure>
+
+<p>Mount multiple data volume containers:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name foo --volumes-from=vol1 --volumes-from=vol2 ubuntu</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/12/31/mount-multiple-data-volumes-and-multiple-data-volume-containers-in-docker/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-12-27T12:00:00.000Z"><a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/">Dec 27, 2014</a></time>
       
       
@@ -499,48 +558,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-11-28T12:00:00.000Z"><a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/">Nov 28, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/">Delete All Messages in an Amazon SQS Queue via AWS CLI</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="http://aws.amazon.com/sqs/" target="_blank" rel="external">Amazon SQS</a> or Simple Queue Service is a fast, reliable, scalable, fully managed message queuing service. There is also <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS CLI</a> or Command Line Interface available to use with the service.</p>
-<p>If you have a lot of messages in a queue, this command will show the approximate number:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ aws sqs get-queue-attributes \</div><div class="line">  --queue-url <span class="variable">$url</span> \</div><div class="line">  --attribute-names ApproximateNumberOfMessages</div></pre></td></tr></table></figure>
-
-<p>Where <code>$url</code> is the URL to the Amazon SQS queue.</p>
-<p>There is no command to delete all messages yet, but you can chain a few commands together to make it work:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -567,7 +584,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>10</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>4</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>5</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -736,7 +753,7 @@
   
     <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
   
-    <li><a href="/tags/coding-style/">coding-style</a><small>3</small></li>
+    <li><a href="/tags/coding-style/">coding-style</a><small>4</small></li>
   
     <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
   
@@ -1180,6 +1197,8 @@
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   
+    <li><a href="/tags/release/">release</a><small>1</small></li>
+  
     <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
   
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
@@ -1216,7 +1235,7 @@
   
     <li><a href="/tags/semantics/">semantics</a><small>1</small></li>
   
-    <li><a href="/tags/semver/">semver</a><small>1</small></li>
+    <li><a href="/tags/semver/">semver</a><small>2</small></li>
   
     <li><a href="/tags/seq/">seq</a><small>1</small></li>
   
@@ -1376,7 +1395,7 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>1</small></li>
+    <li><a href="/tags/version/">version</a><small>2</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

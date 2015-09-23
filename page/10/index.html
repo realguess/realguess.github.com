@@ -64,6 +64,72 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-02-11T22:42:55.000Z"><a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">Feb 11, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">Defining Correct Environment for CoffeeScript in Cron</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I have written a bunch of CoffeeScript scripts that I would like to run them regularly. <a href="http://en.wikipedia.org/wiki/Cron" target="_blank" rel="external">Cron</a> is certainly the right choice in many situation.</p>
+<p>The default executable path recognized by cron is limited:</p>
+<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> echo $PATH &gt; /tmp/log/cron.log
+</code></pre><p>This cron job will recognize the following path:</p>
+<pre><code><span class="regexp">/usr/</span>bin:<span class="regexp">/bin</span>
+</code></pre><p>However the default executable path for Node.js is usually at:</p>
+<pre><code>$ which node
+<span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>node
+</code></pre><p>Therefore, if you attempt to run a cron job:</p>
+<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> node -v &gt; /tmp/log/cron.log 2&gt; /tmp/log/cron.err.log
+</code></pre><p>It will return an error, where the executable is not found:</p>
+<pre><code><span class="attribute">bin/sh</span>: <span class="string">1: node: not found</span>
+</code></pre><p>The easiest way to solve it is by specifying the fully qualified path:</p>
+<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/local/bin/node -v &gt; /tmp/log/cron.log
+</code></pre><p>To ensure the process is installed, we can check the file existence and permission before launching it:</p>
+<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> test -x /usr/local/bin/node &amp;&amp; /usr/local/bin/node -v
+</code></pre><p>But when working with CoffeeScript, the same method does not working:</p>
+<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/local/bin/coffee -v 2&gt; /tmp/log/cron.err.log
+</code></pre><p>Because CoffeeScript binary (<code>coffee</code>) use the following format:</p>
+<pre><code><span class="shebang">#!/usr/bin/env node</span>
+</code></pre><p>Which does not specify fully qualified path on the shebang line, and will result in:</p>
+<pre><code>/usr/bin/env: node: No such <span class="built_in">file</span> <span class="operator">or</span> <span class="built_in">directory</span>
+</code></pre><p>We can compile CoffeeScript into JavaScript and use fully qualified <code>node</code> executable. But this is not necessary. Since we are using Debian based system, which uses Vixie cron. It allows environment variables to be defined. We can make Cron aware of the custom path in environment variable:</p>
+<pre><code>* * * * * <span class="constant">PATH</span>=<span class="variable">$PATH</span><span class="symbol">:/usr/local/bin</span> coffee -v &gt; <span class="regexp">/tmp/log</span><span class="regexp">/cron.log</span>
+</code></pre><p>Now the executable path include the one where both <code>node</code> and <code>coffee</code> commands reside.</p>
+<p>We can also move it to its own line. But Cron is not shell, it does not expand the variable, so you have to specify all paths:</p>
+<pre><code><span class="comment"># Error: `PATH=$PATH:/usr/local/bin`</span>
+<span class="constant">PATH</span>=<span class="regexp">/usr/bin</span><span class="symbol">:/bin</span><span class="symbol">:/usr/local/bin</span>
+<span class="input"><span class="prompt">* * * * * coffee -v &gt;</span> /tmp/log/cron.log</span>
+</code></pre><p>The good practice is to set environment variables in a script:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># This script is intended to be run as a cron job.</span></div><div class="line"></div><div class="line">PATH=<span class="variable">$PATH</span>:/usr/local/bin</div><div class="line">coffee -v</div></pre></td></tr></table></figure>
+
+<p>and run the script as a cron job:</p>
+<pre><code>* * * * * /path/<span class="keyword">to</span>/script &gt; /tmp/<span class="built_in">log</span>/cron.<span class="built_in">log</span> <span class="number">2</span>&gt;&gt; /tmp/<span class="built_in">log</span>/cron.<span class="built_in">err</span>.<span class="built_in">log</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-24T21:19:23.000Z"><a href="/2014/01/24/null/">Jan 24, 2014</a></time>
       
       
@@ -598,55 +664,6 @@ Binary <span class="keyword">file</span> encrypted.txt matches
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-19T16:56:13.000Z"><a href="/2013/12/19/split-json-file-into-multiple-parts/">Dec 19, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/19/split-json-file-into-multiple-parts/">Split JSON File into Multiple Parts</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><code>mongoexport</code> allows us to export documents from MongoDB into a JSON file:</p>
-<pre><code>$ mongoexport <span class="operator">-d</span> mydb -c mycollection -o myfile.json --jsonArray
-</code></pre><p>The <code>--jsonArray</code> option writes the entire content of the export as a single JSON array. Sometimes, the size of individual file is quite large, we need to break it down into small pieces, because most web servers will have a limit on how much data can be submitted at once. However, with the option, the entire document is a single line. Any line processing command cannot be easily used. (If you are looking to do so, you can use <code>jq</code> to <a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">split a large JSON file into smaller pieces</a>.) We can omit the option (default behavior) and have the export utility to dump it one document at a time. The entire exported JSON file is technically not in correct JSON format, but each line, which represents a MongoDB document, is valid JSON, and can be used to do some command line processing.</p>
-<p>To break a large file into many smaller pieces, we can use <code>split</code> command:</p>
-<pre><code>$ split -l <span class="number">10</span> <span class="typedef"><span class="keyword">data</span>.json</span>
-</code></pre><p>The <code>-l</code> or <code>--lines</code> option limits each file with a maximum of 10 lines.</p>
-<p>Another way we can use <code>-C</code> or <code>--line-bytes</code> option to put at most 1k bytes of lines per output file:</p>
-<pre><code>$ split <span class="operator">-d</span> <span class="operator">-a</span> <span class="number">3</span> -C <span class="number">1</span>k data.json
-</code></pre><p>One thing needs to make sure is that the size of each line is no more than the maximum size specified by the option, otherwise, partial lines will be generated.</p>
-<p>It is good to keep all those parts in their own directory:</p>
-<pre><code>$ mkdir pieces &amp;&amp; <span class="built_in">cd</span> pieces &amp;&amp; split <span class="operator">-d</span> <span class="operator">-a</span> <span class="number">3</span> -C <span class="number">1</span>k ../data.json &amp;&amp; <span class="built_in">cd</span> ..
-</code></pre><p>Unless breaking the file into one line at a time, otherwise, we need to convert individual JSON file into correct JSON format:</p>
-<pre><code><span class="formula">$ find pieces/* -exec sh -c <span class="command">\
-</span>&gt; "awk 'BEGIN<span class="special">{</span>l=<span class="command">\"</span><span class="special">[</span><span class="command">\"</span><span class="special">}</span><span class="special">{</span>print l;l=<span class="command">\$</span>0<span class="command">\"</span>,<span class="command">\"</span><span class="special">}</span>END<span class="special">{</span>print<span class="command">\$</span>0<span class="command">\"</span><span class="command">\n</span><span class="special">]</span><span class="command">\"</span><span class="special">}</span>' <span class="command">\
-</span>&gt; <span class="special">{</span><span class="special">}</span> &gt; <span class="special">{</span><span class="special">}</span>.json <span class="special">&amp;</span><span class="special">&amp;</span> rm <span class="special">{</span><span class="special">}</span>" <span class="command">\;</span></span>
-</code></pre><p>The output JSON file will contains an array of MongoDB documents. The main idea of the AWK script is to print out previous line as it reads the current line. <code>BEGIN { l = &quot;[&quot; }</code> defines the first line as the opening square bracket, and the <code>END { print $0&quot;\n&quot; }</code> prints the last line of the file and the closing square bracket.</p>
-<p>There bounds to be a better way. Just need to keep looking.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -672,7 +689,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/categories/cloud/">Cloud</a><small>10</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>4</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>5</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -841,7 +858,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/cocoon/">cocoon</a><small>1</small></li>
   
-    <li><a href="/tags/coding-style/">coding-style</a><small>3</small></li>
+    <li><a href="/tags/coding-style/">coding-style</a><small>4</small></li>
   
     <li><a href="/tags/coffeelint/">coffeelint</a><small>1</small></li>
   
@@ -1285,6 +1302,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   
+    <li><a href="/tags/release/">release</a><small>1</small></li>
+  
     <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
   
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
@@ -1321,7 +1340,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/semantics/">semantics</a><small>1</small></li>
   
-    <li><a href="/tags/semver/">semver</a><small>1</small></li>
+    <li><a href="/tags/semver/">semver</a><small>2</small></li>
   
     <li><a href="/tags/seq/">seq</a><small>1</small></li>
   
@@ -1481,7 +1500,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>1</small></li>
+    <li><a href="/tags/version/">version</a><small>2</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   
