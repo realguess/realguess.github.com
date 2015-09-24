@@ -68,6 +68,56 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-05T12:00:00.000Z"><a href="/2015/09/05/install-docker-on-google-cloud-platform-with-ubuntu-vivid-15-04/">Sep 5, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/05/install-docker-on-google-cloud-platform-with-ubuntu-vivid-15-04/">Install Docker on Google Cloud Platform with Ubuntu Vivid 15.04</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> 15.04 (Vivid Vervet) has switched the init manager from <a href="https://en.wikipedia.org/wiki/Upstart" target="_blank" rel="external">Upstart</a> to <a href="https://en.wikipedia.org/wiki/Systemd" target="_blank" rel="external">systemd</a>. Will the <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> installation change? Let’s give a try and install it on a Google Compute Engine instance.</p>
+<p>Install Docker:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div></pre></td></tr></table></figure>
+
+<p>Add user to Docker group for running commands without sudo:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div></pre></td></tr></table></figure>
+
+<p>Log out, then log back in.</p>
+<p>Verify the installation:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div><div class="line"></div><div class="line">Hello from Docker.</div><div class="line">This message shows that your installation appears to be working correctly.</div><div class="line"></div><div class="line">To generate this message, Docker took the following steps:</div><div class="line"><span class="number">1</span>. The Docker client contacted the Docker daemon.</div><div class="line"><span class="number">2</span>. The Docker daemon pulled the <span class="string">"hello-world"</span> image from the Docker Hub.</div><div class="line"><span class="number">3</span>. The Docker daemon created a new container from that image which runs the</div><div class="line">    executable that produces the output you are currently reading.</div><div class="line"><span class="number">4</span>. The Docker daemon streamed that output to the Docker client, which sent it</div><div class="line">    to your terminal.</div><div class="line"></div><div class="line">To try something more ambitious, you can run an Ubuntu container with:</div><div class="line">$ docker run -it ubuntu bash</div><div class="line"></div><div class="line">Share images, automate workflows, and more with a free Docker Hub account:</div><div class="line">https://hub.docker.com</div><div class="line"></div><div class="line">For more examples and ideas, visit:</div><div class="line">https://docs.docker.com/userguide/</div></pre></td></tr></table></figure>
+
+<p>For upgrading, the process is the same as installing:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/09/05/install-docker-on-google-cloud-platform-with-ubuntu-vivid-15-04/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-04T12:00:00.000Z"><a href="/2015/09/04/node-js-http-server-one-liner/">Sep 4, 2015</a></time>
       
       
@@ -181,7 +231,7 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>10</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>5</small></li>
   
@@ -266,7 +316,7 @@
   
     <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
   
-    <li><a href="/tags/app-engine/">app-engine</a><small>1</small></li>
+    <li><a href="/tags/app-engine/">app-engine</a><small>2</small></li>
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
   
@@ -442,6 +492,8 @@
   
     <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
   
+    <li><a href="/tags/dispatch/">dispatch</a><small>1</small></li>
+  
     <li><a href="/tags/distributed/">distributed</a><small>1</small></li>
   
     <li><a href="/tags/distributed-team/">distributed-team</a><small>1</small></li>
@@ -502,9 +554,11 @@
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
+    <li><a href="/tags/gae/">gae</a><small>1</small></li>
+  
     <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
-    <li><a href="/tags/gcloud/">gcloud</a><small>3</small></li>
+    <li><a href="/tags/gcloud/">gcloud</a><small>4</small></li>
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
   
@@ -532,7 +586,7 @@
   
     <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
-    <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
+    <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>2</small></li>
   
     <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
@@ -591,6 +645,8 @@
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
     <li><a href="/tags/install/">install</a><small>7</small></li>
+  
+    <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -662,7 +718,7 @@
   
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
-    <li><a href="/tags/managed-vms/">managed-vms</a><small>1</small></li>
+    <li><a href="/tags/managed-vms/">managed-vms</a><small>2</small></li>
   
     <li><a href="/tags/markdown/">markdown</a><small>2</small></li>
   
@@ -680,7 +736,7 @@
   
     <li><a href="/tags/mocha/">mocha</a><small>3</small></li>
   
-    <li><a href="/tags/module/">module</a><small>1</small></li>
+    <li><a href="/tags/module/">module</a><small>2</small></li>
   
     <li><a href="/tags/module-caching/">module-caching</a><small>1</small></li>
   
@@ -811,6 +867,8 @@
     <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
   
     <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
+  
+    <li><a href="/tags/routing/">routing</a><small>1</small></li>
   
     <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
   
@@ -994,7 +1052,7 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>2</small></li>
+    <li><a href="/tags/version/">version</a><small>3</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

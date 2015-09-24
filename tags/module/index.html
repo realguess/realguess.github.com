@@ -68,6 +68,73 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-24T12:00:00.000Z"><a href="/2015/09/24/add-a-custom-domain-to-the-specific-module-of-google-app-engine-managed-vms/">Sep 24, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/24/add-a-custom-domain-to-the-specific-module-of-google-app-engine-managed-vms/">Add a Custom Domain to the Specific Module of Google App Engine Managed VMs</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I would like to add a custom domain to a module other than the default one in <a href="https://cloud.google.com/appengine/docs/managed-vms/" target="_blank" rel="external">Google App Engine Managed VMs</a>. For example, I have the following sub-domains:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Custom domain names | SSL support | Record type | Data                 | Alias</div><div class="line">------------------- | ----------- | ----------- | -------------------- | -----</div><div class="line">api.example.com     | none        | CNAME       | ghs.googlehosted.com | api</div><div class="line">admin.example.com   | none        | CNAME       | ghs.googlehosted.com | admin</div></pre></td></tr></table></figure>
+
+<p>listed in the application console:</p>
+<p><a href="https://console.developers.google.com/project/[project]/appengine/settings/domains" target="_blank" rel="external">https://console.developers.google.com/project/[project]/appengine/settings/domains</a></p>
+<p>The domain <code>api.example.com</code> points to the default module. And I would like the other domain <code>admin.example.com</code> to point to the module <code>admin</code>. However, by merely adding the custom domain in the settings, both <code>api.example.com</code> and <code>admin.example.com</code> are pointed to the same module: the default module. Then how to point the custom domain and route the traffic to the <code>admin</code> module? The answer is on the <em>dispatch file</em>. But first need to understand the concept of modules in Google App Engine.</p>
+<p><img src="/2015/09/24/add-a-custom-domain-to-the-specific-module-of-google-app-engine-managed-vms/modules-hierarchy.png" alt="Google App Engine Module Hierarchy" title="Source: Google App Engine Module Hierarchy"><br><em>Source: <a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">Google App Engine Docs</a></em></p>
+<p>The above chart illustrates the architecture of a Google App Engine application:</p>
+<ul>
+<li>Application: “An App Engine application is made up of one or more modules”. [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>]</li>
+<li>Module: “Each module consists of source code and configuration files. The files used by a module represents a version of the module. When you deploy a module, you always deploy a specific version of the module.” [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>] “All module-less apps have been converted to contain a single default module.” [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>] Every application has a single default module.</li>
+<li>Version: “A particular module/version will have one or more instances.”</li>
+<li>Instance: “Each instance runs its own separate executable.”</li>
+</ul>
+<p>Another concept is the resource sharing:</p>
+<ul>
+<li>“App Engine Modules let developers factor large applications into logical components that can share stateful services and communicate in a secure fashion.” [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>]</li>
+<li>“Stateful services (such as Memcache, Datastore, and Task Queues) are shared by all modules in an application.” [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>]</li>
+</ul>
+<p>Remember that <a href="https://cloud.google.com/" target="_blank" rel="external">Google Cloud Platform</a> is project based. If there are a web application and a mobile application, and they are both making requests to another application, the API. Then there should be three projects. However, in this case, both <code>api</code> and <code>admin</code> share the same services, such as the same database and file storage. We should put them together in the same application as separate modules.</p>
+<p>With that in mind, how to route requests to a specific module? “Every module, version, and instance has its own unique URI (for example, <code>v1.my-module.my-app.appspot.com</code>). Incoming user requests are routed to an instance of a particular module/version according to <a href="https://cloud.google.com/appengine/docs/go/modules/routing" target="_blank" rel="external">URL addressing conventions and an optional customized dispatch file</a>.” [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>] Since a custom domain is used, we have to use the customized dispatch file. And this is done by creating a dispatch file <code>dispatch.yml</code> to route requests based on URL patterns.</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># Dispatch</div><div class="line"><span class="header"># ========</span></div><div class="line">---</div><div class="line">dispatch:</div><div class="line"><span class="code">  - url: '*/favicon.ico'</span></div><div class="line"><span class="code">    module: default</span></div><div class="line"><span class="code">  - url: 'admin.example.com/*'</span></div><div class="line"><span class="code">    module: admin</span></div></pre></td></tr></table></figure>
+
+<p>The <code>application</code> field is not necessary, otherwise, you will get:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">WARNING: The [application] field is specified <span class="keyword">in</span> file [/home/chao/example/dispatch.yml].</div><div class="line">This field is not used by gcloud and should be removed.</div></pre></td></tr></table></figure>
+
+<p>Glob characters (such as asterisk) can be used, and support up to 10 routing rules.</p>
+<p>Deploy the dispatch file is simple:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gcloud preview app deploy dispatch.yml</div></pre></td></tr></table></figure>
+
+<p>And it should require almost no time to wait. Once it is ready, the requests sent to <code>admin.example.com</code> will be routed properly to the <code>admin</code> module.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/09/24/add-a-custom-domain-to-the-specific-module-of-google-app-engine-managed-vms/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-04-02T12:00:00.000Z"><a href="/2015/04/02/require-modules-from-the-command-line/">Apr 2, 2015</a></time>
       
       
@@ -123,7 +190,7 @@
   <h3 class="title">Categories</h3>
   <ul class="entry">
   
-    <li><a href="/categories/cloud/">Cloud</a><small>10</small></li>
+    <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
     <li><a href="/categories/coding/">Coding</a><small>5</small></li>
   
@@ -208,7 +275,7 @@
   
     <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
   
-    <li><a href="/tags/app-engine/">app-engine</a><small>1</small></li>
+    <li><a href="/tags/app-engine/">app-engine</a><small>2</small></li>
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
   
@@ -384,6 +451,8 @@
   
     <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
   
+    <li><a href="/tags/dispatch/">dispatch</a><small>1</small></li>
+  
     <li><a href="/tags/distributed/">distributed</a><small>1</small></li>
   
     <li><a href="/tags/distributed-team/">distributed-team</a><small>1</small></li>
@@ -444,9 +513,11 @@
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
+    <li><a href="/tags/gae/">gae</a><small>1</small></li>
+  
     <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
-    <li><a href="/tags/gcloud/">gcloud</a><small>3</small></li>
+    <li><a href="/tags/gcloud/">gcloud</a><small>4</small></li>
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
   
@@ -474,7 +545,7 @@
   
     <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
-    <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>1</small></li>
+    <li><a href="/tags/google-cloud-platform/">google-cloud-platform</a><small>2</small></li>
   
     <li><a href="/tags/google-cloud-pubsub/">google-cloud-pubsub</a><small>1</small></li>
   
@@ -533,6 +604,8 @@
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
     <li><a href="/tags/install/">install</a><small>7</small></li>
+  
+    <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
     <li><a href="/tags/interactive/">interactive</a><small>2</small></li>
   
@@ -604,7 +677,7 @@
   
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
-    <li><a href="/tags/managed-vms/">managed-vms</a><small>1</small></li>
+    <li><a href="/tags/managed-vms/">managed-vms</a><small>2</small></li>
   
     <li><a href="/tags/markdown/">markdown</a><small>2</small></li>
   
@@ -622,7 +695,7 @@
   
     <li><a href="/tags/mocha/">mocha</a><small>3</small></li>
   
-    <li><a href="/tags/module/">module</a><small>1</small></li>
+    <li><a href="/tags/module/">module</a><small>2</small></li>
   
     <li><a href="/tags/module-caching/">module-caching</a><small>1</small></li>
   
@@ -753,6 +826,8 @@
     <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
   
     <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
+  
+    <li><a href="/tags/routing/">routing</a><small>1</small></li>
   
     <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
   
@@ -936,7 +1011,7 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>2</small></li>
+    <li><a href="/tags/version/">version</a><small>3</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   
