@@ -68,6 +68,56 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-26T12:00:00.000Z"><a href="/2015/09/26/node-js-crypto-starters/">Sep 26, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/26/node-js-crypto-starters/">Node.js Crypto Starters</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Starter for the most common usage.</p>
+<p>Create a MD5 hex hash:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'md5'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'hex'</span>);</div></pre></td></tr></table></figure>
+
+<p>Create a SHA256 base64 hash:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div></pre></td></tr></table></figure>
+
+<p>Calculating the <a href="https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding" target="_blank" rel="external">digest</a> varies with encoding:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&gt; data = <span class="string">'secret'</span></div><div class="line"><span class="string">'secret'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div><div class="line"><span class="string">'K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols='</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'binary'</span>);</div><div class="line"><span class="string">'+¸\rS{\u001d£ãÓ\u0003aªV½àêÍqbþö¢_é{õ\'¢['</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest();</div><div class="line"><span class="xml"><span class="tag">&lt;<span class="title">Buffer</span> <span class="attribute">2b</span> <span class="attribute">b8</span> <span class="attribute">0d</span> <span class="attribute">53</span> <span class="attribute">7b</span> <span class="attribute">1d</span> <span class="attribute">a3</span> <span class="attribute">e3</span> <span class="attribute">8b</span> <span class="attribute">d3</span> <span class="attribute">03</span> <span class="attribute">61</span> <span class="attribute">aa</span> <span class="attribute">85</span> <span class="attribute">56</span> <span class="attribute">86</span> <span class="attribute">bd</span> <span class="attribute">e0</span> <span class="attribute">ea</span> <span class="attribute">cd</span> <span class="attribute">71</span> <span class="attribute">62</span> <span class="attribute">fe</span> <span class="attribute">f6</span> <span class="attribute">a2</span> <span class="attribute">5f</span> <span class="attribute">e9</span> <span class="attribute">7b</span> <span class="attribute">f5</span> <span class="attribute">27</span> <span class="attribute">a2</span> <span class="attribute">5b</span>&gt;</span></span></div><div class="line">&gt; require('crypto').createHash('sha256').update(data, 'utf8').digest().toString();</div><div class="line">'+�\rS{\u001d����\u0003a��V�����qb���_�{�\'�['</div></pre></td></tr></table></figure>
+
+<p>Both <code>hex</code> and <code>base64</code> are commonly used ones.</p>
+<p>Needs an <code>input_encoding</code> when <a href="https://nodejs.org/api/crypto.html#crypto_hash_update_data_input_encoding" target="_blank" rel="external">update</a> data, otherwise there will be different results:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&gt; data = <span class="string">'秘密'</span></div><div class="line"><span class="string">'秘密'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'ascii'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'7588bc51fd0ff10db9c66549e5cb7969b9f6b7cf3ccee080137a8eb1aa06e718'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'062a2931da683a9897c5a0b597113b1e9fd0d5bfb63e2a5d7c88b724f7f55c02'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'binary'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'7588bc51fd0ff10db9c66549e5cb7969b9f6b7cf3ccee080137a8eb1aa06e718'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'7588bc51fd0ff10db9c66549e5cb7969b9f6b7cf3ccee080137a8eb1aa06e718'</span></div></pre></td></tr></table></figure>
+
+<p>Don’t assume ASCII.</p>
+<p>Parameter <code>data</code> must be a string or buffer, otherwise there will be an error:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">TypeError: Not a string or buffer</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
       
       
@@ -245,7 +295,7 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>12</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
@@ -454,6 +504,8 @@
   
     <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
   
+    <li><a href="/tags/crypto/">crypto</a><small>1</small></li>
+  
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
     <li><a href="/tags/curl/">curl</a><small>1</small></li>
@@ -491,6 +543,8 @@
     <li><a href="/tags/development-environment/">development-environment</a><small>1</small></li>
   
     <li><a href="/tags/diff/">diff</a><small>2</small></li>
+  
+    <li><a href="/tags/digest/">digest</a><small>1</small></li>
   
     <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
   
@@ -728,6 +782,8 @@
   
     <li><a href="/tags/markdown/">markdown</a><small>2</small></li>
   
+    <li><a href="/tags/md5/">md5</a><small>1</small></li>
+  
     <li><a href="/tags/meeting/">meeting</a><small>1</small></li>
   
     <li><a href="/tags/messaging/">messaging</a><small>1</small></li>
@@ -768,7 +824,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>22</small></li>
+    <li><a href="/tags/node/">node</a><small>23</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -912,6 +968,8 @@
   
     <li><a href="/tags/setup/">setup</a><small>2</small></li>
   
+    <li><a href="/tags/sha256/">sha256</a><small>1</small></li>
+  
     <li><a href="/tags/shabang/">shabang</a><small>1</small></li>
   
     <li><a href="/tags/sharing/">sharing</a><small>1</small></li>
@@ -942,7 +1000,7 @@
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>4</small></li>
+    <li><a href="/tags/starter/">starter</a><small>5</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   

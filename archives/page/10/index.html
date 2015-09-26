@@ -68,6 +68,89 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-03-02T09:55:23.000Z"><a href="/2014/03/02/immediately-invoked-function-expression/">Mar 2, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/02/immediately-invoked-function-expression/">Immediately Invoked Function Expression</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>What’s difference between:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}());</div><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{})();</div></pre></td></tr></table></figure>
+
+<p>This is function declaration:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{}</div></pre></td></tr></table></figure>
+
+<p>The identifier of the function declaration is required.</p>
+<p>This is function expression:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = <span class="function"><span class="keyword">function</span><span class="params">()</span></span>{};</div></pre></td></tr></table></figure>
+
+<p>The right hand side of the assignment must be an expression. And function identifier is optional. Check the previous article about the difference between <a href="/2014/03/01/function-declaration-and-function-expression/">function declaration and function expression</a>.</p>
+<p>Now, come in the grouping operator, which return the result of evaluating an expression:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{});</div></pre></td></tr></table></figure>
+
+<p>If we do it with named function:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{}</div><div class="line">(foo);</div></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{});</div></pre></td></tr></table></figure>
+
+<p>But we haven’t done anything here, in another word, we haven’t invoked the function. We merely evaluate the function in three occasions. Function is object in JavaScript, when you’re evaluating an object, the result is still an object:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{}); <span class="comment">// [Function: foo]</span></div><div class="line"><span class="built_in">console</span>.log(<span class="function"><span class="keyword">function</span> <span class="params">()</span></span>{});    <span class="comment">// [Function]</span></div><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">bar</span><span class="params">()</span></span>{}</div><div class="line"><span class="built_in">console</span>.log(bar);              <span class="comment">// [Function: bar]</span></div><div class="line"><span class="built_in">console</span>.log({});               <span class="comment">// {}</span></div></pre></td></tr></table></figure>
+
+<p>Now, let’s apply function invocation, and do it the traditional way:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">foo();</div></pre></td></tr></table></figure>
+
+<p>The function has been invoked, and it will return the result of the function.</p>
+<p>Replace the identifier with function declaration:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{}();</div></pre></td></tr></table></figure>
+
+<p>However, this does not work. Because interpreter treats it as a function declaration, and <code>(</code> will become an unexpected token. Function declaration cannot be invoked immediately. So, we need to make it an expression, by using the grouping operator:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="title">foo</span><span class="params">()</span></span>{})();</div></pre></td></tr></table></figure>
+
+<p>The function identifier is no longer necessary:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{})();</div></pre></td></tr></table></figure>
+
+<p>Since grouping operator return the result of the expression, we can just drop it:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}();</div></pre></td></tr></table></figure>
+
+<p>But this statement becomes a function declaration again, so we need to place the grouping operator around it:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}());</div></pre></td></tr></table></figure>
+
+<p>Okay, but what’s difference between:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{}());</div><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span></span>{})();</div></pre></td></tr></table></figure>
+
+<p>There is no difference, they are both function expressions being invoked immediately.  Function invocation can only be done via function expression. But first one is more align with <code>foo()</code>, the traditional way. According to the <a href="http://javascript.crockford.com/code.html" target="_blank" rel="external">Code Convention for JavaScript Programming Language</a> by Douglas Crockford:</p>
+<blockquote>
+<p>When a function is to be invoked immediately, the entire <em>invocation expression</em> should be wrapped in parens so that it is clear that the value being produced is the result of the function and not the function itself.</p>
+</blockquote>
+<p>The invocation expression is <code>function(){}()</code>, and wrap it around parenthesis becomes <code>(function(){}());</code>.</p>
+<p>Therefore, this first method is more traditional and preferred.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-03-01T00:04:36.000Z"><a href="/2014/03/01/function-declaration-and-function-expression/">Mar 1, 2014</a></time>
       
       
@@ -661,55 +744,6 @@ Binary <span class="keyword">file</span> encrypted.txt matches
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-02T21:59:01.000Z"><a href="/2014/01/02/passage-of-time-2013/">Jan 2, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/02/passage-of-time-2013/">Passage of Time 2013</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <ul>
-<li>28 blog posts (next: weekly to every 3 days)</li>
-<li>89 WeChat moments</li>
-</ul>
-<h2 id="Snapshot">Snapshot</h2>
-<ul>
-<li>29 blog posts</li>
-<li>204 Twitter tweets</li>
-<li>345 Twitter following</li>
-<li>76 Twitter followers</li>
-<li>8 GitHub followers</li>
-<li>334 GitHub starred</li>
-<li>27 GitHub following</li>
-<li>10 GitHub source repositories</li>
-<li>5 GitHub forked repositories</li>
-<li>13 Hacker News karma</li>
-</ul>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -742,7 +776,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>12</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
@@ -951,6 +985,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
   
+    <li><a href="/tags/crypto/">crypto</a><small>1</small></li>
+  
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
     <li><a href="/tags/curl/">curl</a><small>1</small></li>
@@ -988,6 +1024,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
     <li><a href="/tags/development-environment/">development-environment</a><small>1</small></li>
   
     <li><a href="/tags/diff/">diff</a><small>2</small></li>
+  
+    <li><a href="/tags/digest/">digest</a><small>1</small></li>
   
     <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
   
@@ -1225,6 +1263,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/markdown/">markdown</a><small>2</small></li>
   
+    <li><a href="/tags/md5/">md5</a><small>1</small></li>
+  
     <li><a href="/tags/meeting/">meeting</a><small>1</small></li>
   
     <li><a href="/tags/messaging/">messaging</a><small>1</small></li>
@@ -1265,7 +1305,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>22</small></li>
+    <li><a href="/tags/node/">node</a><small>23</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1409,6 +1449,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/setup/">setup</a><small>2</small></li>
   
+    <li><a href="/tags/sha256/">sha256</a><small>1</small></li>
+  
     <li><a href="/tags/shabang/">shabang</a><small>1</small></li>
   
     <li><a href="/tags/sharing/">sharing</a><small>1</small></li>
@@ -1439,7 +1481,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>4</small></li>
+    <li><a href="/tags/starter/">starter</a><small>5</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   

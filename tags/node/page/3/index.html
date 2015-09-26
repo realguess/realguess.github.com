@@ -68,6 +68,64 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-17T12:30:17.000Z"><a href="/2013/11/17/why-shebang/">Nov 17, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/17/why-shebang/">Why Shebang?</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Frequently the initial two characters on the initial line of a script are: <code>#!</code>.</p>
+<p><em>Why <a href="http://en.wikipedia.org/wiki/Shebang_(Unix)" target="_blank" rel="external">Shebang</a>?</em> Well, simple reason, because shell needs to know which interpreter to use when executing the script.</p>
+<blockquote>
+<p>The sha-bang (<code>#!</code>) at the head of a script tells your system that this file is a set of commands to be fed to the command interpreter indicated. The <code>#!</code> is actually a two-byte magic number, a special marker that designates a file type, or in this case an executable shell script (type man magic for more details on this fascinating topic). Immediately following the sha-bang is a path name. This is the path to the program that interprets the commands in the script, whether it be a shell, a programming language, or a utility. This command interpreter then executes the commands in the script, starting at the top (the line following the sha-bang line), and ignoring comments. - <a href="http://tldp.org/LDP/abs/html/sha-bang.html" target="_blank" rel="external">Starting Off With a Sha-Bang</a></p>
+</blockquote>
+<p>The shebang line is usually ignored by the interpreter because the <code>#</code> character is a comment marker in many scripting languages. Even the actual script is written with a different commenting character, such as in JavaScript:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env node</span></div><div class="line"><span class="comment">// JavaScript stuff starts here.</span></div></pre></td></tr></table></figure>
+
+<p>Because the first line is interpreted by the shell, and the rest is passed into JavaScript interpreter, in this case, Node.</p>
+<p>The syntax of shebang:</p>
+<pre><code><span class="shebang">#! interpreter [optional-arg]</span>
+</code></pre><p>Whether there is a space between shebang character and the interpreter or not, it does not matter.</p>
+<p>The interpreter must usually be an absolute path to a program that is not itself a script. The following are example interpreters:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#! /bin/sh</span></div><div class="line"><span class="shebang">#! /bin/bash</span></div></pre></td></tr></table></figure>
+
+<p>More examples are via <code>head -n 1 /etc/init.d/*</code>.</p>
+<blockquote>
+<p>The optional‑arg should either not be included or it should be a string that is meant to be a single argument (for reasons of portability, it should not contain any whitespace). - <a href="http://en.wikipedia.org/wiki/Shebang_(Unix)" target="_blank" rel="external">Shebang_(Unix)</a></p>
+</blockquote>
+<p>We also frequently see the following shebang:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div></pre></td></tr></table></figure>
+
+<p>That has to do with portability. Not every system install <code>node</code> or <code>bash</code> command in the same path. <code>/usr/bin/env</code> will search through user’s <code>$PATH</code>, and correctly locate the executable.</p>
+<p>To conclude for Node, here is the format I am using:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">#! <span class="regexp">/usr/</span>bin/env node</div><div class="line"></div><div class="line"><span class="comment">// Title</span></div><div class="line"><span class="comment">// =====</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Markdown style description starts here.</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-08T15:59:36.000Z"><a href="/2013/11/08/preserve-command-history-in-node-repl/">Nov 8, 2013</a></time>
       
       
@@ -201,7 +259,7 @@ coffee&gt; .help
   
     <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>11</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>12</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>2</small></li>
   
@@ -410,6 +468,8 @@ coffee&gt; .help
   
     <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
   
+    <li><a href="/tags/crypto/">crypto</a><small>1</small></li>
+  
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
     <li><a href="/tags/curl/">curl</a><small>1</small></li>
@@ -447,6 +507,8 @@ coffee&gt; .help
     <li><a href="/tags/development-environment/">development-environment</a><small>1</small></li>
   
     <li><a href="/tags/diff/">diff</a><small>2</small></li>
+  
+    <li><a href="/tags/digest/">digest</a><small>1</small></li>
   
     <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
   
@@ -684,6 +746,8 @@ coffee&gt; .help
   
     <li><a href="/tags/markdown/">markdown</a><small>2</small></li>
   
+    <li><a href="/tags/md5/">md5</a><small>1</small></li>
+  
     <li><a href="/tags/meeting/">meeting</a><small>1</small></li>
   
     <li><a href="/tags/messaging/">messaging</a><small>1</small></li>
@@ -724,7 +788,7 @@ coffee&gt; .help
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>22</small></li>
+    <li><a href="/tags/node/">node</a><small>23</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -868,6 +932,8 @@ coffee&gt; .help
   
     <li><a href="/tags/setup/">setup</a><small>2</small></li>
   
+    <li><a href="/tags/sha256/">sha256</a><small>1</small></li>
+  
     <li><a href="/tags/shabang/">shabang</a><small>1</small></li>
   
     <li><a href="/tags/sharing/">sharing</a><small>1</small></li>
@@ -898,7 +964,7 @@ coffee&gt; .help
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>4</small></li>
+    <li><a href="/tags/starter/">starter</a><small>5</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
