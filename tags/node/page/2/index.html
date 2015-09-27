@@ -68,6 +68,60 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-03-28T12:00:00.000Z"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Mar 28, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Locate HTTP Port Number from http.Server Instance</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>This is a bare minimal HTTP server:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer().listen(port);</div></pre></td></tr></table></figure>
+
+<p>If the <code>port</code> number is evaluated to be <em>falsy</em>, such as <code>0</code>, <code>null</code>, <code>undefined</code> or an empty string, a random port will be assigned.</p>
+<blockquote>
+<p>Begin accepting connections on the specified <code>port</code> and <code>hostname</code>. If the <code>hostname</code> is omitted, the server will accept connections on any IPv6 address (::) when IPv6 is available, or any IPv4 address (0.0.0.0) otherwise. <strong>A port value of zero will assign a random port.</strong> - <a href="https://iojs.org/api/http.html#http_server_listen_port_hostname_backlog_callback" target="_blank" rel="external">https://iojs.org/api/http.html#http_server_listen_port_hostname_backlog_callback</a></p>
+</blockquote>
+<p>We can use command line tool such as <code>netstat</code> to find out the port number:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ netstat -ltpn | grep node</div><div class="line">tcp6     <span class="number">0</span>    <span class="number">0</span> :::<span class="number">44055</span>             :::*            LISTEN      <span class="number">5624</span>/node</div></pre></td></tr></table></figure>
+
+<p>However, it will be very convenient without relying on external tools.</p>
+<p>Luckily, we can find out the port number by using the <code>address</code> method:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer().listen().address()</div></pre></td></tr></table></figure>
+
+<p>The result will be similar to:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">{ address: <span class="string">'::'</span>, family: <span class="string">'IPv6'</span>, port: <span class="number">44055</span> }</div></pre></td></tr></table></figure>
+
+<p>Furthermore, it works with all popular libraries that create an <code>http.Server</code> instance:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/03/28/locate-http-port-number-from-http-server-instance/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-03-18T12:00:00.000Z"><a href="/2015/03/18/use-array-of-middleware-in-koa-router/">Mar 18, 2015</a></time>
       
       
@@ -708,55 +762,6 @@ app.<span class="keyword">use</span>(foo);
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-18T15:12:43.000Z"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Dec 18, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Set Filename Path with process.cwd()</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When working with <a href="http://nodejs.org/api/fs.html" target="_blank" rel="external">file system</a> in Node, you will need a fully qualified filename to do things like reading the content of a file:</p>
-<pre><code><span class="built_in">require</span>(<span class="string">'fs'</span>).readFile(filename, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{});
-</code></pre><p>If you have the following directory structure:</p>
-<pre><code>.
-├── app.js
-├── <span class="typedef"><span class="keyword">data</span></span>
-│   └── file.txt
-└── lib
-    └── reader.js
-</code></pre><p>There are two ways to read the content of <code>data/file.txt</code> from <code>lib/reader.js</code>:</p>
-<p>Use the current directory of the script <code>__dirname</code>:</p>
-<pre><code><span class="title">filename</span> = __dirname + '/../<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
-</code></pre><p>or with <code>path.join</code> to normalize the resulting path:</p>
-<pre><code>filename = path.<span class="keyword">join</span>(__dirname, <span class="string">'../data/file.txt'</span>);
-</code></pre><p>The second method is to use the current working directory of the process <code>process.cwd()</code>:</p>
-<pre><code><span class="title">filename</span> = process.cwd() + '/<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
-</code></pre><p>The second approach is more portable. If you move <code>lib/reader.js</code> to <code>lib/utils/reader.js</code>, no code change will be needed. But make sure the directory of the Node process is the application root directory where <code>node app.js</code> is being issued.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -789,7 +794,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>12</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>13</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -1000,7 +1005,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
   
-    <li><a href="/tags/crypto/">crypto</a><small>1</small></li>
+    <li><a href="/tags/crypto/">crypto</a><small>2</small></li>
   
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
@@ -1326,7 +1331,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>23</small></li>
+    <li><a href="/tags/node/">node</a><small>24</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1354,7 +1359,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
   
-    <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
+    <li><a href="/tags/openssl/">openssl</a><small>2</small></li>
   
     <li><a href="/tags/order/">order</a><small>1</small></li>
   

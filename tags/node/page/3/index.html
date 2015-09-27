@@ -68,6 +68,55 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-12-18T15:12:43.000Z"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Dec 18, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Set Filename Path with process.cwd()</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When working with <a href="http://nodejs.org/api/fs.html" target="_blank" rel="external">file system</a> in Node, you will need a fully qualified filename to do things like reading the content of a file:</p>
+<pre><code><span class="built_in">require</span>(<span class="string">'fs'</span>).readFile(filename, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{});
+</code></pre><p>If you have the following directory structure:</p>
+<pre><code>.
+├── app.js
+├── <span class="typedef"><span class="keyword">data</span></span>
+│   └── file.txt
+└── lib
+    └── reader.js
+</code></pre><p>There are two ways to read the content of <code>data/file.txt</code> from <code>lib/reader.js</code>:</p>
+<p>Use the current directory of the script <code>__dirname</code>:</p>
+<pre><code><span class="title">filename</span> = __dirname + '/../<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
+</code></pre><p>or with <code>path.join</code> to normalize the resulting path:</p>
+<pre><code>filename = path.<span class="keyword">join</span>(__dirname, <span class="string">'../data/file.txt'</span>);
+</code></pre><p>The second method is to use the current working directory of the process <code>process.cwd()</code>:</p>
+<pre><code><span class="title">filename</span> = process.cwd() + '/<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
+</code></pre><p>The second approach is more portable. If you move <code>lib/reader.js</code> to <code>lib/utils/reader.js</code>, no code change will be needed. But make sure the directory of the Node process is the application root directory where <code>node app.js</code> is being issued.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-17T12:30:17.000Z"><a href="/2013/11/17/why-shebang/">Nov 17, 2013</a></time>
       
       
@@ -259,7 +308,7 @@ coffee&gt; .help
   
     <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>12</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>13</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -470,7 +519,7 @@ coffee&gt; .help
   
     <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
   
-    <li><a href="/tags/crypto/">crypto</a><small>1</small></li>
+    <li><a href="/tags/crypto/">crypto</a><small>2</small></li>
   
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
@@ -796,7 +845,7 @@ coffee&gt; .help
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>23</small></li>
+    <li><a href="/tags/node/">node</a><small>24</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -824,7 +873,7 @@ coffee&gt; .help
   
     <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
   
-    <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
+    <li><a href="/tags/openssl/">openssl</a><small>2</small></li>
   
     <li><a href="/tags/order/">order</a><small>1</small></li>
   

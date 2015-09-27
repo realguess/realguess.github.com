@@ -64,6 +64,50 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-27T12:00:00.000Z"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Sep 27, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Calculate Hashes for All OpenSSL Digest Algorithms</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Based on the following <a href="https://nodejs.org/api/crypto.html" target="_blank" rel="external">Node.js</a> statement:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(algorithm).update(<span class="string">'secret'</span>, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div></pre></td></tr></table></figure>
+
+<p>On a Ubuntu 14.04 system with <a href="http://www.openssl.org/" target="_blank" rel="external">OpenSSL</a>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ openssl version</div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span>f <span class="number">6</span> Jan <span class="number">2014</span></div></pre></td></tr></table></figure>
+
+<p>List available digest algorithms:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">$ openssl list-message-digest-algorithms</div><div class="line">DSA</div><div class="line">DSA-SHA</div><div class="line">DSA-SHA1 =&gt; DSA</div><div class="line">DSA-SHA1-old =&gt; DSA-SHA1</div><div class="line">DSS1 =&gt; DSA-SHA1</div><div class="line">MD4</div><div class="line">MD5</div><div class="line">RIPEMD160</div><div class="line">RSA-MD4 =&gt; MD4</div><div class="line">RSA-MD5 =&gt; MD5</div><div class="line">RSA-RIPEMD160 =&gt; RIPEMD160</div><div class="line">RSA-SHA =&gt; SHA</div><div class="line">RSA-SHA1 =&gt; SHA1</div><div class="line">RSA-SHA1-<span class="number">2</span> =&gt; RSA-SHA1</div><div class="line">RSA-SHA224 =&gt; SHA224</div><div class="line">RSA-SHA256 =&gt; SHA256</div><div class="line">RSA-SHA384 =&gt; SHA384</div><div class="line">RSA-SHA512 =&gt; SHA512</div><div class="line">SHA</div><div class="line">SHA1</div><div class="line">SHA224</div><div class="line">SHA256</div><div class="line">SHA384</div><div class="line">SHA512</div><div class="line">DSA</div><div class="line">DSA-SHA</div><div class="line">dsaWithSHA1 =&gt; DSA</div><div class="line">dss1 =&gt; DSA-SHA1</div><div class="line">ecdsa-with-SHA1</div><div class="line">MD4</div><div class="line">md4WithRSAEncryption =&gt; MD4</div><div class="line">MD5</div><div class="line">md5WithRSAEncryption =&gt; MD5</div><div class="line">ripemd =&gt; RIPEMD160</div><div class="line">RIPEMD160</div><div class="line">ripemd160WithRSA =&gt; RIPEMD160</div><div class="line">rmd160 =&gt; RIPEMD160</div><div class="line">SHA</div><div class="line">SHA1</div><div class="line">sha1WithRSAEncryption =&gt; SHA1</div><div class="line">SHA224</div><div class="line">sha224WithRSAEncryption =&gt; SHA224</div><div class="line">SHA256</div><div class="line">sha256WithRSAEncryption =&gt; SHA256</div><div class="line">SHA384</div><div class="line">sha384WithRSAEncryption =&gt; SHA384</div><div class="line">SHA512</div><div class="line">sha512WithRSAEncryption =&gt; SHA512</div><div class="line">shaWithRSAEncryption =&gt; SHA</div><div class="line">ssl2-md5 =&gt; MD5</div><div class="line">ssl3-md5 =&gt; MD5</div><div class="line">ssl3-sha1 =&gt; SHA1</div><div class="line">whirlpool</div></pre></td></tr></table></figure>
+
+<p>Calculate hashes for each and every uniquely listed algorithm:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">$ openssl list-message-digest-algorithms | \</div><div class="line">  cut <span class="operator">-d</span> <span class="string">' '</span> <span class="operator">-f</span> <span class="number">1</span> | \</div><div class="line">  xargs -n <span class="number">1</span> -I {} node <span class="operator">-e</span> <span class="string">"algorithm = '{}'; \</span></div><div class="line">  digest = require('crypto').createHash('{}').update('secret', 'utf8').digest('base64'); \</div><div class="line">  console.log(algorithm, digest)" | \</div><div class="line">  sort -u</div><div class="line">DSA <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA1-old <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">dsaWithSHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">dss1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSS1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">ecdsa-with-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">md4WithRSAEncryption Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">MD4 Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">md5WithRSAEncryption Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">MD5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ripemd160WithRSA zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RIPEMD160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">ripemd zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">rmd160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RSA-MD4 Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">RSA-MD5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">RSA-RIPEMD160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RSA-SHA1-<span class="number">2</span> <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">RSA-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">RSA-SHA224 lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">RSA-SHA256 K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">RSA-SHA384 WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">RSA-SHA512 vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">RSA-SHA f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">sha1WithRSAEncryption <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">SHA224 lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">sha224WithRSAEncryption lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">SHA256 K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">sha256WithRSAEncryption K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">sha384WithRSAEncryption WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">SHA384 WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">SHA512 vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">sha512WithRSAEncryption vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">SHA f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">shaWithRSAEncryption f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">ssl2-md5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ssl3-md5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ssl3-sha1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">whirlpool <span class="number">4</span>GG4emdK44gOFZq1XtNdbF6Kau+sarCDBKUFiAGNN3soY5uxX97t8AbVfkX3tCmObf786vfJLIJqcI/m0RVusw==</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-27T12:00:00.000Z"><a href="/2015/09/27/get-started-with-the-cut-command-of-gnu-coreutils/">Sep 27, 2015</a></time>
       
       
@@ -519,45 +563,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Sep 7, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Install Docker on Ubuntu Trusty 14.04</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Install <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> on <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> Trusty 14.04 is fairly straightforward:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div><div class="line">$ <span class="keyword">exit</span></div></pre></td></tr></table></figure>
-
-<p>Log out, then log back in to verify the installation by running a sample container:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div></pre></td></tr></table></figure>
-
-<p>Done!</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -587,7 +592,7 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>12</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>13</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -798,7 +803,7 @@
   
     <li><a href="/tags/crontab/">crontab</a><small>1</small></li>
   
-    <li><a href="/tags/crypto/">crypto</a><small>1</small></li>
+    <li><a href="/tags/crypto/">crypto</a><small>2</small></li>
   
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
@@ -1124,7 +1129,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>23</small></li>
+    <li><a href="/tags/node/">node</a><small>24</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1152,7 +1157,7 @@
   
     <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
   
-    <li><a href="/tags/openssl/">openssl</a><small>1</small></li>
+    <li><a href="/tags/openssl/">openssl</a><small>2</small></li>
   
     <li><a href="/tags/order/">order</a><small>1</small></li>
   
