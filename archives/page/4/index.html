@@ -68,6 +68,41 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-03-15T12:00:00.000Z"><a href="/2015/03/15/several-cli-ways-to-find-out-your-public-ip-address/">Mar 15, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/15/several-cli-ways-to-find-out-your-public-ip-address/">Several CLI Ways to Find Out Your Public IP Address</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Need to know your public IP address? Use one of the following:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span> checkip.amazonaws.com</div><div class="line">$ curl <span class="operator">-s</span> ipinfo.io/ip</div><div class="line">$ curl <span class="operator">-s</span> www.trackip.net/ip</div><div class="line">$ curl <span class="operator">-s</span> whatsmyip.me</div><div class="line">$ curl <span class="operator">-s</span> whatismyip.akamai.com</div><div class="line">$ curl <span class="operator">-s</span> icanhazip.com</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-03-14T12:00:00.000Z"><a href="/2015/03/14/use-pm2-with-io-js/">Mar 14, 2015</a></time>
       
       
@@ -482,53 +517,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-01-07T12:00:00.000Z"><a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/">Jan 7, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/">Use CLI s3api to Retrieve Metadata of Amazon S3 Object</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In <a href="http://docs.aws.amazon.com/cli/latest/reference/s3/index.html#available-commands" target="_blank" rel="external">Amazon S3 CLI</a>, there are only a handful commands:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp      ls      mb      mv      rb      rm      sync    website</div></pre></td></tr></table></figure>
-
-<p>We can use <code>cp</code> command to retrieve S3 object:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp s3://mybucket/myfile.json myfile.json</div></pre></td></tr></table></figure>
-
-<p>But if only the metadata of the object, such as <code>ETag</code> or <code>Content-Type</code> is needed, the S3 CLI does not have any command to do that.</p>
-<p>Now enter <a href="http://docs.aws.amazon.com/cli/latest/reference/s3api/index.html" target="_blank" rel="external">S3API CLI</a>. Not only the CLI commands can retrieve S3 objects, but also associated <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html#object-metadata" target="_blank" rel="external">metadata</a>. For example, retrieve S3 object similar to <code>aws s3 cp</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3api get-object --bucket mybucket --key myfile.json</div></pre></td></tr></table></figure>
-
-<p>Just need the metadata of the object, use <code>head-object</code>, which retrieves metadata without the object itself, as HTTP HEAD method:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -563,7 +551,7 @@
   
     <li><a href="/categories/javascript/">JavaScript</a><small>12</small></li>
   
-    <li><a href="/categories/linux/">Linux</a><small>2</small></li>
+    <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
     <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
@@ -758,6 +746,8 @@
   
     <li><a href="/tags/control-character/">control-character</a><small>1</small></li>
   
+    <li><a href="/tags/coreutils/">coreutils</a><small>1</small></li>
+  
     <li><a href="/tags/cors/">cors</a><small>1</small></li>
   
     <li><a href="/tags/create-indexes/">create-indexes</a><small>1</small></li>
@@ -779,6 +769,8 @@
     <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
   
     <li><a href="/tags/custom-generator/">custom-generator</a><small>1</small></li>
+  
+    <li><a href="/tags/cut/">cut</a><small>1</small></li>
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
   
@@ -862,6 +854,8 @@
   
     <li><a href="/tags/facebook/">facebook</a><small>1</small></li>
   
+    <li><a href="/tags/field/">field</a><small>1</small></li>
+  
     <li><a href="/tags/file-system/">file-system</a><small>1</small></li>
   
     <li><a href="/tags/filename/">filename</a><small>1</small></li>
@@ -905,6 +899,8 @@
     <li><a href="/tags/glob/">glob</a><small>1</small></li>
   
     <li><a href="/tags/gnome/">gnome</a><small>1</small></li>
+  
+    <li><a href="/tags/gnu/">gnu</a><small>1</small></li>
   
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
@@ -1132,6 +1128,8 @@
   
     <li><a href="/tags/parseint/">parseint</a><small>1</small></li>
   
+    <li><a href="/tags/part/">part</a><small>1</small></li>
+  
     <li><a href="/tags/path/">path</a><small>4</small></li>
   
     <li><a href="/tags/pattern-matching/">pattern-matching</a><small>1</small></li>
@@ -1211,6 +1209,8 @@
     <li><a href="/tags/search/">search</a><small>1</small></li>
   
     <li><a href="/tags/search-term/">search-term</a><small>1</small></li>
+  
+    <li><a href="/tags/section/">section</a><small>1</small></li>
   
     <li><a href="/tags/security/">security</a><small>1</small></li>
   

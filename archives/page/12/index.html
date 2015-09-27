@@ -68,6 +68,49 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-24T23:22:24.000Z"><a href="/2013/11/24/poor-mans-vpn/">Nov 24, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/24/poor-mans-vpn/">Poor Man&#39;s VPN</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://github.com/apenwarr/sshuttle/" target="_blank" rel="external">sshuttle</a> is a very simple tool to create a VPN connection to a remote server that you have SSH access. You do not need to set up the complex VPN in a remote machine.</p>
+<p>Requirements:</p>
+<ul>
+<li>Root access on local machine</li>
+<li>SSH access to a remote machine</li>
+</ul>
+<p>Install:</p>
+<pre><code>$ <span class="built_in">sudo</span> apt-get install sshuttle
+</code></pre><p>Usage:</p>
+<pre><code><span class="variable">$ </span>sshuttle --dns -vvr username<span class="variable">@sshserver</span> <span class="number">0</span>/<span class="number">0</span>
+</code></pre><p><code>0/0</code> is the shortcut for <code>0.0.0.0/0</code>. <code>--dns</code> enables DNS queries to be proxied. Note that <code>sudo</code> is not needed but will be prompted.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-24T10:19:24.000Z"><a href="/2013/11/24/treading-on-startup-scene-in-hong-kong/">Nov 24, 2013</a></time>
       
       
@@ -532,60 +575,6 @@ coffee&gt; .help
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-10-02T22:23:58.000Z"><a href="/2013/10/02/javascript-parseint(array)-only-converts-the-first-element/">Oct 2, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/10/02/javascript-parseint(array)-only-converts-the-first-element/">JavaScript parseInt(array) Only Converts the First Element</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Converting from one type to another frequently causes bugs or unexpected result if you’re not careful. For example, when converting a string to an integer, we use the following function:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> num = <span class="built_in">parseInt</span>(string, radix);</div></pre></td></tr></table></figure>
-
-<p>Accidentally, I used an array of numeric strings in place of string for conversion.</p>
-<p>As stated in <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt" target="_blank" rel="external">MDN parseInt</a>:</p>
-<blockquote>
-<p>If string is not a string, then it is converted to one. Leading whitespace in the string is ignored.</p>
-</blockquote>
-<p>The array is converted to string.</p>
-<p>If the array has only one element, then there won’t be any problem:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[<span class="number">10</span>].toString()</div><div class="line">&gt; <span class="string">'10'</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'10'</span>, <span class="number">10</span>)</div><div class="line">&gt; <span class="number">10</span></div></pre></td></tr></table></figure>
-
-<p>But when there are more than one element, only the first element will be parsed:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[<span class="number">10</span>, <span class="number">5</span>].toString()</div><div class="line">&gt; <span class="string">'10,5'</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'10,5'</span>, <span class="number">10</span>)</div><div class="line">&gt; <span class="number">10</span></div></pre></td></tr></table></figure>
-
-<p>Therefore, you have to be very careful when processing query parameter like:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?<span class="variable">year=</span><span class="number">2013</span>&<span class="variable">year=</span><span class="number">2012</span></div></pre></td></tr></table></figure>
-
-<p>In many cases, it will be converted to:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">year: [<span class="string">'2013'</span>, <span class="string">'2012'</span>]</div></pre></td></tr></table></figure>
-
-<p>After running through <code>parseInt</code>, it will result in <code>2013</code>, might not be what you are looking for.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -620,7 +609,7 @@ coffee&gt; .help
   
     <li><a href="/categories/javascript/">JavaScript</a><small>12</small></li>
   
-    <li><a href="/categories/linux/">Linux</a><small>2</small></li>
+    <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
     <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
@@ -815,6 +804,8 @@ coffee&gt; .help
   
     <li><a href="/tags/control-character/">control-character</a><small>1</small></li>
   
+    <li><a href="/tags/coreutils/">coreutils</a><small>1</small></li>
+  
     <li><a href="/tags/cors/">cors</a><small>1</small></li>
   
     <li><a href="/tags/create-indexes/">create-indexes</a><small>1</small></li>
@@ -836,6 +827,8 @@ coffee&gt; .help
     <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
   
     <li><a href="/tags/custom-generator/">custom-generator</a><small>1</small></li>
+  
+    <li><a href="/tags/cut/">cut</a><small>1</small></li>
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
   
@@ -919,6 +912,8 @@ coffee&gt; .help
   
     <li><a href="/tags/facebook/">facebook</a><small>1</small></li>
   
+    <li><a href="/tags/field/">field</a><small>1</small></li>
+  
     <li><a href="/tags/file-system/">file-system</a><small>1</small></li>
   
     <li><a href="/tags/filename/">filename</a><small>1</small></li>
@@ -962,6 +957,8 @@ coffee&gt; .help
     <li><a href="/tags/glob/">glob</a><small>1</small></li>
   
     <li><a href="/tags/gnome/">gnome</a><small>1</small></li>
+  
+    <li><a href="/tags/gnu/">gnu</a><small>1</small></li>
   
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
@@ -1189,6 +1186,8 @@ coffee&gt; .help
   
     <li><a href="/tags/parseint/">parseint</a><small>1</small></li>
   
+    <li><a href="/tags/part/">part</a><small>1</small></li>
+  
     <li><a href="/tags/path/">path</a><small>4</small></li>
   
     <li><a href="/tags/pattern-matching/">pattern-matching</a><small>1</small></li>
@@ -1268,6 +1267,8 @@ coffee&gt; .help
     <li><a href="/tags/search/">search</a><small>1</small></li>
   
     <li><a href="/tags/search-term/">search-term</a><small>1</small></li>
+  
+    <li><a href="/tags/section/">section</a><small>1</small></li>
   
     <li><a href="/tags/security/">security</a><small>1</small></li>
   
