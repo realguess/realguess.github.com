@@ -68,6 +68,49 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-10-02T12:00:00.000Z"><a href="/2015/10/02/re-assembling-the-requested-url/">Oct 2, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/10/02/re-assembling-the-requested-url/">Re-assembling the Requested URL</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>It is simple to know the request URL path, it’s one (<code>this.url</code> in <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>) used by routing, but if you are looking to get the complete URL, it’s a little bit complicated. Luckily, there is a quick way to re-assemble the requested URL in <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>, if proxy is not a concern:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> url = <span class="keyword">this</span>.request.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.request.host + <span class="keyword">this</span>.request.originalUrl;</div></pre></td></tr></table></figure>
+
+<p>Or a shorter version:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> url = <span class="keyword">this</span>.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.host + <span class="keyword">this</span>.originalUrl;</div></pre></td></tr></table></figure>
+
+<p>The port number is included in <code>this.host</code>, for example: <code>localhost:3000</code>.</p>
+<p>Putting into a complete script:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{</div><div class="line">  <span class="comment">// Echo back the request URL.</span></div><div class="line">  <span class="keyword">this</span>.body = <span class="keyword">this</span>.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.host + <span class="keyword">this</span>.originalUrl;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>Assume that you have a server running on the host <code>www.example.com</code> with SSL enabled. If you make a request to the server with the URL: <code>https://www.example.com/path</code>, this URL will be echoed back in the response by the above script.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-03-29T12:00:00.000Z"><a href="/2015/03/29/supertest-listen-at-random-port/">Mar 29, 2015</a></time>
       
       
@@ -427,7 +470,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>13</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>14</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -820,6 +863,8 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/hong-kong/">hong-kong</a><small>1</small></li>
   
+    <li><a href="/tags/host/">host</a><small>1</small></li>
+  
     <li><a href="/tags/hosted-zone/">hosted-zone</a><small>1</small></li>
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
@@ -874,7 +919,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
   
-    <li><a href="/tags/koa/">koa</a><small>4</small></li>
+    <li><a href="/tags/koa/">koa</a><small>5</small></li>
   
     <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
   
@@ -1018,7 +1063,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/pm2/">pm2</a><small>1</small></li>
   
-    <li><a href="/tags/port/">port</a><small>2</small></li>
+    <li><a href="/tags/port/">port</a><small>3</small></li>
   
     <li><a href="/tags/prefix/">prefix</a><small>1</small></li>
   
@@ -1031,6 +1076,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/profile/">profile</a><small>1</small></li>
   
     <li><a href="/tags/programming-style/">programming-style</a><small>0</small></li>
+  
+    <li><a href="/tags/protocol/">protocol</a><small>1</small></li>
   
     <li><a href="/tags/provision/">provision</a><small>1</small></li>
   
@@ -1247,6 +1294,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/upload/">upload</a><small>1</small></li>
   
     <li><a href="/tags/upstart/">upstart</a><small>1</small></li>
+  
+    <li><a href="/tags/url/">url</a><small>1</small></li>
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   

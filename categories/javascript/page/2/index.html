@@ -68,6 +68,63 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-03-29T12:00:00.000Z"><a href="/2015/03/29/supertest-listen-at-random-port/">Mar 29, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/29/supertest-listen-at-random-port/">SuperTest: Listen at Random Port</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In the example section of <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> (<em>v0.15.0</em>), it mentions something about <em>ephemeral port</em>:</p>
+<blockquote>
+<p>You may pass an <code>http.Server</code>, or a <code>Function</code> to <code>request()</code> - if the server is not already listening for connections then it is bound to an ephemeral port for you so there is no need to keep track of ports. - <a href="https://github.com/visionmedia/supertest#example" target="_blank" rel="external">https://github.com/visionmedia/supertest#example</a></p>
+</blockquote>
+<p>Let’s dissect this sentence. There are a few key concepts to grasp:</p>
+<ol>
+<li>The <code>request</code> function will accept either a function or an <code>http.Server</code> object.</li>
+<li>When does the server not listening for connections?</li>
+<li>What is an ephemeral port?</li>
+</ol>
+<p>Taking a peek at the <code>index.js</code> file in <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> source code, it is easy to see that it accepts both function and <code>http.Server</code> object, but prefer latter:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// See `index.js` in [SuperTest] source code.</span></div><div class="line"><span class="keyword">if</span> (<span class="string">'function'</span> == <span class="keyword">typeof</span> app) app = http.createServer(app);</div><div class="line"></div><div class="line"><span class="comment">// See `lib/test.js` in [SuperTest] source code.</span></div><div class="line">Test.prototype.serverAddress = <span class="function"><span class="keyword">function</span> <span class="params">(app, path)</span> </span>{</div><div class="line">  <span class="keyword">var</span> addr = app.address();</div><div class="line">  <span class="keyword">if</span> (!addr) <span class="keyword">this</span>._server = app.listen(<span class="number">0</span>);</div><div class="line">  <span class="keyword">var</span> port = app.address().port;</div><div class="line">  <span class="keyword">var</span> protocol = app <span class="keyword">instanceof</span> htts.Server ? <span class="string">'https'</span> : <span class="string">'http'</span>;</div><div class="line">  <span class="keyword">return</span> protocol + <span class="string">'://1270.0.0.1:'</span> + port + path;</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Why it does this? This has to do with <a href="http://expressjs.com/" target="_blank" rel="external">Express</a>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'http'</span>).createServer()</div><div class="line"><span class="string">'object'</span></div><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'express'</span>)()</div><div class="line"><span class="string">'function'</span></div><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'koa'</span>)()</div><div class="line"><span class="string">'object'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="built_in">require</span>(<span class="string">'express'</span>)()).address()</div><div class="line"><span class="literal">null</span></div></pre></td></tr></table></figure>
+
+<p>Only when initiating an <a href="http://expressjs.com/" target="_blank" rel="external">Express</a> app, it returns a function, not an object. And follows up on <code>lib/test.js</code>, when <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> detects the created server is yet to bind to any port number, it will invoke <code>app.listen(0)</code>, so called <em>ephemeral port</em>. In fact, it is just a random port.</p>
+<p>When something is <em>ephemeral</em>, it last for a very short time. When allowing a server to accept connections, we usually do is setting the server to listen on a specific port:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.listen(<span class="number">3001</span>);</div></pre></td></tr></table></figure>
+
+<p>What if setting this to <code>0</code> like above or omit this port number?</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/03/29/supertest-listen-at-random-port/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-03-28T12:00:00.000Z"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Mar 28, 2015</a></time>
       
       
@@ -228,7 +285,7 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>13</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>14</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -621,6 +678,8 @@
   
     <li><a href="/tags/hong-kong/">hong-kong</a><small>1</small></li>
   
+    <li><a href="/tags/host/">host</a><small>1</small></li>
+  
     <li><a href="/tags/hosted-zone/">hosted-zone</a><small>1</small></li>
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
@@ -675,7 +734,7 @@
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
   
-    <li><a href="/tags/koa/">koa</a><small>4</small></li>
+    <li><a href="/tags/koa/">koa</a><small>5</small></li>
   
     <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
   
@@ -819,7 +878,7 @@
   
     <li><a href="/tags/pm2/">pm2</a><small>1</small></li>
   
-    <li><a href="/tags/port/">port</a><small>2</small></li>
+    <li><a href="/tags/port/">port</a><small>3</small></li>
   
     <li><a href="/tags/prefix/">prefix</a><small>1</small></li>
   
@@ -832,6 +891,8 @@
     <li><a href="/tags/profile/">profile</a><small>1</small></li>
   
     <li><a href="/tags/programming-style/">programming-style</a><small>0</small></li>
+  
+    <li><a href="/tags/protocol/">protocol</a><small>1</small></li>
   
     <li><a href="/tags/provision/">provision</a><small>1</small></li>
   
@@ -1048,6 +1109,8 @@
     <li><a href="/tags/upload/">upload</a><small>1</small></li>
   
     <li><a href="/tags/upstart/">upstart</a><small>1</small></li>
+  
+    <li><a href="/tags/url/">url</a><small>1</small></li>
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
