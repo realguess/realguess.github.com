@@ -64,6 +64,97 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-03-29T10:44:53.000Z"><a href="/2014/03/29/amazon-aws-command-line-interface-cli/">Mar 29, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/29/amazon-aws-command-line-interface-cli/">Amazon AWS Command Line Interface (CLI)</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>This is a brief guide for installing <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS Command Line Interface (CLI)</a> on Ubuntu Linux.</p>
+<blockquote>
+<p>The AWS Command Line Interface (CLI)] is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts. [2]</p>
+</blockquote>
+<p>The point here is <strong>unified</strong>, one tool to run all Amazon AWS services.</p>
+<h2 id="Install">Install</h2>
+<p><em>The installation procedure applies to Ubuntu Linux with Zsh and Bash.</em></p>
+<p>Install <a href="http://www.pip-installer.org/en/latest/" target="_blank" rel="external">pip</a>, a Python package manager:</p>
+<pre><code>$ sudo apt-<span class="built_in">get</span> install <span class="keyword">python</span>-pip
+</code></pre><p>Install <em>awscli</em>:</p>
+<pre><code>$ <span class="built_in">sudo</span> pip install awscli
+</code></pre><p>Install autocompletion:</p>
+<pre><code>$ which aws_zsh_completer.<span class="keyword">sh</span>
+/usr/local/bin/aws_zsh_completer.<span class="keyword">sh</span>
+$ <span class="keyword">source</span> aws_zsh_completer.<span class="keyword">sh</span>
+</code></pre><p>Add this line to <code>~/.zshrc</code> as well.</p>
+<p>Or for Bash <code>~/.bashrc</code>:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">'\n# Enable AWS CLI autocompletion'</span> &gt;&gt; ~/.bashrc
+$ <span class="built_in">echo</span> <span class="string">'complete -C aws_completer aws'</span> &gt;&gt; ~/.bashrc
+$ <span class="built_in">source</span> ~/.bashrc
+</code></pre><p>Test installation:</p>
+<pre><code><span class="variable">$ </span>which aws
+/usr/local/bin/aws
+<span class="variable">$ </span>aws help
+</code></pre><p>Test autocompletion:</p>
+<pre><code>$ aws &lt;<span class="keyword">tab</span>&gt;&lt;<span class="keyword">tab</span>&gt;
+</code></pre><p>You should see a list of all available AWS commands.</p>
+<h2 id="Usage">Usage</h2>
+<p>Before using aws-cli, you need to tell it about your AWS credentials. There are three ways to specify AWS credentials:</p>
+<ol>
+<li>Environment variables</li>
+<li>Config file</li>
+<li>IAM Role</li>
+</ol>
+<p>Using config file is preferred, which is a simple <a href="http://en.wikipedia.org/wiki/INI_file" target="_blank" rel="external">ini</a> file format to be stored in <code>~/.aws/config</code>. A soft link can be used to link it or just tell awscli where to find it:</p>
+<pre><code><span class="variable">$ </span>export <span class="constant">AWS_CONFIG_FILE</span>=<span class="regexp">/path/to</span><span class="regexp">/config_file</span>
+</code></pre><p>It is better to use IAM roles with any of the AWS services:</p>
+<blockquote>
+<p>The final option for credentials is highly recommended if you are using aws-cli on an EC2 instance. IAM Roles are a great way to have credentials installed automatically on your instance. If you are using IAM Roles, aws-cli will find them and use them automatically. [4]</p>
+</blockquote>
+<p>The default output is in JSON format. Other formats are tab-delimited text and ASCII-formatted table. For example, using <code>--query</code> filter and table output:</p>
+<pre><code><span class="formula">$ aws ec2 describe-instances --query 'Reservations<span class="special">[</span>*<span class="special">]</span>.Instances<span class="special">[</span>*<span class="special">]</span>.<span class="special">{</span> <span class="command">\
+</span>  ID:InstanceId, TYPE:InstanceType, ZONE:Placement.AvailabilityZone, <span class="command">\
+</span>  SECURITY:SecurityGroups<span class="special">[</span>0<span class="special">]</span>.GroupId, KEY:KeyName, VPC:VpcId, <span class="command">\
+</span>  STATE:State.Name<span class="special">}</span>' --output table</span>
+</code></pre><p>This will print a nice looking table of all EC2 instances.</p>
+<p>The command line options also accept JSON format. But when passing in large blocks of data, referring a JSON file is much easier. Both local file and remote URL can be used.</p>
+<h2 id="Upgrade">Upgrade</h2>
+<p>Check the installed and the latest versions:</p>
+<pre><code>$ pip <span class="built_in">search</span> awscli
+</code></pre><p>Upgrade AWS CLI to the latest version:</p>
+<pre><code>$ sudo pip <span class="operator"><span class="keyword">install</span> <span class="comment">--upgrade awscli</span></span>
+</code></pre><h2 id="References">References</h2>
+<ol>
+<li><a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS Command Line Interface</a></li>
+<li><a href="http://docs.aws.amazon.com/cli/latest/userguide/" target="_blank" rel="external">User Guide</a></li>
+<li><a href="http://docs.aws.amazon.com/cli/latest/reference/" target="_blank" rel="external">Reference</a></li>
+<li><a href="https://github.com/aws/aws-cli/" target="_blank" rel="external">GitHub repository</a></li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-03-22T13:20:10.000Z"><a href="/2014/03/22/writing-custom-yeoman-generator/">Mar 22, 2014</a></time>
       
       
@@ -613,45 +704,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-19T19:54:25.000Z"><a href="/2014/01/19/not-ready-for-xiaomi/">Jan 19, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/19/not-ready-for-xiaomi/">Not Ready for Xiaomi</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When I was in the United States, I have heard of many good news about <a href="http://www.xiaomi.com/en" target="_blank" rel="external">Xiaomi</a>, a Chinese smartphone company. And people are comparing the founder <a href="http://www.weibo.com/leijun" target="_blank" rel="external">Lei Jun</a> to Steve Jobs. I was very excited when I got to China and eager to get my hand on a <a href="http://www.xiaomi.com/en/mi3" target="_blank" rel="external">Mi3</a>.</p>
-<p><img src="/img/2014-01-19/mi3.jpg" alt="Mi3"></p>
-<p>Well, I didn’t get it, not saying that I did not try, maybe I didn’t try hard enough. But in some situations, this might be a good thing.</p>
-<p>The phones were quickly sold out within minutes. The official number of phones sold is remarkable according the manufacturer. But first do you trust these numbers? Maybe I just dislike the marketing technique more. I have read many reviews, people are saying that the marketing technique is awful. While they keep up the demand by limiting the supply from the company website. You can actually buy higher price ones from other retailers.</p>
-<p>Another problem is the quality of the phone. When I first asked my friend for the opinion of buying, he simply replied “trash”. When I asked another friend, she told me that she had two previous version Xiaomi phones, and they both broke down. I have used two iPhones and I have never had any problem with it.</p>
-<p>It boils down to quality vs. quantity. Selling by creating a tricky marketing technique and with <a href="http://en.miui.com/thread-12840-1-1.html" target="_blank" rel="external">misleading</a> information to boost the quantity without really focusing on the quality is sad. Without changing the DNA, the company is not going far, no matter how much money raises.</p>
-<p>I am just happy with my Nexus for now.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -681,7 +733,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>14</small></li>
   
@@ -1278,6 +1330,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/port/">port</a><small>3</small></li>
   
+    <li><a href="/tags/port-forwarding/">port-forwarding</a><small>1</small></li>
+  
     <li><a href="/tags/prefix/">prefix</a><small>1</small></li>
   
     <li><a href="/tags/preinstall/">preinstall</a><small>1</small></li>
@@ -1398,7 +1452,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/split/">split</a><small>2</small></li>
   
-    <li><a href="/tags/ssh/">ssh</a><small>3</small></li>
+    <li><a href="/tags/ssh/">ssh</a><small>4</small></li>
   
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
@@ -1512,7 +1566,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>7</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>8</small></li>
   
     <li><a href="/tags/vagrant-box/">vagrant-box</a><small>1</small></li>
   
@@ -1531,6 +1585,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
     <li><a href="/tags/vimdiff/">vimdiff</a><small>1</small></li>
   
     <li><a href="/tags/vimeo/">vimeo</a><small>1</small></li>
+  
+    <li><a href="/tags/virtualbox/">virtualbox</a><small>1</small></li>
   
     <li><a href="/tags/visit/">visit</a><small>4</small></li>
   

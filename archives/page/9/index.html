@@ -68,6 +68,86 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-05-18T14:49:04.000Z"><a href="/2014/05/18/command-line-json-processing/">May 18, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/05/18/command-line-json-processing/">Command Line JSON Processing</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>What is the best command line tool to process JSON?</p>
+<p>Hmm… Okay, let’s try different command line JSON processing tools with the following use case to decide which one is the best to use.</p>
+<p>Here is the use case: <code>JSON | filter | shell</code>. A program outputs JSON data, pipes into a JSON command line processing tool to filter data, and then send to a shell command to do more work.</p>
+<p>Here is a snippet of sample JSON data:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  {</div><div class="line">    "<span class="attribute">id</span>": <span class="value"><span class="number">1</span></span>,</div><div class="line">    "<span class="attribute">username</span>": <span class="value"><span class="string">"foo"</span></span>,</div><div class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"Foo Foo"</span></span></div><div class="line">  },</div><div class="line">  {</div><div class="line">    "<span class="attribute">id</span>": <span class="value"><span class="number">2</span></span>,</div><div class="line">    "<span class="attribute">username</span>": <span class="value"><span class="string">"bar"</span></span>,</div><div class="line">    "<span class="attribute">name</span>": <span class="value"><span class="string">"Bar Bar"</span></span></div><div class="line">  }</div><div class="line">]</div></pre></td></tr></table></figure>
+
+<p>Or in one-liner <code>data.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[{"<span class="attribute">id</span>":<span class="value"><span class="number">1</span></span>,"<span class="attribute">username</span>":<span class="value"><span class="string">"foo"</span></span>,"<span class="attribute">name</span>":<span class="value"><span class="string">"Foo Foo"</span></span>},{"<span class="attribute">id</span>":<span class="value"><span class="number">2</span></span>,"<span class="attribute">username</span>":<span class="value"><span class="string">"bar"</span></span>,"<span class="attribute">name</span>":<span class="value"><span class="string">"Bar Bar"</span></span>}]</div></pre></td></tr></table></figure>
+
+<p>The command line JSON processor should filter each element of the array and convert it into its own line:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">{"<span class="attribute">name</span>":<span class="value"><span class="string">"Foo Foo"</span></span>}</div><div class="line">{"<span class="attribute">name</span>":<span class="value"><span class="string">"Bar Bar"</span></span>}</div></pre></td></tr></table></figure>
+
+<p>The result will be piped as the input line by line into a shell script <code>echo.bash</code>:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="keyword">while</span> <span class="built_in">read</span> line; <span class="keyword">do</span></div><div class="line">  <span class="built_in">echo</span> <span class="string">"ECHO: '"</span><span class="variable">$line</span><span class="string">"'"</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+
+<p>The final output should be:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ECHO: <span class="string">'{"</span>name<span class="string">":"</span>Foo Foo<span class="string">"}'</span></div><div class="line">ECHO: <span class="string">'{"</span>name<span class="string">":"</span>Bar Bar<span class="string">"}'</span></div></pre></td></tr></table></figure>
+
+<h2 id="Custom_Solution">Custom Solution</h2>
+<p>Before start looking for existing tools, let’s see how difficult it is to write a custom solution.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Filter and convert array element into its own line.</span></div><div class="line"><span class="keyword">var</span> rl = <span class="built_in">require</span>(<span class="string">'readline'</span>).createInterface({</div><div class="line">  input : process.stdin,</div><div class="line">  output: process.stdout,</div><div class="line">});</div><div class="line"></div><div class="line">rl.on(<span class="string">'line'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(line)</span> </span>{</div><div class="line">  <span class="built_in">JSON</span>.parse(line).forEach(<span class="function"><span class="keyword">function</span> <span class="params">(item)</span> </span>{</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">'{"name":"'</span> + item.name + <span class="string">'"}'</span>);</div><div class="line">  });</div><div class="line">}).on(<span class="string">'close'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="comment">// Shh...</span></div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Perform a test run:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ cat <span class="typedef"><span class="keyword">data</span>.json | node filter.js  | bash echo.bash </span></div><div class="line"><span class="type">ECHO</span>: '{<span class="string">"name"</span>:<span class="string">"Foo Foo"</span>}'</div><div class="line"><span class="type">ECHO</span>: '{<span class="string">"name"</span>:<span class="string">"Bar Bar"</span>}'</div></pre></td></tr></table></figure>
+
+<p>Well, it works. In essence, we are writing a simple JSON parser. Unless you want to keep the footprint small, you don’t want to write another JSON parser. And why bother to reinvent the wheel? Let’s start look at the existing solutions.</p>
+<h2 id="Node_Modules">Node Modules</h2>
+<p>Let’s start with the tools from NPM registry:</p>
+<pre><code>$ npm <span class="built_in">search</span> json <span class="keyword">command</span>
+</code></pre><p>Here are a few candidates that appears to be matching from the description:</p>
+<ul>
+<li><a href="https://github.com/bjorne/jku" target="_blank" rel="external">jku</a> - Jku is a command-line tool to filter and/or modifiy a JSON stream. It is heavily inspired by jq. (2 stars and not active, last update 8 months ago).</li>
+<li><a href="https://github.com/zpoley/json-command" target="_blank" rel="external">json</a> or <a href="https://github.com/zpoley/json-command" target="_blank" rel="external">json-command</a> - JSON command line procesing toolkit. (122 stars and 14 forks, last update 9 months ago)</li>
+<li><a href="https://github.com/misterfifths/jutil" target="_blank" rel="external">jutil</a> - Command-line utilities for manipulating JSON. (88 stars and 2 forks, last update more than 2 years ago)</li>
+</ul>
+<p>Not a lot of choice, and modules are not active. This might be that because there is already a really good solution, <a href="https://github.com/stedolan/jq" target="_blank" rel="external">jq</a>, which has 2493 stars and 145 forks, and the last update was 6 days ago.</p>
+<h2 id="jq">jq</h2>
+<blockquote>
+<p>jq is like <code>sed</code> for JSON data - you can use it to slice and filter and map and transform structured data with the same ease that <code>sed</code>, <code>awk</code>, <code>grep</code> and friends let you play with text. - <a href="https://github.com/stedolan/jq" target="_blank" rel="external">jq</a></p>
+</blockquote>
+<p>Instead of NPM install, do:</p>
+<pre><code>$ <span class="built_in">sudo</span> apt-get -y install jq
+</code></pre><p>Since we don’t need color or prettified, just line by line. So, here is the command chain:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ cat <span class="typedef"><span class="keyword">data</span>.json | jq -c -<span class="type">M</span> '.[] | <span class="container">{<span class="title">name</span>}</span>'  | bash echo.bash</span></div><div class="line"><span class="type">ECHO</span>: '{<span class="string">"name"</span>:<span class="string">"Foo Foo"</span>}'</div><div class="line"><span class="type">ECHO</span>: '{<span class="string">"name"</span>:<span class="string">"Bar Bar"</span>}'</div></pre></td></tr></table></figure>
+
+<p><a href="https://github.com/stedolan/jq" target="_blank" rel="external">jq</a> can do much more than just the example just shown. It has zero runtime dependencies, and flexible to deal with not just array but object as well.</p>
+<h2 id="Conclusion">Conclusion</h2>
+<p><a href="https://github.com/stedolan/jq" target="_blank" rel="external">jq</a> is clearly the winner here, with the least dependency, the most functionality and more popularity, as well as a comprehensive documentation.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-05-11T14:11:43.000Z"><a href="/2014/05/11/sharpening-the-ax-before-chopping-down-a-tree/">May 11, 2014</a></time>
       
       
@@ -575,97 +655,6 @@ X-Tumblr-User: birchbox
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-03-29T10:44:53.000Z"><a href="/2014/03/29/amazon-aws-command-line-interface-cli/">Mar 29, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/03/29/amazon-aws-command-line-interface-cli/">Amazon AWS Command Line Interface (CLI)</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>This is a brief guide for installing <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS Command Line Interface (CLI)</a> on Ubuntu Linux.</p>
-<blockquote>
-<p>The AWS Command Line Interface (CLI)] is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts. [2]</p>
-</blockquote>
-<p>The point here is <strong>unified</strong>, one tool to run all Amazon AWS services.</p>
-<h2 id="Install">Install</h2>
-<p><em>The installation procedure applies to Ubuntu Linux with Zsh and Bash.</em></p>
-<p>Install <a href="http://www.pip-installer.org/en/latest/" target="_blank" rel="external">pip</a>, a Python package manager:</p>
-<pre><code>$ sudo apt-<span class="built_in">get</span> install <span class="keyword">python</span>-pip
-</code></pre><p>Install <em>awscli</em>:</p>
-<pre><code>$ <span class="built_in">sudo</span> pip install awscli
-</code></pre><p>Install autocompletion:</p>
-<pre><code>$ which aws_zsh_completer.<span class="keyword">sh</span>
-/usr/local/bin/aws_zsh_completer.<span class="keyword">sh</span>
-$ <span class="keyword">source</span> aws_zsh_completer.<span class="keyword">sh</span>
-</code></pre><p>Add this line to <code>~/.zshrc</code> as well.</p>
-<p>Or for Bash <code>~/.bashrc</code>:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">'\n# Enable AWS CLI autocompletion'</span> &gt;&gt; ~/.bashrc
-$ <span class="built_in">echo</span> <span class="string">'complete -C aws_completer aws'</span> &gt;&gt; ~/.bashrc
-$ <span class="built_in">source</span> ~/.bashrc
-</code></pre><p>Test installation:</p>
-<pre><code><span class="variable">$ </span>which aws
-/usr/local/bin/aws
-<span class="variable">$ </span>aws help
-</code></pre><p>Test autocompletion:</p>
-<pre><code>$ aws &lt;<span class="keyword">tab</span>&gt;&lt;<span class="keyword">tab</span>&gt;
-</code></pre><p>You should see a list of all available AWS commands.</p>
-<h2 id="Usage">Usage</h2>
-<p>Before using aws-cli, you need to tell it about your AWS credentials. There are three ways to specify AWS credentials:</p>
-<ol>
-<li>Environment variables</li>
-<li>Config file</li>
-<li>IAM Role</li>
-</ol>
-<p>Using config file is preferred, which is a simple <a href="http://en.wikipedia.org/wiki/INI_file" target="_blank" rel="external">ini</a> file format to be stored in <code>~/.aws/config</code>. A soft link can be used to link it or just tell awscli where to find it:</p>
-<pre><code><span class="variable">$ </span>export <span class="constant">AWS_CONFIG_FILE</span>=<span class="regexp">/path/to</span><span class="regexp">/config_file</span>
-</code></pre><p>It is better to use IAM roles with any of the AWS services:</p>
-<blockquote>
-<p>The final option for credentials is highly recommended if you are using aws-cli on an EC2 instance. IAM Roles are a great way to have credentials installed automatically on your instance. If you are using IAM Roles, aws-cli will find them and use them automatically. [4]</p>
-</blockquote>
-<p>The default output is in JSON format. Other formats are tab-delimited text and ASCII-formatted table. For example, using <code>--query</code> filter and table output:</p>
-<pre><code><span class="formula">$ aws ec2 describe-instances --query 'Reservations<span class="special">[</span>*<span class="special">]</span>.Instances<span class="special">[</span>*<span class="special">]</span>.<span class="special">{</span> <span class="command">\
-</span>  ID:InstanceId, TYPE:InstanceType, ZONE:Placement.AvailabilityZone, <span class="command">\
-</span>  SECURITY:SecurityGroups<span class="special">[</span>0<span class="special">]</span>.GroupId, KEY:KeyName, VPC:VpcId, <span class="command">\
-</span>  STATE:State.Name<span class="special">}</span>' --output table</span>
-</code></pre><p>This will print a nice looking table of all EC2 instances.</p>
-<p>The command line options also accept JSON format. But when passing in large blocks of data, referring a JSON file is much easier. Both local file and remote URL can be used.</p>
-<h2 id="Upgrade">Upgrade</h2>
-<p>Check the installed and the latest versions:</p>
-<pre><code>$ pip <span class="built_in">search</span> awscli
-</code></pre><p>Upgrade AWS CLI to the latest version:</p>
-<pre><code>$ sudo pip <span class="operator"><span class="keyword">install</span> <span class="comment">--upgrade awscli</span></span>
-</code></pre><h2 id="References">References</h2>
-<ol>
-<li><a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS Command Line Interface</a></li>
-<li><a href="http://docs.aws.amazon.com/cli/latest/userguide/" target="_blank" rel="external">User Guide</a></li>
-<li><a href="http://docs.aws.amazon.com/cli/latest/reference/" target="_blank" rel="external">Reference</a></li>
-<li><a href="https://github.com/aws/aws-cli/" target="_blank" rel="external">GitHub repository</a></li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -696,7 +685,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>8</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>14</small></li>
   
@@ -1293,6 +1282,8 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/port/">port</a><small>3</small></li>
   
+    <li><a href="/tags/port-forwarding/">port-forwarding</a><small>1</small></li>
+  
     <li><a href="/tags/prefix/">prefix</a><small>1</small></li>
   
     <li><a href="/tags/preinstall/">preinstall</a><small>1</small></li>
@@ -1413,7 +1404,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/split/">split</a><small>2</small></li>
   
-    <li><a href="/tags/ssh/">ssh</a><small>3</small></li>
+    <li><a href="/tags/ssh/">ssh</a><small>4</small></li>
   
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
@@ -1527,7 +1518,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/username/">username</a><small>1</small></li>
   
-    <li><a href="/tags/vagrant/">vagrant</a><small>7</small></li>
+    <li><a href="/tags/vagrant/">vagrant</a><small>8</small></li>
   
     <li><a href="/tags/vagrant-box/">vagrant-box</a><small>1</small></li>
   
@@ -1546,6 +1537,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/vimdiff/">vimdiff</a><small>1</small></li>
   
     <li><a href="/tags/vimeo/">vimeo</a><small>1</small></li>
+  
+    <li><a href="/tags/virtualbox/">virtualbox</a><small>1</small></li>
   
     <li><a href="/tags/visit/">visit</a><small>4</small></li>
   
