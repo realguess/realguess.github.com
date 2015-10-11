@@ -68,6 +68,43 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-01-19T23:05:04.000Z"><a href="/2014/01/19/difference-between-http-head-and-get/">Jan 19, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/19/difference-between-http-head-and-get/">Difference between HTTP HEAD and GET</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <blockquote>
+<p>The HEAD method is identical to GET except that the server MUST NOT return a message-body in the response. The metainformation contained in the HTTP headers in response to a HEAD request SHOULD be identical to the information sent in response to a GET request. - <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank" rel="external">Method Definitions</a></p>
+</blockquote>
+<p>I was a little bit confused when I encoutered the HTTP status code <code>204</code>, which states that the response MUST NOT include a message body. The <code>HEAD</code> method contains no body content as well. Should I use <code>204</code> instead of <code>200</code>?</p>
+<p>The answer is <strong>NO</strong>. <code>GET</code> method should always return HTTP status code of 200. Since <code>HEAD</code> method is idential to <code>GET</code>, it should return <code>200</code> as well. Just keep in mind that the cost of processing both <code>HEAD</code> and <code>GET</code> requests are almost the same.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-19T19:54:25.000Z"><a href="/2014/01/19/not-ready-for-xiaomi/">Jan 19, 2014</a></time>
       
       
@@ -614,47 +651,6 @@ Binary <span class="keyword">file</span> encrypted.txt matches
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-09T18:09:08.000Z"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Dec 9, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Insert Text to the Beginning of a File</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>It is easy to append some text to the end of another file:</p>
-<pre><code><span class="input"><span class="prompt">$ cat foo &gt;&gt;</span> bar</span>
-</code></pre><p>or even just portion of a file:</p>
-<pre><code><span class="input"><span class="prompt">$ head -n 2 foo &gt;&gt;</span> bar</span>
-</code></pre><p>but how about to the beginning of a file? Well, it is not that bad to do either:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">"<span class="variable">$(cat foo bar)</span>"</span> &gt; bar
-</code></pre><p>just a portion of a file:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">"<span class="variable">$(head -n 2 foo)</span>\n<span class="variable">$(cat bar)</span>"</span> &gt; bar
-</code></pre><p>Now you can easily add some text such as copyright information to the beginning of another file with one command.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -687,7 +683,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>14</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>15</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -880,7 +876,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
   
-    <li><a href="/tags/context/">context</a><small>1</small></li>
+    <li><a href="/tags/context/">context</a><small>2</small></li>
   
     <li><a href="/tags/control-character/">control-character</a><small>1</small></li>
   
@@ -1136,7 +1132,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
   
-    <li><a href="/tags/koa/">koa</a><small>5</small></li>
+    <li><a href="/tags/koa/">koa</a><small>6</small></li>
   
     <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
   
@@ -1194,7 +1190,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/mi3/">mi3</a><small>1</small></li>
   
-    <li><a href="/tags/middleware/">middleware</a><small>1</small></li>
+    <li><a href="/tags/middleware/">middleware</a><small>2</small></li>
   
     <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
   
@@ -1413,6 +1409,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
     <li><a href="/tags/starter/">starter</a><small>5</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
+  
+    <li><a href="/tags/state/">state</a><small>1</small></li>
   
     <li><a href="/tags/stats/">stats</a><small>5</small></li>
   

@@ -68,6 +68,47 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Oct 11, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Passing Information Through Koa Middleware Via &quot;this.state&quot;</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://koajs.com/" target="_blank" rel="external">Koa</a> has a <a href="http://koajs.com/#context" target="_blank" rel="external">context</a> object created during every request/response cycle. The context is referenced via <code>this</code> in the middleware. Much information are captured in the context, such as <code>req</code> and <code>res</code>. In order to avoid polluting the context and colliding with other middleware, the information from your application should be encapsulated into <code>this.state</code> property, a namespace for passing information through middleware during request/response cycle:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">var</span> state = <span class="keyword">this</span>.state;</div><div class="line"></div><div class="line">  state.user = <span class="keyword">yield</span> users.create(<span class="keyword">this</span>.request.body);</div><div class="line">  state.code = <span class="number">201</span>;</div><div class="line">  state.body = {</div><div class="line">    name: user.name,</div><div class="line">    mail: user.mail</div><div class="line">  };</div><div class="line"></div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>The <code>this.state</code> has been initialized into an empty object:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="keyword">this</span>.state;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>Therefore, we can start using it right away without doing our own initialization:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">3000</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">2</span></div><div class="line">Content-Type: application/json; charset=utf-<span class="number">8</span></div><div class="line"></div><div class="line">{}</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-10-02T12:00:00.000Z"><a href="/2015/10/02/re-assembling-the-requested-url/">Oct 2, 2015</a></time>
       
       
@@ -457,53 +498,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-04-01T12:00:00.000Z"><a href="/2015/04/01/test-execution-order-in-mocha/">Apr 1, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/04/01/test-execution-order-in-mocha/">Test Execution Order in Mocha</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In synchronous tests, both <code>describe</code> and <code>it</code> statements are executed in the order they are laid out.</p>
-<p>Test <code>Foo</code> should run before <code>Bar</code>:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'Suite'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  it(<span class="string">'Foo'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  });</div><div class="line"></div><div class="line">  it(<span class="string">'Bar'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
-
-<p>Suite <code>Foo</code> should run before <code>Bar</code>:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">describe(<span class="string">'Foo'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">});</div><div class="line"></div><div class="line">describe(<span class="string">'Bar'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">});</div></pre></td></tr></table></figure>
-
-<p>In asynchronous tests, the same ordering applies.</p>
-<p>Test Foo should run before Bar even Foo takes much longer to execute, and Suite B should also run after Suite A:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> should = <span class="built_in">require</span>(<span class="string">'should'</span>);</div><div class="line"></div><div class="line">describe(<span class="string">'Suite A'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  it(<span class="string">'Foo'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(done)</span> </span>{</div><div class="line">    setTimeout(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">      (<span class="literal">true</span>).should.equal(<span class="literal">true</span>);</div><div class="line">      done();</div><div class="line">    }, <span class="number">1000</span>);</div><div class="line">  });</div><div class="line"></div><div class="line">  it(<span class="string">'Bar'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    (<span class="literal">true</span>).should.equal(<span class="literal">true</span>);</div><div class="line">  });</div><div class="line">});</div><div class="line"></div><div class="line">describe(<span class="string">'Suite B'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  it(<span class="string">'Foo'</span>, <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">    (<span class="literal">true</span>).should.equal(<span class="literal">true</span>);</div><div class="line">  });</div><div class="line">});</div></pre></td></tr></table></figure>
-
-<p>Result:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">Suite <span class="literal">A</span></div><div class="line">  ✓ Foo (<span class="number">1002</span>ms)</div><div class="line">  ✓ Bar </div><div class="line"></div><div class="line">Suite B</div><div class="line">  ✓ Foo </div><div class="line"></div><div class="line"></div><div class="line"><span class="number">3</span> passing (<span class="number">1</span>s)</div></pre></td></tr></table></figure>
-
-<p>This is the great feature in <a href="http://mochajs.org/" target="_blank" rel="external">Mocha</a>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -534,7 +528,7 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>14</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>15</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -727,7 +721,7 @@
   
     <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
   
-    <li><a href="/tags/context/">context</a><small>1</small></li>
+    <li><a href="/tags/context/">context</a><small>2</small></li>
   
     <li><a href="/tags/control-character/">control-character</a><small>1</small></li>
   
@@ -983,7 +977,7 @@
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
   
-    <li><a href="/tags/koa/">koa</a><small>5</small></li>
+    <li><a href="/tags/koa/">koa</a><small>6</small></li>
   
     <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
   
@@ -1041,7 +1035,7 @@
   
     <li><a href="/tags/mi3/">mi3</a><small>1</small></li>
   
-    <li><a href="/tags/middleware/">middleware</a><small>1</small></li>
+    <li><a href="/tags/middleware/">middleware</a><small>2</small></li>
   
     <li><a href="/tags/minimatch/">minimatch</a><small>1</small></li>
   
@@ -1260,6 +1254,8 @@
     <li><a href="/tags/starter/">starter</a><small>5</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
+  
+    <li><a href="/tags/state/">state</a><small>1</small></li>
   
     <li><a href="/tags/stats/">stats</a><small>5</small></li>
   
