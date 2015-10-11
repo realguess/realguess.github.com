@@ -58,6 +58,88 @@
 <div class="clearfix"></div></header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="blog">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-07-05T14:51:30.000Z"><a href="/2014/07/05/extended-pattern-matching/">Jul 5, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/07/05/extended-pattern-matching/">Extended Pattern Matching</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Bash supports <a href="https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html" target="_blank" rel="external">extended pattern matching</a>. By using the built-in utility we can check if it is enabled or not:</p>
+<pre><code>$ <span class="built_in">shopt</span> extglob
+</code></pre><p>If not, to enable it:</p>
+<pre><code>$ <span class="built_in">shopt</span> <span class="operator">-s</span> extglob
+</code></pre><p>By default <code>extglob</code> is on in interactive shells, but <strong>off in non-interactive shells</strong>.</p>
+<p>The key about extended pattern matching is pattern list via <code>|</code> (what we usually see as a <code>OR</code> operator). But do not think about it as that, think about it as a list of array pattern that are separated by <code>|</code> instead of <code>,</code>. And actually one of them is the same as <code>{}</code> or brace expansion, but it can do more than expanding.</p>
+<p>Here are the pattern operators:</p>
+<pre><code>? <span class="keyword">*</span> + @ !
+</code></pre><p>Create some example files:</p>
+<pre><code>$ touch <span class="operator">a</span>{,<span class="number">1</span>,<span class="number">2</span>,<span class="number">11</span>,<span class="number">12</span>}.js &amp;&amp; ls
+a11.js  a12.js  a1.js  a2.js  <span class="operator">a</span>.js
+</code></pre><p><strong><code>?(pattern-list)</code></strong></p>
+<p>Zero or one (any one) occurrence of the giving pattern:</p>
+<pre><code>$ ls <span class="operator">a</span>?(<span class="number">2</span>|<span class="number">1</span>).js
+a1.js  a2.js  <span class="operator">a</span>.js
+</code></pre><p><strong><code>*(pattern-list)</code></strong></p>
+<p>Zero or more occurrences of the giving pattern (essentially everything):</p>
+<pre><code>$ ls <span class="operator">a</span>*(<span class="number">2</span>|<span class="number">1</span>).js
+a11.js  a12.js  a1.js  a2.js  <span class="operator">a</span>.js
+</code></pre><p><strong><code>+(pattern-list)</code></strong></p>
+<p>One or more of the giving pattern (notice <code>a.js</code> is missing):</p>
+<pre><code>$ <span class="keyword">ls</span> <span class="keyword">a</span>+(<span class="number">2</span>|<span class="number">1</span>).js
+a11.js  a12.js  a1.js  a2.js
+</code></pre><p><strong><code>@(pattern-list)</code></strong></p>
+<p>Any one of giving pattern:</p>
+<pre><code>$ <span class="keyword">ls</span> a<span class="variable">@(</span><span class="number">2</span>|<span class="number">1</span>).js
+a1.js  a2.js
+</code></pre><p><strong><code>!(pattern-list)</code></strong></p>
+<p>None of the giving pattern:</p>
+<pre><code>$ ls <span class="operator">a</span>!(<span class="number">2</span>|<span class="number">1</span>).js
+a11.js  a12.js  <span class="operator">a</span>.js
+</code></pre><p>One mistake I had was getting confused between extended pattern matching and brace expansion, for example:</p>
+<pre><code><span class="variable">$ </span>ls test/@{src|spec}/*.js
+<span class="symbol">ls:</span> cannot access test/<span class="variable">@src</span>/*.<span class="symbol">js:</span> <span class="constant">No</span> such file <span class="keyword">or</span> directory
+<span class="symbol">ls:</span> cannot access test/<span class="variable">@spec</span>/*.<span class="symbol">js:</span> <span class="constant">No</span> such file <span class="keyword">or</span> directory
+</code></pre><p>Extended pattern uses parentheses <code>()</code> not braces <code>{}</code> as in brace expansion.</p>
+<p>Also, these two patterns are the same:</p>
+<pre><code>test/<span class="comment">@(src|spec)/*.js</span>
+test/{src,spec}/<span class="keyword">*</span>.js
+</code></pre><p>In some situations, extended pattern matching does not work, for example, matching files from the current directory and from one of the subdirectories with the following directory structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── app.js</div><div class="line">├── lib</div><div class="line">│   └── util.js</div><div class="line">└── test</div><div class="line">    └── main.js</div><div class="line"></div><div class="line"><span class="number">2</span> <span class="built_in">directories</span>, <span class="number">3</span> <span class="built_in">files</span></div></pre></td></tr></table></figure>
+
+<p>I would like to match js files from the current directory and <code>lib/</code> directory, sort of like:</p>
+<pre><code>$ ls <span class="keyword">*</span>.js lib/<span class="keyword">*</span>.js
+app.js  lib/util.js
+</code></pre><p>But this does not do it:</p>
+<pre><code>$ <span class="keyword">ls</span> <span class="variable">@(</span>.|lib)<span class="comment">/*.js</span>
+</code></pre><p>Instead, use brace expansion:</p>
+<pre><code><span class="variable">$ </span>ls {.,lib}/*.js
+</code></pre><p>Finally, Node’s <a href="https://github.com/isaacs/minimatch" target="_blank" rel="external">Minimatch</a> supports brace expansion, <em>extended globbing</em> and globstar.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article class="post">
   
   <div class="post-content">
@@ -621,96 +703,6 @@ undefined
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-05-20T13:49:37.000Z"><a href="/2014/05/20/node-version-manager/">May 20, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/05/20/node-version-manager/">Node Version Manager</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://github.com/creationix/nvm" target="_blank" rel="external">Node Version Manager</a> is a simple bash script to manage multiple active <a href="http://nodejs.org/" target="_blank" rel="external">Node</a> versions. <em>Why do you want to use it?</em> If you like me, you want to try out the latest unstable version of the Node, but you still need to use the older and stable versions to develop and maintain your projects, then you should use <a href="https://github.com/creationix/nvm" target="_blank" rel="external">NVM</a>.</p>
-<p>You can find out more information on <a href="https://github.com/creationix/nvm" target="_blank" rel="external">NVM GitHub page</a>, below are just my take on installing and using it.</p>
-<h2 id="Install">Install</h2>
-<p>You can install NVM via the install script, but always do it the hard way by installing it manually:</p>
-<pre><code><span class="variable">$ </span>git clone <span class="symbol">https:</span>/<span class="regexp">/github.com/creationix</span><span class="regexp">/nvm.git ~/</span>.nvm
-</code></pre><p>Check out the latest version:</p>
-<pre><code>$ <span class="built_in">cd</span> ~/.nvm &amp;&amp; git checkout v0.<span class="number">7.0</span>
-</code></pre><p>Enable NVM:</p>
-<pre><code>$ <span class="keyword">source</span> ~/.nvm/nvm.<span class="keyword">sh</span>
-</code></pre><p>Add this to <code>~/.bashrc</code> to make it available upon login:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">"\n# Enable NVM"</span>           &gt;&gt; ~/.bashrc
-$ <span class="built_in">echo</span> <span class="string">'source $HOME/.nvm/nvm.sh'</span> &gt;&gt; ~/.bashrc
-</code></pre><p>Enable Bash completion:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">'source $HOME/.nvm/bash_completion'</span> &gt;&gt; ~/.bashrc
-</code></pre><p>Try it by opening a new terminal:</p>
-<pre><code><span class="variable">$ </span>nvm
-</code></pre><h2 id="Usage">Usage</h2>
-<p>Get help:</p>
-<pre><code>$ nvm <span class="built_in">help</span>
-</code></pre><p>Show current NVM version:</p>
-<pre><code>$ nvm --<span class="keyword">version</span>
-</code></pre><p>Display the currently active Node version:</p>
-<pre><code>$ nvm <span class="literal">current</span>
-</code></pre><p>Install Node v0.10.28:</p>
-<pre><code><span class="variable">$ </span>nvm install <span class="number">0</span>.<span class="number">10.28</span>
-</code></pre><p>The installed Node version will reside in <code>~/.nvm/v0.10.28</code>.</p>
-<p>List installed versions:</p>
-<pre><code>$ nvm <span class="keyword">ls</span>
-    .nvm
-v0.<span class="number">10.28</span>
-</code></pre><p>Use a specific Node version:</p>
-<pre><code><span class="variable">$ </span>which node
-/usr/local/bin/node
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">11.13</span>
-<span class="variable">$ </span>nvm <span class="keyword">use</span> <span class="number">0</span>.<span class="number">10.28</span>
-<span class="constant">Now </span>using node v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>which node
-/home/chao/.nvm/v<span class="number">0</span>.<span class="number">10.28</span>/bin/node
-</code></pre><p>Basically, NVM modified the search path.</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="variable">$PATH</span>
-/home/chao/.nvm/v0.<span class="number">10.28</span>/bin
-</code></pre><p>To roll back:</p>
-<pre><code><span class="char">$ </span>nvm deactivate
-/home/chao/.nvm/*/bin removed from <span class="char">$P</span>ATH
-/home/chao/.nvm/*/share/man removed from <span class="char">$M</span>ANPATH
-/home/chao/.nvm/*/lib/node_modules removed from <span class="char">$N</span>ODE_PATH
-</code></pre><p>List Node versions available to install:</p>
-<pre><code>$ nvm <span class="keyword">ls</span>-remote
-</code></pre><p>Use <code>.nvmrc</code> file:</p>
-<pre><code><span class="input"><span class="prompt">$ echo '0.10.28' &gt;&gt;</span> .nvmrc</span>
-<span class="variable">$ </span>nvm use
-<span class="constant">Found</span> <span class="string">'/home/chao/.nvmrc'</span> with version &lt;<span class="number">0</span>.<span class="number">10.28</span>&gt;
-<span class="constant">Now</span> using node v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">10.28</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -742,7 +734,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>15</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -1191,11 +1183,11 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
   
-    <li><a href="/tags/koa/">koa</a><small>6</small></li>
+    <li><a href="/tags/koa/">koa</a><small>7</small></li>
   
     <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
   
-    <li><a href="/tags/koa-router/">koa-router</a><small>1</small></li>
+    <li><a href="/tags/koa-router/">koa-router</a><small>2</small></li>
   
     <li><a href="/tags/lean/">lean</a><small>1</small></li>
   
@@ -1393,7 +1385,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
   
-    <li><a href="/tags/routing/">routing</a><small>1</small></li>
+    <li><a href="/tags/routing/">routing</a><small>2</small></li>
   
     <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
   

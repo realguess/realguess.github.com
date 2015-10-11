@@ -64,6 +64,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
+<ol>
+<li>Having multiple images means more configuration files to manage and update.</li>
+<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
+<li>Steeper learning curve for new developers.</li>
+</ol>
+<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-15T12:00:00.000Z"><a href="/2015/09/15/scaffold-an-explicit-document-to-avoid-error-when-creating-indexes-in-google-cloud-datastore/">Sep 15, 2015</a></time>
       
       
@@ -501,47 +540,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-08-23T12:00:00.000Z"><a href="/2015/08/23/curl-read-from-file-or-stdin/">Aug 23, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/08/23/curl-read-from-file-or-stdin/">cURL: Read from File or Stdin</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Redirect or pipe the content of a file or the output of another command as the input of <a href="http://curl.haxx.se/" target="_blank" rel="external">cURL</a>, for example, making a <code>POST</code> request with cURL.</p>
-<p>This is done by prefixing the data parameter with <code>@</code>, the rest is the filename to read data from. With <code>-</code>, the data is coming from <code>stdin</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">17000</span> <span class="number">1</span> <span class="number">17001</span> | \</div><div class="line">  curl \</div><div class="line">    --request POST \</div><div class="line">    --include \</div><div class="line">    --header <span class="string">'Content-Type: application/json'</span> \</div><div class="line">    --data-binary @- \</div><div class="line">    --no-buffer \</div><div class="line">    https://example.com/data</div></pre></td></tr></table></figure>
-
-<p>Command <code>seq 17000 1 17001</code> returns:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">17000</span></div><div class="line"><span class="number">17001</span></div></pre></td></tr></table></figure>
-
-<p>The size of the above two numbers is 12 bytes (including two newlines). But when reading data via <code>@</code> with <code>--data</code> option, “carriage returns and newlines will be stripped out” [<a href="http://curl.haxx.se/docs/manpage.html" target="_blank" rel="external">1</a>]. If you check your server, you will see the content length is only 10 bytes.</p>
-<p>To correct this problem, we will send the raw data using <code>--data-binary</code> option instead. This preserves <code>\n</code> and <code>\r</code> characters.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -573,7 +571,7 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>15</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -1022,11 +1020,11 @@
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
   
-    <li><a href="/tags/koa/">koa</a><small>6</small></li>
+    <li><a href="/tags/koa/">koa</a><small>7</small></li>
   
     <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
   
-    <li><a href="/tags/koa-router/">koa-router</a><small>1</small></li>
+    <li><a href="/tags/koa-router/">koa-router</a><small>2</small></li>
   
     <li><a href="/tags/lean/">lean</a><small>1</small></li>
   
@@ -1224,7 +1222,7 @@
   
     <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
   
-    <li><a href="/tags/routing/">routing</a><small>1</small></li>
+    <li><a href="/tags/routing/">routing</a><small>2</small></li>
   
     <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
   

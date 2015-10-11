@@ -64,6 +64,51 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/keeping-routing-simple-and-separated-with-koa-router/">Oct 11, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/10/11/keeping-routing-simple-and-separated-with-koa-router/">Keeping Routing Simple and Separated with Koa Router</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Debugging an error when using <a href="https://github.com/alexmingoia/koa-router" target="_blank" rel="external">koa-router</a> module that multiple routes were invoked on a single HTTP request:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> app = <span class="built_in">require</span>(<span class="string">'koa'</span>)();</div><div class="line"><span class="keyword">var</span> router = <span class="built_in">require</span>(<span class="string">'koa-router'</span>)();</div><div class="line"></div><div class="line">router.use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = {};</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">});</div><div class="line"></div><div class="line">router.get(<span class="string">'/users'</span>, <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body[<span class="string">'/users'</span>] = <span class="literal">true</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">});</div><div class="line"></div><div class="line">router.get(<span class="string">'/users/:id?'</span>, <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body[<span class="string">'/users/:id?'</span>] = <span class="literal">true</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">});</div><div class="line"></div><div class="line">app.use(router.routes());</div><div class="line">app.listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>When making a request to get a list of users, it will match both routes:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">3000</span>/users</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">34</span></div><div class="line">Content-Type: application/json; charset=utf-<span class="number">8</span></div><div class="line"></div><div class="line">{</div><div class="line">    <span class="string">"/users"</span>: <span class="literal">true</span>,</div><div class="line">    <span class="string">"/users/:id?"</span>: <span class="literal">true</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Because in the second route <code>:id</code> is optional, and since there is <code>yield next</code> statement in the first route, the second route will be executed subsequently.</p>
+<p>The cause of the bug is the design of the routing <code>GET /users/:id?</code>. The correct routes are:</p>
+<ul>
+<li><code>GET /users</code>: Retrieve a list (array) of users.</li>
+<li><code>GET /users/:id</code>: Retrieve a single user object.</li>
+</ul>
+<p>The question mark should not be appended to the end of <code>id</code> parameter, which effectively marking the route to perform both duties. It’s better to <strong>keep them simple and keep them separated</strong>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Oct 11, 2015</a></time>
       
       
@@ -540,45 +585,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
-<ol>
-<li>Having multiple images means more configuration files to manage and update.</li>
-<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
-<li>Steeper learning curve for new developers.</li>
-</ol>
-<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -608,7 +614,7 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>15</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -1057,11 +1063,11 @@
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
   
-    <li><a href="/tags/koa/">koa</a><small>6</small></li>
+    <li><a href="/tags/koa/">koa</a><small>7</small></li>
   
     <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
   
-    <li><a href="/tags/koa-router/">koa-router</a><small>1</small></li>
+    <li><a href="/tags/koa-router/">koa-router</a><small>2</small></li>
   
     <li><a href="/tags/lean/">lean</a><small>1</small></li>
   
@@ -1259,7 +1265,7 @@
   
     <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
   
-    <li><a href="/tags/routing/">routing</a><small>1</small></li>
+    <li><a href="/tags/routing/">routing</a><small>2</small></li>
   
     <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
   

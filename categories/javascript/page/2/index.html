@@ -68,6 +68,47 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-04-02T12:00:00.000Z"><a href="/2015/04/02/require-modules-from-the-command-line/">Apr 2, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/02/require-modules-from-the-command-line/">Require Modules from the Command Line</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://iojs.org/" target="_blank" rel="external">io.js</a> v1.6.0 introduces a new command line option: <code>-r</code> or <code>--require</code>, which can be used to pre-load modules at startup, see:</p>
+<p><a href="https://github.com/iojs/io.js/blob/v1.x/CHANGELOG.md#2015-03-19-version-160-chrisdickinson" target="_blank" rel="external">https://github.com/iojs/io.js/blob/v1.x/CHANGELOG.md#2015-03-19-version-160-chrisdickinson</a></p>
+<p>I can think of one interesting use case: overriding the default behavior or <code>console.log</code> to perform deep inspection:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// console.js</span></div><div class="line"><span class="keyword">var</span> util = <span class="built_in">require</span>(<span class="string">'util'</span>);</div><div class="line"><span class="keyword">var</span> log = <span class="built_in">console</span>.log;</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log = <span class="function"><span class="keyword">function</span> <span class="params">(obj)</span> </span>{</div><div class="line">  log(util.inspect(obj, { colors: <span class="literal">true</span>, depth: <span class="literal">null</span> }));</div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>Now I can pre-load this script to have all console log show in better format:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ iojs -r /path/to/console.js app.js</div></pre></td></tr></table></figure>
+
+<p>Time to find out more use cases.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-04-01T12:00:00.000Z"><a href="/2015/04/01/test-execution-order-in-mocha/">Apr 1, 2015</a></time>
       
       
@@ -332,7 +373,7 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>15</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -781,11 +822,11 @@
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
   
-    <li><a href="/tags/koa/">koa</a><small>6</small></li>
+    <li><a href="/tags/koa/">koa</a><small>7</small></li>
   
     <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
   
-    <li><a href="/tags/koa-router/">koa-router</a><small>1</small></li>
+    <li><a href="/tags/koa-router/">koa-router</a><small>2</small></li>
   
     <li><a href="/tags/lean/">lean</a><small>1</small></li>
   
@@ -983,7 +1024,7 @@
   
     <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
   
-    <li><a href="/tags/routing/">routing</a><small>1</small></li>
+    <li><a href="/tags/routing/">routing</a><small>2</small></li>
   
     <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
   

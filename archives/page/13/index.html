@@ -68,6 +68,70 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-12T12:32:34.000Z"><a href="/2013/11/12/live-browser-reload-and-command-execution-on-file-change/">Nov 12, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/12/live-browser-reload-and-command-execution-on-file-change/">Live Browser Reload and Command Execution on File Change</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="Execute_Command">Execute Command</h2>
+<p>When I am editting comments in my code, I would like to use <a href="http://jashkenas.github.io/docco/" target="_blank" rel="external">Docco</a> to generate a pretty print source code documentation and review it in web browser. However, every time I made a change, I had to issue <code>docco</code> command again, even I could use the up arrow key, but still a pain. Lucky, there is a way to eliminate this step. One way is to use <a href="https://github.com/gruntjs/grunt-contrib-watch" target="_blank" rel="external">grunt-contrib-watch</a>, but the limitation is that this is not for an individual file on the command line, it is more for a build process. A better alternative is to use <a href="https://github.com/remy/nodemon" target="_blank" rel="external">nodemon</a>:</p>
+<blockquote>
+<p>For use during development of a node.js based application. nodemon will watch the files in the directory that nodemon was started, and if they change, it will automatically restart your node application.</p>
+</blockquote>
+<p>It does not have to be limited to Node and JavaScript files. We can use it with any command:</p>
+<pre><code>nodemon -<span class="keyword">x</span> docco /path/<span class="keyword">to</span>/app.coffee
+</code></pre><p>With this command, <code>docco</code> will be executed upon any change to the file.</p>
+<h2 id="Reload_Browser">Reload Browser</h2>
+<p>Making live reload in browser is a little bit trickier, it involves using some <a href="http://rubygems.org/" target="_blank" rel="external">Ruby gems</a>.</p>
+<p><em>TODO: Need to find a way to avoid using Ruby and its gems.</em></p>
+<p>I have followed some of the steps from the post: <a href="https://vickev.com/#!/article/auto-refresh-your-browser-when-saving-files-or-restarting-node-js" target="_blank" rel="external">Auto-refresh your browser when saving files or restarting node.js</a>.</p>
+<p>First install <a href="https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei" target="_blank" rel="external">LiveReload</a> Chrome extension, and then install <a href="https://github.com/guard/guard" target="_blank" rel="external">Guard</a> and <a href="https://github.com/guard/guard-livereload" target="_blank" rel="external">Guard::LiveReload</a> gems:</p>
+<pre><code><span class="built_in">sudo</span> gem install guard guard-livereload
+</code></pre><p>You need to have a web server to make the livereload work, live reload does not work on files directly served from the file system:</p>
+<pre><code><span class="symbol">file:</span>/<span class="regexp">//home</span><span class="regexp">/chao/docs</span><span class="regexp">/app.html</span>
+</code></pre><p>Therefore, an easy way is to set up a web server, such as Nginx, and configure a directory for this usage, such as:</p>
+<pre><code><span class="regexp">/usr/</span>share<span class="regexp">/nginx/</span>www<span class="regexp">/livereload</span>
+</code></pre><p>Add the following <code>Guardfile</code> into the directory:</p>
+<pre><code>guard <span class="string">'livereload'</span> <span class="keyword">do</span>
+  watch(<span class="regexp">%r{.+\.(css|js|ejs|html)}</span>)
+<span class="keyword">end</span>
+</code></pre><p>Launch <a href="https://github.com/guard/guard" target="_blank" rel="external">Guard</a>:</p>
+<pre><code>cd <span class="regexp">/usr/</span>share<span class="regexp">/nginx/</span>www<span class="regexp">/livereload &amp;&amp; guard</span>
+</code></pre><p>Enable the live reload by clicking the menu icon. You should see the dot in the middle becomes solid.</p>
+<p>Now you need to make sure set the generated files into the correct directory:</p>
+<pre><code>nodemon -<span class="keyword">x</span> <span class="string">'docco -o /usr/share/nginx/www/livereload'</span> /path/<span class="keyword">to</span>/app.coffee
+</code></pre><p>Another way is to create a soft link to the directory, since the <code>docs</code> in the current execution directory is the default output directory:</p>
+<pre><code>ln -s <span class="regexp">/usr/</span>share<span class="regexp">/nginx/</span>www<span class="regexp">/livereload docs</span>
+</code></pre><p>Then, you can use <a href="https://github.com/remy/nodemon" target="_blank" rel="external">nodemon</a> as you normally do:</p>
+<pre><code>nodemon -<span class="keyword">x</span> docco /path/<span class="keyword">to</span>/app.coffee
+</code></pre><p>Having live browser reload is a bit complicated. I wish there is a method as easy as using <a href="https://github.com/remy/nodemon" target="_blank" rel="external">nodemon</a> via a single command. But in the meantime, I just need to have two panes open and have both monitoring tools running independently. No more browser fresh and command re-issuing.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-08T15:59:36.000Z"><a href="/2013/11/08/preserve-command-history-in-node-repl/">Nov 8, 2013</a></time>
       
       
@@ -460,43 +524,6 @@ coffee&gt; .help
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-06-02T23:53:52.000Z"><a href="/2013/06/02/source-maps-by-uglifyjs-2-with-new-prefix/">Jun 2, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/06/02/source-maps-by-uglifyjs-2-with-new-prefix/">Source Maps by UglifyJS 2 with New Prefix</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Living on the bleeding edge means more to learn. I was learning about creating source maps by using <a href="https://github.com/mishoo/UglifyJS2" target="_blank" rel="external">UglifyJS</a>. For some reason, the uncompressed JavaScript source codes were not able to load. After some <code>diff</code> with a working version from <a href="http://net.tutsplus.com/tutorials/tools-and-tips/source-maps-101/" target="_blank" rel="external">Source Maps 101</a>, the problem is just resulting of one character difference. With newly updated <a href="https://github.com/mishoo/UglifyJS2" target="_blank" rel="external">UglifyJS</a> v2.3.6, <a href="https://github.com/mishoo/UglifyJS2/commit/1dbffd48ea49ee278454d6b1c632b7ba4bbf1868" target="_blank" rel="external">SourceMapping pragma has changed to //#</a>:</p>
-<pre><code>//<span class="comment"># sourceMappingURL=script.uglify.js.map</span>
-</code></pre><p>but my Chrome browser lags behind. It recognizes source maps as <code>//@</code>:</p>
-<pre><code>//@ <span class="variable">sourceMappingURL=</span>script.uglify.js.<span class="built_in">map</span>
-</code></pre><p>I did not use the latest or dev build, the current Chrome browser I am using is yet to support <code>//#</code>. What I really need is <a href="http://www.paulirish.com/2012/chrome-canary-for-developers/" target="_blank" rel="external">Chrome Canary</a>. Unfortunately, it is not available for Linux :(.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -529,7 +556,7 @@ coffee&gt; .help
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>15</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>3</small></li>
   
@@ -978,11 +1005,11 @@ coffee&gt; .help
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
   
-    <li><a href="/tags/koa/">koa</a><small>6</small></li>
+    <li><a href="/tags/koa/">koa</a><small>7</small></li>
   
     <li><a href="/tags/koa-compose/">koa-compose</a><small>1</small></li>
   
-    <li><a href="/tags/koa-router/">koa-router</a><small>1</small></li>
+    <li><a href="/tags/koa-router/">koa-router</a><small>2</small></li>
   
     <li><a href="/tags/lean/">lean</a><small>1</small></li>
   
@@ -1180,7 +1207,7 @@ coffee&gt; .help
   
     <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
   
-    <li><a href="/tags/routing/">routing</a><small>1</small></li>
+    <li><a href="/tags/routing/">routing</a><small>2</small></li>
   
     <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
   
