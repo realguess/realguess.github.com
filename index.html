@@ -64,6 +64,60 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-11-26T12:00:00.000Z"><a href="/2015/11/26/setting-up-local-dns-server-for-multi-devices/">Nov 26, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/11/26/setting-up-local-dns-server-for-multi-devices/">Setting Up Local DNS Server for Multi-Devices</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>As always, the first thing you have to ask yourself is that <em>why do you want to set up a DNS server?</em> Here are a few of mine:</p>
+<ul>
+<li>Access web services via custom domains instead of IP addresses</li>
+<li>Update multiple devices (including mobile devices) is <em>time consuming</em> and <em>inconvenient</em></li>
+<li>Router does not provide a DNS server</li>
+</ul>
+<p>I run many web services in the local network, for example, <a href="https://about.gitlab.com/" target="_blank" rel="external">GitLab</a> for code repository and <a href="https://ghost.org/" target="_blank" rel="external">Ghost</a> for blogging. Instead of typing IP address for each service, it will be much easier to use custom domain names, for example, accessing my blog via <a href="http://ghost/" target="_blank" rel="external">http://ghost/</a>, not dot com nor <em>localhost</em>.</p>
+<p>This can be easily done if there is just one machine. You can update the <em>host configuration file</em> in the local machine such as <code>/etc/hosts</code> in Linux or <code>C:\Windows\System32\drivers\etc\hosts</code> in Windows. But I have multiple devices: a laptop, a tablet, and of course a smartphone. Updating multiple devices is a pain. And for many mobile devices running systems such as iOS or Android, it is not easy to edit the host configuration file without rooting the devices. Therefore, we will opt to update a single DNS configuration file.</p>
+<p>DNS configuration can be inherited from the DHCP server from the local network router. Unfortunately, the router I have does not provide a built-in DNS server. I have to setup my own DNS server. Once the DNS server has been setup, the router will use the server as the primary DNS server, and falls back to default gateway IP as the secondary DNS server, or we can use either Google’s public DNS server with IP address <code>8.8.8.8</code> or any other alternatives.</p>
+<ul>
+<li>Primary DNS server: <code>192.168.0.100</code></li>
+<li>Secondary DNS server: <code>192.168.0.1</code>, <code>8.8.8.8</code> or others</li>
+</ul>
+<p>I am going to setup a DNS server in a <a href="https://www.debian.org/releases/jessie/" target="_blank" rel="external">Debian Jessie</a> machine. Here is a summary of steps:</p>
+<ol>
+<li>Install BIND</li>
+<li>Add custom zone</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/11/26/setting-up-local-dns-server-for-multi-devices/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/keeping-routing-simple-and-separated-with-koa-router/">Oct 11, 2015</a></time>
       
       
@@ -547,44 +601,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
-
-<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -616,7 +632,7 @@
   
     <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
   
-    <li><a href="/categories/linux/">Linux</a><small>3</small></li>
+    <li><a href="/categories/linux/">Linux</a><small>4</small></li>
   
     <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
@@ -728,6 +744,10 @@
     <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
   
     <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
+  
+    <li><a href="/tags/bind/">bind</a><small>1</small></li>
+  
+    <li><a href="/tags/bind9/">bind9</a><small>1</small></li>
   
     <li><a href="/tags/binding/">binding</a><small>1</small></li>
   
@@ -853,7 +873,9 @@
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>1</small></li>
+    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+  
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -881,7 +903,9 @@
   
     <li><a href="/tags/distributed-team/">distributed-team</a><small>1</small></li>
   
-    <li><a href="/tags/dns/">dns</a><small>2</small></li>
+    <li><a href="/tags/dns/">dns</a><small>3</small></li>
+  
+    <li><a href="/tags/dns114/">dns114</a><small>1</small></li>
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
@@ -890,6 +914,8 @@
     <li><a href="/tags/dockerfile/">dockerfile</a><small>1</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
+  
+    <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
   
@@ -1011,6 +1037,8 @@
   
     <li><a href="/tags/hosted-zone/">hosted-zone</a><small>1</small></li>
   
+    <li><a href="/tags/hosts/">hosts</a><small>1</small></li>
+  
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
     <li><a href="/tags/http/">http</a><small>4</small></li>
@@ -1033,7 +1061,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>7</small></li>
+    <li><a href="/tags/install/">install</a><small>8</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   

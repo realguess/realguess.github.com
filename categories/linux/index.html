@@ -68,6 +68,60 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-11-26T12:00:00.000Z"><a href="/2015/11/26/setting-up-local-dns-server-for-multi-devices/">Nov 26, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/11/26/setting-up-local-dns-server-for-multi-devices/">Setting Up Local DNS Server for Multi-Devices</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>As always, the first thing you have to ask yourself is that <em>why do you want to set up a DNS server?</em> Here are a few of mine:</p>
+<ul>
+<li>Access web services via custom domains instead of IP addresses</li>
+<li>Update multiple devices (including mobile devices) is <em>time consuming</em> and <em>inconvenient</em></li>
+<li>Router does not provide a DNS server</li>
+</ul>
+<p>I run many web services in the local network, for example, <a href="https://about.gitlab.com/" target="_blank" rel="external">GitLab</a> for code repository and <a href="https://ghost.org/" target="_blank" rel="external">Ghost</a> for blogging. Instead of typing IP address for each service, it will be much easier to use custom domain names, for example, accessing my blog via <a href="http://ghost/" target="_blank" rel="external">http://ghost/</a>, not dot com nor <em>localhost</em>.</p>
+<p>This can be easily done if there is just one machine. You can update the <em>host configuration file</em> in the local machine such as <code>/etc/hosts</code> in Linux or <code>C:\Windows\System32\drivers\etc\hosts</code> in Windows. But I have multiple devices: a laptop, a tablet, and of course a smartphone. Updating multiple devices is a pain. And for many mobile devices running systems such as iOS or Android, it is not easy to edit the host configuration file without rooting the devices. Therefore, we will opt to update a single DNS configuration file.</p>
+<p>DNS configuration can be inherited from the DHCP server from the local network router. Unfortunately, the router I have does not provide a built-in DNS server. I have to setup my own DNS server. Once the DNS server has been setup, the router will use the server as the primary DNS server, and falls back to default gateway IP as the secondary DNS server, or we can use either Google’s public DNS server with IP address <code>8.8.8.8</code> or any other alternatives.</p>
+<ul>
+<li>Primary DNS server: <code>192.168.0.100</code></li>
+<li>Secondary DNS server: <code>192.168.0.1</code>, <code>8.8.8.8</code> or others</li>
+</ul>
+<p>I am going to setup a DNS server in a <a href="https://www.debian.org/releases/jessie/" target="_blank" rel="external">Debian Jessie</a> machine. Here is a summary of steps:</p>
+<ol>
+<li>Install BIND</li>
+<li>Add custom zone</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/11/26/setting-up-local-dns-server-for-multi-devices/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-27T12:00:00.000Z"><a href="/2015/09/27/get-started-with-the-cut-command-of-gnu-coreutils/">Sep 27, 2015</a></time>
       
       
@@ -287,7 +341,7 @@
   
     <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
   
-    <li><a href="/categories/linux/">Linux</a><small>3</small></li>
+    <li><a href="/categories/linux/">Linux</a><small>4</small></li>
   
     <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
@@ -399,6 +453,10 @@
     <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
   
     <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
+  
+    <li><a href="/tags/bind/">bind</a><small>1</small></li>
+  
+    <li><a href="/tags/bind9/">bind9</a><small>1</small></li>
   
     <li><a href="/tags/binding/">binding</a><small>1</small></li>
   
@@ -524,7 +582,9 @@
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>1</small></li>
+    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+  
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -552,7 +612,9 @@
   
     <li><a href="/tags/distributed-team/">distributed-team</a><small>1</small></li>
   
-    <li><a href="/tags/dns/">dns</a><small>2</small></li>
+    <li><a href="/tags/dns/">dns</a><small>3</small></li>
+  
+    <li><a href="/tags/dns114/">dns114</a><small>1</small></li>
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
@@ -561,6 +623,8 @@
     <li><a href="/tags/dockerfile/">dockerfile</a><small>1</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
+  
+    <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
   
@@ -682,6 +746,8 @@
   
     <li><a href="/tags/hosted-zone/">hosted-zone</a><small>1</small></li>
   
+    <li><a href="/tags/hosts/">hosts</a><small>1</small></li>
+  
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
     <li><a href="/tags/http/">http</a><small>4</small></li>
@@ -704,7 +770,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>7</small></li>
+    <li><a href="/tags/install/">install</a><small>8</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   

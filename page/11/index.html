@@ -64,6 +64,52 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-01-24T21:19:23.000Z"><a href="/2014/01/24/null/">Jan 24, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/24/null/">null</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In JavaScript, you assign value <code>null</code> to an object property to indicate that the property is defined but with no value. But using <code>null</code> outside the JavaScript domain becomes tricky. For example, in URL query parameters:</p>
+<pre><code>?<span class="variable">foo=</span><span class="constant">null</span>&amp;<span class="variable">bar=</span>bar
+</code></pre><p>after parsing the query:</p>
+<pre><code>{
+  "<span class="attribute">foo</span>": <span class="value"><span class="string">"null"</span></span>,
+  "<span class="attribute">bar</span>": <span class="value"><span class="string">"bar"</span>
+</span>}
+</code></pre><p>Should the value of <code>foo</code> be parsed from <code>&quot;null&quot;</code> string into <code>null</code> object? Unless you know the context.</p>
+<p>Using <code>null</code> in both schema design and URL query gave me a few headaches. So, I have decided to use string and throw away <code>null</code>.  As string is the most basic data type across many applications. For simplier design and greater compatibility and portability, use empty string instead of <code>null</code>.</p>
+<p>Therefore, the value of query parameter <code>foo</code> should be:</p>
+<pre><code>?<span class="variable">foo=</span><span class="constant">null</span>&amp;<span class="variable">bar=</span>bar // <span class="string">"null"</span>
+?<span class="variable">foo=</span>&amp;<span class="variable">bar=</span>bar     // <span class="string">""</span>
+</code></pre><p>and:</p>
+<pre><code><span class="string">"null"</span> <span class="exclamation_mark">!</span>== <span class="string">""</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-22T11:59:01.000Z"><a href="/2014/01/22/hipchat/">Jan 22, 2014</a></time>
       
       
@@ -601,55 +647,6 @@ Binary <span class="keyword">file</span> encrypted.txt matches
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-18T15:12:43.000Z"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Dec 18, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Set Filename Path with process.cwd()</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When working with <a href="http://nodejs.org/api/fs.html" target="_blank" rel="external">file system</a> in Node, you will need a fully qualified filename to do things like reading the content of a file:</p>
-<pre><code><span class="built_in">require</span>(<span class="string">'fs'</span>).readFile(filename, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{});
-</code></pre><p>If you have the following directory structure:</p>
-<pre><code>.
-├── app.js
-├── <span class="typedef"><span class="keyword">data</span></span>
-│   └── file.txt
-└── lib
-    └── reader.js
-</code></pre><p>There are two ways to read the content of <code>data/file.txt</code> from <code>lib/reader.js</code>:</p>
-<p>Use the current directory of the script <code>__dirname</code>:</p>
-<pre><code><span class="title">filename</span> = __dirname + '/../<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
-</code></pre><p>or with <code>path.join</code> to normalize the resulting path:</p>
-<pre><code>filename = path.<span class="keyword">join</span>(__dirname, <span class="string">'../data/file.txt'</span>);
-</code></pre><p>The second method is to use the current working directory of the process <code>process.cwd()</code>:</p>
-<pre><code><span class="title">filename</span> = process.cwd() + '/<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
-</code></pre><p>The second approach is more portable. If you move <code>lib/reader.js</code> to <code>lib/utils/reader.js</code>, no code change will be needed. But make sure the directory of the Node process is the application root directory where <code>node app.js</code> is being issued.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -683,7 +680,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
   
-    <li><a href="/categories/linux/">Linux</a><small>3</small></li>
+    <li><a href="/categories/linux/">Linux</a><small>4</small></li>
   
     <li><a href="/categories/node-js-and-io-js/">Node.js and io.js</a><small>0</small></li>
   
@@ -795,6 +792,10 @@ Binary <span class="keyword">file</span> encrypted.txt matches
     <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
   
     <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
+  
+    <li><a href="/tags/bind/">bind</a><small>1</small></li>
+  
+    <li><a href="/tags/bind9/">bind9</a><small>1</small></li>
   
     <li><a href="/tags/binding/">binding</a><small>1</small></li>
   
@@ -920,7 +921,9 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>1</small></li>
+    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+  
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -948,7 +951,9 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/distributed-team/">distributed-team</a><small>1</small></li>
   
-    <li><a href="/tags/dns/">dns</a><small>2</small></li>
+    <li><a href="/tags/dns/">dns</a><small>3</small></li>
+  
+    <li><a href="/tags/dns114/">dns114</a><small>1</small></li>
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
@@ -957,6 +962,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
     <li><a href="/tags/dockerfile/">dockerfile</a><small>1</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
+  
+    <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
   
@@ -1078,6 +1085,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/hosted-zone/">hosted-zone</a><small>1</small></li>
   
+    <li><a href="/tags/hosts/">hosts</a><small>1</small></li>
+  
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
     <li><a href="/tags/http/">http</a><small>4</small></li>
@@ -1100,7 +1109,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>7</small></li>
+    <li><a href="/tags/install/">install</a><small>8</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
