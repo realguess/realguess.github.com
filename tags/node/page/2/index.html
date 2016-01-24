@@ -68,6 +68,63 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-03-29T12:00:00.000Z"><a href="/2015/03/29/supertest-listen-at-random-port/">Mar 29, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/29/supertest-listen-at-random-port/">SuperTest: Listen at Random Port</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In the example section of <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> (<em>v0.15.0</em>), it mentions something about <em>ephemeral port</em>:</p>
+<blockquote>
+<p>You may pass an <code>http.Server</code>, or a <code>Function</code> to <code>request()</code> - if the server is not already listening for connections then it is bound to an ephemeral port for you so there is no need to keep track of ports. - <a href="https://github.com/visionmedia/supertest#example" target="_blank" rel="external">https://github.com/visionmedia/supertest#example</a></p>
+</blockquote>
+<p>Let’s dissect this sentence. There are a few key concepts to grasp:</p>
+<ol>
+<li>The <code>request</code> function will accept either a function or an <code>http.Server</code> object.</li>
+<li>When does the server not listening for connections?</li>
+<li>What is an ephemeral port?</li>
+</ol>
+<p>Taking a peek at the <code>index.js</code> file in <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> source code, it is easy to see that it accepts both function and <code>http.Server</code> object, but prefer latter:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// See `index.js` in [SuperTest] source code.</span></div><div class="line"><span class="keyword">if</span> (<span class="string">'function'</span> == <span class="keyword">typeof</span> app) app = http.createServer(app);</div><div class="line"></div><div class="line"><span class="comment">// See `lib/test.js` in [SuperTest] source code.</span></div><div class="line">Test.prototype.serverAddress = <span class="function"><span class="keyword">function</span> <span class="params">(app, path)</span> </span>{</div><div class="line">  <span class="keyword">var</span> addr = app.address();</div><div class="line">  <span class="keyword">if</span> (!addr) <span class="keyword">this</span>._server = app.listen(<span class="number">0</span>);</div><div class="line">  <span class="keyword">var</span> port = app.address().port;</div><div class="line">  <span class="keyword">var</span> protocol = app <span class="keyword">instanceof</span> htts.Server ? <span class="string">'https'</span> : <span class="string">'http'</span>;</div><div class="line">  <span class="keyword">return</span> protocol + <span class="string">'://1270.0.0.1:'</span> + port + path;</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Why it does this? This has to do with <a href="http://expressjs.com/" target="_blank" rel="external">Express</a>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'http'</span>).createServer()</div><div class="line"><span class="string">'object'</span></div><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'express'</span>)()</div><div class="line"><span class="string">'function'</span></div><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'koa'</span>)()</div><div class="line"><span class="string">'object'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="built_in">require</span>(<span class="string">'express'</span>)()).address()</div><div class="line"><span class="literal">null</span></div></pre></td></tr></table></figure>
+
+<p>Only when initiating an <a href="http://expressjs.com/" target="_blank" rel="external">Express</a> app, it returns a function, not an object. And follows up on <code>lib/test.js</code>, when <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> detects the created server is yet to bind to any port number, it will invoke <code>app.listen(0)</code>, so called <em>ephemeral port</em>. In fact, it is just a random port.</p>
+<p>When something is <em>ephemeral</em>, it last for a very short time. When allowing a server to accept connections, we usually do is setting the server to listen on a specific port:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.listen(<span class="number">3001</span>);</div></pre></td></tr></table></figure>
+
+<p>What if setting this to <code>0</code> like above or omit this port number?</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/03/29/supertest-listen-at-random-port/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-03-28T12:00:00.000Z"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Mar 28, 2015</a></time>
       
       
@@ -698,70 +755,6 @@ app.<span class="keyword">use</span>(foo);
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-09T09:18:19.000Z"><a href="/2014/01/09/working-with-big-number-in-javascript/">Jan 9, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/09/working-with-big-number-in-javascript/">Working with Big Number in JavaScript</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>JavaScript is only capable of handling 53-bit numbers, if you are working with a big number such as <a href="https://dev.twitter.com/docs/twitter-ids-json-and-snowflake" target="_blank" rel="external">Twitter ID</a>, which is using 64-bit number, then you need to find an external library to do that, otherwise, there will be precision lost:</p>
-<pre><code>&gt; num = <span class="number">420938523475451904</span>
-<span class="input"><span class="prompt">420938523475451900
-&gt;</span> num = <span class="number">420938523475451904</span> + <span class="number">1</span></span>
-<span class="input"><span class="prompt">420938523475451900
-&gt;</span> num = <span class="number">420938523475451904</span> - <span class="number">1</span></span>
-<span class="number">420938523475451900</span>
-</code></pre><p>Here is one library to use in Node environment, install <a href="https://github.com/MikeMcl/big.js/" target="_blank" rel="external">Big.js</a>:</p>
-<pre><code><span class="variable">$ </span>npm install big.js
-</code></pre><p>Load the module:</p>
-<pre><code>&gt; BigNum = <span class="built_in">require</span>(<span class="string">'big.js'</span>)
-{ [<span class="built_in">Function</span>: Big] DP: <span class="number">20</span>, RM: <span class="number">1</span> }
-</code></pre><p>Use string to create the big number:</p>
-<pre><code>&gt; num = <span class="constant">BigNum</span>(<span class="string">'420938523475451904'</span>)
-<span class="input"><span class="prompt">{ s: 1,
-  e: 17,
-  c: [ 4, 2, 0, 9, 3, 8, 5, 2, 3, 4, 7, 5, 4, 5, 1, 9, 0, 4 ] }
-&gt;</span> num.toString()</span>
-<span class="string">'420938523475451904'</span>
-</code></pre><p>Perform addition:</p>
-<pre><code>&gt; num.<span class="keyword">plus</span>(<span class="number">1</span>).toString()
-<span class="string">'420938523475451905'</span>
-</code></pre><p>Perform substraction:</p>
-<pre><code>&gt; num.<span class="keyword">minus</span>(<span class="number">1</span>).toString()
-<span class="string">'420938523475451903'</span>
-</code></pre><p>There are other packages that yet to be tested:</p>
-<ul>
-<li><a href="https://github.com/MikeMcl/bignumber.js/" target="_blank" rel="external">bignumber.js</a></li>
-<li><a href="https://github.com/rauschma/strint" target="_blank" rel="external">strint.js</a></li>
-<li><a href="http://jsfromhell.com/classes/bignumber" target="_blank" rel="external">bignumber</a></li>
-<li><a href="https://github.com/jtobey/javascript-bignum" target="_blank" rel="external">JavaScript bignumber</a></li>
-</ul>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -794,7 +787,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>4</small></li>
   
@@ -937,6 +930,10 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/caret/">caret</a><small>1</small></li>
+  
+    <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
+  
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
@@ -1045,7 +1042,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
-    <li><a href="/tags/dependency/">dependency</a><small>2</small></li>
+    <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -1080,6 +1077,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
+  
+    <li><a href="/tags/duplicate-keys/">duplicate-keys</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
   
@@ -1251,6 +1250,8 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/jq/">jq</a><small>4</small></li>
   
+    <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
+  
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
@@ -1345,7 +1346,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>24</small></li>
+    <li><a href="/tags/node/">node</a><small>25</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1359,7 +1360,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/november/">november</a><small>1</small></li>
   
-    <li><a href="/tags/npm/">npm</a><small>3</small></li>
+    <li><a href="/tags/npm/">npm</a><small>4</small></li>
   
     <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
   
@@ -1381,7 +1382,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
   
-    <li><a href="/tags/package-json/">package.json</a><small>1</small></li>
+    <li><a href="/tags/package-json/">package.json</a><small>2</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   
@@ -1649,7 +1650,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>3</small></li>
+    <li><a href="/tags/version/">version</a><small>4</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   
@@ -1703,7 +1704,7 @@ app.<span class="keyword">use</span>(foo);
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2015 Chao Huang
+  &copy; 2016 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

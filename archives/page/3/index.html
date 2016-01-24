@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-04T12:00:00.000Z"><a href="/2015/09/04/node-js-http-server-one-liner/">Sep 4, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/04/node-js-http-server-one-liner/">Node.js HTTP Server One Liner</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>One liner to create a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> HTTP server:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">'OK'</span>); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>Print out the process ID instead:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">''</span> + process.pid); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>This is useful with the worker process when implementing the <a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a> module.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-02T12:00:00.000Z"><a href="/2015/09/02/various-node-js-installation-methods/">Sep 2, 2015</a></time>
       
       
@@ -454,59 +493,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-06-25T12:00:00.000Z"><a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/">Jun 25, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/">Fail to Upload Large File to Google App Engine Managed VMs</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>After deploying a Node.js app with custom runtime to Google <a href="https://cloud.google.com/appengine/docs/managed-vms/" target="_blank" rel="external">App Engine</a>, when uploading file larger than 1MB, the server returns HTTP 413 status code, meaning the server is refusing to process the request because the uploading entity size is too large.</p>
-<p>I had the following setup:</p>
-<ul>
-<li>The App Engine application is Google managed</li>
-<li>The application is Node.js app with custom <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a></li>
-<li>The application Docker container runs <code>node</code> command directly on port 8080</li>
-</ul>
-<p>After accessing the server (which changed from Google managed to user managed), and checked the Docker containers:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> docker ps <span class="operator">-a</span></div><div class="line">gcr.io/google_appengine/nginx-proxy:latest      <span class="string">"/usr/sbin/nginx"</span></div></pre></td></tr></table></figure>
-
-<p>It looks like Nginx is running as the proxy to Node.js application. When uploading file that is larger than 1MB, the response is HTTP 413 error:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">head</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">title</span>&gt;</span>413 Request Entity Too Large<span class="tag">&lt;/<span class="title">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">body</span> <span class="attribute">bgcolor</span>=<span class="value">"white"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">center</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">h1</span>&gt;</span>413 Request Entity Too Large<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">center</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">hr</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">center</span>&gt;</span>nginx<span class="tag">&lt;/<span class="title">center</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">body</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">html</span>&gt;</span></div></pre></td></tr></table></figure>
-
-<p>And the Nginx access log from the server:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ tail /var/log/nginx/error.log </div><div class="line"><span class="number">2015</span>/<span class="number">06</span>/<span class="number">25</span> <span class="number">12</span>:<span class="number">00</span>:<span class="number">00</span> [error] <span class="number">7</span><span class="comment">#0: *101623 client intended to send too large body: 1696805 bytes</span></div></pre></td></tr></table></figure>
-
-<p>By default, Nginx limits uploading size or <code>client_max_body_size</code> to be 1MB. The default size is just too small. A short video upload could easily exceed the limit. So, how to accept file upload larger than 1MB via Google Managed VMs in App Engine? Is there a way to change the value through <code>app.yaml</code>custom runtime configuration file? Or a custom Nginx Docker container can be deployed along with the application Docker container?</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -539,7 +525,7 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>4</small></li>
   
@@ -682,6 +668,10 @@
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/caret/">caret</a><small>1</small></li>
+  
+    <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
+  
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
@@ -790,7 +780,7 @@
   
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
-    <li><a href="/tags/dependency/">dependency</a><small>2</small></li>
+    <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -825,6 +815,8 @@
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
+  
+    <li><a href="/tags/duplicate-keys/">duplicate-keys</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
   
@@ -996,6 +988,8 @@
   
     <li><a href="/tags/jq/">jq</a><small>4</small></li>
   
+    <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
+  
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
@@ -1090,7 +1084,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>24</small></li>
+    <li><a href="/tags/node/">node</a><small>25</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1104,7 +1098,7 @@
   
     <li><a href="/tags/november/">november</a><small>1</small></li>
   
-    <li><a href="/tags/npm/">npm</a><small>3</small></li>
+    <li><a href="/tags/npm/">npm</a><small>4</small></li>
   
     <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
   
@@ -1126,7 +1120,7 @@
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
   
-    <li><a href="/tags/package-json/">package.json</a><small>1</small></li>
+    <li><a href="/tags/package-json/">package.json</a><small>2</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   
@@ -1394,7 +1388,7 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>3</small></li>
+    <li><a href="/tags/version/">version</a><small>4</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   
@@ -1448,7 +1442,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2015 Chao Huang
+  &copy; 2016 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

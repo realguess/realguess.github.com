@@ -68,6 +68,52 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-01-24T12:00:00.000Z"><a href="/2016/01/24/why-using-exact-versions-in-npm-package-dependencies/">Jan 24, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/01/24/why-using-exact-versions-in-npm-package-dependencies/">Why Using Exact Versions in NPM Package Dependencies</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Versions frequently used in <a href="https://docs.npmjs.com/files/package.json#dependencies" target="_blank" rel="external">NPM package dependencies</a> are <a href="https://docs.npmjs.com/misc/semver#caret-ranges-1-2-3-0-2-5-0-0-4" target="_blank" rel="external">caret ranges</a> or <code>^version</code>. And <code>npm install</code> uses caret ranges as well.</p>
+<p>Caret range:</p>
+<blockquote>
+<p>Allows changes that do not modify the left-most non-zero digit in the <strong>[major, minor, patch]</strong> tuple. In other words, this allows patch and minor updates for versions <strong>1.0.0</strong> and above, patch updates for version <strong>0.x &gt;=0.1.0</strong>, and <em>no</em> updates for version <strong>0.0.x</strong>.</p>
+</blockquote>
+<p>Most of time, using caret ranges as dependency versions work perfectly fine. But once a while, there are bugs. In one of projects, <a href="https://github.com/nodeca/js-yaml" target="_blank" rel="external">JS-YAML</a> with caret version <code>^3.4.3</code> was used and installed:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">dependencies</span>": <span class="value">{</span></div><div class="line">    "<span class="attribute">js-yaml</span>": <span class="value"><span class="string">"^3.4.3"</span></span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Time passes. When <code>npm install</code> was run again from a freshly cloned project code base, version <code>3.5.2</code> was installed. Since JS-YAML version <code>3.5.0</code>, errors are thrown when safe loading a spec with duplicate keys. If there are no duplicate keys in the YAML file, this will be fine. However, one of the files has it. The correct approach is to actually fix the duplicate keys. But it requires additional work back and forth. You’ve heard this before: “Hey it works when I installed it.”</p>
+<p>The point here is to use <strong>exact versions</strong> instead of letting the package manager decides by dropping the caret character:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">dependencies</span>": <span class="value">{</span></div><div class="line">    "<span class="attribute">js-yaml</span>": <span class="value"><span class="string">"3.4.3"</span></span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>This will avoid the above mentioned problem. We can manually <a href="https://realguess.net/2014/12/13/update-outdated-npm-packages/" target="_blank" rel="external">update the outdated NPM packages</a>.</p>
+<p>Don’t let machine decide. You Do!</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-24T12:00:00.000Z"><a href="/2015/09/24/add-a-custom-domain-to-the-specific-module-of-google-app-engine-managed-vms/">Sep 24, 2015</a></time>
       
       
@@ -281,7 +327,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>4</small></li>
   
@@ -424,6 +470,10 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/caret/">caret</a><small>1</small></li>
+  
+    <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
+  
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
@@ -532,7 +582,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
-    <li><a href="/tags/dependency/">dependency</a><small>2</small></li>
+    <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -567,6 +617,8 @@ v<span class="number">0</span>.<span class="number">10.28</span>
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
+  
+    <li><a href="/tags/duplicate-keys/">duplicate-keys</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
   
@@ -738,6 +790,8 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/jq/">jq</a><small>4</small></li>
   
+    <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
+  
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
@@ -832,7 +886,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>24</small></li>
+    <li><a href="/tags/node/">node</a><small>25</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -846,7 +900,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/november/">november</a><small>1</small></li>
   
-    <li><a href="/tags/npm/">npm</a><small>3</small></li>
+    <li><a href="/tags/npm/">npm</a><small>4</small></li>
   
     <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
   
@@ -868,7 +922,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
   
-    <li><a href="/tags/package-json/">package.json</a><small>1</small></li>
+    <li><a href="/tags/package-json/">package.json</a><small>2</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   
@@ -1136,7 +1190,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>3</small></li>
+    <li><a href="/tags/version/">version</a><small>4</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   
@@ -1190,7 +1244,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2015 Chao Huang
+  &copy; 2016 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

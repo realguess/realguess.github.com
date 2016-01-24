@@ -64,6 +64,63 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-06-29T09:11:46.000Z"><a href="/2013/06/29/share-javascript-code-between-browser-(front-end)-and-node-(back-end)/">Jun 29, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/06/29/share-javascript-code-between-browser-(front-end)-and-node-(back-end)/">Share JavaScript Code between Browser (front-end) and Node (back-end)</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>One of the benefits coding in JavaScript is the ability to share code between<br>browser (front-end) and <a href="http://nodejs.org/" target="_blank" rel="external">Node</a> (back-end) environments.</p>
+<p>To share code between two different environment, first need to understand what<br>are specific to browser and what are specific to Node. Shared code should be<br>agnostic to both environments.</p>
+<p>In browser environment, there is an obvious one: <code>window</code> object. In Node<br>environment, there are a few objects that are not globally defined in browser:<br><code>global</code>, <code>process</code>, <code>module</code>, <code>exports</code> and more, see <a href="http://nodejs.org/api/globals.html" target="_blank" rel="external">global objects</a>. All<br>these variables work, but <code>exports</code> is preferred.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="string">'Hi '</span> + (<span class="keyword">typeof</span> <span class="built_in">window</span> !== <span class="string">'undefined'</span> ? <span class="string">'browser!'</span> : <span class="string">'Node!'</span>));</div></pre></td></tr></table></figure>
+
+<p>Once environment is identified, then it is just the matter of writing style,<br>either browser style or Node style.</p>
+<p>For example, writing in Node style by passing the <code>exports</code> as the parameter:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">(exports)</span> </span>{</div><div class="line">  <span class="keyword">var</span> foo = exports.foo = {};</div><div class="line"></div><div class="line">  <span class="comment">// Node style code goes here.</span></div><div class="line">}(<span class="keyword">typeof</span> exports === <span class="string">'undefined'</span> ? <span class="keyword">this</span> : exports));</div></pre></td></tr></table></figure>
+
+<p>By using browser style, here is an example from the <a href="http://underscorejs.org/docs/underscore.html" target="_blank" rel="external">annotated source code</a> of<br><a href="http://underscorejs.org/" target="_blank" rel="external">Underscore</a>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Export the Underscore object for Node.js, with backwards-compatibility</span></div><div class="line"><span class="comment">// for the old require() API. If we're in the browser, add _ as a global</span></div><div class="line"><span class="comment">// object via a string identifier, for Closure Compiler "advanced" mode.</span></div><div class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">'undefined'</span>) {</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">module</span> !== <span class="string">'undefined'</span> && <span class="built_in">module</span>.exports) {</div><div class="line">    exports = <span class="built_in">module</span>.exports = _;</div><div class="line">  }</div><div class="line">  exports._ = _;</div><div class="line">} <span class="keyword">else</span> {</div><div class="line">  root._ = _;</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>To make it easier without concerning the backward compatibility:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> foo = {};</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">'undefined'</span>) {</div><div class="line">    exports.foo = foo;</div><div class="line">  } <span class="keyword">else</span> {</div><div class="line">    <span class="keyword">this</span>.foo = foo;</div><div class="line">  }</div><div class="line"></div><div class="line">  <span class="comment">// Browser style code goes here.</span></div><div class="line">}).call(<span class="keyword">this</span>);</div></pre></td></tr></table></figure>
+
+<p><code>this</code> is the same as <code>window</code> object in the browser environment.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">(window)</span> </span>{</div><div class="line">  <span class="comment">// Browser style code goes here.</span></div><div class="line">}(<span class="keyword">this</span>));</div></pre></td></tr></table></figure>
+
+<p>One more thing, writing in <a href="coffeescript.org">CoffeeScript</a> is even better, because the compiled<br>code is already wrapped in closure, fewer indentation is needed.</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">foo = {}</div><div class="line"><span class="keyword">if</span> exports <span class="keyword">isnt</span> <span class="string">'undefined'</span></div><div class="line">  exports.foo = foo</div><div class="line"><span class="keyword">else</span></div><div class="line">  <span class="keyword">this</span>.foo = foo</div><div class="line"></div><div class="line"><span class="comment"># Browser style code goes here.</span></div></pre></td></tr></table></figure>
+
+<p>Compile to JavaScript by <a href="coffeescript.org">CoffeeScript</a> 1.6.3:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> foo;</div><div class="line"></div><div class="line">  foo = {};</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (exports !== <span class="string">'undefined'</span>) {</div><div class="line">    exports.foo = foo;</div><div class="line">  } <span class="keyword">else</span> {</div><div class="line">    <span class="keyword">this</span>.foo = foo;</div><div class="line">  }</div><div class="line"></div><div class="line">}).call(<span class="keyword">this</span>);</div></pre></td></tr></table></figure>
+
+<p>Everything will be encapsulated inside the <code>foo</code> object.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-06-09T09:55:23.000Z"><a href="/2013/06/09/repeat-character-serveral-times-in-javascript/">Jun 9, 2013</a></time>
       
       
@@ -371,7 +428,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>4</small></li>
   
@@ -514,6 +571,10 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/caret/">caret</a><small>1</small></li>
+  
+    <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
+  
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
@@ -622,7 +683,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
-    <li><a href="/tags/dependency/">dependency</a><small>2</small></li>
+    <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -657,6 +718,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
+  
+    <li><a href="/tags/duplicate-keys/">duplicate-keys</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
   
@@ -828,6 +891,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/jq/">jq</a><small>4</small></li>
   
+    <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
+  
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
@@ -922,7 +987,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>24</small></li>
+    <li><a href="/tags/node/">node</a><small>25</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -936,7 +1001,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/november/">november</a><small>1</small></li>
   
-    <li><a href="/tags/npm/">npm</a><small>3</small></li>
+    <li><a href="/tags/npm/">npm</a><small>4</small></li>
   
     <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
   
@@ -958,7 +1023,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
   
-    <li><a href="/tags/package-json/">package.json</a><small>1</small></li>
+    <li><a href="/tags/package-json/">package.json</a><small>2</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   
@@ -1226,7 +1291,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>3</small></li>
+    <li><a href="/tags/version/">version</a><small>4</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   
@@ -1280,7 +1345,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2015 Chao Huang
+  &copy; 2016 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

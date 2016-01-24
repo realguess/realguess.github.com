@@ -64,22 +64,18 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
+        <time datetime="2015-09-23T12:00:00.000Z"><a href="/2015/09/23/the-first-release-version/">Sep 23, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
+    <h1 class="title"><a href="/2015/09/23/the-first-release-version/">The First Release Version</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
-
-<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
-
+        <p>When you have a release for the first time, how do you name your release version based on <a href="http://semver.org/" target="_blank" rel="external">SemVer</a>? <code>1.0.0</code>, <code>0.1.0</code> or <code>0.0.1</code>?</p>
+<p>I like to start off with <code>0.1.0</code>. Because version <code>0.0.0</code> means there is nothing. Then from nothing to something, that’s breaking change, hence version <code>0.1.0</code>.</p>
 
       
     </div>
@@ -119,6 +115,44 @@
 <li>Steeper learning curve for new developers.</li>
 </ol>
 <p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
+
+<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -481,45 +515,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-04T12:00:00.000Z"><a href="/2015/09/04/node-js-http-server-one-liner/">Sep 4, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/04/node-js-http-server-one-liner/">Node.js HTTP Server One Liner</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>One liner to create a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> HTTP server:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">'OK'</span>); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>Print out the process ID instead:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">''</span> + process.pid); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>This is useful with the worker process when implementing the <a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a> module.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -551,7 +546,7 @@
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>4</small></li>
   
@@ -694,6 +689,10 @@
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/caret/">caret</a><small>1</small></li>
+  
+    <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
+  
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
@@ -802,7 +801,7 @@
   
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
-    <li><a href="/tags/dependency/">dependency</a><small>2</small></li>
+    <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -837,6 +836,8 @@
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
+  
+    <li><a href="/tags/duplicate-keys/">duplicate-keys</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
   
@@ -1008,6 +1009,8 @@
   
     <li><a href="/tags/jq/">jq</a><small>4</small></li>
   
+    <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
+  
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
@@ -1102,7 +1105,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>24</small></li>
+    <li><a href="/tags/node/">node</a><small>25</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1116,7 +1119,7 @@
   
     <li><a href="/tags/november/">november</a><small>1</small></li>
   
-    <li><a href="/tags/npm/">npm</a><small>3</small></li>
+    <li><a href="/tags/npm/">npm</a><small>4</small></li>
   
     <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
   
@@ -1138,7 +1141,7 @@
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
   
-    <li><a href="/tags/package-json/">package.json</a><small>1</small></li>
+    <li><a href="/tags/package-json/">package.json</a><small>2</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   
@@ -1406,7 +1409,7 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>3</small></li>
+    <li><a href="/tags/version/">version</a><small>4</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   
@@ -1460,7 +1463,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2015 Chao Huang
+  &copy; 2016 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

@@ -64,6 +64,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-11-28T12:00:00.000Z"><a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/">Nov 28, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/">Delete All Messages in an Amazon SQS Queue via AWS CLI</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://aws.amazon.com/sqs/" target="_blank" rel="external">Amazon SQS</a> or Simple Queue Service is a fast, reliable, scalable, fully managed message queuing service. There is also <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS CLI</a> or Command Line Interface available to use with the service.</p>
+<p>If you have a lot of messages in a queue, this command will show the approximate number:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ aws sqs get-queue-attributes \</div><div class="line">  --queue-url <span class="variable">$url</span> \</div><div class="line">  --attribute-names ApproximateNumberOfMessages</div></pre></td></tr></table></figure>
+
+<p>Where <code>$url</code> is the URL to the Amazon SQS queue.</p>
+<p>There is no command to delete all messages yet, but you can chain a few commands together to make it work:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-11-23T12:00:00.000Z"><a href="/2014/11/23/restart-upstart-instances-on-system-reboot/">Nov 23, 2014</a></time>
       
       
@@ -450,68 +492,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-07-19T21:13:44.000Z"><a href="/2014/07/19/non-interactive-redis-install/">Jul 19, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/07/19/non-interactive-redis-install/">Non-Interactive Redis Install</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>To build <a href="http://redis.io/" target="_blank" rel="external">Redis</a> from source, we first need to install TCL 8.5 or newer, this is needed for <code>make test</code> later:</p>
-<pre><code>$ sudo apt-<span class="built_in">get</span> install -<span class="keyword">y</span> <span class="keyword">tcl</span>
-</code></pre><p>Now clone and make:</p>
-<pre><code>$ git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/antirez/redis
-$ git checkout <span class="number">2.8</span>.<span class="number">13</span>
-$ <span class="keyword">make</span>
-$ <span class="keyword">make</span> test
-$ sudo <span class="keyword">make</span> install
-$ sudo utils/install_server.<span class="keyword">sh</span>
-</code></pre><p>Binary (<code>redis-cli</code> and <code>redis-server</code>) will be installed into <code>/usr/local/bin</code>.</p>
-<p>The last command with <code>utils/install_server.sh</code> is an interactive command. Since the script is a shell script using the <code>read</code> built-in command and <code>-p</code> option for prompt, we can make it non-interactive by redirecting input from <code>echo</code> command:</p>
-<pre><code>$ <span class="built_in">echo</span> -n | <span class="built_in">sudo</span> utils/install_server.sh
-</code></pre><p>Without pumping any value into the script, the default values are used.</p>
-<p>If really want to customize it, we can add our own values:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="operator">-e</span> \
-  <span class="string">"<span class="variable">${PORT}</span>\n<span class="variable">${CONFIG_FILE}</span>\n<span class="variable">${LOG_FILE}</span>\n<span class="variable">${DATA_DIR}</span>\n<span class="variable">${EXECUTABLE}</span>\n"</span> | \
-  <span class="built_in">sudo</span> utils/install_server.sh
-</code></pre><p>There are 6 read statements, hence <code>n - 1</code> newline characters. Without using <code>-n</code>, the last newline character is supplied by <code>echo</code>.</p>
-<p>Here are the default values:</p>
-<pre><code><span class="constant">PORT</span>=<span class="number">6379</span>
-<span class="constant">CONFIG_FILE</span>=/etc/redis/<span class="number">6379</span>.conf
-<span class="constant">LOG_FILE</span>=/var/log/redis_6379.log
-<span class="constant">DATA_DIR</span>=/var/lib/redis/<span class="number">6379</span>
-<span class="constant">EXECUTABLE</span>=/usr/local/bin/redis-server
-</code></pre><p>The <code>utils/install_server.sh</code> script should return something like this:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Welcome to the redis service installer</div><div class="line">This script will <span class="operator"><span class="keyword">help</span> you easily <span class="keyword">set</span> up a running redis <span class="keyword">server</span></span></div><div class="line"></div><div class="line">Selecting <span class="keyword">default</span>: <span class="number">6379</span></div><div class="line">Selected <span class="keyword">default</span> - /etc/redis/<span class="number">6379.</span>conf</div><div class="line">Selected <span class="keyword">default</span> - /<span class="keyword">var</span>/<span class="keyword">log</span>/redis_6379.<span class="keyword">log</span></div><div class="line">Selected <span class="keyword">default</span> - /<span class="keyword">var</span>/lib/redis/<span class="number">6379</span></div><div class="line">Selected config:</div><div class="line">Port           : <span class="number">6379</span></div><div class="line">Config file    : /etc/redis/<span class="number">6379.</span>conf</div><div class="line"><span class="keyword">Log</span> file       : /<span class="keyword">var</span>/<span class="keyword">log</span>/redis_6379.<span class="keyword">log</span></div><div class="line"><span class="keyword">Data</span> dir       : /<span class="keyword">var</span>/lib/redis/<span class="number">6379</span></div><div class="line">Executable     : /usr/<span class="keyword">local</span>/<span class="keyword">bin</span>/redis-<span class="keyword">server</span></div><div class="line">Cli Executable : /usr/<span class="keyword">local</span>/<span class="keyword">bin</span>/redis-cli</div><div class="line">Copied /tmp/<span class="number">6379.</span>conf =&gt; /etc/init.d/redis_6379</div><div class="line">Installing service...</div><div class="line"> System <span class="keyword">start</span>/<span class="keyword">stop</span> links <span class="keyword">for</span> /etc/init.d/redis_6379 already exist.</div><div class="line">Success!</div><div class="line">/<span class="keyword">var</span>/run/redis_6379.pid <span class="keyword">exists</span>, process <span class="keyword">is</span> already running <span class="keyword">or</span> crashed</div><div class="line">Installation successful!</div></pre></td></tr></table></figure>
-
-<p>Set an alias for Redis client:</p>
-<pre><code>$ <span class="built_in">cd</span> /usr/local/bin &amp;&amp; <span class="built_in">sudo</span> ln <span class="operator">-s</span> redis-cli redis
-</code></pre><p>For more advanced install, see the <code>README</code> file.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -543,7 +523,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
   
-    <li><a href="/categories/javascript/">JavaScript</a><small>16</small></li>
+    <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
     <li><a href="/categories/linux/">Linux</a><small>4</small></li>
   
@@ -686,6 +666,10 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/caret/">caret</a><small>1</small></li>
+  
+    <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
+  
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
@@ -794,7 +778,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
-    <li><a href="/tags/dependency/">dependency</a><small>2</small></li>
+    <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -829,6 +813,8 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
+  
+    <li><a href="/tags/duplicate-keys/">duplicate-keys</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
   
@@ -1000,6 +986,8 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/jq/">jq</a><small>4</small></li>
   
+    <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
+  
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
     <li><a href="/tags/json/">json</a><small>4</small></li>
@@ -1094,7 +1082,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>24</small></li>
+    <li><a href="/tags/node/">node</a><small>25</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1108,7 +1096,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/november/">november</a><small>1</small></li>
   
-    <li><a href="/tags/npm/">npm</a><small>3</small></li>
+    <li><a href="/tags/npm/">npm</a><small>4</small></li>
   
     <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
   
@@ -1130,7 +1118,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
   
-    <li><a href="/tags/package-json/">package.json</a><small>1</small></li>
+    <li><a href="/tags/package-json/">package.json</a><small>2</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   
@@ -1398,7 +1386,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>3</small></li>
+    <li><a href="/tags/version/">version</a><small>4</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   
@@ -1452,7 +1440,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2015 Chao Huang
+  &copy; 2016 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>
