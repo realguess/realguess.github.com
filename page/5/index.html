@@ -64,6 +64,49 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-02-22T12:00:00.000Z"><a href="/2015/02/22/git-end-of-line-normalization-by-autocrlf-with-input/">Feb 22, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/02/22/git-end-of-line-normalization-by-autocrlf-with-input/">Git End-of-Line Normalization by AutoCRLF with Input</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Using Vagrant file provision in a Windows host, the line endings are not converted from CRLF to LF (Linux systems). So, code cannot be executed properly in the guest Linux system. And also this is a frequently occurred message for working with Windows:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">warning: LF will be replaced by CRLF in README.md.</div><div class="line">The file will have its original line endings in your working directory.</div></pre></td></tr></table></figure>
+
+<p>One solution is to use UNIX line ending (LF) even in Windows, hence no conversion is needed. This is done by setting:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ git config --global core.autocrlf input</div></pre></td></tr></table></figure>
+
+<p>Which means when committing the code to a remote repository, the line ending will be convert from CRLF to LF if any, but when checking out from the remote directory, no conversion from LF to CRLF is performed.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/02/22/git-end-of-line-normalization-by-autocrlf-with-input/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-02-21T12:00:00.000Z"><a href="/2015/02/21/git-branch-description/">Feb 21, 2015</a></time>
       
       
@@ -494,56 +537,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-01-01T12:00:00.000Z"><a href="/2015/01/01/statistics-in-december-2014/">Jan 1, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/01/01/statistics-in-december-2014/">Statistics in December 2014</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In December 2014, there are 837 <em>unique visitors</em> making 950 <em>visits</em> resulting in 1,128 <em>pageviews</em>, about 36 <em>daily pageviews</em>, virtually flat comparing to last month.</p>
-<p>As today, <a href="http://www.alexa.com/siteinfo/realguess.net" target="_blank" rel="external">my blog</a> is still estimated by <a href="http://www.alexa.com/" target="_blank" rel="external">Alexa</a>. It ranks my blog 781,909 globally and 146,776 in the United States. Higher than last month, but these are estimates.</p>
-<p><strong>Where are my visitors located?</strong></p>
-<p>29.27% of visits are from the United States, almost 5% drop compare to last month. The second place is from India with 8.60%, that is increase of more than 1%. </p>
-<p><strong>Where do my visitors come from?</strong></p>
-<p>Google is the top traffic source with 82% of all visits, almost 2% drop month to month. Social is still almost non-existing.</p>
-<p><strong>What devices and operating systems are my visitors using?</strong></p>
-<p>48.39% are using Windows, then followed closely by Macintosh with 32.14%. The gain in Windows is interesting. And 97.25% visitors are using desktop devices, not changing much.</p>
-<p><strong>What is the top post?</strong></p>
-<p>The most popular post is still <a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">Split a Large JSON File into Smaller Pieces</a>, it is even more popular than the site’s main index page.</p>
-<p><strong>How is my site speed?</strong></p>
-<p>The average page load time is 2.93 seconds. The slowest is sampled at 4.09 seconds. This is better news than last month.</p>
-<p><strong>Is my blog getting more and more visitors?</strong></p>
-<p>Yes! The month-to-month gain is just 2.15%, and year-to-year gain is 603.70%, more than a half of thousdand fold.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/01/01/statistics-in-december-2014/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -573,7 +566,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -858,7 +851,7 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>8</small></li>
+    <li><a href="/tags/docker/">docker</a><small>9</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>1</small></li>
   
@@ -934,9 +927,13 @@
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
   
+    <li><a href="/tags/gitlab/">gitLab</a><small>0</small></li>
+  
     <li><a href="/tags/github/">github</a><small>4</small></li>
   
     <li><a href="/tags/github-pages/">github-pages</a><small>1</small></li>
+  
+    <li><a href="/tags/gitlab/">gitlab</a><small>1</small></li>
   
     <li><a href="/tags/glob/">glob</a><small>1</small></li>
   
@@ -1177,6 +1174,8 @@
     <li><a href="/tags/parseint/">parseint</a><small>1</small></li>
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
+  
+    <li><a href="/tags/password/">password</a><small>1</small></li>
   
     <li><a href="/tags/path/">path</a><small>4</small></li>
   

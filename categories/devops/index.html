@@ -68,6 +68,57 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-07-02T12:00:00.000Z"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Jul 2, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Resetting GitLab User Password with a Simple Shell Script</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="Problem">Problem</h2>
+<p>Resetting password is one of the most common requests virtually in any system. In <a href="https://gitlab.com/" target="_blank" rel="external">GitLab</a>, user password can be updated by visiting the <code>/admin/users</code> page. But if you forgot the password for the root user or the admin user. You need another method to reset it.</p>
+<h2 id="Objective">Objective</h2>
+<p>The goal is to simplify the process of resetting GitLab user password by using CLI, so next time when encountering the same problem again, it will be quick and easy.</p>
+<h2 id="Settings">Settings</h2>
+<p>Self-hosted <a href="https://gitlab.com/" target="_blank" rel="external">GitLab</a>, installed in a <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> container.</p>
+<h2 id="Solutions">Solutions</h2>
+<p>Step by step procedure to reset the root password is already provided by <a href="http://docs.gitlab.com/ce/security/reset_root_password.html" target="_blank" rel="external">this GitLab documentation</a>. By converting it into a Bash shell script and placing it in user’s home <code>bin</code> directory as an executable <code>~/bin/gitlab-password-reset</code> file, we will have created a simple command to be run repeatedly:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> -n <span class="string">"Email: "</span>;    <span class="built_in">read</span> MAIL</div><div class="line"><span class="built_in">echo</span> -n <span class="string">"Password: "</span>; <span class="built_in">read</span> <span class="operator">-s</span> PASS</div><div class="line"><span class="built_in">echo</span> <span class="comment"># Ensure a new line</span></div><div class="line"></div><div class="line">docker <span class="keyword">exec</span> gitlab gitlab-rails runner <span class="operator">-e</span> production <span class="string">"  \</span></div><div class="line">  user = User.find_by(email: '<span class="variable">$MAIL</span>');                  \</div><div class="line">  user.password = user.password_confirmation = '<span class="variable">$PASS</span>'; \</div><div class="line">  user.save!"</div></pre></td></tr></table></figure>
+
+<p>We could simply run the long <code>docker</code> command instead of shell script. But since we’re dealing with password, it’s a good practice to avoid placing sensitive information on command line history log.</p>
+<p>No trailing spaces are allowed on the password field, by the way.</p>
+<p>Another solution is turning the Ruby evaluation into a script and save into somewhere like <code>/srv/gitlab/config</code> directory. Then, we can just run:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="keyword">exec</span> gitlab gitlab-rails runner <span class="operator">-e</span> production /etc/gitlab/scripts/password-reset.rb</div></pre></td></tr></table></figure>
+
+<p>Because we are using Docker to run GitLab, and the following directories are mapped from the host to the guest:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/srv/gitlab/confi<span class="variable">g:</span>/etc/gitlab</div><div class="line">/srv/gitlab/<span class="built_in">log</span><span class="variable">s:</span>/var/<span class="built_in">log</span>/gitlab</div><div class="line">/srv/gitlab/dat<span class="variable">a:</span>/var/<span class="keyword">opt</span>/gitlab</div></pre></td></tr></table></figure>
+
+<p>Therefore, when executing the Ruby script, it’s <code>/etc/gitlab</code> instead of <code>/srv/gitlab</code>. However, you will need to figure out how to get the email and password into the script. That’s for you to answer.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-10-06T12:00:00.000Z"><a href="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/">Oct 6, 2015</a></time>
       
       
@@ -538,7 +589,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>9</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -823,7 +874,7 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>8</small></li>
+    <li><a href="/tags/docker/">docker</a><small>9</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>1</small></li>
   
@@ -899,9 +950,13 @@
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
   
+    <li><a href="/tags/gitlab/">gitLab</a><small>0</small></li>
+  
     <li><a href="/tags/github/">github</a><small>4</small></li>
   
     <li><a href="/tags/github-pages/">github-pages</a><small>1</small></li>
+  
+    <li><a href="/tags/gitlab/">gitlab</a><small>1</small></li>
   
     <li><a href="/tags/glob/">glob</a><small>1</small></li>
   
@@ -1142,6 +1197,8 @@
     <li><a href="/tags/parseint/">parseint</a><small>1</small></li>
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
+  
+    <li><a href="/tags/password/">password</a><small>1</small></li>
   
     <li><a href="/tags/path/">path</a><small>4</small></li>
   
