@@ -64,6 +64,61 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Jul 5, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Node.js Installation Methods July 2016 Edition</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Follow up with the <a href="https://realguess.net/2015/09/02/various-node-js-installation-methods/" target="_blank" rel="external">previous blog</a> on various methods to install <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a>, here is the updated one with Node.js v4.x and v6.x versions.</p>
+<p>Install Node.js v4.x via <a href="https://nodesource.com/" target="_blank" rel="external">NodeSource</a>[^1] setup script:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_4.<span class="keyword">x</span> | sudo -E bash -</div><div class="line">$ apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
+
+<p><code>sudo -E</code> option indicates to the security policy that the user wishes to preserve their existing environment variables[^2].</p>
+<p>With <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> and <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a>, <code>sudo</code> should be removed, because root:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RUN curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_4.<span class="keyword">x</span> | bash - && \</div><div class="line">    apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
+
+<p>Install Node.js v6.x via the same method:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_6.<span class="keyword">x</span> | sudo -E bash -</div><div class="line">$ apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
+
+<p>The above installation method has been tested on:</p>
+<ul>
+<li>Debian 8.5</li>
+<li>Node.js v4.4.7 and v6.2.2</li>
+</ul>
+<p>In summary, the methods to install Node.js covered are:</p>
+<ul>
+<li>Package manager</li>
+<li>Nodesource script</li>
+<li>From the source</li>
+</ul>
+<p>[^1]: NodeSource provides <a href="https://github.com/nodesource/distributions" target="_blank" rel="external">binary distribution setup and support scripts</a>.<br>[^2]: See <code>man sudo</code>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-02T12:00:00.000Z"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Jul 2, 2016</a></time>
       
       
@@ -547,56 +602,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-26T12:00:00.000Z"><a href="/2015/09/26/node-js-crypto-starters/">Sep 26, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/26/node-js-crypto-starters/">Node.js Crypto Starters</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Starter for the most common usage.</p>
-<p>Create a MD5 hex hash:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'md5'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'hex'</span>);</div></pre></td></tr></table></figure>
-
-<p>Create a SHA256 base64 hash:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div></pre></td></tr></table></figure>
-
-<p>Calculating the <a href="https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding" target="_blank" rel="external">digest</a> varies with encoding:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&gt; data = <span class="string">'secret'</span></div><div class="line"><span class="string">'secret'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div><div class="line"><span class="string">'K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols='</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'binary'</span>);</div><div class="line"><span class="string">'+¸\rS{\u001d£ãÓ\u0003aªV½àêÍqbþö¢_é{õ\'¢['</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest();</div><div class="line"><span class="xml"><span class="tag">&lt;<span class="title">Buffer</span> <span class="attribute">2b</span> <span class="attribute">b8</span> <span class="attribute">0d</span> <span class="attribute">53</span> <span class="attribute">7b</span> <span class="attribute">1d</span> <span class="attribute">a3</span> <span class="attribute">e3</span> <span class="attribute">8b</span> <span class="attribute">d3</span> <span class="attribute">03</span> <span class="attribute">61</span> <span class="attribute">aa</span> <span class="attribute">85</span> <span class="attribute">56</span> <span class="attribute">86</span> <span class="attribute">bd</span> <span class="attribute">e0</span> <span class="attribute">ea</span> <span class="attribute">cd</span> <span class="attribute">71</span> <span class="attribute">62</span> <span class="attribute">fe</span> <span class="attribute">f6</span> <span class="attribute">a2</span> <span class="attribute">5f</span> <span class="attribute">e9</span> <span class="attribute">7b</span> <span class="attribute">f5</span> <span class="attribute">27</span> <span class="attribute">a2</span> <span class="attribute">5b</span>&gt;</span></span></div><div class="line">&gt; require('crypto').createHash('sha256').update(data, 'utf8').digest().toString();</div><div class="line">'+�\rS{\u001d����\u0003a��V�����qb���_�{�\'�['</div></pre></td></tr></table></figure>
-
-<p>Both <code>hex</code> and <code>base64</code> are commonly used ones.</p>
-<p>Needs an <code>input_encoding</code> when <a href="https://nodejs.org/api/crypto.html#crypto_hash_update_data_input_encoding" target="_blank" rel="external">update</a> data, otherwise there will be different results:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&gt; data = <span class="string">'秘密'</span></div><div class="line"><span class="string">'秘密'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'ascii'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'7588bc51fd0ff10db9c66549e5cb7969b9f6b7cf3ccee080137a8eb1aa06e718'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'062a2931da683a9897c5a0b597113b1e9fd0d5bfb63e2a5d7c88b724f7f55c02'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'binary'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'7588bc51fd0ff10db9c66549e5cb7969b9f6b7cf3ccee080137a8eb1aa06e718'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'7588bc51fd0ff10db9c66549e5cb7969b9f6b7cf3ccee080137a8eb1aa06e718'</span></div></pre></td></tr></table></figure>
-
-<p>Don’t assume ASCII.</p>
-<p>Parameter <code>data</code> must be a string or buffer, otherwise there will be an error:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">TypeError: Not a string or buffer</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -620,7 +625,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>5</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>6</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -911,7 +916,7 @@
   
     <li><a href="/tags/docker/">docker</a><small>9</small></li>
   
-    <li><a href="/tags/dockerfile/">dockerfile</a><small>1</small></li>
+    <li><a href="/tags/dockerfile/">dockerfile</a><small>2</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
@@ -1067,7 +1072,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>8</small></li>
+    <li><a href="/tags/install/">install</a><small>9</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1189,11 +1194,13 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>25</small></li>
+    <li><a href="/tags/node/">node</a><small>26</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
     <li><a href="/tags/nodemon/">nodemon</a><small>1</small></li>
+  
+    <li><a href="/tags/nodesource/">nodesource</a><small>1</small></li>
   
     <li><a href="/tags/normalization/">normalization</a><small>1</small></li>
   

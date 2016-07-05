@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-07-06T12:00:00.000Z"><a href="/2015/07/06/fields-in-package-json-for-private-and-unlicensed-modules/">Jul 6, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/06/fields-in-package-json-for-private-and-unlicensed-modules/">Fields in &#39;package.json&#39; for Private and Unlicensed Modules</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>If you not include the <code>license</code> field in <code>package.json</code>, <a href="https://www.npmjs.com/" target="_blank" rel="external">npm</a> will keep bugging you:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">INFO: package.json</div><div class="line">INFO: api@<span class="number">0.1</span>.<span class="number">8</span> No license field.</div></pre></td></tr></table></figure>
+
+<p>If your module is private, just add the following two fields to <code>package.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">license</span>": <span class="value"><span class="string">"UNLICENSED"</span></span>,</div><div class="line">  "<span class="attribute">private</span>": <span class="value"><span class="literal">true</span></span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>See NPM <code>package.json</code> <a href="https://docs.npmjs.com/files/package.json#license" target="_blank" rel="external">license</a>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-06-29T12:00:00.000Z"><a href="/2015/06/29/google-cloud-pub-sub-starters-for-gcloud-version-v0-15-x/">Jun 29, 2015</a></time>
       
       
@@ -475,41 +514,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-03-14T12:00:00.000Z"><a href="/2015/03/14/use-pm2-with-io-js/">Mar 14, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/03/14/use-pm2-with-io-js/">Use PM2 with io.js</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>If you have both <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> and <a href="https://iojs.org/" target="_blank" rel="external">io.js</a> installed, <a href="https://github.com/Unitech/PM2" target="_blank" rel="external">PM2</a> will run Node.js by default. To start the app with io.js, use <code>--interpreter</code> flag:</p>
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ pm2 start app.js --name web --interpreter iojs</div><div class="line">[<span class="link_label">PM2</span>][<span class="link_reference">WARN</span>] We've notice that you are running the node script, but currently</div><div class="line">using a iojs interpreter, may be you need inspect the --interpreter option.</div><div class="line">[PM2] Process app.js launched</div><div class="line">┌──────────┬────┬──────┬──────┬────────┬─────────┬────────┬─────────────┬──────────┐</div><div class="line">│ App name │ id │ mode │ pid  │ status │ restart │ uptime │ memory      │ watching │</div><div class="line">├──────────┼────┼──────┼──────┼────────┼─────────┼────────┼─────────────┼──────────┤</div><div class="line">│ web      │ 2  │ fork │ 5074 │ online │ 0       │ 0s     │ 20.172 MB   │ disabled │</div><div class="line">└──────────┴────┴──────┴──────┴────────┴─────────┴────────┴─────────────┴──────────┘</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -536,7 +540,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>5</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>6</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -827,7 +831,7 @@
   
     <li><a href="/tags/docker/">docker</a><small>9</small></li>
   
-    <li><a href="/tags/dockerfile/">dockerfile</a><small>1</small></li>
+    <li><a href="/tags/dockerfile/">dockerfile</a><small>2</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
@@ -983,7 +987,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>8</small></li>
+    <li><a href="/tags/install/">install</a><small>9</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1105,11 +1109,13 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>25</small></li>
+    <li><a href="/tags/node/">node</a><small>26</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
     <li><a href="/tags/nodemon/">nodemon</a><small>1</small></li>
+  
+    <li><a href="/tags/nodesource/">nodesource</a><small>1</small></li>
   
     <li><a href="/tags/normalization/">normalization</a><small>1</small></li>
   
