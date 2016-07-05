@@ -363,23 +363,22 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
+    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
-<ol>
-<li>Having multiple images means more configuration files to manage and update.</li>
-<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
-<li>Steeper learning curve for new developers.</li>
-</ol>
-<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
+        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
+
+<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -402,22 +401,23 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
+    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
-
-<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
-
+        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
+<ol>
+<li>Having multiple images means more configuration files to manage and update.</li>
+<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
+<li>Steeper learning curve for new developers.</li>
+</ol>
+<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
 
       
     </div>
@@ -591,7 +591,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>6</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -1018,7 +1018,7 @@
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>4</small></li>
+    <li><a href="/tags/http/">http</a><small>5</small></li>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
@@ -1160,7 +1160,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>26</small></li>
+    <li><a href="/tags/node/">node</a><small>27</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1188,7 +1188,7 @@
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
   
-    <li><a href="/tags/one-liner/">one-liner</a><small>1</small></li>
+    <li><a href="/tags/one-liner/">one-liner</a><small>2</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>2</small></li>
   
@@ -1308,7 +1308,7 @@
   
     <li><a href="/tags/serialization/">serialization</a><small>1</small></li>
   
-    <li><a href="/tags/server/">server</a><small>2</small></li>
+    <li><a href="/tags/server/">server</a><small>3</small></li>
   
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
@@ -1348,7 +1348,7 @@
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/starter/">starter</a><small>5</small></li>
+    <li><a href="/tags/starter/">starter</a><small>6</small></li>
   
     <li><a href="/tags/startup/">startup</a><small>2</small></li>
   
