@@ -64,6 +64,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-10-25T15:37:25.000Z"><a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/">Oct 25, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/">Use CNAME for Resovling Private and Public IP Address in Amazon EC2</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>“A security group acts as a virtual firewall that controlls the traffic for one or more instances.” <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">1</a> The <a href="https://aws.amazon.com/ec2/" target="_blank" rel="external">Amazon EC2</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">Security Groups</a> are not just capable controlling traffic from an IP address, but also from all EC2 instances belong to a specific security group. I want to allow an instance belonging to one security group to access an instance belongs to another security group via a custom domain name (subdomain.example.com).</p>
+<p>But when I configured the subdomain via <a href="https://aws.amazon.com/route53/" target="_blank" rel="external">Amazon Route 53</a>, I have misconfigured it by assigning a A record, an IP address or the <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" target="_blank" rel="external">Elastic IP address</a> of the instance. I should have used CNAME, and assigned the public DNS (the public hostname of the EC2 instance).</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-10-15T08:13:42.000Z"><a href="/2014/10/15/hello-comcast-why-is-my-internet-so-slow/">Oct 15, 2014</a></time>
       
       
@@ -546,47 +584,6 @@ undefined
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-21T21:24:54.000Z"><a href="/2014/06/21/tiny-http-servers/">Jun 21, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/21/tiny-http-servers/">Tiny HTTP Servers</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>This is a simple way to run a tiny web server via command line:</p>
-<pre><code>$ <span class="keyword">python</span> -<span class="keyword">m</span> SimpleHTTPServer <span class="number">8080</span>
-</code></pre><p>which will server static files from the current directory.</p>
-<p>There is <a href="https://github.com/moserrya/knod" target="_blank" rel="external">Knod</a> for Ruby, and of course there is one for Node: <a href="https://github.com/nodeapps/http-server" target="_blank" rel="external">http-server</a>.</p>
-<p>To install:</p>
-<pre><code>$ sudo npm <span class="operator"><span class="keyword">install</span> -g http-<span class="keyword">server</span></span>
-</code></pre><p>To run:</p>
-<pre><code><span class="variable">$ </span>http-server
-</code></pre><p>Server will be accessible via <a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -615,6 +612,8 @@ undefined
     <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
+  
+    <li><a href="/categories/data-processing/">Data Processing</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
   
@@ -777,7 +776,7 @@ undefined
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>10</small></li>
+    <li><a href="/tags/cli/">cli</a><small>11</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -841,13 +840,13 @@ undefined
   
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
-    <li><a href="/tags/curl/">curl</a><small>1</small></li>
+    <li><a href="/tags/curl/">curl</a><small>2</small></li>
   
     <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
   
     <li><a href="/tags/custom-generator/">custom-generator</a><small>1</small></li>
   
-    <li><a href="/tags/cut/">cut</a><small>1</small></li>
+    <li><a href="/tags/cut/">cut</a><small>2</small></li>
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
   
@@ -901,7 +900,7 @@ undefined
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>9</small></li>
+    <li><a href="/tags/docker/">docker</a><small>10</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>2</small></li>
   
@@ -1006,6 +1005,8 @@ undefined
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
     <li><a href="/tags/google-trends/">google-trends</a><small>1</small></li>
+  
+    <li><a href="/tags/grep/">grep</a><small>1</small></li>
   
     <li><a href="/tags/groupthink/">groupthink</a><small>1</small></li>
   
@@ -1489,7 +1490,7 @@ undefined
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>4</small></li>
+    <li><a href="/tags/version/">version</a><small>5</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

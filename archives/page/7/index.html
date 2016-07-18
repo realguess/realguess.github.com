@@ -68,6 +68,63 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-12-07T12:00:00.000Z"><a href="/2014/12/07/vagrant/">Dec 7, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/12/07/vagrant/">Vagrant</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <ol>
+<li>What is Vagrant?</li>
+<li>What are the main features?</li>
+<li>Why do they build it?</li>
+<li>How would it benefit me?</li>
+<li>Where does this fit into the stack?</li>
+</ol>
+<h2 id="What_is_Vagrant?">What is Vagrant?</h2>
+<p><a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a> is a configuration management tool for creating, configuring, and managing complete development environments in virtual machine.</p>
+<h2 id="What_are_the_main_features?">What are the main features?</h2>
+<p><strong>Development environment version control</strong></p>
+<p>Configuration for setting up development environment is in code (<code>Vagrantfile</code>), so the development environment can be version controlled.</p>
+<p><strong>Consistent but distributed development environments</strong></p>
+<p>Consistent development environment, build one development environment, and distribute to the rest of the team. Create identical development environment for everyone on the team.</p>
+<p>Distributed development environment, but linked by source control. “I like to think of Vagrant as the Git of development clouds. Centralized development and test environments create bottlenecks. Vagrant lets developers work at their own pace and in their own environment, while keeping all the environment synchronized with each other.” (By Jeff Sussna) [<a href="https://www.safaribooksonline.com/library/view/vagrant-up-and/9781449336103/cover.html" target="_blank" rel="external">1</a>].</p>
+<p><strong>Disposable computing resource</strong></p>
+<p>“Vagrant lowers development environment setup time, increases development/production parity, and brings the idea of disposable compute resources down to the desktop.” [<a href="https://www.safaribooksonline.com/library/view/vagrant-up-and/9781449336103/cover.html" target="_blank" rel="external">1</a>]</p>
+<p>“At the end of the day, Vagrant can suspend, halt, or destroy the development environment, keeping the overall system clean. Never again can developers forget to shut down a stray server process and waste precious compute resources.” [<a href="https://www.safaribooksonline.com/library/view/vagrant-up-and/9781449336103/cover.html" target="_blank" rel="external">1</a>]</p>
+<p><strong>Simple development environment setup</strong></p>
+<p>Forget about <code>README</code> or <code>INSTALL</code> instructions, type <code>vagrant up</code> and you are good to go.</p>
+<p>“Say goodbye to ‘works on my machine’ bugs.” [<a href="http://docs.vagrantup.com/" target="_blank" rel="external">2</a>] For designers, “no more bothering other developers to help you fix your environment so you can test designs. Just check out the code, <code>vagrant up</code>, and start designing.” [<a href="http://docs.vagrantup.com/" target="_blank" rel="external">2</a>]</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/12/07/vagrant/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-12-05T12:00:00.000Z"><a href="/2014/12/05/livereload-with-browsersync-and-gulp/">Dec 5, 2014</a></time>
       
       
@@ -451,44 +508,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-10-25T15:37:25.000Z"><a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/">Oct 25, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/">Use CNAME for Resovling Private and Public IP Address in Amazon EC2</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>“A security group acts as a virtual firewall that controlls the traffic for one or more instances.” <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">1</a> The <a href="https://aws.amazon.com/ec2/" target="_blank" rel="external">Amazon EC2</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">Security Groups</a> are not just capable controlling traffic from an IP address, but also from all EC2 instances belong to a specific security group. I want to allow an instance belonging to one security group to access an instance belongs to another security group via a custom domain name (subdomain.example.com).</p>
-<p>But when I configured the subdomain via <a href="https://aws.amazon.com/route53/" target="_blank" rel="external">Amazon Route 53</a>, I have misconfigured it by assigning a A record, an IP address or the <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" target="_blank" rel="external">Elastic IP address</a> of the instance. I should have used CNAME, and assigned the public DNS (the public hostname of the EC2 instance).</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -518,6 +537,8 @@
     <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
+  
+    <li><a href="/categories/data-processing/">Data Processing</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
   
@@ -680,7 +701,7 @@
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>10</small></li>
+    <li><a href="/tags/cli/">cli</a><small>11</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -744,13 +765,13 @@
   
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
-    <li><a href="/tags/curl/">curl</a><small>1</small></li>
+    <li><a href="/tags/curl/">curl</a><small>2</small></li>
   
     <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
   
     <li><a href="/tags/custom-generator/">custom-generator</a><small>1</small></li>
   
-    <li><a href="/tags/cut/">cut</a><small>1</small></li>
+    <li><a href="/tags/cut/">cut</a><small>2</small></li>
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
   
@@ -804,7 +825,7 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>9</small></li>
+    <li><a href="/tags/docker/">docker</a><small>10</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>2</small></li>
   
@@ -909,6 +930,8 @@
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
     <li><a href="/tags/google-trends/">google-trends</a><small>1</small></li>
+  
+    <li><a href="/tags/grep/">grep</a><small>1</small></li>
   
     <li><a href="/tags/groupthink/">groupthink</a><small>1</small></li>
   
@@ -1392,7 +1415,7 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>4</small></li>
+    <li><a href="/tags/version/">version</a><small>5</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

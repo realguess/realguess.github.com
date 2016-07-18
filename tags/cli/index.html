@@ -68,6 +68,65 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-07-18T12:00:00.000Z"><a href="/2016/07/18/getting-the-version-of-the-latest-release/">Jul 18, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/18/getting-the-version-of-the-latest-release/">Getting the Version of the Latest Release</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>What’s the latest release of <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a>?</p>
+<p>Its homepage doesn’t tell you anything. Have to poke around, click on a few links, may or may not get you what you want. If there’s a quick way, even better a CLI method, that will be great.</p>
+<p>Couple things we can do. First, when <a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">installing docker</a>, we use the URL <a href="https://get.docker.com/" target="_blank" rel="external">https://get.docker.com/</a>. It has a path that will return an installation instruction with the version number:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ curl https://get.docker.com/builds/</div><div class="line"># To <span class="operator"><span class="keyword">install</span>, run the following command <span class="keyword">as</span> root:</span></div><div class="line">curl -sSL -O https://<span class="keyword">get</span>.docker.com/builds/Linux/x86_64/docker-<span class="number">1.11</span><span class="number">.2</span>.tgz && sudo tar zxf docker-<span class="number">1.11</span><span class="number">.2</span>.tgz -C /</div><div class="line"># <span class="keyword">Then</span> <span class="keyword">start</span> docker <span class="keyword">in</span> daemon <span class="keyword">mode</span>:</div><div class="line">sudo /usr/<span class="keyword">local</span>/<span class="keyword">bin</span>/docker daemon</div></pre></td></tr></table></figure>
+
+<p>There is another way. <em>Well, there is always another way.</em> Docker project is hosted in <a href="https://github.com/" target="_blank" rel="external">GitHub</a>, we can use this URL:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http<span class="variable">s:</span>//github.<span class="keyword">com</span>/docker/docker/releases/latest</div></pre></td></tr></table></figure>
+
+<p>which will be redirected to the latest release:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http<span class="variable">s:</span>//github.<span class="keyword">com</span>/docker/docker/releases/<span class="keyword">tag</span>/v1.<span class="number">11.2</span></div></pre></td></tr></table></figure>
+
+<p>Since it’s a redirect, we can use <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank" rel="external">HTTP HEAD</a> method without download the entire response body:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ curl --silent --head https://github.com/docker/docker/releases/latest</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">302</span> Found</div><div class="line"><span class="label">Server:</span> GitHub.com</div><div class="line">Content-Type: text/html<span class="comment">; charset=utf-8</span></div><div class="line"><span class="label">Status:</span> <span class="number">302</span> Found</div><div class="line">Cache-Control: no-cache</div><div class="line"><span class="label">Vary:</span> <span class="built_in">X</span>-PJAX</div><div class="line"><span class="label">Location:</span> https://github.com/docker/docker/releases/tag/v1<span class="number">.11</span><span class="number">.2</span></div><div class="line"><span class="label">Vary:</span> Accept-Encoding</div></pre></td></tr></table></figure>
+
+<p>Extract and process the value of the <code>Location</code> field will get us what we are looking for.</p>
+<p>Let’s construct a simple command to obtain such an information:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ curl                                                       \</div><div class="line">    -<span class="ruby">-silent                                                 \</span></div><div class="line">    -<span class="ruby">-head                                                   \</span></div><div class="line">    -<span class="ruby">-url <span class="symbol">https:</span>/<span class="regexp">/github.com/docker</span><span class="regexp">/docker/releases</span><span class="regexp">/latest | \</span></span></div><div class="line">  grep                                                       \</div><div class="line">    -<span class="ruby">-regexp=^<span class="constant">Location</span>                                     | \</span></div><div class="line">  cut                                                        \</div><div class="line">    -<span class="ruby">-delimiter=<span class="regexp">/                                            \</span></span></div><div class="line">    -<span class="ruby">-fields=<span class="number">8</span></span></div></pre></td></tr></table></figure>
+
+<p>or:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>curl -sI <span class="symbol">https:</span>/<span class="regexp">/github.com/docker</span><span class="regexp">/docker/releases</span><span class="regexp">/latest | \</span></div><div class="line">    grep ^Location | \</div><div class="line">    cut -d / -f <span class="number">8</span></div></pre></td></tr></table></figure>
+
+<p>Both commands will return <code>v1.11.2</code>.</p>
+<p>By using GitHub, not only we can get the latest stable release version of Docker, we can also obtain other projects. In fact, if the project was hosted in GitHub, and it was tagged properly with the releases, you can use this method to obtain the version. However, if it’s not properly tagged, such as <a href="https://github.com/nodejs/node" target="_blank" rel="external">Node.js</a>, you need to find another way.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/07/18/getting-the-version-of-the-latest-release/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-06T12:00:00.000Z"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Sep 6, 2015</a></time>
       
       
@@ -560,63 +619,11 @@ $ <span class="built_in">source</span> ~/.bashrc
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-06T10:55:55.000Z"><a href="/2013/12/06/amazon-route-53-via-command-line/">Dec 6, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/06/amazon-route-53-via-command-line/">Amazon Route 53 via Command Line</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Retrieve a list of hosted zones:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53 list-hosted-zones          </div><div class="line">{</div><div class="line">  <span class="string">"HostedZones"</span><span class="symbol">:</span> [</div><div class="line">    {</div><div class="line">        <span class="string">"ResourceRecordSetCount"</span><span class="symbol">:</span> <span class="number">4</span>,</div><div class="line">        <span class="string">"CallerReference"</span><span class="symbol">:</span> <span class="string">"12345678-ABCD-EFGH-IJKL-ABCDEFGHIJKL"</span>,</div><div class="line">        <span class="string">"Config"</span><span class="symbol">:</span> {},</div><div class="line">        <span class="string">"Id"</span><span class="symbol">:</span> <span class="string">"/hostedzone/1234567890ABC"</span>,</div><div class="line">        <span class="string">"Name"</span><span class="symbol">:</span> <span class="string">"realguess.net."</span></div><div class="line">    }</div><div class="line">  ], </div><div class="line">  <span class="string">"IsTruncated"</span><span class="symbol">:</span> <span class="keyword">false</span>, </div><div class="line">  <span class="string">"MaxItems"</span><span class="symbol">:</span> <span class="string">"100"</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Get a single hosted zone with delegation set (four Route 53 name servers that were assigned to the hosted zone):</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="built_in">get</span>-hosted-zone <span class="comment">--id 1234567890ABC</span></div><div class="line">{</div><div class="line">  <span class="string">"HostedZone"</span>: {</div><div class="line">    <span class="string">"ResourceRecordSetCount"</span>: <span class="number">4</span>,</div><div class="line">    <span class="string">"CallerReference"</span>: <span class="string">"12345678-ABCD-EFGH-IJKL-ABCDEFGHIJKL"</span>,</div><div class="line">    <span class="string">"Config"</span>: {},</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"/hostedzone/1234567890ABC"</span>,</div><div class="line">    <span class="string">"Name"</span>: <span class="string">"realguess.net."</span></div><div class="line">  },</div><div class="line">  <span class="string">"DelegationSet"</span>: {</div><div class="line">    <span class="string">"NameServers"</span>: [</div><div class="line">      <span class="string">"ns-1727.awsdns-23.co.uk"</span>,</div><div class="line">      <span class="string">"ns-1312.awsdns-36.org"</span>,</div><div class="line">      <span class="string">"ns-402.awsdns-50.com"</span>,</div><div class="line">      <span class="string">"ns-587.awsdns-09.net"</span></div><div class="line">    ]</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>List all resource record sets in a hosted zone:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="type">list</span>-resource-<span class="type">record</span>-sets <span class="comment">--hosted-zone-id 1234567890ABC</span></div><div class="line">{</div><div class="line">  <span class="string">"IsTruncated"</span>: <span class="constant">false</span>,</div><div class="line">  <span class="string">"ResourceRecordSets"</span>: [</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">172800</span></div><div class="line">    },</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1727.awsdns-23.co.uk."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1312.awsdns-36.org."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-402.awsdns-50.com."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-587.awsdns-09.net."</span></div><div class="line">        }</div><div class="line">      ], </div><div class="line">      <span class="string">"Type"</span>: <span class="string">"NS"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">172800</span></div><div class="line">    }, </div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1727.awsdns-23.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"</span></div><div class="line">        }</div><div class="line">      ], </div><div class="line">      <span class="string">"Type"</span>: <span class="string">"SOA"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">900</span></div><div class="line">    },</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"www.realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">86400</span></div><div class="line">    }</div><div class="line">  ],</div><div class="line">  <span class="string">"MaxItems"</span>: <span class="string">"100"</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Retrieve a single record set:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="type">list</span>-resource-<span class="type">record</span>-sets <span class="comment">--hosted-zone-id 1234567890ABC \</span></div><div class="line">  <span class="comment">--start-record-name www.realguess.net --start-record-type A --max-items 1</span></div><div class="line">{</div><div class="line">  <span class="string">"IsTruncated"</span>: <span class="constant">false</span>,</div><div class="line">  <span class="string">"ResourceRecordSets"</span>: [</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"www.realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">86400</span></div><div class="line">    }</div><div class="line">  ],</div><div class="line">  <span class="string">"MaxItems"</span>: <span class="string">"1"</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>In order to create a new record set, first create a JSON file to describe the new record:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">Comment</span>": <span class="value"><span class="string">"A new record set for the zone."</span></span>,</div><div class="line">  "<span class="attribute">Changes</span>": <span class="value">[</span></div><div class="line">    {</div><div class="line">      "<span class="attribute">Action</span>": <span class="value"><span class="string">"CREATE"</span></span>,</div><div class="line">      "<span class="attribute">ResourceRecordSet</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">Name</span>": <span class="value"><span class="string">"api.realguess.net."</span></span>,</div><div class="line">        "<span class="attribute">Type</span>": <span class="value"><span class="string">"CNAME"</span></span>,</div><div class="line">        "<span class="attribute">TTL</span>": <span class="value"><span class="number">60</span></span>,</div><div class="line">        "<span class="attribute">ResourceRecords</span>": <span class="value">[</span></div><div class="line">          {</div><div class="line">            "<span class="attribute">Value</span>": <span class="value"><span class="string">"www.realguess.net"</span></span></div><div class="line">          }</div><div class="line">        ]</div><div class="line">      }</div><div class="line">    }</div><div class="line">  ]</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Add a new record set (note that the JSON file must use <code>file://</code> starting path):</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53 change-resource-record-sets --hosted-zone-id <span class="number">1234567890</span>ABC \</div><div class="line">  --change-batch <span class="symbol">file:</span>/<span class="regexp">//path</span><span class="regexp">/to/record</span>.json</div><div class="line">{</div><div class="line">  <span class="string">"ChangeInfo"</span><span class="symbol">:</span> {</div><div class="line">    <span class="string">"Status"</span><span class="symbol">:</span> <span class="string">"PENDING"</span>,</div><div class="line">    <span class="string">"Comment"</span><span class="symbol">:</span> <span class="string">"A new record set for the zone."</span>,</div><div class="line">    <span class="string">"SubmittedAt"</span><span class="symbol">:</span> <span class="string">"2013-12-06T00:00:00.000Z"</span>,</div><div class="line">    <span class="string">"Id"</span><span class="symbol">:</span> <span class="string">"/change/CHANGEID123"</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>The status of adding the new record is currently <em>pending</em>. Poll the server to get the updated status:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ aws route53 get-<span class="operator"><span class="keyword">change</span> <span class="comment">--id CHANGEID123</span></span></div><div class="line">{</div><div class="line">  <span class="string">"ChangeInfo"</span>: {</div><div class="line">    <span class="string">"Status"</span>: <span class="string">"INSYNC"</span>,</div><div class="line">    <span class="string">"Comment"</span>: <span class="string">"A new record set for the zone."</span>,</div><div class="line">    <span class="string">"SubmittedAt"</span>: <span class="string">"2013-12-06T00:00:00.000Z"</span>,</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"/change/CHANGEID123"</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>A new record has been created and has been propagated to all hosts.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
+  
+    <a href="/tags/cli/page/2/" class="alignright next">Next</a>
   
   <div class="clearfix"></div>
 </nav>
@@ -639,6 +646,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
+  
+    <li><a href="/categories/data-processing/">Data Processing</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
   
@@ -801,7 +810,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>10</small></li>
+    <li><a href="/tags/cli/">cli</a><small>11</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -865,13 +874,13 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
-    <li><a href="/tags/curl/">curl</a><small>1</small></li>
+    <li><a href="/tags/curl/">curl</a><small>2</small></li>
   
     <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
   
     <li><a href="/tags/custom-generator/">custom-generator</a><small>1</small></li>
   
-    <li><a href="/tags/cut/">cut</a><small>1</small></li>
+    <li><a href="/tags/cut/">cut</a><small>2</small></li>
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
   
@@ -925,7 +934,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>9</small></li>
+    <li><a href="/tags/docker/">docker</a><small>10</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>2</small></li>
   
@@ -1030,6 +1039,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
     <li><a href="/tags/google-trends/">google-trends</a><small>1</small></li>
+  
+    <li><a href="/tags/grep/">grep</a><small>1</small></li>
   
     <li><a href="/tags/groupthink/">groupthink</a><small>1</small></li>
   
@@ -1513,7 +1524,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>4</small></li>
+    <li><a href="/tags/version/">version</a><small>5</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

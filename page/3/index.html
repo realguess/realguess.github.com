@@ -64,6 +64,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Sep 7, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Install Docker on Ubuntu Trusty 14.04</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Install <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> on <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> Trusty 14.04 is fairly straightforward:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div><div class="line">$ <span class="keyword">exit</span></div></pre></td></tr></table></figure>
+
+<p>Log out, then log back in to verify the installation by running a sample container:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div></pre></td></tr></table></figure>
+
+<p>Done!</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/setup-development-environment-with-vagrant-on-google-compute-engine/">Sep 7, 2015</a></time>
       
       
@@ -501,52 +540,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-07-17T12:00:00.000Z"><a href="/2015/07/17/use-custom-message-in-chai/">Jul 17, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/07/17/use-custom-message-in-chai/">Use Custom Message in Chai</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When running a test in a loop with <a href="http://mochajs.org/" target="_blank" rel="external">Mocha</a> and <a href="http://chaijs.com/" target="_blank" rel="external">Chai</a>, it might not be easy to pinpoint the element where the error occurred. For example:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, len = arr.length; i &lt; len; i += <span class="number">1</span>) {</div><div class="line">  expect(arr[i]).to.equal(<span class="literal">true</span>);</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Run the test:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ mocha --harmony test/message.js</div><div class="line"></div><div class="line"></div><div class="line">  Custom Message</div><div class="line">    <span class="number">1</span>) Should <span class="keyword">return</span> <span class="literal">true</span></div><div class="line"></div><div class="line"></div><div class="line">  <span class="number">0</span> passing (<span class="number">37</span>ms)</div><div class="line">  <span class="number">1</span> failing</div><div class="line"></div><div class="line">  <span class="number">1</span>) Custom Message Should <span class="keyword">return</span> <span class="literal">true</span>:</div><div class="line"></div><div class="line">      AssertionError: expected <span class="literal">false</span> to equal <span class="literal">true</span></div><div class="line">      + expected - actual</div><div class="line"></div><div class="line">      -false</div><div class="line">      +<span class="literal">true</span></div><div class="line"></div><div class="line">      at Context.&lt;anonymous&gt; (test/message.js:<span class="number">16</span>:<span class="number">25</span>)</div></pre></td></tr></table></figure>
-
-<p>It failed on the <code>expect</code> statement, but the error message does not show which element is in error.</p>
-<p>Instead, we can add a custom message to the <code>expect</code> statement:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, len = arr.length; i &lt; len; i += <span class="number">1</span>) {</div><div class="line">  expect(arr[i], <span class="string">'i = '</span> + i).to.equal(<span class="literal">true</span>);</div><div class="line">}</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/07/17/use-custom-message-in-chai/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -575,6 +568,8 @@
     <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
+  
+    <li><a href="/categories/data-processing/">Data Processing</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
   
@@ -737,7 +732,7 @@
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>10</small></li>
+    <li><a href="/tags/cli/">cli</a><small>11</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -801,13 +796,13 @@
   
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
-    <li><a href="/tags/curl/">curl</a><small>1</small></li>
+    <li><a href="/tags/curl/">curl</a><small>2</small></li>
   
     <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
   
     <li><a href="/tags/custom-generator/">custom-generator</a><small>1</small></li>
   
-    <li><a href="/tags/cut/">cut</a><small>1</small></li>
+    <li><a href="/tags/cut/">cut</a><small>2</small></li>
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
   
@@ -861,7 +856,7 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>9</small></li>
+    <li><a href="/tags/docker/">docker</a><small>10</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>2</small></li>
   
@@ -966,6 +961,8 @@
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
     <li><a href="/tags/google-trends/">google-trends</a><small>1</small></li>
+  
+    <li><a href="/tags/grep/">grep</a><small>1</small></li>
   
     <li><a href="/tags/groupthink/">groupthink</a><small>1</small></li>
   
@@ -1449,7 +1446,7 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>4</small></li>
+    <li><a href="/tags/version/">version</a><small>5</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

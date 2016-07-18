@@ -68,6 +68,65 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-07-18T12:00:00.000Z"><a href="/2016/07/18/getting-the-version-of-the-latest-release/">Jul 18, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/18/getting-the-version-of-the-latest-release/">Getting the Version of the Latest Release</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>What’s the latest release of <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a>?</p>
+<p>Its homepage doesn’t tell you anything. Have to poke around, click on a few links, may or may not get you what you want. If there’s a quick way, even better a CLI method, that will be great.</p>
+<p>Couple things we can do. First, when <a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">installing docker</a>, we use the URL <a href="https://get.docker.com/" target="_blank" rel="external">https://get.docker.com/</a>. It has a path that will return an installation instruction with the version number:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ curl https://get.docker.com/builds/</div><div class="line"># To <span class="operator"><span class="keyword">install</span>, run the following command <span class="keyword">as</span> root:</span></div><div class="line">curl -sSL -O https://<span class="keyword">get</span>.docker.com/builds/Linux/x86_64/docker-<span class="number">1.11</span><span class="number">.2</span>.tgz && sudo tar zxf docker-<span class="number">1.11</span><span class="number">.2</span>.tgz -C /</div><div class="line"># <span class="keyword">Then</span> <span class="keyword">start</span> docker <span class="keyword">in</span> daemon <span class="keyword">mode</span>:</div><div class="line">sudo /usr/<span class="keyword">local</span>/<span class="keyword">bin</span>/docker daemon</div></pre></td></tr></table></figure>
+
+<p>There is another way. <em>Well, there is always another way.</em> Docker project is hosted in <a href="https://github.com/" target="_blank" rel="external">GitHub</a>, we can use this URL:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http<span class="variable">s:</span>//github.<span class="keyword">com</span>/docker/docker/releases/latest</div></pre></td></tr></table></figure>
+
+<p>which will be redirected to the latest release:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http<span class="variable">s:</span>//github.<span class="keyword">com</span>/docker/docker/releases/<span class="keyword">tag</span>/v1.<span class="number">11.2</span></div></pre></td></tr></table></figure>
+
+<p>Since it’s a redirect, we can use <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank" rel="external">HTTP HEAD</a> method without download the entire response body:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ curl --silent --head https://github.com/docker/docker/releases/latest</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">302</span> Found</div><div class="line"><span class="label">Server:</span> GitHub.com</div><div class="line">Content-Type: text/html<span class="comment">; charset=utf-8</span></div><div class="line"><span class="label">Status:</span> <span class="number">302</span> Found</div><div class="line">Cache-Control: no-cache</div><div class="line"><span class="label">Vary:</span> <span class="built_in">X</span>-PJAX</div><div class="line"><span class="label">Location:</span> https://github.com/docker/docker/releases/tag/v1<span class="number">.11</span><span class="number">.2</span></div><div class="line"><span class="label">Vary:</span> Accept-Encoding</div></pre></td></tr></table></figure>
+
+<p>Extract and process the value of the <code>Location</code> field will get us what we are looking for.</p>
+<p>Let’s construct a simple command to obtain such an information:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ curl                                                       \</div><div class="line">    -<span class="ruby">-silent                                                 \</span></div><div class="line">    -<span class="ruby">-head                                                   \</span></div><div class="line">    -<span class="ruby">-url <span class="symbol">https:</span>/<span class="regexp">/github.com/docker</span><span class="regexp">/docker/releases</span><span class="regexp">/latest | \</span></span></div><div class="line">  grep                                                       \</div><div class="line">    -<span class="ruby">-regexp=^<span class="constant">Location</span>                                     | \</span></div><div class="line">  cut                                                        \</div><div class="line">    -<span class="ruby">-delimiter=<span class="regexp">/                                            \</span></span></div><div class="line">    -<span class="ruby">-fields=<span class="number">8</span></span></div></pre></td></tr></table></figure>
+
+<p>or:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>curl -sI <span class="symbol">https:</span>/<span class="regexp">/github.com/docker</span><span class="regexp">/docker/releases</span><span class="regexp">/latest | \</span></div><div class="line">    grep ^Location | \</div><div class="line">    cut -d / -f <span class="number">8</span></div></pre></td></tr></table></figure>
+
+<p>Both commands will return <code>v1.11.2</code>.</p>
+<p>By using GitHub, not only we can get the latest stable release version of Docker, we can also obtain other projects. In fact, if the project was hosted in GitHub, and it was tagged properly with the releases, you can use this method to obtain the version. However, if it’s not properly tagged, such as <a href="https://github.com/nodejs/node" target="_blank" rel="external">Node.js</a>, you need to find another way.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/07/18/getting-the-version-of-the-latest-release/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-08-23T12:00:00.000Z"><a href="/2015/08/23/curl-read-from-file-or-stdin/">Aug 23, 2015</a></time>
       
       
@@ -128,6 +187,8 @@
     <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
+  
+    <li><a href="/categories/data-processing/">Data Processing</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
   
@@ -290,7 +351,7 @@
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>10</small></li>
+    <li><a href="/tags/cli/">cli</a><small>11</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -354,13 +415,13 @@
   
     <li><a href="/tags/cryptography/">cryptography</a><small>1</small></li>
   
-    <li><a href="/tags/curl/">curl</a><small>1</small></li>
+    <li><a href="/tags/curl/">curl</a><small>2</small></li>
   
     <li><a href="/tags/custom-domain/">custom-domain</a><small>2</small></li>
   
     <li><a href="/tags/custom-generator/">custom-generator</a><small>1</small></li>
   
-    <li><a href="/tags/cut/">cut</a><small>1</small></li>
+    <li><a href="/tags/cut/">cut</a><small>2</small></li>
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
   
@@ -414,7 +475,7 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>9</small></li>
+    <li><a href="/tags/docker/">docker</a><small>10</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>2</small></li>
   
@@ -519,6 +580,8 @@
     <li><a href="/tags/google-keep/">google-keep</a><small>1</small></li>
   
     <li><a href="/tags/google-trends/">google-trends</a><small>1</small></li>
+  
+    <li><a href="/tags/grep/">grep</a><small>1</small></li>
   
     <li><a href="/tags/groupthink/">groupthink</a><small>1</small></li>
   
@@ -1002,7 +1065,7 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>4</small></li>
+    <li><a href="/tags/version/">version</a><small>5</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   
