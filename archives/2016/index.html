@@ -68,6 +68,72 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-07-29T12:00:00.000Z"><a href="/2016/07/29/escaping-in-json-with-backslash/">Jul 29, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/29/escaping-in-json-with-backslash/">Escaping in JSON with Backslash</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <blockquote>
+<p>Escape characters are part of the syntax for many programming languages, <em>data formats</em>, and communication protocols. For a given alphabet an escape character’s purpose is to start character sequences (so named escape sequences), which have to be interpreted differently from the same characters occurring without the prefixed escape character.[^2]</p>
+</blockquote>
+<p>JSON or JavaScript Object Notation is a <em>data interchange format</em>. It has an escape character as well.</p>
+<blockquote>
+<p>In many programming languages such as C, Perl, and PHP and in Unix scripting languages, the backslash is an escape character, used to indicate that the character following it should be treated specially (if it would otherwise be treated normally), or normally (if it would otherwise be treated specially).[^3]</p>
+</blockquote>
+<p>JavaScript also uses backslash as an escape character. JSON is based on a subset of the JavaScript Programming Language, therefore, JSON also uses backslash as the escape character:</p>
+<blockquote>
+<p>A string is a sequence of zero or more Unicode characters, wrapped in double quotes, using backslash escapes.[^1]</p>
+</blockquote>
+<p>A character can be:</p>
+<ul>
+<li>Any Unicode character except <code>&quot;</code> or <code>\</code> or control character</li>
+<li><code>\&quot;</code></li>
+<li><code>\\</code></li>
+<li><code>\/</code></li>
+<li><code>\b</code></li>
+<li><code>\f</code></li>
+<li><code>\n</code></li>
+<li><code>\r</code></li>
+<li><code>\t</code></li>
+<li><code>\u</code> + four-hex-digits</li>
+</ul>
+<p>Only a few characters can be escaped in JSON. If the character is not one of the listed:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cat <span class="typedef"><span class="keyword">data</span>.json</span></div><div class="line"><span class="string">"\a"</span></div></pre></td></tr></table></figure>
+
+<p>it returns a <code>SyntaxError</code>[^4]:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>node -e <span class="string">'console.log(require("./data.json"))'</span></div><div class="line"><span class="class"><span class="keyword">module</span>.<span class="title">js</span>:561</span></div><div class="line">    throw err;</div><div class="line">    ^</div><div class="line"></div><div class="line"><span class="constant">SyntaxError</span><span class="symbol">:</span> /home/chao/tmp/js/data.<span class="symbol">json:</span> <span class="constant">Unexpected</span> token a <span class="keyword">in</span> <span class="constant">JSON</span> at position <span class="number">2</span></div><div class="line">    at <span class="constant">Object</span>.parse (native)</div><div class="line">    at <span class="constant">Object</span>.<span class="constant">Module</span>._extensions..json (<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:558:27)</span></div><div class="line">    at <span class="constant">Module</span>.load (<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:458:32)</span></div><div class="line">    at tryModuleLoad (<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:417:12)</span></div><div class="line">    at <span class="constant">Function</span>.<span class="constant">Module</span>._load (<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:409:3)</span></div><div class="line">    at <span class="constant">Module</span>.<span class="keyword">require</span> (<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:468:17)</span></div><div class="line">    at <span class="keyword">require</span> (internal/<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:20:19)</span></div><div class="line">    at [eval]<span class="symbol">:</span><span class="number">1</span><span class="symbol">:</span><span class="number">13</span></div><div class="line">    at <span class="constant">ContextifyScript</span>.<span class="constant">Script</span>.runInThisContext (vm.<span class="symbol">js:</span><span class="number">25</span><span class="symbol">:</span><span class="number">33</span>)</div><div class="line">    at <span class="constant">Object</span>.exports.runInThisContext (vm.<span class="symbol">js:</span><span class="number">77</span><span class="symbol">:</span><span class="number">17</span>)</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/07/29/escaping-in-json-with-backslash/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-18T12:00:00.000Z"><a href="/2016/07/18/getting-the-version-of-the-latest-release/">Jul 18, 2016</a></time>
       
       
@@ -331,11 +397,13 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/data-processing/">Data Processing</a><small>1</small></li>
+    <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
+  
+    <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
   
@@ -441,6 +509,8 @@
     <li><a href="/tags/aws-cli/">aws-cli</a><small>4</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
     <li><a href="/tags/bash/">bash</a><small>3</small></li>
   
@@ -650,6 +720,8 @@
   
     <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
   
+    <li><a href="/tags/escape-character/">escape-character</a><small>1</small></li>
+  
     <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
   
     <li><a href="/tags/express/">express</a><small>3</small></li>
@@ -800,7 +872,7 @@
   
     <li><a href="/tags/jasmine/">jasmine</a><small>1</small></li>
   
-    <li><a href="/tags/javascript/">javascript</a><small>12</small></li>
+    <li><a href="/tags/javascript/">javascript</a><small>13</small></li>
   
     <li><a href="/tags/jelly-bean/">jelly-bean</a><small>1</small></li>
   
@@ -812,7 +884,7 @@
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>4</small></li>
+    <li><a href="/tags/json/">json</a><small>5</small></li>
   
     <li><a href="/tags/koa/">koa</a><small>7</small></li>
   

@@ -64,6 +64,67 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-12-04T17:34:59.000Z"><a href="/2013/12/04/configuration-setup-and-loading-precedence/">Dec 4, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/04/configuration-setup-and-loading-precedence/">Configuration Setup and Loading Precedence</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Loading precedence (latter overrides former):</p>
+<ol>
+<li>Load application default settings (<code>config/default.yml</code>)</li>
+<li>Load environment settings</li>
+<li>Load custom settings</li>
+</ol>
+<p>Default settings of the application is provided by the upstream, therefore, it should not be modified.</p>
+<p>There are four types of environments: <code>development</code>, <code>testing</code>, <code>staging</code> and <code>production</code>. Environment can be set by using the shell environment variable: <code>ENV</code>. If the environment variable is not specified, it is set to <code>development</code> as default. Environment settings override default settings.</p>
+<p>Custom settings override environment settings. The search path for custom settings is:</p>
+<ol>
+<li>Environment variable <code>SETTINGS</code></li>
+<li><code>config/settings.yml</code></li>
+</ol>
+<p>If both paths are not available, that means the custom settings are not specified.</p>
+<p><code>config/settings.yml</code> is a custom settings, therefore, it will be ignored by git in <code>.gitignore</code> file:</p>
+<pre><code>config/settings.yml
+</code></pre><p>The complete directory structure regarding to the configuration setup:</p>
+<pre><code><span class="title">config</span>/
+├── <span class="default"><span class="keyword">default</span>.yml</span>
+├── environments
+│   ├── development.yml
+│   ├── production.yml
+│   ├── staging.yml
+│   └── testing.yml
+└── settings.yml
+</code></pre><p>Quick start command:</p>
+<pre><code><span class="variable">$ </span>node app
+</code></pre><p>Fully customized start command:</p>
+<pre><code><span class="variable">$ </span><span class="constant">ENV</span>=production <span class="constant">SETTINGS</span>=<span class="regexp">/path/to</span><span class="regexp">/settings.yml node app</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-29T12:00:30.000Z"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Nov 29, 2013</a></time>
       
       
@@ -544,41 +605,6 @@ coffee&gt; .help
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-10-26T23:06:00.000Z"><a href="/2013/10/26/coffeescript-inline-block-rule-toggling/">Oct 26, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/10/26/coffeescript-inline-block-rule-toggling/">CoffeeScript Inline Block Rule Toggling</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Temporarily remove <a href="http://www.coffeelint.org/" target="_blank" rel="external">CoffeeLint</a> restriction via the inline code:</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coffeelint: disable=max_line_length,no_implicit_parens</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># A long comment that exceeds 80 chars per line. Lorem ipsum dolor sit amet, consectetur</span></div><div class="line"><span class="comment"># adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># coffeelint: enable=max_line_length,no_implicit_parens</span></div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -604,11 +630,13 @@ coffee&gt; .help
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/data-processing/">Data Processing</a><small>1</small></li>
+    <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
+  
+    <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
   
@@ -714,6 +742,8 @@ coffee&gt; .help
     <li><a href="/tags/aws-cli/">aws-cli</a><small>4</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
     <li><a href="/tags/bash/">bash</a><small>3</small></li>
   
@@ -923,6 +953,8 @@ coffee&gt; .help
   
     <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
   
+    <li><a href="/tags/escape-character/">escape-character</a><small>1</small></li>
+  
     <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
   
     <li><a href="/tags/express/">express</a><small>3</small></li>
@@ -1073,7 +1105,7 @@ coffee&gt; .help
   
     <li><a href="/tags/jasmine/">jasmine</a><small>1</small></li>
   
-    <li><a href="/tags/javascript/">javascript</a><small>12</small></li>
+    <li><a href="/tags/javascript/">javascript</a><small>13</small></li>
   
     <li><a href="/tags/jelly-bean/">jelly-bean</a><small>1</small></li>
   
@@ -1085,7 +1117,7 @@ coffee&gt; .help
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>4</small></li>
+    <li><a href="/tags/json/">json</a><small>5</small></li>
   
     <li><a href="/tags/koa/">koa</a><small>7</small></li>
   

@@ -68,6 +68,49 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-10-02T12:00:00.000Z"><a href="/2015/10/02/re-assembling-the-requested-url/">Oct 2, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/10/02/re-assembling-the-requested-url/">Re-assembling the Requested URL</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>It is simple to know the request URL path, it’s one (<code>this.url</code> in <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>) used by routing, but if you are looking to get the complete URL, it’s a little bit complicated. Luckily, there is a quick way to re-assemble the requested URL in <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>, if proxy is not a concern:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> url = <span class="keyword">this</span>.request.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.request.host + <span class="keyword">this</span>.request.originalUrl;</div></pre></td></tr></table></figure>
+
+<p>Or a shorter version:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> url = <span class="keyword">this</span>.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.host + <span class="keyword">this</span>.originalUrl;</div></pre></td></tr></table></figure>
+
+<p>The port number is included in <code>this.host</code>, for example: <code>localhost:3000</code>.</p>
+<p>Putting into a complete script:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{</div><div class="line">  <span class="comment">// Echo back the request URL.</span></div><div class="line">  <span class="keyword">this</span>.body = <span class="keyword">this</span>.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.host + <span class="keyword">this</span>.originalUrl;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>Assume that you have a server running on the host <code>www.example.com</code> with SSL enabled. If you make a request to the server with the URL: <code>https://www.example.com/path</code>, this URL will be echoed back in the response by the above script.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-27T12:00:00.000Z"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Sep 27, 2015</a></time>
       
       
@@ -515,58 +558,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/">Sep 14, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/">Understand the Limitation of the String Property Type of Google Cloud Datastore</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> supports a variety of data types for property values:</p>
-<ul>
-<li>Integers</li>
-<li>Floating-point numbers</li>
-<li>Strings</li>
-<li>Dates</li>
-<li>Binary data</li>
-</ul>
-<p>Strings are likely the most frequently used. When working with strings, the most important question to ask is how many bytes can be inserted into the property/field. According to the table listed in <a href="https://cloud.google.com/datastore/docs/concepts/entities#Datastore_Properties_and_value_types" target="_blank" rel="external">properties and value types</a>:</p>
-<blockquote>
-<p>Up to 1500 bytes if property is indexed, up to 1MB otherwise</p>
-</blockquote>
-<p>Let’s give a try:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">// String Property Type</div><div class="line">// ====================</div><div class="line">//</div><div class="line">// Investigate the string property <span class="built_in">type</span> of Google Cloud Datastore.</div><div class="line">//</div><div class="line">// Dependencies tested:</div><div class="line">//</div><div class="line">// - `gcloud@v0.<span class="number">21.0</span>`</div><div class="line">// - `lorem-ipsum@<span class="number">1.0</span>.<span class="number">3</span>`</div><div class="line"></div><div class="line"><span class="string">'use strict'</span>;</div><div class="line"></div><div class="line">// Define dependencies.</div><div class="line">var params = {</div><div class="line">  projectId: <span class="string">'myproj'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'test'</span></div><div class="line">};</div><div class="line">var dataset = require(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line">var kind = <span class="string">'String'</span>;</div><div class="line">var lorem = require(<span class="string">'lorem-ipsum'</span>);</div><div class="line"></div><div class="line">// Save an entity to the datastore.</div><div class="line">function run(params) {</div><div class="line">  var size = params.size;</div><div class="line">  var index = params.index;</div><div class="line">  var str = lorem({ count: size }).substr(<span class="number">0</span>, size);</div><div class="line">  var key = dataset.key(kind);</div><div class="line">  var data = [</div><div class="line">    {</div><div class="line">      name: <span class="string">'title'</span>,</div><div class="line">      value: str,</div><div class="line">      excludeFromIndexes: !index</div><div class="line">    }</div><div class="line">  ];</div><div class="line">  var entity = {</div><div class="line">    key: key,</div><div class="line">    data: data</div><div class="line">  };</div><div class="line"></div><div class="line">  dataset.save(entity, function (err) {</div><div class="line">    console.log(size, new Buffer(str).length, index,</div><div class="line">      err ? err.code + <span class="string">' '</span> + err.message : <span class="string">'200 OK'</span>);</div><div class="line">  });</div><div class="line">}</div><div class="line"></div><div class="line">// Explanation of fields:</div><div class="line">//</div><div class="line">// - `size`: Total number of bytes to produce</div><div class="line">// - `index`: Whether to index the string field</div><div class="line">//</div><div class="line">// In-line comment indicates the expected result.</div><div class="line">[</div><div class="line">  { size: <span class="number">1500</span>, index: <span class="literal">true</span>  },             // OK</div><div class="line">  { size: <span class="number">1501</span>, index: <span class="literal">false</span> },             // OK</div><div class="line">  { size: <span class="number">1501</span>, index: <span class="literal">true</span>  },             // Error</div><div class="line">  { size: <span class="number">1024</span> * <span class="number">1024</span> - <span class="number">92</span>, index: <span class="literal">false</span> }, // OK</div><div class="line">  { size: <span class="number">1024</span> * <span class="number">1024</span> - <span class="number">91</span>, index: <span class="literal">false</span> }, // Error</div><div class="line">].forEach(run);</div></pre></td></tr></table></figure>
-
-<p>Don’t ask me where <code>91</code> or <code>92</code> is coming from. Apparently, this is somewhere closer to 1 MB, but not exactly. The result of the test script:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -593,11 +584,13 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/data-processing/">Data Processing</a><small>1</small></li>
+    <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
+  
+    <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
   
@@ -703,6 +696,8 @@
     <li><a href="/tags/aws-cli/">aws-cli</a><small>4</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
     <li><a href="/tags/bash/">bash</a><small>3</small></li>
   
@@ -912,6 +907,8 @@
   
     <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
   
+    <li><a href="/tags/escape-character/">escape-character</a><small>1</small></li>
+  
     <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
   
     <li><a href="/tags/express/">express</a><small>3</small></li>
@@ -1062,7 +1059,7 @@
   
     <li><a href="/tags/jasmine/">jasmine</a><small>1</small></li>
   
-    <li><a href="/tags/javascript/">javascript</a><small>12</small></li>
+    <li><a href="/tags/javascript/">javascript</a><small>13</small></li>
   
     <li><a href="/tags/jelly-bean/">jelly-bean</a><small>1</small></li>
   
@@ -1074,7 +1071,7 @@
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>4</small></li>
+    <li><a href="/tags/json/">json</a><small>5</small></li>
   
     <li><a href="/tags/koa/">koa</a><small>7</small></li>
   
