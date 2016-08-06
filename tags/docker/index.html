@@ -68,6 +68,58 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-08-06T12:00:00.000Z"><a href="/2016/08/06/creating-a-data-volume-container-in-dockerfile/">Aug 6, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/06/creating-a-data-volume-container-in-dockerfile/">Creating a Data Volume Container in Dockerfile</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Create a <a href="https://docker.com/" target="_blank" rel="external">Docker</a> data volume container in <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a> is unbelievably simple, just use the <a href="https://docs.docker.com/engine/reference/builder/#/volume" target="_blank" rel="external">VOLUME</a> instruction:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FROM debian:8.5</div><div class="line">VOLUME ["/data"]</div></pre></td></tr></table></figure>
+
+<p>The instruction creates a mount point and attach the volumes from native host or other containers.</p>
+<p>Build the data container:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ docker build -t data .</div><div class="line">Sending build context to Docker daemon 2.048 kB</div><div class="line">Step 1 : FROM debian:8.5</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">1</span>b088884749b</span></span></div><div class="line">Step 2 : VOLUME /data</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="constant">Running</span> in <span class="number">5511</span>f34a489c</span></span></div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">7</span>b723b2b3d13</span></span></div><div class="line">Removing intermediate container 5511f34a489c</div><div class="line">Successfully built 7b723b2b3d13</div></pre></td></tr></table></figure>
+
+<p>The built size is just about 125.1 MB.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="operator"><span class="keyword">create</span> <span class="comment">--name data data</span></span></div></pre></td></tr></table></figure>
+
+<p>The first <code>data</code> is the name of the container, the second <code>data</code> is the name of Docker image.</p>
+<p>To attach the data volume container to another, we use <code>--volumes-from</code> option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">$</span> <span class="comment">docker</span> <span class="comment">run</span> <span class="literal">-</span><span class="comment">it</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">rm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">name</span> <span class="comment">foo</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">volumes</span><span class="literal">-</span><span class="comment">from=data</span> <span class="comment">debian:8</span><span class="string">.</span><span class="comment">5</span> <span class="comment">/bin/bash</span></div></pre></td></tr></table></figure>
+
+<p>If there’re initial data to copy, then add the <code>COPY</code> instruction:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">FROM debian:8.5</div><div class="line">VOLUME ["/data"]</div><div class="line">COPY . /data</div></pre></td></tr></table></figure>
+
+<p>Settings:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker --<span class="keyword">version</span></div><div class="line">Docker <span class="keyword">version</span> <span class="number">1.11</span>.<span class="number">2</span>, build b9f10c9</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-18T12:00:00.000Z"><a href="/2016/07/18/getting-the-version-of-the-latest-release/">Jul 18, 2016</a></time>
       
       
@@ -518,70 +570,11 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-11-03T22:00:00.000Z"><a href="/2014/11/03/create-a-jq-docker-image-with-automated-build/">Nov 3, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/11/03/create-a-jq-docker-image-with-automated-build/">Create a jq Docker Image with Automated Build</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I have created a <a href="http://stedolan.github.io/jq/" target="_blank" rel="external">jq</a> Docker image based on <a href="https://registry.hub.docker.com/_/busybox/" target="_blank" rel="external">BusyBox</a> with <a href="https://docs.docker.com/docker-hub/builds/" target="_blank" rel="external">automated builds</a>. BusyBox is really really small in size, so the jq image I have created is also very small, just a little over 6 MB.</p>
-<p>Here is the source code and image repositories:</p>
-<ul>
-<li><a href="https://github.com/realguess/docker-jq" target="_blank" rel="external">https://github.com/realguess/docker-jq</a></li>
-<li><a href="https://registry.hub.docker.com/u/realguess/jq/" target="_blank" rel="external">https://registry.hub.docker.com/u/realguess/jq/</a></li>
-</ul>
-<p>Building Docker image is pretty straight-forward, just follow the instruction:</p>
-<p><a href="https://docs.docker.com/userguide/dockerrepos/#automated-builds" target="_blank" rel="external">https://docs.docker.com/userguide/dockerrepos/#automated-builds</a></p>
-<p>I have also created a tag <code>v1.4</code> in my GitHub repository to match the release of jq binary. This should also be reflected in Docker registry. After couple tries, here is the build details for adding both <code>latest</code> and <code>1.4</code> tags:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="header">Type     Name     Dockerfile Location   Tag Name</span></div><div class="line">------------------------------------------------</div><div class="line">Tag      v1.4     /                     1.4</div><div class="line">Branch   master   /                     latest</div></pre></td></tr></table></figure>
-
-<p>The first two columns match git branch and tag, and the last column reflects Docker tags. See <a href="https://github.com/realguess/docker-jq/tags" target="_blank" rel="external">https://github.com/realguess/docker-jq/tags</a> and <a href="https://registry.hub.docker.com/u/realguess/jq/tags/manage/" target="_blank" rel="external">https://registry.hub.docker.com/u/realguess/jq/tags/manage/</a>.</p>
-<p>This is done by starting an automated build with type of <code>tag</code> instead of <code>branch</code>. Everything is done via the Docker Hub website.</p>
-<p>If I pull down this repository:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>docker pull realguess/jq</div></pre></td></tr></table></figure>
-
-<p>It should give me two image layers with the two different image IDs, which makes sense, as latest commit usually is not the same as the tagged one.</p>
-<p>After a while, the index should be built, and I can search it via:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ docker search jq</div><div class="line">NAME             DESCRIPTION              STARS    OFFICIAL   AUTOMATED</div><div class="line">realguess/jq                              <span class="number">1</span>                   [OK]</div></pre></td></tr></table></figure>
-
-<p>The image is listed as <code>AUTOMATED</code>, but the description is missing here in the search command.</p>
-<p>There are two types of descriptions:</p>
-<ul>
-<li>Short description</li>
-<li>Full description</li>
-</ul>
-<p>Full description will be generated automatically via <code>README.md</code> file. I thought the short description can also be generated via <code>README-short.txt</code>, however, this is not the case. You can add it in the settings page for example:</p>
-<p><a href="https://registry.hub.docker.com/u/realguess/jq/settings/" target="_blank" rel="external">https://registry.hub.docker.com/u/realguess/jq/settings/</a></p>
-<p>Automated builds are triggered automatically with GitHub and BitBucket repository. Once any commit is pushed to either repository, a trigger will be sent to Docker Hub, and automated build will start.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
+  
+    <a href="/tags/docker/page/2/" class="alignright next">Next</a>
   
   <div class="clearfix"></div>
 </nav>
@@ -609,7 +602,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>11</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -846,7 +839,7 @@
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
   
-    <li><a href="/tags/data-volume/">data-volume</a><small>1</small></li>
+    <li><a href="/tags/data-volume/">data-volume</a><small>2</small></li>
   
     <li><a href="/tags/database/">database</a><small>1</small></li>
   
@@ -896,9 +889,9 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>10</small></li>
+    <li><a href="/tags/docker/">docker</a><small>11</small></li>
   
-    <li><a href="/tags/dockerfile/">dockerfile</a><small>2</small></li>
+    <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   

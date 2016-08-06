@@ -64,6 +64,58 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-08-06T12:00:00.000Z"><a href="/2016/08/06/creating-a-data-volume-container-in-dockerfile/">Aug 6, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/06/creating-a-data-volume-container-in-dockerfile/">Creating a Data Volume Container in Dockerfile</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Create a <a href="https://docker.com/" target="_blank" rel="external">Docker</a> data volume container in <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a> is unbelievably simple, just use the <a href="https://docs.docker.com/engine/reference/builder/#/volume" target="_blank" rel="external">VOLUME</a> instruction:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FROM debian:8.5</div><div class="line">VOLUME ["/data"]</div></pre></td></tr></table></figure>
+
+<p>The instruction creates a mount point and attach the volumes from native host or other containers.</p>
+<p>Build the data container:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ docker build -t data .</div><div class="line">Sending build context to Docker daemon 2.048 kB</div><div class="line">Step 1 : FROM debian:8.5</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">1</span>b088884749b</span></span></div><div class="line">Step 2 : VOLUME /data</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="constant">Running</span> in <span class="number">5511</span>f34a489c</span></span></div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">7</span>b723b2b3d13</span></span></div><div class="line">Removing intermediate container 5511f34a489c</div><div class="line">Successfully built 7b723b2b3d13</div></pre></td></tr></table></figure>
+
+<p>The built size is just about 125.1 MB.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="operator"><span class="keyword">create</span> <span class="comment">--name data data</span></span></div></pre></td></tr></table></figure>
+
+<p>The first <code>data</code> is the name of the container, the second <code>data</code> is the name of Docker image.</p>
+<p>To attach the data volume container to another, we use <code>--volumes-from</code> option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">$</span> <span class="comment">docker</span> <span class="comment">run</span> <span class="literal">-</span><span class="comment">it</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">rm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">name</span> <span class="comment">foo</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">volumes</span><span class="literal">-</span><span class="comment">from=data</span> <span class="comment">debian:8</span><span class="string">.</span><span class="comment">5</span> <span class="comment">/bin/bash</span></div></pre></td></tr></table></figure>
+
+<p>If there’re initial data to copy, then add the <code>COPY</code> instruction:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">FROM debian:8.5</div><div class="line">VOLUME ["/data"]</div><div class="line">COPY . /data</div></pre></td></tr></table></figure>
+
+<p>Settings:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker --<span class="keyword">version</span></div><div class="line">Docker <span class="keyword">version</span> <span class="number">1.11</span>.<span class="number">2</span>, build b9f10c9</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-29T12:00:00.000Z"><a href="/2016/07/29/escaping-in-json-with-backslash/">Jul 29, 2016</a></time>
       
       
@@ -511,71 +563,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-10-06T12:00:00.000Z"><a href="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/">Oct 6, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/">Overriding the Default Forwarded SSH Port in Vagrant</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>TLDR:</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Must specified `id: "ssh"` in order to override the default forwarded SSH port.</span></div><div class="line">config.vm.network <span class="symbol">:forwarded_port</span>, <span class="symbol">guest:</span> <span class="number">22</span>, <span class="symbol">host:</span> <span class="number">2322</span>, <span class="symbol">id:</span> <span class="string">"ssh"</span></div></pre></td></tr></table></figure>
-
-<p>What’s the problem? If running multiple virtual machines managed by Vagrant, SSH port collision will happen:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Vagrant cannot forward the specified ports on this VM, since they</div><div class="line">would collide with some other application that is already listening</div><div class="line">on these ports. The forwarded port to 2222 is already in use</div><div class="line">on the host machine.</div><div class="line"></div><div class="line">To fix this, modify your current projects Vagrantfile to use another</div><div class="line">port. Example, where '1234' would be replaced by a unique host port:</div><div class="line"></div><div class="line">  config.vm.network :forwarded_port, guest: 22, host: 1234</div><div class="line"></div><div class="line">Sometimes, Vagrant will attempt to auto-correct this for you. In this</div><div class="line">case, Vagrant was unable to. This is usually because the guest machine</div><div class="line">is in a state which doesn't allow modifying port forwarding.</div></pre></td></tr></table></figure>
-
-<p>The example is <em>correct</em> but <em>incomplete</em>. By default the SSH port (<code>22</code>) on the guest machine is forwarded to port <code>2222</code> on the host machine:</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Source: https://github.com/mitchellh/vagrant/blob/v1.7.2/plugins/kernel_v2/config/vm.rb</span></div><div class="line"><span class="keyword">if</span> !<span class="variable">@__networks</span>[<span class="string">"forwarded_port-ssh"</span>]</div><div class="line">  network <span class="symbol">:forwarded_port</span>,</div><div class="line">    <span class="symbol">guest:</span> <span class="number">22</span>,</div><div class="line">    <span class="symbol">host:</span> <span class="number">2222</span>,</div><div class="line">    <span class="symbol">host_ip:</span> <span class="string">"127.0.0.1"</span>,</div><div class="line">    <span class="symbol">id:</span> <span class="string">"ssh"</span>,</div><div class="line">    <span class="symbol">auto_correct:</span> <span class="keyword">true</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-
-<p>Changing to another port in <code>Vagrantfile</code> does not solve the problem. For example, switching from <code>2222</code> to <code>2322</code>:</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Create a forwarded port mapping which allows access to a specific port</span></div><div class="line"><span class="comment"># within the machine from a port on the host machine. In the example below,</span></div><div class="line"><span class="comment"># accessing "localhost:8080" will access port 80 on the guest machine.</span></div><div class="line">config.vm.network <span class="string">"forwarded_port"</span>, <span class="symbol">guest:</span> <span class="number">22</span>, <span class="symbol">host:</span> <span class="number">2322</span></div></pre></td></tr></table></figure>
-
-<p>In this situation, you are forwarding both ports <code>2222</code> and <code>2322</code> to the SSH port on the guest machine, as shown in <a href="https://www.virtualbox.org/" target="_blank" rel="external">VirtualBox</a> port forwarding settings:</p>
-<p><img src="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/port-forwarding-rules.jpg" alt="Port Forwarding Rules"></p>
-<p>When bringing up the machine, there will be multiple host machine ports forwarding to the same SSH port.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ vagrant up</div><div class="line">==&gt; default: Forwarding ports...</div><div class="line">    default: <span class="number">22</span> =&gt; <span class="number">2322</span> (adapter <span class="number">1</span>)</div><div class="line">    default: <span class="number">22</span> =&gt; <span class="number">2222</span> (adapter <span class="number">1</span>)</div></pre></td></tr></table></figure>
-
-<p>The SSH configuration shows the same outcome:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh-config</div><div class="line">Host default</div><div class="line">  HostName <span class="number">127.0</span>.<span class="number">0.1</span></div><div class="line">  User chao</div><div class="line">  Port <span class="number">2222</span></div></pre></td></tr></table></figure>
-
-<p>Of course, you can do:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh -p <span class="number">2322</span> chao@localhost</div></pre></td></tr></table></figure>
-
-<p>This works, but we like the simple <code>vagrant ssh</code> command, and we just want to retain a single port <code>2322</code>.</p>
-<p>The solution is appending <code>id: &quot;ssh&quot;</code>, and it must be specified in order to override the default forwarded SSH port. See &lt; <a href="https://github.com/mitchellh/vagrant/issues/3232#issuecomment-39354659&gt;" target="_blank" rel="external">https://github.com/mitchellh/vagrant/issues/3232#issuecomment-39354659&gt;</a>:</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Must specified `id: "ssh"` in order to override the default forwarded SSH port.</span></div><div class="line">config.vm.network <span class="symbol">:forwarded_port</span>, <span class="symbol">guest:</span> <span class="number">22</span>, <span class="symbol">host:</span> <span class="number">2322</span>, <span class="symbol">id:</span> <span class="string">"ssh"</span></div></pre></td></tr></table></figure>
-
-<p>After appending <code>id: &quot;ssh&quot;</code>, the SSH configuration has also been updated:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh-config</div><div class="line">Host default</div><div class="line">  HostName <span class="number">127.0</span>.<span class="number">0.1</span></div><div class="line">  User chao</div><div class="line">  Port <span class="number">2322</span></div></pre></td></tr></table></figure>
-
-<p>Now, you are good to go:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -607,7 +594,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>10</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>11</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -844,7 +831,7 @@
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
   
-    <li><a href="/tags/data-volume/">data-volume</a><small>1</small></li>
+    <li><a href="/tags/data-volume/">data-volume</a><small>2</small></li>
   
     <li><a href="/tags/database/">database</a><small>1</small></li>
   
@@ -894,9 +881,9 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>10</small></li>
+    <li><a href="/tags/docker/">docker</a><small>11</small></li>
   
-    <li><a href="/tags/dockerfile/">dockerfile</a><small>2</small></li>
+    <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>1</small></li>
   
