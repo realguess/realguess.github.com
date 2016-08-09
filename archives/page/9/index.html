@@ -68,6 +68,68 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-06-29T21:07:07.000Z"><a href="/2014/06/29/inherited-accessor-property-can-only-be-overridden-by-accessor-property/">Jun 29, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/29/inherited-accessor-property-can-only-be-overridden-by-accessor-property/">Inherited Accessor Property Can Only Be Overridden by Accessor Property</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In Javascript, define a property <code>prop</code> as an accessor property via getter/setter:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = {</div><div class="line">  get prop() {},</div><div class="line">  set prop() {}</div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>And the property will have the following attributes:</p>
+<pre><code>&gt; <span class="built_in">Object</span>.keys(obj)
+[ <span class="string">'prop'</span> ]
+&gt; <span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, <span class="string">'prop'</span>)
+{ <span class="keyword">get</span>: [<span class="built_in">Function</span>: prop],
+  <span class="keyword">set</span>: [<span class="built_in">Function</span>: prop],
+  enumerable: <span class="literal">true</span>,
+  configurable: <span class="literal">true</span> }
+</code></pre><p>Now, create a new object that inherits <code>obj</code>, and attempt to overwrite the accessor property by a data property:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = <span class="built_in">Object</span>.create(obj);</div><div class="line">foo.prop = <span class="string">'data'</span>;</div></pre></td></tr></table></figure>
+
+<p>But, the same property of the new object cannot be created:</p>
+<pre><code><span class="input"><span class="prompt">&gt; Object.keys(foo)
+[]
+&gt;</span> <span class="constant">Object</span>.getOwnPropertyDescriptor(foo, <span class="string">'prop'</span>)</span>
+undefined
+</code></pre><p>That is because that the property is an accessor property and it cannot be overridden by a data property. It can only be overridden by an accessor property:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(foo, <span class="string">'prop'</span>, {</div><div class="line">  get: <span class="function"><span class="keyword">function</span> <span class="title">prop</span><span class="params">()</span> </span>{},</div><div class="line">  set: <span class="function"><span class="keyword">function</span> <span class="title">prop</span><span class="params">()</span> </span>{},</div><div class="line">  enumerable: <span class="literal">true</span>,</div><div class="line">  configurable: <span class="literal">true</span>,</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Then, the <code>foo</code> object will have its own property named <code>prop</code>:</p>
+<pre><code>&gt; <span class="built_in">Object</span>.keys(foo)
+[ <span class="string">'prop'</span> ]
+&gt; <span class="built_in">Object</span>.getOwnPropertyDescriptor(foo, <span class="string">'prop'</span>)
+{ <span class="keyword">get</span>: [<span class="built_in">Function</span>: prop],
+  <span class="keyword">set</span>: [<span class="built_in">Function</span>: prop],
+  enumerable: <span class="literal">true</span>,
+  configurable: <span class="literal">true</span> }
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-06-28T10:10:21.000Z"><a href="/2014/06/28/getter-and-setter-methods-without-function-identifier-restriction/">Jun 28, 2014</a></time>
       
       
@@ -653,61 +715,6 @@ v<span class="number">0</span>.<span class="number">10.28</span>
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-05-18T22:05:34.000Z"><a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">May 18, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">Split a Large JSON file into Smaller Pieces</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In the <a href="/2013/12/19/split-json-file-into-multiple-parts/">previous post</a>, I have written about how to split a large JSON file into multiple parts, but that was limited to the default behavior of <code>mongoexport</code>, where each line in the output file represents a JSON string. If you have to deal with a large JSON file, such as the one generated with <code>--jsonArray</code> option in <code>mongoexport</code>, you can to parse the file incrementally or streaming.</p>
-<p>I have downloaded a large JOSN <a href="https://health.data.ny.gov/api/views/vafa-pf2s/rows.json?accessType=DOWNLOAD" target="_blank" rel="external">data set</a> (about 144MB) from <a href="http://catalog.data.gov/dataset/genealogical-research-death-index-beginning-1957" target="_blank" rel="external">Data.gov</a>. If you try to read the entire data set into memory:</p>
-<pre><code>&gt; <span class="keyword">var</span> json = <span class="built_in">require</span>(<span class="string">'./data.json'</span>)
-Killed
-</code></pre><p>The process is not able to handle it. Use streaming is necessary. And luckily, our <a href="/2014/05/18/command-line-json-processing/">command line JSON processing</a> tool, <a href="http://stedolan.github.io/jq/" target="_blank" rel="external">jq</a>, supports streaming.</p>
-<p>The parts we are interested are encapsulated in an array under <code>data</code> property of the data set. We are going to split each element of the array into its own file.</p>
-<p>Don’t try to use <code>-f</code> option in <em>jq</em> to read file from the command line, it will read everything into a memory. Instead, do <code>cat data.json | jq</code>.</p>
-<pre><code>$ <span class="built_in">mkdir</span> parts
-$ <span class="keyword">cat</span> data.json | jq -<span class="keyword">c</span> -M <span class="string">'.data[]'</span> | \
-  <span class="keyword">while</span> <span class="keyword">read</span> <span class="built_in">line</span>; <span class="keyword">do</span> <span class="keyword">echo</span> $<span class="built_in">line</span> &gt; parts/$(date +%<span class="keyword">s</span>%<span class="keyword">N</span>).json; done
-</code></pre><p>The entire data set is piped into <em>jq</em> to filter and compress each array element. Each element is printed in one line, and each line is saved into its own JSON file by using UNIX timestamp plus nanosecond as the filename. All pieces are saved into <code>parts/</code> directory.</p>
-<p>But there is one problem with embedded JSON string, which has to do with <code>echo</code>, due to backslash. For example, if echoing the following string:</p>
-<pre><code>{<span class="string">"name"</span>:<span class="string">"{\"first\":\"Foo\",\"last\":\"Foo\"}"</span>,<span class="string">"username"</span>:<span class="string">"foo"</span>,<span class="string">"id"</span>:<span class="number">1</span>}
-</code></pre><p>It will be printed as an invalid JSON:</p>
-<pre><code>{<span class="string">"name"</span><span class="symbol">:<span class="string">"{"</span>first<span class="string">":"</span>Foo<span class="string">","</span>last<span class="string">":"</span>Foo<span class="string">"}"</span></span>,<span class="string">"username"</span><span class="symbol">:<span class="string">"foo"</span></span>,<span class="string">"id"</span><span class="symbol">:</span><span class="number">1</span>}
-</code></pre><p>Backslashes are stripped. To fix this problem, we can simply double backslash:</p>
-<pre><code>$ <span class="keyword">cat</span> data.json | jq -<span class="keyword">c</span> -M <span class="string">'.data[]'</span> | sed <span class="string">'s/\\"/\\\\"/g'</span> | \
-  <span class="keyword">while</span> <span class="keyword">read</span> <span class="built_in">line</span>; <span class="keyword">do</span> <span class="keyword">echo</span> $<span class="built_in">line</span> &gt; parts/$(date +%<span class="keyword">s</span>%<span class="keyword">N</span>).json; done
-</code></pre><p>You can even try <code>curl</code> the remote JSON file instead using <code>cat</code> from the downloaded file. But you might want to try with a smaller file first, because, with my slow machine, it took me nearly an hour to finish splitting into 678,733 parts:</p>
-<pre><code>real    <span class="number">49</span>m35.<span class="number">780</span>s
-<span class="literal">user</span>    <span class="number">2</span>m42.<span class="number">888</span>s
-sys     <span class="number">6</span>m48.<span class="number">048</span>s
-</code></pre><p>To take it a little bit further, the next step is to decide how many lines or array elements to write into a single file.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -737,6 +744,8 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
     <li><a href="/categories/coding/">Coding</a><small>8</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
+  
+    <li><a href="/categories/computing/">Computing</a><small>1</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -841,9 +850,9 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>8</small></li>
+    <li><a href="/tags/aws/">aws</a><small>9</small></li>
   
-    <li><a href="/tags/aws-cli/">aws-cli</a><small>4</small></li>
+    <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
   
@@ -905,7 +914,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>11</small></li>
+    <li><a href="/tags/cli/">cli</a><small>12</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -929,7 +938,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/command-history/">command-history</a><small>1</small></li>
   
-    <li><a href="/tags/command-line/">command-line</a><small>10</small></li>
+    <li><a href="/tags/command-line/">command-line</a><small>11</small></li>
   
     <li><a href="/tags/command-line-interface/">command-line-interface</a><small>0</small></li>
   
@@ -1332,6 +1341,10 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
     <li><a href="/tags/npm/">npm</a><small>4</small></li>
   
     <li><a href="/tags/npm-module/">npm-module</a><small>1</small></li>
+  
+    <li><a href="/tags/ntp/">ntp</a><small>1</small></li>
+  
+    <li><a href="/tags/ntpdate/">ntpdate</a><small>1</small></li>
   
     <li><a href="/tags/null/">null</a><small>1</small></li>
   
