@@ -68,6 +68,65 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-12-31T12:00:00.000Z"><a href="/2014/12/31/mount-multiple-data-volumes-and-multiple-data-volume-containers-in-docker/">Dec 31, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/12/31/mount-multiple-data-volumes-and-multiple-data-volume-containers-in-docker/">Mount Multiple Data Volumes and Multiple Data Volume Containers in Docker</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><strong>Multiple Data Volumes from a Single Container</strong></p>
+<p>Create and run multiple data volumes in a container:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run <span class="operator">-d</span> --name vol -v /vol1 -v /vol2 ubuntu</div></pre></td></tr></table></figure>
+
+<p>Mount the data volumes in a new container:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name foo --volumes-from=vol ubuntu</div></pre></td></tr></table></figure>
+
+<p>Both volumes will be mounted under the root directory as <code>/vol1</code> and <code>/vol2</code>.</p>
+<p><strong>Multiple Data Volume Containers</strong></p>
+<p>Create and run multiple data volume containers:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> {<span class="number">1</span>..<span class="number">2</span>}; <span class="keyword">do</span> docker run <span class="operator">-d</span> --name vol<span class="variable">${i}</span> -v /vol<span class="variable">${i}</span> ubuntu; <span class="keyword">done</span></div></pre></td></tr></table></figure>
+
+<p>Mount multiple data volume containers:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name foo --volumes-from=vol1 --volumes-from=vol2 ubuntu</div></pre></td></tr></table></figure>
+
+<p>Now there are also two volumes mounted under the root directory as <code>/vol1</code> and <code>/vol2</code>, one from each container.</p>
+<p><strong>Multiple Data Volume Containers But Sharing the Same Data Volume Name</strong></p>
+<p>Create multiple data volume containers with the same data volume name <code>/vol</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> {<span class="number">1</span>..<span class="number">2</span>}; <span class="keyword">do</span> docker run <span class="operator">-d</span> --name vol<span class="variable">${i}</span> -v /vol ubuntu; <span class="keyword">done</span></div></pre></td></tr></table></figure>
+
+<p>Mount multiple data volume containers:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name foo --volumes-from=vol1 --volumes-from=vol2 ubuntu</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/12/31/mount-multiple-data-volumes-and-multiple-data-volume-containers-in-docker/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-11-03T22:00:00.000Z"><a href="/2014/11/03/create-a-jq-docker-image-with-automated-build/">Nov 3, 2014</a></time>
       
       
@@ -157,7 +216,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>11</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>12</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -444,7 +503,7 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>11</small></li>
+    <li><a href="/tags/docker/">docker</a><small>12</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -842,7 +901,7 @@
   
     <li><a href="/tags/responsibility/">responsibility</a><small>1</small></li>
   
-    <li><a href="/tags/restart/">restart</a><small>1</small></li>
+    <li><a href="/tags/restart/">restart</a><small>2</small></li>
   
     <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
   

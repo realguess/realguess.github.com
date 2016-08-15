@@ -64,6 +64,74 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-04-02T00:30:00.000Z"><a href="/2014/04/02/difference-between-require-and-fs-in-loading-files/">Apr 2, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/04/02/difference-between-require-and-fs-in-loading-files/">Difference between require and fs in Loading Files</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Node has a simple module loading system by using <code>require</code>.</p>
+<blockquote>
+<p>A module prefixed with <code>&#39;/&#39;</code> is an absolute path to the file. For example, <code>require(&#39;/home/marco/foo.js&#39;)</code> will load the file at <code>/home/marco/foo.js</code>.</p>
+<p>A module prefixed with <code>&#39;./&#39;</code> is relative to the file calling <code>require()</code>. That is, <code>circle.js</code> must be in the same directory as <code>foo.js</code> for <code>require(&#39;./circle&#39;)</code> to find it.</p>
+<p>Without a leading <code>&#39;/&#39;</code> or <code>&#39;./&#39;</code> to indicate a file, the module is either a “core module” or is loaded from a <code>node_modules</code> folder.</p>
+<p><a href="http://nodejs.org/api/modules.html#modules_file_modules" target="_blank" rel="external">http://nodejs.org/api/modules.html#modules_file_modules</a></p>
+</blockquote>
+<p>We can also use it to load JSON files by simply specifying the file path. File path can be relative or absolute. Giving the following file structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── app.js</div><div class="line">├── <span class="typedef"><span class="keyword">data</span></span></div><div class="line">│   └── file.json</div><div class="line">└── lib</div><div class="line">    └── util.js</div></pre></td></tr></table></figure>
+
+<p>Let’s say the root path of the application is <code>/home/marco</code>. Use relative path from the file <code>lib/util.js</code>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> json = <span class="built_in">require</span>(<span class="string">'../data/file.json'</span>);</div></pre></td></tr></table></figure>
+
+<p>This will load the JSON content from <code>data/file.json</code>, because the require system knows that the file is relative to the calling file <code>lib/util.js</code>. But when using <a href="http://nodejs.org/api/fs.html" target="_blank" rel="external">file system</a> functions, relative path is not treat the same way:</p>
+<blockquote>
+<p>Relative path to filename can be used, remember however that this path will be relative to <code>process.cwd()</code>. - <a href="http://nodejs.org/api/fs.html" target="_blank" rel="external">File System</a></p>
+</blockquote>
+<p><code>process.cwd()</code> returns the current working directory, not the root directory of the application nor the directory of the calling file. For example:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> data = fs.readFileSync(<span class="string">'../data/file.json'</span>);</div></pre></td></tr></table></figure>
+
+<p>If your current working directory is <code>/home/marco/myapp</code>, the application root directory, you will get the following error message:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">fs.js:<span class="number">410</span></div><div class="line">  <span class="keyword">return</span> binding.open(pathModule._makeLong(path), stringToFlags(flags), mode);</div><div class="line">                 ^</div><div class="line"><span class="keyword">Error</span>: ENOENT, no such file <span class="keyword">or</span> directory <span class="comment">'../data/file.json'</span></div><div class="line">    at <span class="built_in">Object</span>.fs.openSync (fs.js:<span class="number">410</span>:<span class="number">18</span>)</div><div class="line">    at <span class="built_in">Object</span>.fs.readFileSync (fs.js:<span class="number">276</span>:<span class="number">15</span>)</div></pre></td></tr></table></figure>
+
+<p>Because <code>process.cwd()</code> is <code>/home/marco/myapp</code>, and reading file relative to this directory with <code>../data/file.json</code>, Node will expect file path to be <code>/home/marco/data/file.json</code>. Therefore, the error is thrown.</p>
+<p>The difference between <code>require</code> and <code>fs</code> in loading files is that if the relative path is used in <code>require</code>, it is relative to the file calling the <code>require</code>. If the relative path is used in <code>fs</code>, it is relative to <code>process.cwd()</code>.</p>
+<p>To fix the error in file system functions, we should always use absolute path. One thing we can do is:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> data = fs.readFileSync(__dirname + <span class="string">'/../data/file.json'</span>);</div></pre></td></tr></table></figure>
+
+<p><code>__dirname</code> is “the name of the directory that the currently executing script is resides in” [<a href="http://nodejs.org/api/globals.html#globals_dirname" target="_blank" rel="external">dirname</a>], and it has no trailing slash. The the structure looks odd, even though it works, but it might not work in all systems.</p>
+<p>The correct solution here is to use <code>path.join</code> from <a href="http://nodejs.org/api/path.html" target="_blank" rel="external">Path</a>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> data = fs.readFileSync(path.join(__dirname, <span class="string">'../data/file.json'</span>));</div></pre></td></tr></table></figure>
+
+<p>The <code>path</code> module “contains utilities for handling and transforming file paths”. The <code>path.join</code> function will call <code>path.normalize</code> to “normalize a string path, taking care of <code>..</code> and <code>.</code> paths” [<a href="http://nodejs.org/api/path.html#path_path_normalize_p" target="_blank" rel="external">normalize</a>], also see function <code>normalizeArray</code> in <a href="https://github.com/joyent/node/blob/master/lib/path.js" target="_blank" rel="external">https://github.com/joyent/node/blob/master/lib/path.js</a> on how the paths are normalized.</p>
+<p>In conclusion:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Use `require` to load JSON file.</span></div><div class="line"><span class="keyword">var</span> json = <span class="built_in">require</span>(<span class="string">'../data/file.json'</span>);</div><div class="line"></div><div class="line"><span class="comment">// Use `fs` to load JSON file.</span></div><div class="line"><span class="keyword">var</span> data = fs.readFileSync(path.join(__dirname, <span class="string">'../data/file.json'</span>));</div><div class="line"><span class="keyword">var</span> json = <span class="built_in">JSON</span>.parse(data.toString());</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-03-29T22:58:55.000Z"><a href="/2014/03/29/passing-environment-variables-from-cron-to-shell-script/">Mar 29, 2014</a></time>
       
       
@@ -665,50 +733,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-22T11:59:01.000Z"><a href="/2014/01/22/hipchat/">Jan 22, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/22/hipchat/">HipChat</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>While I was learning more on distributed team and remote working. I saw many startups are using <a href="https://www.hipchat.com/" target="_blank" rel="external">HipChat</a>, a group chatting service. If you have been using IRC, you will feel right at home. But it is not just a group chat, you can also share files and source code. Here are a few things I like so far.</p>
-<p><strong>Virtual office</strong></p>
-<p>The most appealing is the concept of “virtual office”. This certainly will help a distributed team. It gives you a sense of being in the office at the same time but without constant disruption.</p>
-<p><strong>Reduce emails</strong></p>
-<p>The advantage it has over email is that all messages are within team only. Team messages should take priority over others. And you know that you cannot control your inbox. Hopefully this will cut down the unnecessary emails and facilitate quicker response.</p>
-<p><strong>Search past chat history</strong></p>
-<p>All chats are saved and indexed, so if you say that you are going to do something, you’d better do it, because it will be recorded and searcheable in the future. Meetings could be conducted in the chat room as well, as all details are saved, without pulling all people out of their seats at the same time.</p>
-<p><strong>Integration and API</strong></p>
-<p>I have integrated with <a href="https://bitbucket.org/" target="_blank" rel="external">BitBucket</a>, so all commits will show up in one of our chat rooms. This chat room becomes our notification center. There are many other integration such as Basecamp, Evernote. And There is also an API that can be used to create custom integration.</p>
-<p><strong>Slash commands and emoticons</strong></p>
-<p>I also like the <a href="http://help.hipchat.com/knowledgebase/articles/64451-work-faster-with-slash-commands" target="_blank" rel="external">slash commands</a> and <a href="http://hipchat-emoticons.nyh.name/" target="_blank" rel="external">emoticons</a>.</p>
-<p>So, I just got it started with my team, let me see how it goes.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -744,7 +768,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>11</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>12</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -1031,7 +1055,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>11</small></li>
+    <li><a href="/tags/docker/">docker</a><small>12</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1429,7 +1453,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/responsibility/">responsibility</a><small>1</small></li>
   
-    <li><a href="/tags/restart/">restart</a><small>1</small></li>
+    <li><a href="/tags/restart/">restart</a><small>2</small></li>
   
     <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
   
