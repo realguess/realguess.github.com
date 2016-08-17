@@ -68,6 +68,42 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-04-11T02:00:00.000Z"><a href="/2014/04/11/nota-bene/">Apr 11, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/04/11/nota-bene/">Nota Bene</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Everyday, there are always new things to learn, even just at reading the comments from <code>/etc/apt/sources.list</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">## N.B. software <span class="keyword">from</span> this repository <span class="keyword">is</span> ENTIRELY UNSUPPORTED <span class="keyword">by</span> the Ubuntu</div><div class="line">## team, <span class="keyword">and</span> may <span class="keyword">not</span> be under a free licence. Please satisfy yourself <span class="keyword">as</span> <span class="keyword">to</span></div><div class="line">## your rights <span class="keyword">to</span> use the software. Also, please note that software <span class="keyword">in</span></div><div class="line">## multiverse WILL <span class="keyword">NOT</span> receive any review <span class="keyword">or</span> updates <span class="keyword">from</span> the Ubuntu</div><div class="line">## security team.</div></pre></td></tr></table></figure>
+
+<p>“N.B.” is an abbreviation for <a href="http://en.wikipedia.org/wiki/Nota_bene" target="_blank" rel="external">nota bene</a>, a Latin expression meaning “note well”. N.B. every detail matters.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-04-02T00:30:00.000Z"><a href="/2014/04/02/difference-between-require-and-fs-in-loading-files/">Apr 2, 2014</a></time>
       
       
@@ -691,52 +727,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-24T21:19:23.000Z"><a href="/2014/01/24/null/">Jan 24, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/24/null/">null</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In JavaScript, you assign value <code>null</code> to an object property to indicate that the property is defined but with no value. But using <code>null</code> outside the JavaScript domain becomes tricky. For example, in URL query parameters:</p>
-<pre><code>?<span class="variable">foo=</span><span class="constant">null</span>&amp;<span class="variable">bar=</span>bar
-</code></pre><p>after parsing the query:</p>
-<pre><code>{
-  "<span class="attribute">foo</span>": <span class="value"><span class="string">"null"</span></span>,
-  "<span class="attribute">bar</span>": <span class="value"><span class="string">"bar"</span>
-</span>}
-</code></pre><p>Should the value of <code>foo</code> be parsed from <code>&quot;null&quot;</code> string into <code>null</code> object? Unless you know the context.</p>
-<p>Using <code>null</code> in both schema design and URL query gave me a few headaches. So, I have decided to use string and throw away <code>null</code>.  As string is the most basic data type across many applications. For simplier design and greater compatibility and portability, use empty string instead of <code>null</code>.</p>
-<p>Therefore, the value of query parameter <code>foo</code> should be:</p>
-<pre><code>?<span class="variable">foo=</span><span class="constant">null</span>&amp;<span class="variable">bar=</span>bar // <span class="string">"null"</span>
-?<span class="variable">foo=</span>&amp;<span class="variable">bar=</span>bar     // <span class="string">""</span>
-</code></pre><p>and:</p>
-<pre><code><span class="string">"null"</span> <span class="exclamation_mark">!</span>== <span class="string">""</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -773,7 +763,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>12</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>13</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -1222,7 +1212,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>9</small></li>
+    <li><a href="/tags/install/">install</a><small>10</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1246,7 +1236,9 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>4</small></li>
+    <li><a href="/tags/jq/">jq</a><small>5</small></li>
+  
+    <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
     <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
   

@@ -64,6 +64,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-06-09T09:55:23.000Z"><a href="/2013/06/09/repeat-character-serveral-times-in-javascript/">Jun 9, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/06/09/repeat-character-serveral-times-in-javascript/">Repeat Character Serveral Times in JavaScript</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In <a href="http://daringfireball.net/projects/markdown/" target="_blank" rel="external">Markdown</a>, a header can be written as:</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="header">Header</span></div><div class="line">======</div></pre></td></tr></table></figure>
+
+<p>This is a Setext-style headers, which are <em>‘underlined’ using equal signs (for<br>first-level headers) and dashes (for second-level headers)</em>. In order to<br>generate those underlined equal signs, a simple loop could be used to repeat<br>the character <code>=</code> several times. By the way, it is not necessary to have exact<br>number of the equal signs as the header length, but it just looks better. But<br>there is <a href="http://stackoverflow.com/a/1877479/594696" target="_blank" rel="external">another way</a>:</p>
+<figure class="highlight JavaScript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>(heading.length + <span class="number">1</span>).join(<span class="string">'='</span>)</div></pre></td></tr></table></figure>
+
+<p>It is using the JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" target="_blank" rel="external">Array</a> global object to construct an empty Array<br>with the specified array length. Clever indeed!</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-06-02T23:53:52.000Z"><a href="/2013/06/02/source-maps-by-uglifyjs-2-with-new-prefix/">Jun 2, 2013</a></time>
       
       
@@ -336,7 +375,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>12</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>13</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -785,7 +824,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>9</small></li>
+    <li><a href="/tags/install/">install</a><small>10</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -809,7 +848,9 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>4</small></li>
+    <li><a href="/tags/jq/">jq</a><small>5</small></li>
+  
+    <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
     <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
   

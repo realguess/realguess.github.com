@@ -68,6 +68,46 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-02-19T12:00:00.000Z"><a href="/2015/02/19/why-startup/">Feb 19, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/02/19/why-startup/">Why Startup?</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I asked myself this question:</p>
+<blockquote>
+<p>Why startup?</p>
+</blockquote>
+<p>I answered:</p>
+<blockquote>
+<p>To be my own boss.</p>
+</blockquote>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-02-11T12:00:00.000Z"><a href="/2015/02/11/install-docker-and-then-run-docker-commands-without-sudo/">Feb 11, 2015</a></time>
       
       
@@ -521,63 +561,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-12-27T12:00:00.000Z"><a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/">Dec 27, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/">Revoke and Grant Public IP Addresses to Amazon EC2 Instances Via AWS Command Line Interface (CLI)</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>If you work from place to place, such as from one coffee shop to another, and you need access to your Amazon EC2 instances, but you don’t want to allow traffics from all IP addresses. You can use the EC2 <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">Security Groups</a> to allow the IP addresses from those locations. But once you move on to a different location, you want to delete the IP address from the previous location. The process to do these manually and over and over again quickly becomes cumbersome. Here is a command line method that quickly removes all other locations and allows only the traffic from your current location.</p>
-<p>The steps are:</p>
-<ol>
-<li>Revoke all existing sources to a particular port</li>
-<li>Grant access to the port only from the current IP address</li>
-</ol>
-<p>Assume the following:</p>
-<ul>
-<li>Profile: <code>default</code></li>
-<li>Security group: <code>mygroup</code></li>
-<li>Protocol: <code>tcp</code></li>
-<li>Port: <code>22</code></li>
-</ul>
-<p>First, revoke access to the port from all IP addresses:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ aws ec2 describe-security-groups \</div><div class="line">    --profile default \</div><div class="line">    --group-names mygroup \</div><div class="line">    --query <span class="string">'SecurityGroups[0].IpPermissions[?ToPort==`22`].IpRanges[].CidrIp'</span> | \</div><div class="line">  jq .[] | \</div><div class="line">  xargs -n <span class="number">1</span> aws ec2 revoke-security-group-ingress \</div><div class="line">    --profile default \</div><div class="line">    --group-name mygroup \</div><div class="line">    --protocol tcp \</div><div class="line">    --port <span class="number">22</span> \</div><div class="line">    --cidr</div></pre></td></tr></table></figure>
-
-<p>The <code>aws ec2 describe-security-groups</code> command before the first pipe returns JSON formatted data, filtered via <a href="http://jmespath.org/" target="_blank" rel="external">JMESPath</a> query, which is supported by <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS CLI</a>, for example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">  <span class="string">"XXX.XXX.XXX.XXX/32"</span>,</div><div class="line">  <span class="string">"XXX.XXX.XXX.XXX/32"</span></div><div class="line">]</div></pre></td></tr></table></figure>
-
-<p><a href="http://stedolan.github.io/jq/" target="_blank" rel="external">jq</a> command simply converts an array of JSON to line by line strings, which <code>xarg</code> takes in, loops through and deletes one IP address at a time.</p>
-<p>After this step, all IP addresses originally allowed are all revoked. Next step is to grant access to the port from a single IP address:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -614,7 +597,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>12</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>13</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -1063,7 +1046,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>9</small></li>
+    <li><a href="/tags/install/">install</a><small>10</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1087,7 +1070,9 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>4</small></li>
+    <li><a href="/tags/jq/">jq</a><small>5</small></li>
+  
+    <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
     <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
   

@@ -62,6 +62,61 @@
 
 
   
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-08-17T12:00:00.000Z"><a href="/2016/08/17/installing-jq-from-source/">Aug 17, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/17/installing-jq-from-source/">Installing jq from Source</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Packages built in both Ubuntu and Debian packages lack behind, therefore, to get the latest version of <a href="https://stedolan.github.io/jq/" target="_blank" rel="external">jq</a>, build from source.</p>
+<p>There are a few prerequisites to install:</p>
+<ul>
+<li>GCC</li>
+<li>Make</li>
+<li>Autotools</li>
+</ul>
+<p>Both GCC and Make are usually installed if you do development, but not <a href="https://www.gnu.org/software/automake/" target="_blank" rel="external">Autotools</a>. Luckily, this is easy to fulfill:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> apt-get install automake</div></pre></td></tr></table></figure>
+
+<p>Install from source:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> git clone https://github.com/stedolan/jq.git</div><div class="line">$ <span class="built_in">cd</span> jq</div><div class="line">$ <span class="built_in">sudo</span> git checkout jq-<span class="number">1.5</span></div><div class="line">$ <span class="built_in">sudo</span> ./configure && <span class="built_in">sudo</span> make && <span class="built_in">sudo</span> make install</div></pre></td></tr></table></figure>
+
+<p>The installed path is at:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ which jq</div><div class="line">jq is <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>jq</div></pre></td></tr></table></figure>
+
+<p>However, this gives me an unexpected tag:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ jq --<span class="keyword">version</span></div><div class="line">jq-<span class="number">1.5</span>-dirty</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/08/17/installing-jq-from-source/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
     <article class="image">
   
   <div class="post-content">
@@ -281,7 +336,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>12</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>13</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -730,7 +785,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>9</small></li>
+    <li><a href="/tags/install/">install</a><small>10</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -754,7 +809,9 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>4</small></li>
+    <li><a href="/tags/jq/">jq</a><small>5</small></li>
+  
+    <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
     <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
   

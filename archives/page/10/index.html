@@ -68,6 +68,160 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-05-24T22:17:41.000Z"><a href="/2014/05/24/amazon-s3-delimiter-and-prefix/">May 24, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/05/24/amazon-s3-delimiter-and-prefix/">Amazon S3 Delimiter and Prefix</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://aws.amazon.com/s3/" target="_blank" rel="external">Amazon S3</a> is an inexpensive online file storage service, and there is the <a href="http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html" target="_blank" rel="external">JavaScript SDK</a> to use. There are things puzzling me when using the SDK were:</p>
+<ol>
+<li>How to use parameters <code>Delimiter</code> and <code>Prefix</code>?</li>
+<li>What is the difference between <code>CommonPrefixes</code> and <code>Contents</code>?</li>
+<li>How to create a folder/directory with JavaScript SDK?</li>
+</ol>
+<p>To retrieve objects in an Amazon S3 bucket, the operation is <code>listObjects</code>. The <code>listObjects</code> does not return the content of the object, but the key and meta data such as size and owner of the object.</p>
+<p>To make a call to get a list of objects in a bucket:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">s3.listObjects(params, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{</div><div class="line">  <span class="comment">// ...</span></div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Where the <code>params</code> can be configured with the following parameters:</p>
+<ul>
+<li>Bucket</li>
+<li>Delimiter</li>
+<li>EncodingType</li>
+<li>Marker</li>
+<li>MaxKeys</li>
+<li>Prefix</li>
+</ul>
+<p>But what are <code>Delimiter</code> and <code>Prefix</code>? And how to use them?</p>
+<p>Let’s start by creating some objects in an Amazon S3 bucket similar to the following file structure. This can be easily done by using the AWS Console.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── <span class="built_in">directory</span></div><div class="line">│   ├── <span class="built_in">directory</span></div><div class="line">│   │   └── <span class="built_in">file</span></div><div class="line">│   └── <span class="built_in">file</span></div><div class="line">└── <span class="built_in">file</span></div><div class="line"></div><div class="line"><span class="number">2</span> <span class="built_in">directories</span>, <span class="number">3</span> <span class="built_in">files</span></div></pre></td></tr></table></figure>
+
+<p>In Amazon S3, the objects are:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>One thing to keep in mind is that Amazon S3 is not a file system. There is not really the concept of file and directory/folder. From the console, it might look like there are 2 directories and 3 files. But they are all objects. And objects are listed alphabetically by their keys. </p>
+<p>To make it a little bit more clear, let’s invoke the <code>listObjects</code> method. Since the operation has only <code>Bucket</code> parameter is required:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">params = {</div><div class="line">  Bucket: <span class="string">'example'</span></div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>The response <code>data</code> contains in the callback function:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> },</div><div class="line">     { Key: <span class="string">'file'</span>,</div><div class="line">       LastModified: <span class="keyword">...</span>,</div><div class="line">       ETag: <span class="string">'"d41d8cd98f00b204e9800998ecf8427e"'</span>,</div><div class="line">       Size: <span class="number">0</span>,</div><div class="line">       Owner: [Object],</div><div class="line">       StorageClass: <span class="string">'STANDARD'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  Marker: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  IsTruncated: false }</div></pre></td></tr></table></figure>
+
+<p>If this is a file structure, you might expect:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>But it is not, because a bucket does not work like a folder or a directory, where the immediate files inside the directory is shown.  The objects inside the bucket are laid out flat and alphabetically.</p>
+<p>In UNIX, a directory is a file, but in Amazon S3, everything is an object, and can be identified by key.</p>
+<p>So, how to make Amazon S3 behave more like a folder or a directory? Or how to just list the content of first level right inside the bucket?</p>
+<p>In order to make it work like directory you have to use <code>Delimiter</code> and <code>Prefix</code>. <code>Delimiter</code> is what you use to group keys. It does have to be a <em>single character</em>, it can be a string of characters. And <code>Prefix</code> limits the response to keys that begin with the specified prefix.</p>
+<h2 id="Delimiter">Delimiter</h2>
+<p>Let’s start by adding the following delimiter:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">params = {</div><div class="line">  Bucket: <span class="string">'example'</span>,</div><div class="line">  Delimiter: <span class="string">'/'</span></div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>You will get something more like a listing of a directory:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'/'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>There are a directory <code>directory/</code> and a file <code>file</code>. What happened was that the following objects except <code>file</code> are grouped by the delimiter <code>/</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>So, result in:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>This feels more like a listing of a directory or folder. But if we change <code>Delimiter</code> to <code>i</code>, then, you get no <code>Contents</code> and just the prefixes:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">{ Contents: [],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'di'</span> }, { Prefix: <span class="string">'fi'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'i'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>All keys can be grouped into two prefixes: <code>di</code> and <code>fi</code>. Therefore, Amazon S3 is not a file system, but might act like one if using the right parameters.</p>
+<p>As I have mentioned that <code>Delimiter</code> does not need to be a single character:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> },</div><div class="line">     { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/directory'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'/directory'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>If recall the bucket structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Both <code>directory/directory/</code> and <code>directory/directory/file</code> are grouped into a common prefix: <code>directory/directory</code>, due to the common grouping string <code>/directory</code>.</p>
+<p>Let’s try another one with <code>Delimiter: &#39;directory&#39;</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory'</span> } ],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">''</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  Delimiter: <span class="string">'directory'</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>Okay, one more. Let’s try <code>ry/fi</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'file'</span> } ],</div><div class="line">  CommonPrefixes: </div><div class="line">   [ { Prefix: <span class="string">'directory/directory/fi'</span> },</div><div class="line">     { Prefix: <span class="string">'directory/fi'</span> } ],</div><div class="line">  Name: <span class="string">'example,</span></div><div class="line">  Prefix: '<span class="string">',</span></div><div class="line">  MaxKeys: 1000,</div><div class="line">  Delimiter: 'ry/<span class="keyword">fi</span><span class="string">',</span></div><div class="line">  IsTruncated: false }</div></pre></td></tr></table></figure>
+
+<p>So, remember that <code>Delimiter</code> is just providing a grouping functionality for keys. If you want it to behave like a file system, use <code>Delimiter: &#39;/&#39;</code>.</p>
+<h2 id="Prefix">Prefix</h2>
+<p><code>Prefix</code> is much easier to understand, it is a filter that limits keys to be prefixed by the one specified.</p>
+<p>With the same structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Let’s set the <code>Prefix</code> parameter to <code>directory</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Name: <span class="string">'example'</span>,</div><div class="line">  Prefix: <span class="string">'directory'</span>,</div><div class="line">  MaxKeys: <span class="number">1000</span>,</div><div class="line">  IsTruncated: <span class="literal">false</span> }</div></pre></td></tr></table></figure>
+
+<p>How about <code>directory/</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Prefix: <span class="string">'directory/'</span> }</div></pre></td></tr></table></figure>
+
+<p>Both <code>directory</code> and <code>directory/</code> prefixes are the same.</p>
+<p>If we try something slightly different, <code>Prefix: &#39;directory/d&#39;</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [],</div><div class="line">  Prefix: <span class="string">'directory/d'</span> }</div></pre></td></tr></table></figure>
+
+<p>Putting all together with both <code>Delimiter: &#39;directory&#39;</code> and <code>Prefix: &#39;directory&#39;</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> },</div><div class="line">     { Key: <span class="string">'directory/file'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/directory'</span> } ],</div><div class="line">  Prefix: <span class="string">'directory'</span>,</div><div class="line">  Delimiter: <span class="string">'directory'</span> }</div></pre></td></tr></table></figure>
+
+<p>First, list the keys prefixed by <code>directory</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Group them by the delimiter <code>directory</code> <strong>with prefix <code>directory</code></strong>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span></div></pre></td></tr></table></figure>
+
+<p>The result <code>Contents</code> are:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>and <code>CommonPrefixes</code> are:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span></div></pre></td></tr></table></figure>
+
+<p>Maybe changing <code>Delimiter</code> to <code>i</code> could give a better perspective:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{ Contents: </div><div class="line">   [ { Key: <span class="string">'directory/'</span> } ],</div><div class="line">  CommonPrefixes: [ { Prefix: <span class="string">'directory/di'</span> }, { Prefix: <span class="string">'directory/fi'</span> } ],</div><div class="line">  Prefix: <span class="string">'directory'</span>,</div><div class="line">  Delimiter: <span class="string">'i'</span> }</div></pre></td></tr></table></figure>
+
+<p>as:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/               <span class="comment"># key to show</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/     <span class="comment"># group to 'directory/di'</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">directory</span>/<span class="built_in">file</span> <span class="comment"># group to 'directory/di'</span></div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span>           <span class="comment"># Group to 'directory/fi'</span></div><div class="line"><span class="built_in">file</span>                     <span class="comment"># ignored due to prefix</span></div></pre></td></tr></table></figure>
+
+<p>One advantage of using Amazon S3 over listing a directory is that you don’t need to concern about nested directories, everything is being flattened. So, you can loop it through just by specifying the <code>Prefix</code> property.</p>
+<h2 id="Directory/Folder">Directory/Folder</h2>
+<p>If you’re using the Amazon AWS console to “Create Folder”, you can create a directory/folder and upload a file to inside the directory/folder. In effect, you are actually creating two objects with the following keys:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">directory</span>/</div><div class="line"><span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>If you use the following command to upload a file, the directory is not created:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp <span class="built_in">file</span> s3://example/<span class="built_in">directory</span>/<span class="built_in">file</span></div></pre></td></tr></table></figure>
+
+<p>Because, Amazon S3 is not a file system, but a key/value store. If you use <code>listObjects</code> method, you will just see one object. That is the same reason that you cannot copy a local directory:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp directory s3://example/directory</div><div class="line">upload failed: aws/ to s3://example/directory [Errno <span class="number">21</span>] Is a directory: <span class="string">u'/home/chao/tmp/directory/'</span></div></pre></td></tr></table></figure>
+
+<p>But we can use the JavaScript SDK to create a directory/folder:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">s3.putObject({ Bucket: <span class="string">'example'</span>, Key: <span class="string">'directory/'</span> }, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) { <span class="keyword">return</span> <span class="built_in">console</span>.error(err); }</div><div class="line"></div><div class="line">  <span class="built_in">console</span>.log(data);</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Note that you must use <code>directory/</code> with trailing slash instead the one without. Otherwise, it is just a regular file not a directory.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-05-20T13:49:37.000Z"><a href="/2014/05/20/node-version-manager/">May 20, 2014</a></time>
       
       
@@ -654,42 +808,6 @@ X-Tumblr-User: birchbox
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-04-11T02:00:00.000Z"><a href="/2014/04/11/nota-bene/">Apr 11, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/04/11/nota-bene/">Nota Bene</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Everyday, there are always new things to learn, even just at reading the comments from <code>/etc/apt/sources.list</code>:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">## N.B. software <span class="keyword">from</span> this repository <span class="keyword">is</span> ENTIRELY UNSUPPORTED <span class="keyword">by</span> the Ubuntu</div><div class="line">## team, <span class="keyword">and</span> may <span class="keyword">not</span> be under a free licence. Please satisfy yourself <span class="keyword">as</span> <span class="keyword">to</span></div><div class="line">## your rights <span class="keyword">to</span> use the software. Also, please note that software <span class="keyword">in</span></div><div class="line">## multiverse WILL <span class="keyword">NOT</span> receive any review <span class="keyword">or</span> updates <span class="keyword">from</span> the Ubuntu</div><div class="line">## security team.</div></pre></td></tr></table></figure>
-
-<p>“N.B.” is an abbreviation for <a href="http://en.wikipedia.org/wiki/Nota_bene" target="_blank" rel="external">nota bene</a>, a Latin expression meaning “note well”. N.B. every detail matters.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -726,7 +844,7 @@ X-Tumblr-User: birchbox
   
     <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>12</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>13</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -1175,7 +1293,7 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>9</small></li>
+    <li><a href="/tags/install/">install</a><small>10</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1199,7 +1317,9 @@ X-Tumblr-User: birchbox
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>4</small></li>
+    <li><a href="/tags/jq/">jq</a><small>5</small></li>
+  
+    <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
     <li><a href="/tags/js-yaml/">js-yaml</a><small>1</small></li>
   
