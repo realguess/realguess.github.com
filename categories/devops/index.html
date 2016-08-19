@@ -372,44 +372,6 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
-
-<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
         <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
       
       
@@ -449,23 +411,22 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Sep 7, 2015</a></time>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Install Docker on Ubuntu Trusty 14.04</a></h1>
+    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Install <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> on <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> Trusty 14.04 is fairly straightforward:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div><div class="line">$ <span class="keyword">exit</span></div></pre></td></tr></table></figure>
+        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
 
-<p>Log out, then log back in to verify the installation by running a sample container:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div></pre></td></tr></table></figure>
+<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
 
-<p>Done!</p>
 
       
     </div>
@@ -561,6 +522,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Sep 7, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Install Docker on Ubuntu Trusty 14.04</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Install <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> on <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> Trusty 14.04 is fairly straightforward:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div><div class="line">$ <span class="keyword">exit</span></div></pre></td></tr></table></figure>
+
+<p>Log out, then log back in to verify the installation by running a sample container:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div></pre></td></tr></table></figure>
+
+<p>Done!</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-06T12:00:00.000Z"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Sep 6, 2015</a></time>
       
       
@@ -634,13 +634,13 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>1</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>2</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>13</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>14</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -664,7 +664,7 @@
   
     <li><a href="/categories/test/">Test</a><small>2</small></li>
   
-    <li><a href="/categories/tools/">Tools</a><small>19</small></li>
+    <li><a href="/categories/tools/">Tools</a><small>18</small></li>
   
     <li><a href="/categories/travel/">Travel</a><small>1</small></li>
   
@@ -750,6 +750,8 @@
     <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
     <li><a href="/tags/bash/">bash</a><small>3</small></li>
+  
+    <li><a href="/tags/batch/">batch</a><small>1</small></li>
   
     <li><a href="/tags/beforeeach/">beforeeach</a><small>1</small></li>
   
@@ -901,6 +903,8 @@
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
+    <li><a href="/tags/delete/">delete</a><small>1</small></li>
+  
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
     <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
@@ -999,7 +1003,7 @@
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
   
-    <li><a href="/tags/get/">get</a><small>1</small></li>
+    <li><a href="/tags/get/">get</a><small>2</small></li>
   
     <li><a href="/tags/getter/">getter</a><small>2</small></li>
   
@@ -1073,7 +1077,9 @@
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>5</small></li>
+    <li><a href="/tags/http/">http</a><small>6</small></li>
+  
+    <li><a href="/tags/http-method/">http-method</a><small>1</small></li>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
@@ -1271,6 +1277,8 @@
   
     <li><a href="/tags/password/">password</a><small>1</small></li>
   
+    <li><a href="/tags/patch/">patch</a><small>1</small></li>
+  
     <li><a href="/tags/path/">path</a><small>4</small></li>
   
     <li><a href="/tags/pattern-matching/">pattern-matching</a><small>1</small></li>
@@ -1286,6 +1294,8 @@
     <li><a href="/tags/port/">port</a><small>3</small></li>
   
     <li><a href="/tags/port-forwarding/">port-forwarding</a><small>1</small></li>
+  
+    <li><a href="/tags/post/">post</a><small>1</small></li>
   
     <li><a href="/tags/prefix/">prefix</a><small>1</small></li>
   
@@ -1304,6 +1314,8 @@
     <li><a href="/tags/provision/">provision</a><small>1</small></li>
   
     <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/put/">put</a><small>1</small></li>
   
     <li><a href="/tags/python/">python</a><small>1</small></li>
   
@@ -1332,6 +1344,8 @@
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
   
     <li><a href="/tags/require/">require</a><small>2</small></li>
+  
+    <li><a href="/tags/resource/">resource</a><small>1</small></li>
   
     <li><a href="/tags/responsibility/">responsibility</a><small>1</small></li>
   

@@ -99,6 +99,48 @@
 
 
   
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-12-12T12:00:00.000Z"><a href="/2013/12/12/http-methods-truth-table/">Dec 12, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/12/http-methods-truth-table/">HTTP Methods Truth Table</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>My take on on HTTP methods and resources:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="code">+-----------------------------------------------------------+</span></div><div class="line"><span class="header">| # | Request-URI              | Method         | RE  | RNE |</span></div><div class="line">+-----------------------------------------------------------+</div><div class="line">| 0 | GET    /resources        | list           | 200 | 200 |</div><div class="line">| 1 | GET    /resources/entity | load/insert    | 200 | 404 |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 2 | POST   /resources        | create         | 201 | 409 |</div><div class="line">| 3 | POST   /resources/entity | N/A            | N/A | N/A |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 4 | PUT    /resources        | (batch)        | 200 | 200 |</div><div class="line">| 5 | PUT    /resources/entity | replace/save   | 204 | 201 |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 6 | PATCH  /resources        | (batch)        | 200 | 200 |</div><div class="line">| 7 | PATCH  /resources/entity | update         | 204 | 404 |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 8 | DELETE /resources        | (batch)        | 200 | 200 |</div><div class="line"><span class="header">| 9 | DELETE /resources/entity | remove/delete  | 204 | 404 |</span></div><div class="line">+-----------------------------------------------------------+</div></pre></td></tr></table></figure>
+
+<p>Notes:</p>
+<ol>
+<li>RE: resource exists</li>
+<li>RNE: resource not exists</li>
+<li>For batch request, whether resource/entity exists or not, the resulting HTTP<br>status code is always <code>200</code>, because the code is used to indicate the status<br>of the operation. The actual status code of each entity is enclosed in the<br>response array. When there are no matching entities, the response is an empty<br>array, therefore, status code <code>204</code> is not used.</li>
+<li>There are two situation, a new resource is being created, then the <code>Location</code><br>header must indicate the fully qualified resource URI.</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
 
   <nav id="pagination">
   
@@ -125,13 +167,13 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>1</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>2</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>13</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>14</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -155,7 +197,7 @@
   
     <li><a href="/categories/test/">Test</a><small>2</small></li>
   
-    <li><a href="/categories/tools/">Tools</a><small>19</small></li>
+    <li><a href="/categories/tools/">Tools</a><small>18</small></li>
   
     <li><a href="/categories/travel/">Travel</a><small>1</small></li>
   
@@ -241,6 +283,8 @@
     <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
     <li><a href="/tags/bash/">bash</a><small>3</small></li>
+  
+    <li><a href="/tags/batch/">batch</a><small>1</small></li>
   
     <li><a href="/tags/beforeeach/">beforeeach</a><small>1</small></li>
   
@@ -392,6 +436,8 @@
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
+    <li><a href="/tags/delete/">delete</a><small>1</small></li>
+  
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
     <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
@@ -490,7 +536,7 @@
   
     <li><a href="/tags/generator/">generator</a><small>1</small></li>
   
-    <li><a href="/tags/get/">get</a><small>1</small></li>
+    <li><a href="/tags/get/">get</a><small>2</small></li>
   
     <li><a href="/tags/getter/">getter</a><small>2</small></li>
   
@@ -564,7 +610,9 @@
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>5</small></li>
+    <li><a href="/tags/http/">http</a><small>6</small></li>
+  
+    <li><a href="/tags/http-method/">http-method</a><small>1</small></li>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
@@ -762,6 +810,8 @@
   
     <li><a href="/tags/password/">password</a><small>1</small></li>
   
+    <li><a href="/tags/patch/">patch</a><small>1</small></li>
+  
     <li><a href="/tags/path/">path</a><small>4</small></li>
   
     <li><a href="/tags/pattern-matching/">pattern-matching</a><small>1</small></li>
@@ -777,6 +827,8 @@
     <li><a href="/tags/port/">port</a><small>3</small></li>
   
     <li><a href="/tags/port-forwarding/">port-forwarding</a><small>1</small></li>
+  
+    <li><a href="/tags/post/">post</a><small>1</small></li>
   
     <li><a href="/tags/prefix/">prefix</a><small>1</small></li>
   
@@ -795,6 +847,8 @@
     <li><a href="/tags/provision/">provision</a><small>1</small></li>
   
     <li><a href="/tags/proxy/">proxy</a><small>1</small></li>
+  
+    <li><a href="/tags/put/">put</a><small>1</small></li>
   
     <li><a href="/tags/python/">python</a><small>1</small></li>
   
@@ -823,6 +877,8 @@
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
   
     <li><a href="/tags/require/">require</a><small>2</small></li>
+  
+    <li><a href="/tags/resource/">resource</a><small>1</small></li>
   
     <li><a href="/tags/responsibility/">responsibility</a><small>1</small></li>
   
