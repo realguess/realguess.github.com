@@ -64,6 +64,40 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-23T12:00:00.000Z"><a href="/2015/09/23/the-first-release-version/">Sep 23, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/23/the-first-release-version/">The First Release Version</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When you have a release for the first time, how do you name your release version based on <a href="http://semver.org/" target="_blank" rel="external">SemVer</a>? <code>1.0.0</code>, <code>0.1.0</code> or <code>0.0.1</code>?</p>
+<p>I like to start off with <code>0.1.0</code>. Because version <code>0.0.0</code> means there is nothing. Then from nothing to something, that’s breaking change, hence version <code>0.1.0</code>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
       
       
@@ -187,6 +221,41 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Google Cloud Datastore Starter: Dataset</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> dataset starter, part of a starter collection:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Google Cloud Datastore Starter: Dataset</span></div><div class="line"><span class="comment">// =======================================</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="comment">// Define a dataset.</span></div><div class="line"><span class="keyword">var</span> params = {</div><div class="line">  projectId: <span class="string">'MY_PROJECT'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'MY_NAMESPACE'</span></div><div class="line">};</div><div class="line"><span class="keyword">var</span> dataset = <span class="built_in">require</span>(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line"></div><div class="line"><span class="comment">// Define an entity (including both key and data).</span></div><div class="line"><span class="keyword">var</span> kind = <span class="string">'MY_KIND'</span>;</div><div class="line"><span class="keyword">var</span> key = dataset.key(kind);</div><div class="line"><span class="keyword">var</span> data = [</div><div class="line">  {</div><div class="line">    name: <span class="string">'title'</span>,</div><div class="line">    value: <span class="string">'Google Cloud Datastore Starter'</span>,</div><div class="line">    excludeFromIndexes: <span class="literal">false</span></div><div class="line">  }</div><div class="line">];</div><div class="line"><span class="comment">// var data = { title: 'Google Cloud Datastore Starter' }; // Simple version</span></div><div class="line"><span class="keyword">var</span> entity = {</div><div class="line">  key: key,</div><div class="line">  data: data</div><div class="line">};</div><div class="line"></div><div class="line"><span class="comment">// Save a single entity.</span></div><div class="line">dataset.save(entity, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) {</div><div class="line">    <span class="keyword">throw</span> err;</div><div class="line">  }</div><div class="line">});</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/">Sep 14, 2015</a></time>
       
       
@@ -239,19 +308,23 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
+        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Sep 7, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Google Cloud Datastore Starter: Dataset</a></h1>
+    <h1 class="title"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Install Docker on Ubuntu Trusty 14.04</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> dataset starter, part of a starter collection:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Google Cloud Datastore Starter: Dataset</span></div><div class="line"><span class="comment">// =======================================</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="comment">// Define a dataset.</span></div><div class="line"><span class="keyword">var</span> params = {</div><div class="line">  projectId: <span class="string">'MY_PROJECT'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'MY_NAMESPACE'</span></div><div class="line">};</div><div class="line"><span class="keyword">var</span> dataset = <span class="built_in">require</span>(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line"></div><div class="line"><span class="comment">// Define an entity (including both key and data).</span></div><div class="line"><span class="keyword">var</span> kind = <span class="string">'MY_KIND'</span>;</div><div class="line"><span class="keyword">var</span> key = dataset.key(kind);</div><div class="line"><span class="keyword">var</span> data = [</div><div class="line">  {</div><div class="line">    name: <span class="string">'title'</span>,</div><div class="line">    value: <span class="string">'Google Cloud Datastore Starter'</span>,</div><div class="line">    excludeFromIndexes: <span class="literal">false</span></div><div class="line">  }</div><div class="line">];</div><div class="line"><span class="comment">// var data = { title: 'Google Cloud Datastore Starter' }; // Simple version</span></div><div class="line"><span class="keyword">var</span> entity = {</div><div class="line">  key: key,</div><div class="line">  data: data</div><div class="line">};</div><div class="line"></div><div class="line"><span class="comment">// Save a single entity.</span></div><div class="line">dataset.save(entity, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) {</div><div class="line">    <span class="keyword">throw</span> err;</div><div class="line">  }</div><div class="line">});</div></pre></td></tr></table></figure>
+        <p>Install <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> on <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> Trusty 14.04 is fairly straightforward:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div><div class="line">$ <span class="keyword">exit</span></div></pre></td></tr></table></figure>
 
+<p>Log out, then log back in to verify the installation by running a sample container:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div></pre></td></tr></table></figure>
+
+<p>Done!</p>
 
       
     </div>
@@ -330,45 +403,6 @@
           <div class="alignleft">
             <a href="/2015/09/07/setup-development-environment-with-vagrant-on-google-compute-engine/#more" class="more-link">Read More</a>
           </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Sep 7, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Install Docker on Ubuntu Trusty 14.04</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Install <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> on <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> Trusty 14.04 is fairly straightforward:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div><div class="line">$ <span class="keyword">exit</span></div></pre></td></tr></table></figure>
-
-<p>Log out, then log back in to verify the installation by running a sample container:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div></pre></td></tr></table></figure>
-
-<p>Done!</p>
-
-      
-    </div>
-    <footer>
-      
         
         
       
@@ -481,45 +515,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-04T12:00:00.000Z"><a href="/2015/09/04/node-js-http-server-one-liner/">Sep 4, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/04/node-js-http-server-one-liner/">Node.js HTTP Server One Liner</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>One liner to create a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> HTTP server:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">'OK'</span>); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>Print out the process ID instead:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">''</span> + process.pid); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>This is useful with the worker process when implementing the <a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a> module.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -553,7 +548,7 @@
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
-    <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
+    <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>13</small></li>
   
@@ -791,6 +786,8 @@
     <li><a href="/tags/cut/">cut</a><small>2</small></li>
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
+  
+    <li><a href="/tags/data-retrieval/">data-retrieval</a><small>1</small></li>
   
     <li><a href="/tags/data-volume/">data-volume</a><small>2</small></li>
   
@@ -1252,6 +1249,8 @@
   
     <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
   
+    <li><a href="/tags/rule-of-diversity/">rule-of-diversity</a><small>1</small></li>
+  
     <li><a href="/tags/san-francisco/">san-francisco</a><small>1</small></li>
   
     <li><a href="/tags/save/">save</a><small>1</small></li>
@@ -1425,6 +1424,8 @@
     <li><a href="/tags/upload/">upload</a><small>1</small></li>
   
     <li><a href="/tags/upstart/">upstart</a><small>1</small></li>
+  
+    <li><a href="/tags/upwork/">upwork</a><small>1</small></li>
   
     <li><a href="/tags/url/">url</a><small>1</small></li>
   

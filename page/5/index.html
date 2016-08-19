@@ -64,6 +64,59 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-06-25T12:00:00.000Z"><a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/">Jun 25, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/">Fail to Upload Large File to Google App Engine Managed VMs</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>After deploying a Node.js app with custom runtime to Google <a href="https://cloud.google.com/appengine/docs/managed-vms/" target="_blank" rel="external">App Engine</a>, when uploading file larger than 1MB, the server returns HTTP 413 status code, meaning the server is refusing to process the request because the uploading entity size is too large.</p>
+<p>I had the following setup:</p>
+<ul>
+<li>The App Engine application is Google managed</li>
+<li>The application is Node.js app with custom <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a></li>
+<li>The application Docker container runs <code>node</code> command directly on port 8080</li>
+</ul>
+<p>After accessing the server (which changed from Google managed to user managed), and checked the Docker containers:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> docker ps <span class="operator">-a</span></div><div class="line">gcr.io/google_appengine/nginx-proxy:latest      <span class="string">"/usr/sbin/nginx"</span></div></pre></td></tr></table></figure>
+
+<p>It looks like Nginx is running as the proxy to Node.js application. When uploading file that is larger than 1MB, the response is HTTP 413 error:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">head</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">title</span>&gt;</span>413 Request Entity Too Large<span class="tag">&lt;/<span class="title">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">body</span> <span class="attribute">bgcolor</span>=<span class="value">"white"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">center</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">h1</span>&gt;</span>413 Request Entity Too Large<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">center</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">hr</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">center</span>&gt;</span>nginx<span class="tag">&lt;/<span class="title">center</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">body</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">html</span>&gt;</span></div></pre></td></tr></table></figure>
+
+<p>And the Nginx access log from the server:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ tail /var/log/nginx/error.log </div><div class="line"><span class="number">2015</span>/<span class="number">06</span>/<span class="number">25</span> <span class="number">12</span>:<span class="number">00</span>:<span class="number">00</span> [error] <span class="number">7</span><span class="comment">#0: *101623 client intended to send too large body: 1696805 bytes</span></div></pre></td></tr></table></figure>
+
+<p>By default, Nginx limits uploading size or <code>client_max_body_size</code> to be 1MB. The default size is just too small. A short video upload could easily exceed the limit. So, how to accept file upload larger than 1MB via Google Managed VMs in App Engine? Is there a way to change the value through <code>app.yaml</code>custom runtime configuration file? Or a custom Nginx Docker container can be deployed along with the application Docker container?</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-06-20T12:00:00.000Z"><a href="/2015/06/20/migrate-to-cloud9-ide/">Jun 20, 2015</a></time>
       
       
@@ -456,52 +509,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-02-21T12:00:00.000Z"><a href="/2015/02/21/git-branch-description/">Feb 21, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/02/21/git-branch-description/">Git Branch Description</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Branch is cheap, use it often. But when you create too many, knowing which is for what becomes a management problem. Here are two solutions:</p>
-<ol>
-<li>Use <code>--edit-description</code> to provide more than just a simple branch name</li>
-<li>Delete all merged branches</li>
-</ol>
-<p>For the first solution:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git branch --edit-description</div><div class="line">$ git config branch.master.description</div></pre></td></tr></table></figure>
-
-<p>Also see:</p>
-<ul>
-<li><a href="http://labs.sixdimensions.com/blog/2015-02-19/taking-advantage-git-branch-descriptions/" target="_blank" rel="external">Taking Advantage of Git Branch Descriptions</a></li>
-<li><a href="http://bahmutov.calepin.co/git-branches-with-descriptions-really.html" target="_blank" rel="external">Git branches with descriptions, really</a></li>
-</ul>
-<p>I prefer the second approach.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -535,7 +542,7 @@
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
-    <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
+    <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>13</small></li>
   
@@ -773,6 +780,8 @@
     <li><a href="/tags/cut/">cut</a><small>2</small></li>
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
+  
+    <li><a href="/tags/data-retrieval/">data-retrieval</a><small>1</small></li>
   
     <li><a href="/tags/data-volume/">data-volume</a><small>2</small></li>
   
@@ -1234,6 +1243,8 @@
   
     <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
   
+    <li><a href="/tags/rule-of-diversity/">rule-of-diversity</a><small>1</small></li>
+  
     <li><a href="/tags/san-francisco/">san-francisco</a><small>1</small></li>
   
     <li><a href="/tags/save/">save</a><small>1</small></li>
@@ -1407,6 +1418,8 @@
     <li><a href="/tags/upload/">upload</a><small>1</small></li>
   
     <li><a href="/tags/upstart/">upstart</a><small>1</small></li>
+  
+    <li><a href="/tags/upwork/">upwork</a><small>1</small></li>
   
     <li><a href="/tags/url/">url</a><small>1</small></li>
   

@@ -68,6 +68,56 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-08-18T12:00:00.000Z"><a href="/2016/08/18/accessing-upwork-json-data-without-the-api/">Aug 18, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/18/accessing-upwork-json-data-without-the-api/">Accessing Upwork JSON Data without the API</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://www.upwork.com/" target="_blank" rel="external">Upwork</a>, formerly Elance-oDesk, is the world’s largest freelancing marketplace. I’m interested to know what types of jobs they are in the platform, and how many. For a lazy programmer, browsing each job category and clicking on each link, and copying those numbers is not the way to go. I need to automate this. There is an <a href="https://developers.upwork.com/" target="_blank" rel="external">API</a>. But before diving into the API documentation, let’s see if there is another way (“Rule of Diversity”).</p>
+<p>After poking around the web app, it communicates with its backend by using <a href="http://json.org/" target="_blank" rel="external">JSON</a> data exchange format via the URL: <a href="https://www.upwork.com/o/jobs/browse/url" target="_blank" rel="external">https://www.upwork.com/o/jobs/browse/url</a>. However, if accessing the URL directly, it will respond with 404 page not exist error. Something is missing.</p>
+<p>Well, the web app is able to successfully make the request, so this is not difficult to tackle. Just use the process of elimination from the working request, it will reveal the required information. </p>
+<p>After a couple tries, just need to add the request header: <code>X-Requested-With: XMLHttpRequest</code>, then the JSON response with the status code <code>200</code> will be returned:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ http --verbose https://<span class="filename">www.upwork.com/o/jobs/browse/url \</span></div><div class="line">  X-Requested-With:XMLHttpRequest</div><div class="line">GET /o/jobs/browse/url HTTP/<span class="number">1.1</span></div><div class="line">Accept: */*</div><div class="line">Accept-Encoding: gzip, deflate</div><div class="line">Connection: keep-alive</div><div class="line">Host: <span class="filename">www.upwork.com</span></div><div class="line">User-Agent: HTTPie/<span class="number">0.9</span><span class="number">.6</span></div><div class="line">X-Requested-With: XMLHttpRequest</div></pre></td></tr></table></figure>
+
+<p>The default sort is by creation time in descending order, so you don’t need to add the query parameters: <code>sort==create_time+desc</code> (<a href="https://github.com/jkbrzt/httpie" target="_blank" rel="external">HTTPie</a>).</p>
+<p>Let’s load the response data into Node.js and perform a quick analysis:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">$ node</div><div class="line">&gt; data = <span class="built_in">require</span>(<span class="string">'./upwork.json'</span>)</div><div class="line">{ url: <span class="string">'/o/jobs/browse/'</span>,</div><div class="line">  searchResults:</div><div class="line">   { q: <span class="string">''</span>,</div><div class="line">     paging: { total: <span class="number">87654</span>, offset: <span class="number">0</span> },</div><div class="line">     spellcheck: { corrected_queries: [] },</div><div class="line">     jobs:</div><div class="line">      [ [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>] ],</div><div class="line">     smartSearch: { downloadTeamApplication: <span class="literal">false</span> },</div><div class="line">     facets:</div><div class="line">      { jobType: [<span class="built_in">Object</span>],</div><div class="line">        workload: [<span class="built_in">Object</span>],</div><div class="line">        duration: [<span class="built_in">Object</span>],</div><div class="line">        clientHires: [<span class="built_in">Object</span>],</div><div class="line">        contractorTier: [<span class="built_in">Object</span>],</div><div class="line">        categories: [<span class="built_in">Object</span>],</div><div class="line">        previousClients: [<span class="built_in">Object</span>],</div><div class="line">        subcategories: [] },</div><div class="line">     isSearchWithEmptyParams: <span class="literal">true</span>,</div><div class="line">     subcategories: [],</div><div class="line">     currentQuery: {},</div><div class="line">     rssLink: <span class="string">'/ab/feed/jobs/rss?api_params=1&q='</span>,</div><div class="line">     atomLink: <span class="string">'/ab/feed/jobs/atom?api_params=1&q='</span>,</div><div class="line">     queryParsedParams: [],</div><div class="line">     pageTitle: <span class="string">'Freelance Jobs - Upwork'</span> } }</div></pre></td></tr></table></figure>
+
+<p>The property <code>searchResults.paging.total</code> is the total number of jobs available:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="tag">data</span><span class="class">.searchResults</span><span class="class">.paging</span></div><div class="line"><span class="rules">{ <span class="rule"><span class="attribute">total</span>:<span class="value"> <span class="number">87654</span>, offset: <span class="number">0</span> </span></span></span>}</div></pre></td></tr></table></figure>
+
+<p>But, the number is different from the web app, a lot less, 50% less jobs found. Is that because the request is not recognized as a logged-in user? Let’s find out.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/08/18/accessing-upwork-json-data-without-the-api/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-08-17T12:00:00.000Z"><a href="/2016/08/17/installing-jq-from-source/">Aug 17, 2016</a></time>
       
       
@@ -334,7 +384,7 @@
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
-    <li><a href="/categories/data-science/">Data Science</a><small>1</small></li>
+    <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
     <li><a href="/categories/devops/">DevOps</a><small>13</small></li>
   
@@ -572,6 +622,8 @@
     <li><a href="/tags/cut/">cut</a><small>2</small></li>
   
     <li><a href="/tags/cwd/">cwd</a><small>1</small></li>
+  
+    <li><a href="/tags/data-retrieval/">data-retrieval</a><small>1</small></li>
   
     <li><a href="/tags/data-volume/">data-volume</a><small>2</small></li>
   
@@ -1033,6 +1085,8 @@
   
     <li><a href="/tags/ruby/">ruby</a><small>1</small></li>
   
+    <li><a href="/tags/rule-of-diversity/">rule-of-diversity</a><small>1</small></li>
+  
     <li><a href="/tags/san-francisco/">san-francisco</a><small>1</small></li>
   
     <li><a href="/tags/save/">save</a><small>1</small></li>
@@ -1206,6 +1260,8 @@
     <li><a href="/tags/upload/">upload</a><small>1</small></li>
   
     <li><a href="/tags/upstart/">upstart</a><small>1</small></li>
+  
+    <li><a href="/tags/upwork/">upwork</a><small>1</small></li>
   
     <li><a href="/tags/url/">url</a><small>1</small></li>
   
