@@ -68,6 +68,66 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-08-25T12:00:00.000Z"><a href="/2016/08/25/installing-caddy-0-9-x-on-ubuntu-debian-system/">Aug 25, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/25/installing-caddy-0-9-x-on-ubuntu-debian-system/">Installing Caddy 0.9.x on Ubuntu/Debian System</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Install <a href="https://caddyserver.com/" target="_blank" rel="external">Caddy</a> via its <a href="https://getcaddy.com/" target="_blank" rel="external">installer script</a> on Ubuntu/Debian system:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="attribute">-s</span> https:<span class="comment">//getcaddy.com/ | sudo bash</span></div><div class="line">Downloading Caddy for linux/amd64<span class="attribute">...</span></div><div class="line">https:<span class="comment">//caddyserver.com/download/build?os=linux&arch=amd64&arm=&features=</span></div><div class="line">Extracting<span class="attribute">...</span></div><div class="line">Putting caddy <span class="keyword">in</span> /usr/<span class="built_in">local</span>/bin (may <span class="keyword">require</span> password)</div><div class="line">Caddy <span class="number">0.9</span><span class="number">.1</span> (<span class="subst">+</span>e8e5595)</div><div class="line">Successfully installed</div></pre></td></tr></table></figure>
+
+<p>This is different from the <a href="https://caddyserver.com/download" target="_blank" rel="external">Download</a> page, where you get to select additional features (see the <code>&amp;features=</code> URL query parameter).</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ which caddy</div><div class="line">caddy is <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>caddy</div></pre></td></tr></table></figure>
+
+<p>Get the installed version:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ caddy --<span class="keyword">version</span></div><div class="line">Caddy <span class="number">0.9</span>.<span class="number">1</span> (+e8e5595)</div></pre></td></tr></table></figure>
+
+<p>Get help:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">$ caddy -h</div><div class="line">Usage <span class="keyword">of</span> caddy:</div><div class="line">  -agree</div><div class="line">        Agree <span class="keyword">to</span> the CA<span class="attribute">'s</span> Subscriber Agreement</div><div class="line">  -ca <span class="typename">string</span></div><div class="line">        URL <span class="keyword">to</span> certificate authority<span class="attribute">'s</span> ACME server directory (<span class="keyword">default</span> <span class="string">"https://acme-v01.api.letsencrypt.org/directory"</span>)</div><div class="line">  -conf <span class="typename">string</span></div><div class="line">        Caddyfile <span class="keyword">to</span> load (<span class="keyword">default</span> <span class="string">"Caddyfile"</span>)</div><div class="line">  -cpu <span class="typename">string</span></div><div class="line">        CPU cap (<span class="keyword">default</span> <span class="string">"100%"</span>)</div><div class="line">  -email <span class="typename">string</span></div><div class="line">        <span class="keyword">Default</span> ACME CA account email address</div><div class="line">  -grace duration</div><div class="line">        Maximum duration <span class="keyword">of</span> graceful shutdown (<span class="keyword">default</span> <span class="number">5</span>s)</div><div class="line">  -host <span class="typename">string</span></div><div class="line">        <span class="keyword">Default</span> host</div><div class="line">  -http2</div><div class="line">        <span class="keyword">Use</span> HTTP/<span class="number">2</span> (<span class="keyword">default</span> true)</div><div class="line">  -log <span class="typename">string</span></div><div class="line">        <span class="keyword">Process</span> log <span class="keyword">file</span></div><div class="line">  -pidfile <span class="typename">string</span></div><div class="line">        Path <span class="keyword">to</span> write pid <span class="keyword">file</span></div><div class="line">  -plugins</div><div class="line">        List installed plugins</div><div class="line">  -<span class="keyword">port</span> <span class="typename">string</span></div><div class="line">        <span class="keyword">Default</span> <span class="keyword">port</span> (<span class="keyword">default</span> <span class="string">"2015"</span>)</div><div class="line">  -quic</div><div class="line">        <span class="keyword">Use</span> experimental QUIC</div><div class="line">  -quiet</div><div class="line">        Quiet mode (no initialization output)</div><div class="line">  -revoke <span class="typename">string</span></div><div class="line">        Hostname <span class="keyword">for</span> which <span class="keyword">to</span> revoke the certificate</div><div class="line">  -root <span class="typename">string</span></div><div class="line">        Root path <span class="keyword">of</span> <span class="keyword">default</span> site (<span class="keyword">default</span> <span class="string">"."</span>)</div><div class="line">  -<span class="keyword">type</span> <span class="typename">string</span></div><div class="line">        <span class="keyword">Type</span> <span class="keyword">of</span> server <span class="keyword">to</span> run (<span class="keyword">default</span> <span class="string">"http"</span>)</div><div class="line">  -version</div><div class="line">        Show version</div></pre></td></tr></table></figure>
+
+<p>Run Caddy locally:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ caddy</div><div class="line">Activating privacy features... done.</div><div class="line">http://:2015</div><div class="line"><span class="label">WARNING: </span>File descriptor limit 1024 is too low for production servers. At least 8192 is recommended. Fix with "ulimit -n 8192".</div></pre></td></tr></table></figure>
+
+<p>A file descriptor is simply a number that the operating system assigns to an open file to keep track of it. Caddy’s primary goal is to be an easy-to-use static file web server. Having high file descriptor limit means it can open more files to serve users at the same time.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>ulimit -<span class="constant">Sn</span> && ulimit -<span class="constant">Hn</span></div><div class="line"><span class="number">1024</span></div><div class="line"><span class="number">4096</span></div></pre></td></tr></table></figure>
+
+<p>The current system is too low in both soft and hard limits. But since it’s not in production, warning can be ignored.</p>
+<p>Make sure the server working:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">2015</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">404</span> <span class="keyword">Not</span> Found</div><div class="line">Content-<span class="keyword">Length</span>: <span class="number">14</span></div><div class="line">Content-Type: text/plain; charset=utf-<span class="number">8</span></div><div class="line">Server: Caddy</div><div class="line">X-Content-Type-<span class="keyword">Options</span>: nosniff</div><div class="line"></div><div class="line"><span class="number">404</span> <span class="keyword">Not</span> Found</div></pre></td></tr></table></figure>
+
+<p>Response header <code>X-Content-Type-Options: nosniff</code> prevents MIME based attacks, it tells the browser to respect the response content type, not to override.</p>
+<p>Status code <code>404</code> means working, but just lacks an index file. Let’s create one:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/08/25/installing-caddy-0-9-x-on-ubuntu-debian-system/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-08-17T12:00:00.000Z"><a href="/2016/08/17/installing-jq-from-source/">Aug 17, 2016</a></time>
       
       
@@ -539,71 +599,11 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-07-19T21:13:44.000Z"><a href="/2014/07/19/non-interactive-redis-install/">Jul 19, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/07/19/non-interactive-redis-install/">Non-Interactive Redis Install</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>To build <a href="http://redis.io/" target="_blank" rel="external">Redis</a> from source, we first need to install TCL 8.5 or newer, this is needed for <code>make test</code> later:</p>
-<pre><code>$ sudo apt-<span class="built_in">get</span> install -<span class="keyword">y</span> <span class="keyword">tcl</span>
-</code></pre><p>Now clone and make:</p>
-<pre><code>$ git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/antirez/redis
-$ git checkout <span class="number">2.8</span>.<span class="number">13</span>
-$ <span class="keyword">make</span>
-$ <span class="keyword">make</span> test
-$ sudo <span class="keyword">make</span> install
-$ sudo utils/install_server.<span class="keyword">sh</span>
-</code></pre><p>Binary (<code>redis-cli</code> and <code>redis-server</code>) will be installed into <code>/usr/local/bin</code>.</p>
-<p>The last command with <code>utils/install_server.sh</code> is an interactive command. Since the script is a shell script using the <code>read</code> built-in command and <code>-p</code> option for prompt, we can make it non-interactive by redirecting input from <code>echo</code> command:</p>
-<pre><code>$ <span class="built_in">echo</span> -n | <span class="built_in">sudo</span> utils/install_server.sh
-</code></pre><p>Without pumping any value into the script, the default values are used.</p>
-<p>If really want to customize it, we can add our own values:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="operator">-e</span> \
-  <span class="string">"<span class="variable">${PORT}</span>\n<span class="variable">${CONFIG_FILE}</span>\n<span class="variable">${LOG_FILE}</span>\n<span class="variable">${DATA_DIR}</span>\n<span class="variable">${EXECUTABLE}</span>\n"</span> | \
-  <span class="built_in">sudo</span> utils/install_server.sh
-</code></pre><p>There are 6 read statements, hence <code>n - 1</code> newline characters. Without using <code>-n</code>, the last newline character is supplied by <code>echo</code>.</p>
-<p>Here are the default values:</p>
-<pre><code><span class="constant">PORT</span>=<span class="number">6379</span>
-<span class="constant">CONFIG_FILE</span>=/etc/redis/<span class="number">6379</span>.conf
-<span class="constant">LOG_FILE</span>=/var/log/redis_6379.log
-<span class="constant">DATA_DIR</span>=/var/lib/redis/<span class="number">6379</span>
-<span class="constant">EXECUTABLE</span>=/usr/local/bin/redis-server
-</code></pre><p>The <code>utils/install_server.sh</code> script should return something like this:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">Welcome to the redis service installer</div><div class="line">This script will <span class="operator"><span class="keyword">help</span> you easily <span class="keyword">set</span> up a running redis <span class="keyword">server</span></span></div><div class="line"></div><div class="line">Selecting <span class="keyword">default</span>: <span class="number">6379</span></div><div class="line">Selected <span class="keyword">default</span> - /etc/redis/<span class="number">6379.</span>conf</div><div class="line">Selected <span class="keyword">default</span> - /<span class="keyword">var</span>/<span class="keyword">log</span>/redis_6379.<span class="keyword">log</span></div><div class="line">Selected <span class="keyword">default</span> - /<span class="keyword">var</span>/lib/redis/<span class="number">6379</span></div><div class="line">Selected config:</div><div class="line">Port           : <span class="number">6379</span></div><div class="line">Config file    : /etc/redis/<span class="number">6379.</span>conf</div><div class="line"><span class="keyword">Log</span> file       : /<span class="keyword">var</span>/<span class="keyword">log</span>/redis_6379.<span class="keyword">log</span></div><div class="line"><span class="keyword">Data</span> dir       : /<span class="keyword">var</span>/lib/redis/<span class="number">6379</span></div><div class="line">Executable     : /usr/<span class="keyword">local</span>/<span class="keyword">bin</span>/redis-<span class="keyword">server</span></div><div class="line">Cli Executable : /usr/<span class="keyword">local</span>/<span class="keyword">bin</span>/redis-cli</div><div class="line">Copied /tmp/<span class="number">6379.</span>conf =&gt; /etc/init.d/redis_6379</div><div class="line">Installing service...</div><div class="line"> System <span class="keyword">start</span>/<span class="keyword">stop</span> links <span class="keyword">for</span> /etc/init.d/redis_6379 already exist.</div><div class="line">Success!</div><div class="line">/<span class="keyword">var</span>/run/redis_6379.pid <span class="keyword">exists</span>, process <span class="keyword">is</span> already running <span class="keyword">or</span> crashed</div><div class="line">Installation successful!</div></pre></td></tr></table></figure>
-
-<p>Set an alias for Redis client:</p>
-<pre><code>$ <span class="built_in">cd</span> /usr/local/bin &amp;&amp; <span class="built_in">sudo</span> ln <span class="operator">-s</span> redis-cli redis
-</code></pre><p>For more advanced install, see the <code>README</code> file.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
+  
+    <a href="/tags/install/page/2/" class="alignright next">Next</a>
   
   <div class="clearfix"></div>
 </nav>
@@ -623,7 +623,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -633,7 +633,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>14</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -659,7 +659,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/categories/tools/">Tools</a><small>18</small></li>
   
-    <li><a href="/categories/travel/">Travel</a><small>1</small></li>
+    <li><a href="/categories/travel/">Travel</a><small>3</small></li>
   
   </ul>
 </div>
@@ -680,6 +680,8 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/absolute-path/">absolute-path</a><small>1</small></li>
   
+    <li><a href="/tags/accept-ranges/">accept-ranges</a><small>1</small></li>
+  
     <li><a href="/tags/accessor-property/">accessor-property</a><small>1</small></li>
   
     <li><a href="/tags/aftereach/">aftereach</a><small>1</small></li>
@@ -698,7 +700,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/amazon-sqs/">amazon-sqs</a><small>1</small></li>
   
-    <li><a href="/tags/amtrak/">amtrak</a><small>1</small></li>
+    <li><a href="/tags/amtrak/">amtrak</a><small>2</small></li>
   
     <li><a href="/tags/android/">android</a><small>1</small></li>
   
@@ -752,7 +754,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/big-apple/">big-apple</a><small>1</small></li>
   
-    <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
+    <li><a href="/tags/big-easy/">big-easy</a><small>2</small></li>
   
     <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
   
@@ -783,6 +785,8 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
     <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
+  
+    <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
   
@@ -1060,6 +1064,8 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/hipchat/">hipchat</a><small>1</small></li>
   
+    <li><a href="/tags/hollywood/">hollywood</a><small>1</small></li>
+  
     <li><a href="/tags/hong-kong/">hong-kong</a><small>1</small></li>
   
     <li><a href="/tags/host/">host</a><small>1</small></li>
@@ -1092,7 +1098,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>10</small></li>
+    <li><a href="/tags/install/">install</a><small>11</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1170,6 +1176,8 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/lorem-ipsum/">lorem-ipsum</a><small>1</small></li>
   
+    <li><a href="/tags/los-angeles/">los-angeles</a><small>1</small></li>
+  
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
     <li><a href="/tags/managed-vms/">managed-vms</a><small>2</small></li>
@@ -1212,7 +1220,7 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/network/">network</a><small>1</small></li>
   
-    <li><a href="/tags/new-orleans/">new-orleans</a><small>1</small></li>
+    <li><a href="/tags/new-orleans/">new-orleans</a><small>2</small></li>
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
@@ -1317,6 +1325,8 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
     <li><a href="/tags/random/">random</a><small>2</small></li>
+  
+    <li><a href="/tags/range/">range</a><small>1</small></li>
   
     <li><a href="/tags/rawgit/">rawgit</a><small>1</small></li>
   
@@ -1450,6 +1460,8 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
   
+    <li><a href="/tags/sunset-limited/">sunset-limited</a><small>1</small></li>
+  
     <li><a href="/tags/supertest/">supertest</a><small>1</small></li>
   
     <li><a href="/tags/symbolic-link/">symbolic-link</a><small>1</small></li>
@@ -1494,9 +1506,9 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
-    <li><a href="/tags/train/">train</a><small>1</small></li>
+    <li><a href="/tags/train/">train</a><small>2</small></li>
   
-    <li><a href="/tags/travel/">travel</a><small>1</small></li>
+    <li><a href="/tags/travel/">travel</a><small>0</small></li>
   
     <li><a href="/tags/trello/">trello</a><small>1</small></li>
   
@@ -1511,6 +1523,8 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
     <li><a href="/tags/ubuntu/">ubuntu</a><small>5</small></li>
   
     <li><a href="/tags/uglifyjs/">uglifyjs</a><small>1</small></li>
+  
+    <li><a href="/tags/ulimit/">ulimit</a><small>1</small></li>
   
     <li><a href="/tags/underscore/">underscore</a><small>1</small></li>
   
@@ -1570,13 +1584,15 @@ $ sudo utils/install_server.<span class="keyword">sh</span>
   
     <li><a href="/tags/web-framework/">web-framework</a><small>1</small></li>
   
-    <li><a href="/tags/web-server/">web-server</a><small>1</small></li>
+    <li><a href="/tags/web-server/">web-server</a><small>2</small></li>
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
   
     <li><a href="/tags/windows/">windows</a><small>2</small></li>
   
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
+  
+    <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   

@@ -68,6 +68,66 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-08-25T12:00:00.000Z"><a href="/2016/08/25/installing-caddy-0-9-x-on-ubuntu-debian-system/">Aug 25, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/25/installing-caddy-0-9-x-on-ubuntu-debian-system/">Installing Caddy 0.9.x on Ubuntu/Debian System</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Install <a href="https://caddyserver.com/" target="_blank" rel="external">Caddy</a> via its <a href="https://getcaddy.com/" target="_blank" rel="external">installer script</a> on Ubuntu/Debian system:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="attribute">-s</span> https:<span class="comment">//getcaddy.com/ | sudo bash</span></div><div class="line">Downloading Caddy for linux/amd64<span class="attribute">...</span></div><div class="line">https:<span class="comment">//caddyserver.com/download/build?os=linux&arch=amd64&arm=&features=</span></div><div class="line">Extracting<span class="attribute">...</span></div><div class="line">Putting caddy <span class="keyword">in</span> /usr/<span class="built_in">local</span>/bin (may <span class="keyword">require</span> password)</div><div class="line">Caddy <span class="number">0.9</span><span class="number">.1</span> (<span class="subst">+</span>e8e5595)</div><div class="line">Successfully installed</div></pre></td></tr></table></figure>
+
+<p>This is different from the <a href="https://caddyserver.com/download" target="_blank" rel="external">Download</a> page, where you get to select additional features (see the <code>&amp;features=</code> URL query parameter).</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ which caddy</div><div class="line">caddy is <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>caddy</div></pre></td></tr></table></figure>
+
+<p>Get the installed version:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ caddy --<span class="keyword">version</span></div><div class="line">Caddy <span class="number">0.9</span>.<span class="number">1</span> (+e8e5595)</div></pre></td></tr></table></figure>
+
+<p>Get help:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">$ caddy -h</div><div class="line">Usage <span class="keyword">of</span> caddy:</div><div class="line">  -agree</div><div class="line">        Agree <span class="keyword">to</span> the CA<span class="attribute">'s</span> Subscriber Agreement</div><div class="line">  -ca <span class="typename">string</span></div><div class="line">        URL <span class="keyword">to</span> certificate authority<span class="attribute">'s</span> ACME server directory (<span class="keyword">default</span> <span class="string">"https://acme-v01.api.letsencrypt.org/directory"</span>)</div><div class="line">  -conf <span class="typename">string</span></div><div class="line">        Caddyfile <span class="keyword">to</span> load (<span class="keyword">default</span> <span class="string">"Caddyfile"</span>)</div><div class="line">  -cpu <span class="typename">string</span></div><div class="line">        CPU cap (<span class="keyword">default</span> <span class="string">"100%"</span>)</div><div class="line">  -email <span class="typename">string</span></div><div class="line">        <span class="keyword">Default</span> ACME CA account email address</div><div class="line">  -grace duration</div><div class="line">        Maximum duration <span class="keyword">of</span> graceful shutdown (<span class="keyword">default</span> <span class="number">5</span>s)</div><div class="line">  -host <span class="typename">string</span></div><div class="line">        <span class="keyword">Default</span> host</div><div class="line">  -http2</div><div class="line">        <span class="keyword">Use</span> HTTP/<span class="number">2</span> (<span class="keyword">default</span> true)</div><div class="line">  -log <span class="typename">string</span></div><div class="line">        <span class="keyword">Process</span> log <span class="keyword">file</span></div><div class="line">  -pidfile <span class="typename">string</span></div><div class="line">        Path <span class="keyword">to</span> write pid <span class="keyword">file</span></div><div class="line">  -plugins</div><div class="line">        List installed plugins</div><div class="line">  -<span class="keyword">port</span> <span class="typename">string</span></div><div class="line">        <span class="keyword">Default</span> <span class="keyword">port</span> (<span class="keyword">default</span> <span class="string">"2015"</span>)</div><div class="line">  -quic</div><div class="line">        <span class="keyword">Use</span> experimental QUIC</div><div class="line">  -quiet</div><div class="line">        Quiet mode (no initialization output)</div><div class="line">  -revoke <span class="typename">string</span></div><div class="line">        Hostname <span class="keyword">for</span> which <span class="keyword">to</span> revoke the certificate</div><div class="line">  -root <span class="typename">string</span></div><div class="line">        Root path <span class="keyword">of</span> <span class="keyword">default</span> site (<span class="keyword">default</span> <span class="string">"."</span>)</div><div class="line">  -<span class="keyword">type</span> <span class="typename">string</span></div><div class="line">        <span class="keyword">Type</span> <span class="keyword">of</span> server <span class="keyword">to</span> run (<span class="keyword">default</span> <span class="string">"http"</span>)</div><div class="line">  -version</div><div class="line">        Show version</div></pre></td></tr></table></figure>
+
+<p>Run Caddy locally:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ caddy</div><div class="line">Activating privacy features... done.</div><div class="line">http://:2015</div><div class="line"><span class="label">WARNING: </span>File descriptor limit 1024 is too low for production servers. At least 8192 is recommended. Fix with "ulimit -n 8192".</div></pre></td></tr></table></figure>
+
+<p>A file descriptor is simply a number that the operating system assigns to an open file to keep track of it. Caddy’s primary goal is to be an easy-to-use static file web server. Having high file descriptor limit means it can open more files to serve users at the same time.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>ulimit -<span class="constant">Sn</span> && ulimit -<span class="constant">Hn</span></div><div class="line"><span class="number">1024</span></div><div class="line"><span class="number">4096</span></div></pre></td></tr></table></figure>
+
+<p>The current system is too low in both soft and hard limits. But since it’s not in production, warning can be ignored.</p>
+<p>Make sure the server working:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">2015</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">404</span> <span class="keyword">Not</span> Found</div><div class="line">Content-<span class="keyword">Length</span>: <span class="number">14</span></div><div class="line">Content-Type: text/plain; charset=utf-<span class="number">8</span></div><div class="line">Server: Caddy</div><div class="line">X-Content-Type-<span class="keyword">Options</span>: nosniff</div><div class="line"></div><div class="line"><span class="number">404</span> <span class="keyword">Not</span> Found</div></pre></td></tr></table></figure>
+
+<p>Response header <code>X-Content-Type-Options: nosniff</code> prevents MIME based attacks, it tells the browser to respect the response content type, not to override.</p>
+<p>Status code <code>404</code> means working, but just lacks an index file. Let’s create one:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/08/25/installing-caddy-0-9-x-on-ubuntu-debian-system/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-08-17T12:00:00.000Z"><a href="/2016/08/17/installing-jq-from-source/">Aug 17, 2016</a></time>
       
       
@@ -256,6 +316,61 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Jul 5, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Node.js Installation Methods July 2016 Edition</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Follow up with the <a href="https://realguess.net/2015/09/02/various-node-js-installation-methods/" target="_blank" rel="external">previous blog</a> on various methods to install <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a>, here is the updated one with Node.js v4.x and v6.x versions.</p>
+<p>Install Node.js v4.x via <a href="https://nodesource.com/" target="_blank" rel="external">NodeSource</a>[^1] setup script:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_4.<span class="keyword">x</span> | sudo -E bash -</div><div class="line">$ sudo apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
+
+<p><code>sudo -E</code> option indicates to the security policy that the user wishes to preserve their existing environment variables[^2].</p>
+<p>With <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> and <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a>, <code>sudo</code> should be removed, because root:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RUN curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_4.<span class="keyword">x</span> | bash - && \</div><div class="line">    apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
+
+<p>Install Node.js v6.x via the same method:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_6.<span class="keyword">x</span> | sudo -E bash -</div><div class="line">$ sudo apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
+
+<p>The above installation method has been tested on:</p>
+<ul>
+<li>Debian 8.5</li>
+<li>Node.js v4.4.7 and v6.2.2</li>
+</ul>
+<p>In summary, the methods to install Node.js covered are:</p>
+<ul>
+<li>Package manager</li>
+<li>Nodesource script</li>
+<li>From the source</li>
+</ul>
+<p>[^1]: NodeSource provides <a href="https://github.com/nodesource/distributions" target="_blank" rel="external">binary distribution setup and support scripts</a>.<br>[^2]: See <code>man sudo</code>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-02T12:00:00.000Z"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Jul 2, 2016</a></time>
       
       
@@ -372,45 +487,6 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
-<ol>
-<li>Having multiple images means more configuration files to manage and update.</li>
-<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
-<li>Steeper learning curve for new developers.</li>
-</ol>
-<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
         <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
       
       
@@ -449,62 +525,28 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/setup-development-environment-with-vagrant-on-google-compute-engine/">Sep 7, 2015</a></time>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/07/setup-development-environment-with-vagrant-on-google-compute-engine/">Setup Development Environment with Vagrant on Google Compute Engine</a></h1>
+    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>We usually use <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a> to provision and manage <a href="https://www.virtualbox.org/" target="_blank" rel="external">VirtualBox</a> virtual machines or VMs. And Vagrant only ships with VirtualBox support by default. But Vagrant can do much more. VirtualBox is just one of <a href="https://docs.vagrantup.com/v2/providers/index.html" target="_blank" rel="external">providers</a>, additional providers can be added via the <a href="https://docs.vagrantup.com/v2/plugins/index.html" target="_blank" rel="external">Vagrant plugin system</a>. Here, we are going to use <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> as the provider and setup a disposable development environment.</p>
-<p>Basic steps involve:</p>
+        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
 <ol>
-<li>Install Vagrant</li>
-<li>Install vagrant-google plugin</li>
-<li>Add SSH keys to metadata server</li>
-<li>Add Vagrant box</li>
-<li>Add a Vagrantfile and override the defaults from the box</li>
-<li>Provision the machine</li>
+<li>Having multiple images means more configuration files to manage and update.</li>
+<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
+<li>Steeper learning curve for new developers.</li>
 </ol>
-<p>First, install Vagrant (exampled by <a href="https://www.debian.org/" target="_blank" rel="external">Debian</a> systems such as <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a>):</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ file=/tmp/vagrant.deb version=<span class="number">1.7</span>.<span class="number">4</span> && \</div><div class="line">  curl <span class="operator">-s</span>SL https://dl.bintray.com/mitchellh/vagrant/vagrant_<span class="variable">${version}</span>_x86_64.deb &gt; <span class="variable">${file}</span> && \</div><div class="line">  <span class="built_in">sudo</span> dpkg -i <span class="variable">${file}</span> && \</div><div class="line">  rm <span class="variable">${file}</span> && \</div><div class="line">  vagrant version</div></pre></td></tr></table></figure>
-
-<p>Install dependencies for building Debian packages, which are needed for the plugin:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> apt-get install -y build-essential</div></pre></td></tr></table></figure>
-
-<p>Install <a href="https://github.com/mitchellh/vagrant-google" target="_blank" rel="external">vagrant-google</a> plugin:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ vagrant plugin install vagrant-google</div><div class="line">Installing the <span class="string">'vagrant-google'</span> plugin. This can take a few minutes...</div><div class="line">Installed the plugin <span class="string">'vagrant-google (0.2.1)'</span>!</div></pre></td></tr></table></figure>
-
-<p>In order to SSH into the VM, we need to add public key to the instance which will be provisioned. In Google Compute Engine, this is done via <a href="https://cloud.google.com/compute/docs/metadata" target="_blank" rel="external">metadata</a> server at the project level.</p>
-<p>Add the username to prefix the SSH key, so the Compute Engine will pick it up and create the corresponding user:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span> -n <span class="string">'chao:'</span> &gt; /tmp/id_rsa.pub</div><div class="line">$ cat ~/.ssh/id_rsa.pub &gt;&gt; /tmp/id_rsa.pub</div></pre></td></tr></table></figure>
-
-<p>Now the concatenated one will have the username:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">chao</span><span class="pseudo">:ssh-rsa</span> <span class="tag">AAAAB3</span>... <span class="tag">chao</span><span class="at_rule">@<span class="keyword">ubuntu</span></span></div></pre></td></tr></table></figure>
-
-<p>Setting up SSH keys at the project level:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ gcloud compute project-info add-metadata --metadata-from-file \</div><div class="line">  sshKeys=/tmp/id_rsa.pub</div></pre></td></tr></table></figure>
-
-<p><a href="https://cloud.google.com/sdk/" target="_blank" rel="external">Google Cloud SDK</a> or <code>gcloud</code> command should be installed already. Now it’s time to configure the machine to be provisioned.</p>
-<p>The plugin provides a Vagrant <a href="https://docs.vagrantup.com/v2/boxes.html" target="_blank" rel="external">box</a>, which is a package format for Vagrant environments. It is not necessary to create a new box, we can just override the defaults by the <code>Vagrantfile</code>. So add the provider-specific box:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant box add gce https://github.com/mitchellh/vagrant-google/raw/master/google.box</div></pre></td></tr></table></figure>
-
-<p>Make sure the box is added:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant box list</div></pre></td></tr></table></figure>
-
-<p>Add a <code>Vagrantfile</code> and override the defaults:</p>
+<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
 
       
     </div>
     <footer>
       
-        
-          <div class="alignleft">
-            <a href="/2015/09/07/setup-development-environment-with-vagrant-on-google-compute-engine/#more" class="more-link">Read More</a>
-          </div>
         
         
       
@@ -555,57 +597,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-06T12:00:00.000Z"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Sep 6, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Upgrade Vagrant in Windows from Command Line without Prompt</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>To determine whether your <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a> is out of date or not, issue:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ vagrant version</div><div class="line">Installed Version: <span class="number">1.7</span>.<span class="number">4</span></div><div class="line">Latest Version: <span class="number">1.7</span>.<span class="number">4</span></div><div class="line"></div><div class="line">You<span class="string">'re running an up-to-date version of Vagrant!</span></div></pre></td></tr></table></figure>
-
-<p>If yours is out of date, you can download it from its <a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="external">download</a> page. However, being a lazy programmer, that’s still too many clicks. I want to figure out a way to update or install Vagrant from the command line without prompt.</p>
-<p>And here you go!</p>
-<p>Vagrant binaries are distributed by <a href="https://bintray.com/" target="_blank" rel="external">Bintray</a>, its format is:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://dl.bintray.com/mitchellh/vagrant/vagrant_{version}.msi</div></pre></td></tr></table></figure>
-
-<p>For example:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi</div></pre></td></tr></table></figure>
-
-<p>After you issue <code>vagrant version</code>, you know the correct version to upgrade, then download it:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://dl.bintray.com/mitchellh/vagrant/vagrant_1.<span class="number">7.4</span>.msi &gt; vagrant.msi</div></pre></td></tr></table></figure>
-
-<p>Install it by <code>msiexec</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ msiexec /i C:\Users\Chao\Downloads\vagrant.msi /passive /norestart</div></pre></td></tr></table></figure>
-
-<p>Make sure to use the full path instead of relative <code>.\vagrant.msi</code>, and Vagrant should be installed in the default location <code>C:\HashiCorp\Vagrant</code>. To find out all possible options, Just type <code>msiexec</code> command only.</p>
-<p>Saving a few clicks!</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -630,7 +621,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -640,7 +631,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>14</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -666,7 +657,7 @@
   
     <li><a href="/categories/tools/">Tools</a><small>18</small></li>
   
-    <li><a href="/categories/travel/">Travel</a><small>1</small></li>
+    <li><a href="/categories/travel/">Travel</a><small>3</small></li>
   
   </ul>
 </div>
@@ -687,6 +678,8 @@
   
     <li><a href="/tags/absolute-path/">absolute-path</a><small>1</small></li>
   
+    <li><a href="/tags/accept-ranges/">accept-ranges</a><small>1</small></li>
+  
     <li><a href="/tags/accessor-property/">accessor-property</a><small>1</small></li>
   
     <li><a href="/tags/aftereach/">aftereach</a><small>1</small></li>
@@ -705,7 +698,7 @@
   
     <li><a href="/tags/amazon-sqs/">amazon-sqs</a><small>1</small></li>
   
-    <li><a href="/tags/amtrak/">amtrak</a><small>1</small></li>
+    <li><a href="/tags/amtrak/">amtrak</a><small>2</small></li>
   
     <li><a href="/tags/android/">android</a><small>1</small></li>
   
@@ -759,7 +752,7 @@
   
     <li><a href="/tags/big-apple/">big-apple</a><small>1</small></li>
   
-    <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
+    <li><a href="/tags/big-easy/">big-easy</a><small>2</small></li>
   
     <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
   
@@ -790,6 +783,8 @@
     <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
+  
+    <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
   
@@ -1067,6 +1062,8 @@
   
     <li><a href="/tags/hipchat/">hipchat</a><small>1</small></li>
   
+    <li><a href="/tags/hollywood/">hollywood</a><small>1</small></li>
+  
     <li><a href="/tags/hong-kong/">hong-kong</a><small>1</small></li>
   
     <li><a href="/tags/host/">host</a><small>1</small></li>
@@ -1099,7 +1096,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>10</small></li>
+    <li><a href="/tags/install/">install</a><small>11</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1177,6 +1174,8 @@
   
     <li><a href="/tags/lorem-ipsum/">lorem-ipsum</a><small>1</small></li>
   
+    <li><a href="/tags/los-angeles/">los-angeles</a><small>1</small></li>
+  
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
     <li><a href="/tags/managed-vms/">managed-vms</a><small>2</small></li>
@@ -1219,7 +1218,7 @@
   
     <li><a href="/tags/network/">network</a><small>1</small></li>
   
-    <li><a href="/tags/new-orleans/">new-orleans</a><small>1</small></li>
+    <li><a href="/tags/new-orleans/">new-orleans</a><small>2</small></li>
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
@@ -1324,6 +1323,8 @@
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
     <li><a href="/tags/random/">random</a><small>2</small></li>
+  
+    <li><a href="/tags/range/">range</a><small>1</small></li>
   
     <li><a href="/tags/rawgit/">rawgit</a><small>1</small></li>
   
@@ -1457,6 +1458,8 @@
   
     <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
   
+    <li><a href="/tags/sunset-limited/">sunset-limited</a><small>1</small></li>
+  
     <li><a href="/tags/supertest/">supertest</a><small>1</small></li>
   
     <li><a href="/tags/symbolic-link/">symbolic-link</a><small>1</small></li>
@@ -1501,9 +1504,9 @@
   
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
-    <li><a href="/tags/train/">train</a><small>1</small></li>
+    <li><a href="/tags/train/">train</a><small>2</small></li>
   
-    <li><a href="/tags/travel/">travel</a><small>1</small></li>
+    <li><a href="/tags/travel/">travel</a><small>0</small></li>
   
     <li><a href="/tags/trello/">trello</a><small>1</small></li>
   
@@ -1518,6 +1521,8 @@
     <li><a href="/tags/ubuntu/">ubuntu</a><small>5</small></li>
   
     <li><a href="/tags/uglifyjs/">uglifyjs</a><small>1</small></li>
+  
+    <li><a href="/tags/ulimit/">ulimit</a><small>1</small></li>
   
     <li><a href="/tags/underscore/">underscore</a><small>1</small></li>
   
@@ -1577,13 +1582,15 @@
   
     <li><a href="/tags/web-framework/">web-framework</a><small>1</small></li>
   
-    <li><a href="/tags/web-server/">web-server</a><small>1</small></li>
+    <li><a href="/tags/web-server/">web-server</a><small>2</small></li>
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
   
     <li><a href="/tags/windows/">windows</a><small>2</small></li>
   
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
+  
+    <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   

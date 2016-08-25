@@ -68,6 +68,57 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-07-02T12:00:00.000Z"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Jul 2, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Resetting GitLab User Password with a Simple Shell Script</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="Problem">Problem</h2>
+<p>Resetting password is one of the most common requests virtually in any system. In <a href="https://gitlab.com/" target="_blank" rel="external">GitLab</a>, user password can be updated by visiting the <code>/admin/users</code> page. But if you forgot the password for the root user or the admin user. You need another method to reset it.</p>
+<h2 id="Objective">Objective</h2>
+<p>The goal is to simplify the process of resetting GitLab user password by using CLI, so next time when encountering the same problem again, it will be quick and easy.</p>
+<h2 id="Settings">Settings</h2>
+<p>Self-hosted <a href="https://gitlab.com/" target="_blank" rel="external">GitLab</a>, installed in a <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> container.</p>
+<h2 id="Solutions">Solutions</h2>
+<p>Step by step procedure to reset the root password is already provided by <a href="http://docs.gitlab.com/ce/security/reset_root_password.html" target="_blank" rel="external">this GitLab documentation</a>. By converting it into a Bash shell script and placing it in user’s home <code>bin</code> directory as an executable <code>~/bin/gitlab-password-reset</code> file, we will have created a simple command to be run repeatedly:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> -n <span class="string">"Email: "</span>;    <span class="built_in">read</span> MAIL</div><div class="line"><span class="built_in">echo</span> -n <span class="string">"Password: "</span>; <span class="built_in">read</span> <span class="operator">-s</span> PASS</div><div class="line"><span class="built_in">echo</span> <span class="comment"># Ensure a new line</span></div><div class="line"></div><div class="line">docker <span class="keyword">exec</span> gitlab gitlab-rails runner <span class="operator">-e</span> production <span class="string">"  \</span></div><div class="line">  user = User.find_by(email: '<span class="variable">$MAIL</span>');                  \</div><div class="line">  user.password = user.password_confirmation = '<span class="variable">$PASS</span>'; \</div><div class="line">  user.save!"</div></pre></td></tr></table></figure>
+
+<p>We could simply run the long <code>docker</code> command instead of shell script. But since we’re dealing with password, it’s a good practice to avoid placing sensitive information on command line history log.</p>
+<p>No trailing spaces are allowed on the password field, by the way.</p>
+<p>Another solution is turning the Ruby evaluation into a script and save into somewhere like <code>/srv/gitlab/config</code> directory. Then, we can just run:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="keyword">exec</span> gitlab gitlab-rails runner <span class="operator">-e</span> production /etc/gitlab/scripts/password-reset.rb</div></pre></td></tr></table></figure>
+
+<p>Because we are using Docker to run GitLab, and the following directories are mapped from the host to the guest:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/srv/gitlab/confi<span class="variable">g:</span>/etc/gitlab</div><div class="line">/srv/gitlab/<span class="built_in">log</span><span class="variable">s:</span>/var/<span class="built_in">log</span>/gitlab</div><div class="line">/srv/gitlab/dat<span class="variable">a:</span>/var/<span class="keyword">opt</span>/gitlab</div></pre></td></tr></table></figure>
+
+<p>Therefore, when executing the Ruby script, it’s <code>/etc/gitlab</code> instead of <code>/srv/gitlab</code>. However, you will need to figure out how to get the email and password into the script. That’s for you to answer.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-01-24T12:00:00.000Z"><a href="/2016/01/24/why-using-exact-versions-in-npm-package-dependencies/">Jan 24, 2016</a></time>
       
       
@@ -550,73 +601,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-24T12:00:00.000Z"><a href="/2015/09/24/add-a-custom-domain-to-the-specific-module-of-google-app-engine-managed-vms/">Sep 24, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/24/add-a-custom-domain-to-the-specific-module-of-google-app-engine-managed-vms/">Add a Custom Domain to the Specific Module of Google App Engine Managed VMs</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I would like to add a custom domain to a module other than the default one in <a href="https://cloud.google.com/appengine/docs/managed-vms/" target="_blank" rel="external">Google App Engine Managed VMs</a>. For example, I have the following sub-domains:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Custom domain names | SSL support | Record type | Data                 | Alias</div><div class="line">------------------- | ----------- | ----------- | -------------------- | -----</div><div class="line">api.example.com     | none        | CNAME       | ghs.googlehosted.com | api</div><div class="line">admin.example.com   | none        | CNAME       | ghs.googlehosted.com | admin</div></pre></td></tr></table></figure>
-
-<p>listed in the application console:</p>
-<p><a href="https://console.developers.google.com/project/[project]/appengine/settings/domains" target="_blank" rel="external">https://console.developers.google.com/project/[project]/appengine/settings/domains</a></p>
-<p>The domain <code>api.example.com</code> points to the default module. And I would like the other domain <code>admin.example.com</code> to point to the module <code>admin</code>. However, by merely adding the custom domain in the settings, both <code>api.example.com</code> and <code>admin.example.com</code> are pointed to the same module: the default module. Then how to point the custom domain and route the traffic to the <code>admin</code> module? The answer is on the <em>dispatch file</em>. But first need to understand the concept of modules in Google App Engine.</p>
-<p><img src="/2015/09/24/add-a-custom-domain-to-the-specific-module-of-google-app-engine-managed-vms/modules-hierarchy.png" alt="Google App Engine Module Hierarchy" title="Source: Google App Engine Module Hierarchy"><br><em>Source: <a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">Google App Engine Docs</a></em></p>
-<p>The above chart illustrates the architecture of a Google App Engine application:</p>
-<ul>
-<li>Application: “An App Engine application is made up of one or more modules”. [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>]</li>
-<li>Module: “Each module consists of source code and configuration files. The files used by a module represents a version of the module. When you deploy a module, you always deploy a specific version of the module.” [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>] “All module-less apps have been converted to contain a single default module.” [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>] Every application has a single default module.</li>
-<li>Version: “A particular module/version will have one or more instances.”</li>
-<li>Instance: “Each instance runs its own separate executable.”</li>
-</ul>
-<p>Another concept is the resource sharing:</p>
-<ul>
-<li>“App Engine Modules let developers factor large applications into logical components that can share stateful services and communicate in a secure fashion.” [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>]</li>
-<li>“Stateful services (such as Memcache, Datastore, and Task Queues) are shared by all modules in an application.” [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>]</li>
-</ul>
-<p>Remember that <a href="https://cloud.google.com/" target="_blank" rel="external">Google Cloud Platform</a> is project based. If there are a web application and a mobile application, and they are both making requests to another application, the API. Then there should be three projects. However, in this case, both <code>api</code> and <code>admin</code> share the same services, such as the same database and file storage. We should put them together in the same application as separate modules.</p>
-<p>With that in mind, how to route requests to a specific module? “Every module, version, and instance has its own unique URI (for example, <code>v1.my-module.my-app.appspot.com</code>). Incoming user requests are routed to an instance of a particular module/version according to <a href="https://cloud.google.com/appengine/docs/go/modules/routing" target="_blank" rel="external">URL addressing conventions and an optional customized dispatch file</a>.” [<a href="https://cloud.google.com/appengine/docs/go/modules/" target="_blank" rel="external">1</a>] Since a custom domain is used, we have to use the customized dispatch file. And this is done by creating a dispatch file <code>dispatch.yml</code> to route requests based on URL patterns.</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"># Dispatch</div><div class="line"><span class="header"># ========</span></div><div class="line">---</div><div class="line">dispatch:</div><div class="line"><span class="code">  - url: '*/favicon.ico'</span></div><div class="line"><span class="code">    module: default</span></div><div class="line"><span class="code">  - url: 'admin.example.com/*'</span></div><div class="line"><span class="code">    module: admin</span></div></pre></td></tr></table></figure>
-
-<p>The <code>application</code> field is not necessary, otherwise, you will get:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">WARNING: The [application] field is specified <span class="keyword">in</span> file [/home/chao/example/dispatch.yml].</div><div class="line">This field is not used by gcloud and should be removed.</div></pre></td></tr></table></figure>
-
-<p>Glob characters (such as asterisk) can be used, and support up to 10 routing rules.</p>
-<p>Deploy the dispatch file is simple:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gcloud preview app deploy dispatch.yml</div></pre></td></tr></table></figure>
-
-<p>And it should require almost no time to wait. Once it is ready, the requests sent to <code>admin.example.com</code> will be routed properly to the <code>admin</code> module.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/09/24/add-a-custom-domain-to-the-specific-module-of-google-app-engine-managed-vms/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -643,7 +627,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -653,7 +637,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>14</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -679,7 +663,7 @@
   
     <li><a href="/categories/tools/">Tools</a><small>18</small></li>
   
-    <li><a href="/categories/travel/">Travel</a><small>1</small></li>
+    <li><a href="/categories/travel/">Travel</a><small>3</small></li>
   
   </ul>
 </div>
@@ -700,6 +684,8 @@
   
     <li><a href="/tags/absolute-path/">absolute-path</a><small>1</small></li>
   
+    <li><a href="/tags/accept-ranges/">accept-ranges</a><small>1</small></li>
+  
     <li><a href="/tags/accessor-property/">accessor-property</a><small>1</small></li>
   
     <li><a href="/tags/aftereach/">aftereach</a><small>1</small></li>
@@ -718,7 +704,7 @@
   
     <li><a href="/tags/amazon-sqs/">amazon-sqs</a><small>1</small></li>
   
-    <li><a href="/tags/amtrak/">amtrak</a><small>1</small></li>
+    <li><a href="/tags/amtrak/">amtrak</a><small>2</small></li>
   
     <li><a href="/tags/android/">android</a><small>1</small></li>
   
@@ -772,7 +758,7 @@
   
     <li><a href="/tags/big-apple/">big-apple</a><small>1</small></li>
   
-    <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
+    <li><a href="/tags/big-easy/">big-easy</a><small>2</small></li>
   
     <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
   
@@ -803,6 +789,8 @@
     <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
+  
+    <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
   
@@ -1080,6 +1068,8 @@
   
     <li><a href="/tags/hipchat/">hipchat</a><small>1</small></li>
   
+    <li><a href="/tags/hollywood/">hollywood</a><small>1</small></li>
+  
     <li><a href="/tags/hong-kong/">hong-kong</a><small>1</small></li>
   
     <li><a href="/tags/host/">host</a><small>1</small></li>
@@ -1112,7 +1102,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>10</small></li>
+    <li><a href="/tags/install/">install</a><small>11</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1190,6 +1180,8 @@
   
     <li><a href="/tags/lorem-ipsum/">lorem-ipsum</a><small>1</small></li>
   
+    <li><a href="/tags/los-angeles/">los-angeles</a><small>1</small></li>
+  
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
     <li><a href="/tags/managed-vms/">managed-vms</a><small>2</small></li>
@@ -1232,7 +1224,7 @@
   
     <li><a href="/tags/network/">network</a><small>1</small></li>
   
-    <li><a href="/tags/new-orleans/">new-orleans</a><small>1</small></li>
+    <li><a href="/tags/new-orleans/">new-orleans</a><small>2</small></li>
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
@@ -1337,6 +1329,8 @@
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
     <li><a href="/tags/random/">random</a><small>2</small></li>
+  
+    <li><a href="/tags/range/">range</a><small>1</small></li>
   
     <li><a href="/tags/rawgit/">rawgit</a><small>1</small></li>
   
@@ -1470,6 +1464,8 @@
   
     <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
   
+    <li><a href="/tags/sunset-limited/">sunset-limited</a><small>1</small></li>
+  
     <li><a href="/tags/supertest/">supertest</a><small>1</small></li>
   
     <li><a href="/tags/symbolic-link/">symbolic-link</a><small>1</small></li>
@@ -1514,9 +1510,9 @@
   
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
-    <li><a href="/tags/train/">train</a><small>1</small></li>
+    <li><a href="/tags/train/">train</a><small>2</small></li>
   
-    <li><a href="/tags/travel/">travel</a><small>1</small></li>
+    <li><a href="/tags/travel/">travel</a><small>0</small></li>
   
     <li><a href="/tags/trello/">trello</a><small>1</small></li>
   
@@ -1531,6 +1527,8 @@
     <li><a href="/tags/ubuntu/">ubuntu</a><small>5</small></li>
   
     <li><a href="/tags/uglifyjs/">uglifyjs</a><small>1</small></li>
+  
+    <li><a href="/tags/ulimit/">ulimit</a><small>1</small></li>
   
     <li><a href="/tags/underscore/">underscore</a><small>1</small></li>
   
@@ -1590,13 +1588,15 @@
   
     <li><a href="/tags/web-framework/">web-framework</a><small>1</small></li>
   
-    <li><a href="/tags/web-server/">web-server</a><small>1</small></li>
+    <li><a href="/tags/web-server/">web-server</a><small>2</small></li>
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
   
     <li><a href="/tags/windows/">windows</a><small>2</small></li>
   
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
+  
+    <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   

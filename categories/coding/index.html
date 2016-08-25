@@ -170,61 +170,6 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Jul 5, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Node.js Installation Methods July 2016 Edition</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Follow up with the <a href="https://realguess.net/2015/09/02/various-node-js-installation-methods/" target="_blank" rel="external">previous blog</a> on various methods to install <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a>, here is the updated one with Node.js v4.x and v6.x versions.</p>
-<p>Install Node.js v4.x via <a href="https://nodesource.com/" target="_blank" rel="external">NodeSource</a>[^1] setup script:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_4.<span class="keyword">x</span> | sudo -E bash -</div><div class="line">$ sudo apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
-
-<p><code>sudo -E</code> option indicates to the security policy that the user wishes to preserve their existing environment variables[^2].</p>
-<p>With <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> and <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a>, <code>sudo</code> should be removed, because root:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RUN curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_4.<span class="keyword">x</span> | bash - && \</div><div class="line">    apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
-
-<p>Install Node.js v6.x via the same method:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_6.<span class="keyword">x</span> | sudo -E bash -</div><div class="line">$ sudo apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
-
-<p>The above installation method has been tested on:</p>
-<ul>
-<li>Debian 8.5</li>
-<li>Node.js v4.4.7 and v6.2.2</li>
-</ul>
-<p>In summary, the methods to install Node.js covered are:</p>
-<ul>
-<li>Package manager</li>
-<li>Nodesource script</li>
-<li>From the source</li>
-</ul>
-<p>[^1]: NodeSource provides <a href="https://github.com/nodesource/distributions" target="_blank" rel="external">binary distribution setup and support scripts</a>.<br>[^2]: See <code>man sudo</code>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
         <time datetime="2015-09-23T12:00:00.000Z"><a href="/2015/09/23/the-first-release-version/">Sep 23, 2015</a></time>
       
       
@@ -453,7 +398,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -463,7 +408,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>14</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -489,7 +434,7 @@
   
     <li><a href="/categories/tools/">Tools</a><small>18</small></li>
   
-    <li><a href="/categories/travel/">Travel</a><small>1</small></li>
+    <li><a href="/categories/travel/">Travel</a><small>3</small></li>
   
   </ul>
 </div>
@@ -510,6 +455,8 @@
   
     <li><a href="/tags/absolute-path/">absolute-path</a><small>1</small></li>
   
+    <li><a href="/tags/accept-ranges/">accept-ranges</a><small>1</small></li>
+  
     <li><a href="/tags/accessor-property/">accessor-property</a><small>1</small></li>
   
     <li><a href="/tags/aftereach/">aftereach</a><small>1</small></li>
@@ -528,7 +475,7 @@
   
     <li><a href="/tags/amazon-sqs/">amazon-sqs</a><small>1</small></li>
   
-    <li><a href="/tags/amtrak/">amtrak</a><small>1</small></li>
+    <li><a href="/tags/amtrak/">amtrak</a><small>2</small></li>
   
     <li><a href="/tags/android/">android</a><small>1</small></li>
   
@@ -582,7 +529,7 @@
   
     <li><a href="/tags/big-apple/">big-apple</a><small>1</small></li>
   
-    <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
+    <li><a href="/tags/big-easy/">big-easy</a><small>2</small></li>
   
     <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
   
@@ -613,6 +560,8 @@
     <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
+  
+    <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
   
@@ -890,6 +839,8 @@
   
     <li><a href="/tags/hipchat/">hipchat</a><small>1</small></li>
   
+    <li><a href="/tags/hollywood/">hollywood</a><small>1</small></li>
+  
     <li><a href="/tags/hong-kong/">hong-kong</a><small>1</small></li>
   
     <li><a href="/tags/host/">host</a><small>1</small></li>
@@ -922,7 +873,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>10</small></li>
+    <li><a href="/tags/install/">install</a><small>11</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1000,6 +951,8 @@
   
     <li><a href="/tags/lorem-ipsum/">lorem-ipsum</a><small>1</small></li>
   
+    <li><a href="/tags/los-angeles/">los-angeles</a><small>1</small></li>
+  
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
     <li><a href="/tags/managed-vms/">managed-vms</a><small>2</small></li>
@@ -1042,7 +995,7 @@
   
     <li><a href="/tags/network/">network</a><small>1</small></li>
   
-    <li><a href="/tags/new-orleans/">new-orleans</a><small>1</small></li>
+    <li><a href="/tags/new-orleans/">new-orleans</a><small>2</small></li>
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
@@ -1147,6 +1100,8 @@
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
     <li><a href="/tags/random/">random</a><small>2</small></li>
+  
+    <li><a href="/tags/range/">range</a><small>1</small></li>
   
     <li><a href="/tags/rawgit/">rawgit</a><small>1</small></li>
   
@@ -1280,6 +1235,8 @@
   
     <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
   
+    <li><a href="/tags/sunset-limited/">sunset-limited</a><small>1</small></li>
+  
     <li><a href="/tags/supertest/">supertest</a><small>1</small></li>
   
     <li><a href="/tags/symbolic-link/">symbolic-link</a><small>1</small></li>
@@ -1324,9 +1281,9 @@
   
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
-    <li><a href="/tags/train/">train</a><small>1</small></li>
+    <li><a href="/tags/train/">train</a><small>2</small></li>
   
-    <li><a href="/tags/travel/">travel</a><small>1</small></li>
+    <li><a href="/tags/travel/">travel</a><small>0</small></li>
   
     <li><a href="/tags/trello/">trello</a><small>1</small></li>
   
@@ -1341,6 +1298,8 @@
     <li><a href="/tags/ubuntu/">ubuntu</a><small>5</small></li>
   
     <li><a href="/tags/uglifyjs/">uglifyjs</a><small>1</small></li>
+  
+    <li><a href="/tags/ulimit/">ulimit</a><small>1</small></li>
   
     <li><a href="/tags/underscore/">underscore</a><small>1</small></li>
   
@@ -1400,13 +1359,15 @@
   
     <li><a href="/tags/web-framework/">web-framework</a><small>1</small></li>
   
-    <li><a href="/tags/web-server/">web-server</a><small>1</small></li>
+    <li><a href="/tags/web-server/">web-server</a><small>2</small></li>
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
   
     <li><a href="/tags/windows/">windows</a><small>2</small></li>
   
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
+  
+    <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   

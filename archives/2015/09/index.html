@@ -486,6 +486,41 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Google Cloud Datastore Starter: Dataset</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> dataset starter, part of a starter collection:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Google Cloud Datastore Starter: Dataset</span></div><div class="line"><span class="comment">// =======================================</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="comment">// Define a dataset.</span></div><div class="line"><span class="keyword">var</span> params = {</div><div class="line">  projectId: <span class="string">'MY_PROJECT'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'MY_NAMESPACE'</span></div><div class="line">};</div><div class="line"><span class="keyword">var</span> dataset = <span class="built_in">require</span>(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line"></div><div class="line"><span class="comment">// Define an entity (including both key and data).</span></div><div class="line"><span class="keyword">var</span> kind = <span class="string">'MY_KIND'</span>;</div><div class="line"><span class="keyword">var</span> key = dataset.key(kind);</div><div class="line"><span class="keyword">var</span> data = [</div><div class="line">  {</div><div class="line">    name: <span class="string">'title'</span>,</div><div class="line">    value: <span class="string">'Google Cloud Datastore Starter'</span>,</div><div class="line">    excludeFromIndexes: <span class="literal">false</span></div><div class="line">  }</div><div class="line">];</div><div class="line"><span class="comment">// var data = { title: 'Google Cloud Datastore Starter' }; // Simple version</span></div><div class="line"><span class="keyword">var</span> entity = {</div><div class="line">  key: key,</div><div class="line">  data: data</div><div class="line">};</div><div class="line"></div><div class="line"><span class="comment">// Save a single entity.</span></div><div class="line">dataset.save(entity, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) {</div><div class="line">    <span class="keyword">throw</span> err;</div><div class="line">  }</div><div class="line">});</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/">Sep 14, 2015</a></time>
       
       
@@ -532,41 +567,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Google Cloud Datastore Starter: Dataset</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> dataset starter, part of a starter collection:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Google Cloud Datastore Starter: Dataset</span></div><div class="line"><span class="comment">// =======================================</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="comment">// Define a dataset.</span></div><div class="line"><span class="keyword">var</span> params = {</div><div class="line">  projectId: <span class="string">'MY_PROJECT'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'MY_NAMESPACE'</span></div><div class="line">};</div><div class="line"><span class="keyword">var</span> dataset = <span class="built_in">require</span>(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line"></div><div class="line"><span class="comment">// Define an entity (including both key and data).</span></div><div class="line"><span class="keyword">var</span> kind = <span class="string">'MY_KIND'</span>;</div><div class="line"><span class="keyword">var</span> key = dataset.key(kind);</div><div class="line"><span class="keyword">var</span> data = [</div><div class="line">  {</div><div class="line">    name: <span class="string">'title'</span>,</div><div class="line">    value: <span class="string">'Google Cloud Datastore Starter'</span>,</div><div class="line">    excludeFromIndexes: <span class="literal">false</span></div><div class="line">  }</div><div class="line">];</div><div class="line"><span class="comment">// var data = { title: 'Google Cloud Datastore Starter' }; // Simple version</span></div><div class="line"><span class="keyword">var</span> entity = {</div><div class="line">  key: key,</div><div class="line">  data: data</div><div class="line">};</div><div class="line"></div><div class="line"><span class="comment">// Save a single entity.</span></div><div class="line">dataset.save(entity, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) {</div><div class="line">    <span class="keyword">throw</span> err;</div><div class="line">  }</div><div class="line">});</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -591,7 +591,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -601,7 +601,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>14</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -627,7 +627,7 @@
   
     <li><a href="/categories/tools/">Tools</a><small>18</small></li>
   
-    <li><a href="/categories/travel/">Travel</a><small>1</small></li>
+    <li><a href="/categories/travel/">Travel</a><small>3</small></li>
   
   </ul>
 </div>
@@ -648,6 +648,8 @@
   
     <li><a href="/tags/absolute-path/">absolute-path</a><small>1</small></li>
   
+    <li><a href="/tags/accept-ranges/">accept-ranges</a><small>1</small></li>
+  
     <li><a href="/tags/accessor-property/">accessor-property</a><small>1</small></li>
   
     <li><a href="/tags/aftereach/">aftereach</a><small>1</small></li>
@@ -666,7 +668,7 @@
   
     <li><a href="/tags/amazon-sqs/">amazon-sqs</a><small>1</small></li>
   
-    <li><a href="/tags/amtrak/">amtrak</a><small>1</small></li>
+    <li><a href="/tags/amtrak/">amtrak</a><small>2</small></li>
   
     <li><a href="/tags/android/">android</a><small>1</small></li>
   
@@ -720,7 +722,7 @@
   
     <li><a href="/tags/big-apple/">big-apple</a><small>1</small></li>
   
-    <li><a href="/tags/big-easy/">big-easy</a><small>1</small></li>
+    <li><a href="/tags/big-easy/">big-easy</a><small>2</small></li>
   
     <li><a href="/tags/big-number/">big-number</a><small>1</small></li>
   
@@ -751,6 +753,8 @@
     <li><a href="/tags/busybox/">busybox</a><small>1</small></li>
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
+  
+    <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
   
@@ -1028,6 +1032,8 @@
   
     <li><a href="/tags/hipchat/">hipchat</a><small>1</small></li>
   
+    <li><a href="/tags/hollywood/">hollywood</a><small>1</small></li>
+  
     <li><a href="/tags/hong-kong/">hong-kong</a><small>1</small></li>
   
     <li><a href="/tags/host/">host</a><small>1</small></li>
@@ -1060,7 +1066,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>10</small></li>
+    <li><a href="/tags/install/">install</a><small>11</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1138,6 +1144,8 @@
   
     <li><a href="/tags/lorem-ipsum/">lorem-ipsum</a><small>1</small></li>
   
+    <li><a href="/tags/los-angeles/">los-angeles</a><small>1</small></li>
+  
     <li><a href="/tags/m101/">m101</a><small>1</small></li>
   
     <li><a href="/tags/managed-vms/">managed-vms</a><small>2</small></li>
@@ -1180,7 +1188,7 @@
   
     <li><a href="/tags/network/">network</a><small>1</small></li>
   
-    <li><a href="/tags/new-orleans/">new-orleans</a><small>1</small></li>
+    <li><a href="/tags/new-orleans/">new-orleans</a><small>2</small></li>
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
@@ -1285,6 +1293,8 @@
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
     <li><a href="/tags/random/">random</a><small>2</small></li>
+  
+    <li><a href="/tags/range/">range</a><small>1</small></li>
   
     <li><a href="/tags/rawgit/">rawgit</a><small>1</small></li>
   
@@ -1418,6 +1428,8 @@
   
     <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
   
+    <li><a href="/tags/sunset-limited/">sunset-limited</a><small>1</small></li>
+  
     <li><a href="/tags/supertest/">supertest</a><small>1</small></li>
   
     <li><a href="/tags/symbolic-link/">symbolic-link</a><small>1</small></li>
@@ -1462,9 +1474,9 @@
   
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
-    <li><a href="/tags/train/">train</a><small>1</small></li>
+    <li><a href="/tags/train/">train</a><small>2</small></li>
   
-    <li><a href="/tags/travel/">travel</a><small>1</small></li>
+    <li><a href="/tags/travel/">travel</a><small>0</small></li>
   
     <li><a href="/tags/trello/">trello</a><small>1</small></li>
   
@@ -1479,6 +1491,8 @@
     <li><a href="/tags/ubuntu/">ubuntu</a><small>5</small></li>
   
     <li><a href="/tags/uglifyjs/">uglifyjs</a><small>1</small></li>
+  
+    <li><a href="/tags/ulimit/">ulimit</a><small>1</small></li>
   
     <li><a href="/tags/underscore/">underscore</a><small>1</small></li>
   
@@ -1538,13 +1552,15 @@
   
     <li><a href="/tags/web-framework/">web-framework</a><small>1</small></li>
   
-    <li><a href="/tags/web-server/">web-server</a><small>1</small></li>
+    <li><a href="/tags/web-server/">web-server</a><small>2</small></li>
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
   
     <li><a href="/tags/windows/">windows</a><small>2</small></li>
   
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
+  
+    <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   
