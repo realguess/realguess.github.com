@@ -68,6 +68,64 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-08-25T12:00:00.000Z"><a href="/2016/08/25/streaming-http-request-directly-to-response-in-node-js/">Aug 25, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/25/streaming-http-request-directly-to-response-in-node-js/">Streaming HTTP Request Directly to Response in Node.js</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>This is a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> starting script to stream HTTP request directly into response:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span><span class="function"><span class="params">(<span class="string">'http'</span>)</span>.<span class="title">createServer</span><span class="params">((req, res) =&gt; {</span></span></div><div class="line">  req.pipe(res); <span class="regexp">//</span> Pipe request directly to response</div><div class="line">}).<span class="title">listen</span><span class="params">(<span class="number">3000</span>)</span>;</div></pre></td></tr></table></figure>
+
+<p>It behaves almost like an echo, you get back whatever you sent. For example, use <a href="https://github.com/jkbrzt/httpie" target="_blank" rel="external">HTTPie</a> to make a request to the above server:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">$ echo foo | http <span class="comment">--verbose --stream :3000 Content-Type:text/plain</span></div><div class="line">POST / HTTP/<span class="number">1.1</span></div><div class="line">Accept: <span class="type">application</span>/json, */*</div><div class="line">Accept-Encoding: gzip, deflate</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">4</span></div><div class="line">Host: localhost:<span class="number">3000</span></div><div class="line">User-Agent: HTTPie/<span class="number">0.9</span><span class="number">.6</span></div><div class="line">Content-Type: <span class="type">text</span>/plain</div><div class="line"></div><div class="line">foo</div><div class="line"></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Transfer-Encoding: chunked</div><div class="line"></div><div class="line">foo</div></pre></td></tr></table></figure>
+
+<p>We can also add the <code>Content-Type</code> response header to echo back what the entire media type is after assembling all chunks.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span><span class="function"><span class="params">(<span class="string">'http'</span>)</span>.<span class="title">createServer</span><span class="params">((req, res) =&gt; {</span></span></div><div class="line">  req.pipe(res); <span class="regexp">//</span> Pipe request directly to response</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (req.headers[<span class="string">'content-type'</span>]) {</div><div class="line">    res.setHeader(<span class="string">'Content-Type'</span>, req.headers[<span class="string">'content-type'</span>]);</div><div class="line">  }</div><div class="line">}).<span class="title">listen</span><span class="params">(<span class="number">3000</span>)</span>;</div></pre></td></tr></table></figure>
+
+<p>The response should have the <code>Content-Type</code> field as below:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="status">HTTP/1.1 <span class="number">200</span> OK</span></div><div class="line"><span class="attribute">Connection</span>: <span class="string">keep-alive</span></div><div class="line"><span class="attribute">Content-Type</span>: <span class="string">text/plain</span></div><div class="line"><span class="attribute">Transfer-Encoding</span>: <span class="string">chunked</span></div><div class="line"></div><div class="line"><span class="undefined">foo</span></div></pre></td></tr></table></figure>
+
+<p>Notice that instead of usual <code>Content-Length</code> in the response header, we’ve got <code>Transfer-Encoding: chunked</code>. The default transfer encoding for Node.js HTTP is <code>chunked</code>:</p>
+<blockquote>
+<p>Sending a ‘Content-length’ header will disable the default chunked encoding.[^1]</p>
+</blockquote>
+<p>About transfer encoding:</p>
+<blockquote>
+<p>Chunked transfer encoding is a data transfer mechanism in version 1.1 of the Hypertext Transfer Protocol (HTTP) in which data is sent in a series of “chunks”. It uses the Transfer-Encoding HTTP header in place of the Content-Length header, which the earlier version of the protocol would otherwise require. Because the Content-Length header is not used, the sender does not need to know the length of the content before it starts transmitting a response to the receiver. Senders can begin transmitting dynamically-generated content before knowing the total size of that content. … The size of each chunk is sent right before the chunk itself so that the receiver can tell when it has finished receiving data for that chunk. The data transfer is terminated by a final chunk of length zero.[^2]</p>
+</blockquote>
+<p>With the above starting script, now you can attach some <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform" target="_blank" rel="external">transform streams</a> to manipulate the request and stream back in chunked response.</p>
+<p>Settings:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ node <span class="comment">--version</span></div><div class="line">v6<span class="number">.3</span><span class="number">.1</span></div><div class="line">$ <span class="keyword">http</span> <span class="comment">--version</span></div><div class="line"><span class="number">0.9</span><span class="number">.6</span></div></pre></td></tr></table></figure>
+
+<p>[^1]: <a href="https://nodejs.org/api/http.html" target="_blank" rel="external">HTTP</a>, Node.js API Docs</p>
+<p>[^2]: <a href="https://en.wikipedia.org/wiki/Chunked_transfer_encoding" target="_blank" rel="external">Chunked transfer encoding</a>, Wikipedia</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-29T12:00:00.000Z"><a href="/2016/07/29/escaping-in-json-with-backslash/">Jul 29, 2016</a></time>
       
       
@@ -398,7 +456,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -579,6 +637,8 @@
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
+    <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
+  
     <li><a href="/tags/cli/">cli</a><small>12</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
@@ -618,6 +678,8 @@
     <li><a href="/tags/console/">console</a><small>1</small></li>
   
     <li><a href="/tags/container/">container</a><small>1</small></li>
+  
+    <li><a href="/tags/content-length/">content-length</a><small>1</small></li>
   
     <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
   
@@ -851,7 +913,7 @@
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>6</small></li>
+    <li><a href="/tags/http/">http</a><small>7</small></li>
   
     <li><a href="/tags/http-method/">http-method</a><small>1</small></li>
   
@@ -1001,7 +1063,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>27</small></li>
+    <li><a href="/tags/node/">node</a><small>28</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1221,7 +1283,9 @@
   
     <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
-    <li><a href="/tags/stream/">stream</a><small>1</small></li>
+    <li><a href="/tags/stream/">stream</a><small>2</small></li>
+  
+    <li><a href="/tags/streaming/">streaming</a><small>1</small></li>
   
     <li><a href="/tags/string/">string</a><small>1</small></li>
   
@@ -1282,6 +1346,8 @@
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
+  
+    <li><a href="/tags/transfer-encoding/">transfer-encoding</a><small>1</small></li>
   
     <li><a href="/tags/travel/">travel</a><small>0</small></li>
   

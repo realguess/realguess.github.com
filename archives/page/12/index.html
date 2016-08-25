@@ -62,6 +62,55 @@
 
 
   
+    <article class="blog">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-03-03T13:39:13.000Z"><a href="/2014/03/03/immediately-invoked-function-expression-in-coffeescript/">Mar 3, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/03/immediately-invoked-function-expression-in-coffeescript/">Immediately Invoked Function Expression in CoffeeScript</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://coffeescript.org/" target="_blank" rel="external">CoffeeScript</a> only has function expression, there are no named functions nor function declaration, as <a href="http://coffeescript.org/#expressions" target="_blank" rel="external">almost everything in CoffeeScript is expression</a>.</p>
+<p>Anonymous function can be written as just a dash plus an arrow:</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="function">-&gt;</span></div></pre></td></tr></table></figure>
+
+<p>This will be compiled to JavaScript:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{});</div></pre></td></tr></table></figure>
+
+<p>This anonymous function can be invoked immediately:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// (-&gt;)()</span></div><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{})();</div></pre></td></tr></table></figure>
+
+<p>The immediately invoked function expression (IIFE) syntax is different from the <a href="/2014/03/02/immediately-invoked-function-expression/">preferred format</a> in JavaScript. But this is more likely due to the syntax and compilation of CoffeeScript.</p>
+<p>Here is one useful example to show the syntax:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// (square = (n) -&gt; return n * n)()</span></div><div class="line"><span class="keyword">var</span> square;</div><div class="line"></div><div class="line">(square = <span class="function"><span class="keyword">function</span><span class="params">(n)</span> </span>{</div><div class="line">  <span class="keyword">return</span> n * n;</div><div class="line">})();</div></pre></td></tr></table></figure>
+
+<p>And a few more without compiled Javascript:</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="function">-&gt;</span>)()</div><div class="line"><span class="function"><span class="params">(square = (n) -&gt; <span class="keyword">return</span> n * n)()</span></span></div><div class="line"><span class="title">console</span>.<span class="title">log</span> <span class="params">(square = (n) -&gt; <span class="keyword">return</span> n * n)(<span class="number">10</span>)</span> # 100</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
     <article class="post">
   
   <div class="post-content">
@@ -697,53 +746,6 @@ app.<span class="keyword">use</span>(foo);
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-05T14:18:22.000Z"><a href="/2014/01/05/use-vim-cryptographic-features-to-encrypt-important-text-files/">Jan 5, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/05/use-vim-cryptographic-features-to-encrypt-important-text-files/">Use Vim Cryptographic Features to Encrypt Important Text Files</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>You can protect your important text files by using <a href="http://www.vim.org/" target="_blank" rel="external">Vim</a> cryptographic features.</p>
-<p>Set cryptographic method to <a href="http://en.wikipedia.org/wiki/Blowfish_(cipher)" target="_blank" rel="external">Blowfish</a>:</p>
-<pre><code>:<span class="keyword">set</span> cryptmethod=blowfish
-</code></pre><p>Set encryption key:</p>
-<pre><code><span class="symbol">:X</span>
-</code></pre><p>Save and get out:</p>
-<pre><code><span class="symbol">:wq</span>
-</code></pre><p>But the drawback is:</p>
-<pre><code>$ <span class="keyword">grep</span> <span class="string">'Vim'</span> encrypted.txt
-Binary <span class="keyword">file</span> encrypted.txt matches
-</code></pre><p>References:</p>
-<ul>
-<li><a href="http://usevim.com/2013/11/01/vim-encryption/" target="_blank" rel="external">Protect Notes with Vim Encryption</a></li>
-<li><a href="http://vim.wikia.com/wiki/Encryption" target="_blank" rel="external">Encryption - Vim Tips Wiki</a></li>
-</ul>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -770,7 +772,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -951,6 +953,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
+    <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
+  
     <li><a href="/tags/cli/">cli</a><small>12</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
@@ -990,6 +994,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
     <li><a href="/tags/console/">console</a><small>1</small></li>
   
     <li><a href="/tags/container/">container</a><small>1</small></li>
+  
+    <li><a href="/tags/content-length/">content-length</a><small>1</small></li>
   
     <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
   
@@ -1223,7 +1229,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>6</small></li>
+    <li><a href="/tags/http/">http</a><small>7</small></li>
   
     <li><a href="/tags/http-method/">http-method</a><small>1</small></li>
   
@@ -1373,7 +1379,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>27</small></li>
+    <li><a href="/tags/node/">node</a><small>28</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1593,7 +1599,9 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
-    <li><a href="/tags/stream/">stream</a><small>1</small></li>
+    <li><a href="/tags/stream/">stream</a><small>2</small></li>
+  
+    <li><a href="/tags/streaming/">streaming</a><small>1</small></li>
   
     <li><a href="/tags/string/">string</a><small>1</small></li>
   
@@ -1654,6 +1662,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
+  
+    <li><a href="/tags/transfer-encoding/">transfer-encoding</a><small>1</small></li>
   
     <li><a href="/tags/travel/">travel</a><small>0</small></li>
   

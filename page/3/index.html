@@ -64,6 +64,56 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-26T12:00:00.000Z"><a href="/2015/09/26/node-js-crypto-starters/">Sep 26, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/26/node-js-crypto-starters/">Node.js Crypto Starters</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Starter for the most common usage.</p>
+<p>Create a MD5 hex hash:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'md5'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'hex'</span>);</div></pre></td></tr></table></figure>
+
+<p>Create a SHA256 base64 hash:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div></pre></td></tr></table></figure>
+
+<p>Calculating the <a href="https://nodejs.org/api/crypto.html#crypto_hash_digest_encoding" target="_blank" rel="external">digest</a> varies with encoding:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&gt; data = <span class="string">'secret'</span></div><div class="line"><span class="string">'secret'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div><div class="line"><span class="string">'K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols='</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'binary'</span>);</div><div class="line"><span class="string">'+¸\rS{\u001d£ãÓ\u0003aªV½àêÍqbþö¢_é{õ\'¢['</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest();</div><div class="line"><span class="xml"><span class="tag">&lt;<span class="title">Buffer</span> <span class="attribute">2b</span> <span class="attribute">b8</span> <span class="attribute">0d</span> <span class="attribute">53</span> <span class="attribute">7b</span> <span class="attribute">1d</span> <span class="attribute">a3</span> <span class="attribute">e3</span> <span class="attribute">8b</span> <span class="attribute">d3</span> <span class="attribute">03</span> <span class="attribute">61</span> <span class="attribute">aa</span> <span class="attribute">85</span> <span class="attribute">56</span> <span class="attribute">86</span> <span class="attribute">bd</span> <span class="attribute">e0</span> <span class="attribute">ea</span> <span class="attribute">cd</span> <span class="attribute">71</span> <span class="attribute">62</span> <span class="attribute">fe</span> <span class="attribute">f6</span> <span class="attribute">a2</span> <span class="attribute">5f</span> <span class="attribute">e9</span> <span class="attribute">7b</span> <span class="attribute">f5</span> <span class="attribute">27</span> <span class="attribute">a2</span> <span class="attribute">5b</span>&gt;</span></span></div><div class="line">&gt; require('crypto').createHash('sha256').update(data, 'utf8').digest().toString();</div><div class="line">'+�\rS{\u001d����\u0003a��V�����qb���_�{�\'�['</div></pre></td></tr></table></figure>
+
+<p>Both <code>hex</code> and <code>base64</code> are commonly used ones.</p>
+<p>Needs an <code>input_encoding</code> when <a href="https://nodejs.org/api/crypto.html#crypto_hash_update_data_input_encoding" target="_blank" rel="external">update</a> data, otherwise there will be different results:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&gt; data = <span class="string">'秘密'</span></div><div class="line"><span class="string">'秘密'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'ascii'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'7588bc51fd0ff10db9c66549e5cb7969b9f6b7cf3ccee080137a8eb1aa06e718'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'utf8'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'062a2931da683a9897c5a0b597113b1e9fd0d5bfb63e2a5d7c88b724f7f55c02'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data, <span class="string">'binary'</span>).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'7588bc51fd0ff10db9c66549e5cb7969b9f6b7cf3ccee080137a8eb1aa06e718'</span></div><div class="line">&gt; require(<span class="string">'crypto'</span>).createHash(<span class="string">'sha256'</span>).update(data).digest(<span class="string">'hex'</span>);</div><div class="line"><span class="string">'7588bc51fd0ff10db9c66549e5cb7969b9f6b7cf3ccee080137a8eb1aa06e718'</span></div></pre></td></tr></table></figure>
+
+<p>Don’t assume ASCII.</p>
+<p>Parameter <code>data</code> must be a string or buffer, otherwise there will be an error:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">TypeError: Not a string or buffer</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-24T12:00:00.000Z"><a href="/2015/09/24/add-a-custom-domain-to-the-specific-module-of-google-app-engine-managed-vms/">Sep 24, 2015</a></time>
       
       
@@ -165,22 +215,23 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
+    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
-
-<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
-
+        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
+<ol>
+<li>Having multiple images means more configuration files to manage and update.</li>
+<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
+<li>Steeper learning curve for new developers.</li>
+</ol>
+<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
 
       
     </div>
@@ -203,23 +254,22 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
+    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
-<ol>
-<li>Having multiple images means more configuration files to manage and update.</li>
-<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
-<li>Steeper learning curve for new developers.</li>
-</ol>
-<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
+        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
+
+<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -266,41 +316,6 @@
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ gcloud preview datastore create-indexes index.yml</div><div class="line"></div><div class="line">You are about to update the following configurations:</div><div class="line">- myproj/index  From: [/home/chao/kind/index.yml]</div><div class="line">Do you want to <span class="keyword">continue</span> (Y/n)?</div></pre></td></tr></table></figure>
 
 <p>Therefore, to avoid error, when scaffold an <code>index.yml</code> file for indexing, use an explicit document with an empty document content.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Google Cloud Datastore Starter: Dataset</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> dataset starter, part of a starter collection:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Google Cloud Datastore Starter: Dataset</span></div><div class="line"><span class="comment">// =======================================</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="comment">// Define a dataset.</span></div><div class="line"><span class="keyword">var</span> params = {</div><div class="line">  projectId: <span class="string">'MY_PROJECT'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'MY_NAMESPACE'</span></div><div class="line">};</div><div class="line"><span class="keyword">var</span> dataset = <span class="built_in">require</span>(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line"></div><div class="line"><span class="comment">// Define an entity (including both key and data).</span></div><div class="line"><span class="keyword">var</span> kind = <span class="string">'MY_KIND'</span>;</div><div class="line"><span class="keyword">var</span> key = dataset.key(kind);</div><div class="line"><span class="keyword">var</span> data = [</div><div class="line">  {</div><div class="line">    name: <span class="string">'title'</span>,</div><div class="line">    value: <span class="string">'Google Cloud Datastore Starter'</span>,</div><div class="line">    excludeFromIndexes: <span class="literal">false</span></div><div class="line">  }</div><div class="line">];</div><div class="line"><span class="comment">// var data = { title: 'Google Cloud Datastore Starter' }; // Simple version</span></div><div class="line"><span class="keyword">var</span> entity = {</div><div class="line">  key: key,</div><div class="line">  data: data</div><div class="line">};</div><div class="line"></div><div class="line"><span class="comment">// Save a single entity.</span></div><div class="line">dataset.save(entity, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) {</div><div class="line">    <span class="keyword">throw</span> err;</div><div class="line">  }</div><div class="line">});</div></pre></td></tr></table></figure>
-
 
       
     </div>
@@ -375,23 +390,19 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Sep 7, 2015</a></time>
+        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Install Docker on Ubuntu Trusty 14.04</a></h1>
+    <h1 class="title"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Google Cloud Datastore Starter: Dataset</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Install <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> on <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> Trusty 14.04 is fairly straightforward:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div><div class="line">$ <span class="keyword">exit</span></div></pre></td></tr></table></figure>
+        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> dataset starter, part of a starter collection:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Google Cloud Datastore Starter: Dataset</span></div><div class="line"><span class="comment">// =======================================</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="comment">// Define a dataset.</span></div><div class="line"><span class="keyword">var</span> params = {</div><div class="line">  projectId: <span class="string">'MY_PROJECT'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'MY_NAMESPACE'</span></div><div class="line">};</div><div class="line"><span class="keyword">var</span> dataset = <span class="built_in">require</span>(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line"></div><div class="line"><span class="comment">// Define an entity (including both key and data).</span></div><div class="line"><span class="keyword">var</span> kind = <span class="string">'MY_KIND'</span>;</div><div class="line"><span class="keyword">var</span> key = dataset.key(kind);</div><div class="line"><span class="keyword">var</span> data = [</div><div class="line">  {</div><div class="line">    name: <span class="string">'title'</span>,</div><div class="line">    value: <span class="string">'Google Cloud Datastore Starter'</span>,</div><div class="line">    excludeFromIndexes: <span class="literal">false</span></div><div class="line">  }</div><div class="line">];</div><div class="line"><span class="comment">// var data = { title: 'Google Cloud Datastore Starter' }; // Simple version</span></div><div class="line"><span class="keyword">var</span> entity = {</div><div class="line">  key: key,</div><div class="line">  data: data</div><div class="line">};</div><div class="line"></div><div class="line"><span class="comment">// Save a single entity.</span></div><div class="line">dataset.save(entity, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) {</div><div class="line">    <span class="keyword">throw</span> err;</div><div class="line">  }</div><div class="line">});</div></pre></td></tr></table></figure>
 
-<p>Log out, then log back in to verify the installation by running a sample container:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div></pre></td></tr></table></figure>
-
-<p>Done!</p>
 
       
     </div>
@@ -487,35 +498,23 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-06T12:00:00.000Z"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Sep 6, 2015</a></time>
+        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Sep 7, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/06/upgrade-vagrant-in-windows-from-command-line-without-prompt/">Upgrade Vagrant in Windows from Command Line without Prompt</a></h1>
+    <h1 class="title"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Install Docker on Ubuntu Trusty 14.04</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>To determine whether your <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a> is out of date or not, issue:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ vagrant version</div><div class="line">Installed Version: <span class="number">1.7</span>.<span class="number">4</span></div><div class="line">Latest Version: <span class="number">1.7</span>.<span class="number">4</span></div><div class="line"></div><div class="line">You<span class="string">'re running an up-to-date version of Vagrant!</span></div></pre></td></tr></table></figure>
+        <p>Install <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> on <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> Trusty 14.04 is fairly straightforward:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div><div class="line">$ <span class="keyword">exit</span></div></pre></td></tr></table></figure>
 
-<p>If yours is out of date, you can download it from its <a href="https://www.vagrantup.com/downloads.html" target="_blank" rel="external">download</a> page. However, being a lazy programmer, that’s still too many clicks. I want to figure out a way to update or install Vagrant from the command line without prompt.</p>
-<p>And here you go!</p>
-<p>Vagrant binaries are distributed by <a href="https://bintray.com/" target="_blank" rel="external">Bintray</a>, its format is:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://dl.bintray.com/mitchellh/vagrant/vagrant_{version}.msi</div></pre></td></tr></table></figure>
+<p>Log out, then log back in to verify the installation by running a sample container:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div></pre></td></tr></table></figure>
 
-<p>For example:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://dl.bintray.com/mitchellh/vagrant/vagrant_1.7.4.msi</div></pre></td></tr></table></figure>
-
-<p>After you issue <code>vagrant version</code>, you know the correct version to upgrade, then download it:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://dl.bintray.com/mitchellh/vagrant/vagrant_1.<span class="number">7.4</span>.msi &gt; vagrant.msi</div></pre></td></tr></table></figure>
-
-<p>Install it by <code>msiexec</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ msiexec /i C:\Users\Chao\Downloads\vagrant.msi /passive /norestart</div></pre></td></tr></table></figure>
-
-<p>Make sure to use the full path instead of relative <code>.\vagrant.msi</code>, and Vagrant should be installed in the default location <code>C:\HashiCorp\Vagrant</code>. To find out all possible options, Just type <code>msiexec</code> command only.</p>
-<p>Saving a few clicks!</p>
+<p>Done!</p>
 
       
     </div>
@@ -557,7 +556,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -738,6 +737,8 @@
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
+    <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
+  
     <li><a href="/tags/cli/">cli</a><small>12</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
@@ -777,6 +778,8 @@
     <li><a href="/tags/console/">console</a><small>1</small></li>
   
     <li><a href="/tags/container/">container</a><small>1</small></li>
+  
+    <li><a href="/tags/content-length/">content-length</a><small>1</small></li>
   
     <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
   
@@ -1010,7 +1013,7 @@
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>6</small></li>
+    <li><a href="/tags/http/">http</a><small>7</small></li>
   
     <li><a href="/tags/http-method/">http-method</a><small>1</small></li>
   
@@ -1160,7 +1163,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>27</small></li>
+    <li><a href="/tags/node/">node</a><small>28</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1380,7 +1383,9 @@
   
     <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
-    <li><a href="/tags/stream/">stream</a><small>1</small></li>
+    <li><a href="/tags/stream/">stream</a><small>2</small></li>
+  
+    <li><a href="/tags/streaming/">streaming</a><small>1</small></li>
   
     <li><a href="/tags/string/">string</a><small>1</small></li>
   
@@ -1441,6 +1446,8 @@
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
+  
+    <li><a href="/tags/transfer-encoding/">transfer-encoding</a><small>1</small></li>
   
     <li><a href="/tags/travel/">travel</a><small>0</small></li>
   

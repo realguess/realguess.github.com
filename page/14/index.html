@@ -64,6 +64,53 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-29T12:00:30.000Z"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Nov 29, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Written in CoffeeScript, Required in JavaScript</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>If you are writing in CoffeeScript, then requiring another module written in CoffeeScript works the same as as both scripts are in JavaScript:</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cm = <span class="built_in">require</span> <span class="string">'coffee-module'</span></div></pre></td></tr></table></figure>
+
+<p>But if you are writing in JavaScript, and the dependent module is in CoffeeScript, you have to include CoffeeScript as a dependency with require statement:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'coffee-script'</span>);</div><div class="line"><span class="keyword">var</span> cm = <span class="built_in">require</span>(<span class="string">'coffee-module'</span>);</div></pre></td></tr></table></figure>
+
+<p>For better compatibility, source codes written in CoffeeScript should be compiled into JavaScript. But what is the best practice? You don’t want to maintain two languages. When to compile? Here is two options:</p>
+<ol>
+<li>Compile before publish the module</li>
+<li>Compile after module install</li>
+</ol>
+<p>The advantage of the first approach is that there is no dependency on CoffeeScript. The module has been compiled into JavaScript prior to submitting to module registry. However, this approach requires two repositories, one is source code repository, and another one is the published module repository. If you are working on a private project, it is less likely that you will publish your module to an public NPM registry or running your own private one. It is more likely to have a single source code repository. Therefore, the second approach might be better in this situation. However, <code>coffee-script</code> must be added in <code>dependency</code>, or it must be installed globally with <code>coffee</code> command available during <code>preinstall</code> phase. Although this approach is not recommended in <a href="https://npmjs.org/doc/misc/npm-scripts.html" target="_blank" rel="external">npm-scripts</a>, before setting up a private NPM registry, this is the way to go.</p>
+<p>Here is the required fields in <code>package.json</code>:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">scripts</span>": <span class="value">{</span></div><div class="line">    "<span class="attribute">preinstall</span>": <span class="value"><span class="string">"coffee --compile --bare --output lib/ src/"</span></span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-24T23:22:24.000Z"><a href="/2013/11/24/poor-mans-vpn/">Nov 24, 2013</a></time>
       
       
@@ -542,41 +589,6 @@ coffee&gt; .help
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-10-26T23:06:00.000Z"><a href="/2013/10/26/coffeescript-inline-block-rule-toggling/">Oct 26, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/10/26/coffeescript-inline-block-rule-toggling/">CoffeeScript Inline Block Rule Toggling</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Temporarily remove <a href="http://www.coffeelint.org/" target="_blank" rel="external">CoffeeLint</a> restriction via the inline code:</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># coffeelint: disable=max_line_length,no_implicit_parens</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># A long comment that exceeds 80 chars per line. Lorem ipsum dolor sit amet, consectetur</span></div><div class="line"><span class="comment"># adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># coffeelint: enable=max_line_length,no_implicit_parens</span></div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -602,7 +614,7 @@ coffee&gt; .help
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>7</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -783,6 +795,8 @@ coffee&gt; .help
   
     <li><a href="/tags/chunghwa-telecom/">chunghwa-telecom</a><small>1</small></li>
   
+    <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
+  
     <li><a href="/tags/cli/">cli</a><small>12</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
@@ -822,6 +836,8 @@ coffee&gt; .help
     <li><a href="/tags/console/">console</a><small>1</small></li>
   
     <li><a href="/tags/container/">container</a><small>1</small></li>
+  
+    <li><a href="/tags/content-length/">content-length</a><small>1</small></li>
   
     <li><a href="/tags/content-type/">content-type</a><small>1</small></li>
   
@@ -1055,7 +1071,7 @@ coffee&gt; .help
   
     <li><a href="/tags/hotlinking/">hotlinking</a><small>1</small></li>
   
-    <li><a href="/tags/http/">http</a><small>6</small></li>
+    <li><a href="/tags/http/">http</a><small>7</small></li>
   
     <li><a href="/tags/http-method/">http-method</a><small>1</small></li>
   
@@ -1205,7 +1221,7 @@ coffee&gt; .help
   
     <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
   
-    <li><a href="/tags/node/">node</a><small>27</small></li>
+    <li><a href="/tags/node/">node</a><small>28</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1425,7 +1441,9 @@ coffee&gt; .help
   
     <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
-    <li><a href="/tags/stream/">stream</a><small>1</small></li>
+    <li><a href="/tags/stream/">stream</a><small>2</small></li>
+  
+    <li><a href="/tags/streaming/">streaming</a><small>1</small></li>
   
     <li><a href="/tags/string/">string</a><small>1</small></li>
   
@@ -1486,6 +1504,8 @@ coffee&gt; .help
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
+  
+    <li><a href="/tags/transfer-encoding/">transfer-encoding</a><small>1</small></li>
   
     <li><a href="/tags/travel/">travel</a><small>0</small></li>
   
