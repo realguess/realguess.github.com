@@ -58,6 +58,216 @@
 <div class="clearfix"></div></header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-03-22T13:20:10.000Z"><a href="/2014/03/22/writing-custom-yeoman-generator/">Mar 22, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/22/writing-custom-yeoman-generator/">Writing Custom Yeoman Generator</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Writing a custom <a href="http://yeoman.io/" target="_blank" rel="external">Yeoman</a> generator, you need to install <a href="https://github.com/yeoman/generator-generator" target="_blank" rel="external">generator-generator</a> first.</p>
+<blockquote>
+<p>(generator-generator) Scaffolds out a new basic Yeoman generator with some sensible defaults.</p>
+</blockquote>
+<p>So it creates some basic structure for writing your own custom generators. It is a generator for writing Node generator application.</p>
+<p>First Install generator-generator:</p>
+<pre><code>$ <span class="built_in">sudo</span> npm install -g generator-generator
+</code></pre><p>Then generate some basic files for writing your own generator by issuing:</p>
+<pre><code><span class="variable">$ </span>yo generator
+</code></pre><p>You can use generator-generator to write both a custom generator and a custom sub-generator. What is sub-generator? For example, Angular directive or service is a sub-generator.</p>
+<p>Use naming convention <code>generator-[name]</code>.</p>
+<p>Create a directory for your new generator:</p>
+<pre><code><span class="variable">$ </span>mkdir -p ~<span class="regexp">/generators/generator</span>-hello &amp;&amp; cd <span class="variable">$_</span>
+</code></pre><p>Make sure entering the newly created directory (<code>cd $_</code>), otherwise all files generated will be placed under the current directory. Then, scaffold your generator:</p>
+<pre><code><span class="variable">$ </span>yo generator
+</code></pre><p>As versions yo@1.1.2 and generator-generator@0.4.3, the generator creates the following directories and files:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── app</div><div class="line">│   ├── index.js</div><div class="line">│   └── templates</div><div class="line">├── <span class="string">.editorconfig</span></div><div class="line">├── <span class="string">.gitattributes</span></div><div class="line">├── <span class="string">.gitignore</span></div><div class="line">├── <span class="string">.jshintrc</span></div><div class="line">├── node_modules</div><div class="line">│   ├── <span class="string">.bin</span></div><div class="line">│   ├── chalk</div><div class="line">│   ├── mocha</div><div class="line">│   └── yeoman-generator</div><div class="line">├── package.json</div><div class="line">├── README.md</div><div class="line">├── <span class="keyword">test</span></div><div class="line">│   ├── <span class="keyword">test</span>-creation.js</div><div class="line">│   └── <span class="keyword">test</span>-load.js</div><div class="line">└── <span class="string">.travis</span>.yml</div><div class="line"></div><div class="line"><span class="number">8</span> directories, <span class="number">10</span> files</div></pre></td></tr></table></figure>
+
+<p>You might want to make your initial commit:</p>
+<pre><code>$ git init &amp;&amp; git <span class="built_in">add</span> <span class="string">'*'</span> &amp;&amp; git commit -<span class="keyword">m</span> <span class="string">'Initial commit'</span>
+</code></pre><p>While in development, make it accessible globally:</p>
+<pre><code>$ <span class="built_in">sudo</span> npm link
+</code></pre><p>This is similar to:</p>
+<pre><code>$ <span class="built_in">sudo</span> npm install -g [generator-name]
+</code></pre><p>They both will be discoverable from <code>/usr/local/lib/node_modules</code>.</p>
+<p>There isn’t much going on there, we need to customize our own generator. The main file is <code>./app/index.js</code>.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> HelloGenerator = yeoman.generators.Base.extend({</div><div class="line">});</div><div class="line"><span class="built_in">module</span>.exports = HelloGenerator;</div></pre></td></tr></table></figure>
+
+<p>The <code>HelloGenerator</code> extends <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> generator. There are four properties (functions) that it has extended: <code>init</code>, <code>askFor</code>, <code>app</code>, and <code>projectfiles</code>.</p>
+<p>All these functions will be invoked by Yeoman one by one in order (the order is important), meaning that <code>init</code> will be called first to perform initialization, and then <code>askFor</code> will be called to get user prompts, then <code>app</code> and <code>projectfiles</code> will be called afterward to build the application.</p>
+<p>However, it is not a must to have four properties, it just brings more structure and modularity. In fact, you can merge all four functions into a single one.</p>
+<p>The method name does not matter. Just don’t name it <code>prompt</code> because you will override the existing property inherited from <code>yeoman.generators.Base</code>. </p>
+<p>If we need to declare a “private” property, just appending it with an underscore as a hidden property, e.g. <code>_dontAskFor: function(){}</code>, or if you just use it in the same file, you can simply define a global <code>function myFunc()</code>.</p>
+<p>Personal, I don’t think it is necessary to break it into many functions, three are enough, initialization, prompting user for input, and generating files.</p>
+<p>When choosing property names, the <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> object contains many properties which is not a good idea to be overridden, such as <code>[&quot;append&quot;, &quot;help&quot;, &quot;log&quot;, &quot;prompt&quot;, &quot;remote&quot;]</code>. This design has limitation on choosing a right property name. For example, I was thinking about using <code>prompt</code> instead of <code>askFor</code>, but <code>prompt</code> is an inherited property. Therefore, it is a good idea to keep fewer properties in <code>HelloGenerator</code>. Three are enough. All these properties can be accessible from the context <code>this</code>. From <code>this</code> object you can access everything from <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> object to newly defined <code>_dontAskFor</code> hidden property.</p>
+<p>Time to test the custom generator:</p>
+<pre><code>$ <span class="built_in">cd</span> /tmp &amp;&amp; mkdir hello &amp;&amp; yo <span class="variable">$_</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-03-14T23:12:50.000Z"><a href="/2014/03/14/traveling-from-the-big-easy-to-hollywood-via-amtrak-sunset-limited/">Mar 14, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/14/traveling-from-the-big-easy-to-hollywood-via-amtrak-sunset-limited/">Traveling from the Big Easy to Hollywood via Amtrak Sunset Limited</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>If 30 hours on the train was long, how about 50 more hours? This is the second part of the train traveling journey from New York to Los Angeles. <a href="/2014/03/07/traveling-from-the-big-apple-to-the-big-easy-via-amtrak-crescent/">Traveling from New York to New Orleans</a> took about 30 hours with one night sleep on the train, and this trip, from New Orleans to Los Angeles is about 50 hours, and two nights were spent on the train.</p>
+<h1 id="The_Route">The Route</h1>
+<p>The train travels from New Orleans, Louisiana to Los Angeles, California, passing notable cities such as Houston, San Antonio, El Paso, and Tuscon. Not many states involved comparing to <a href="/2014/03/07/traveling-from-the-big-apple-to-the-big-easy-via-amtrak-crescent/">the first leg</a> of the trip. There are only Louisiana, Texas, New Mexico, Arizona and California.</p>
+<p>If you look at the Amtrak System map, it is a hub for three long distance Amtrak routes, Sunset Limited, Crescent and City of New Orleans (between Chicago and New Orleans). Next hub is San Antonio. The Sunset Limited is used to extend to Jacksonville, Florida. But due to Katrina, the service is suspended.</p>
+<p>The train travels close to the United States and Mexico border, sometimes, it was very close, like in El Paso. I was able to see the Mexico side from the train.</p>
+<h1 id="The_Train">The Train</h1>
+<p>The type of train in this route is called <a href="https://en.wikipedia.org/wiki/Superliner_(railcar)" target="_blank" rel="external">Superliner</a>, a double decker train. We were staying on the second floor, on the left side, able to see the border between the United States and Mexico.</p>
+<p>Superliner has a sightseeing lounge, where two decks of windows on each side of the car. And you can turn the chair facing the windows. This provides a really comfortable scenery view along the route.</p>
+<h1 id="The_Room">The Room</h1>
+<p>The Superliner roomette we booked still has two beds, one is assembled by pulling the seats together, and the other one can be pulled down from the ceiling. But it has no sink and toilet like the one from the last leg. And we have to use the shared toilet on the end of car. By the way, there is a shower room to use. Feeling taking a shower on a moving train?</p>
+<blockquote>
+<p>Our Superliner Roomette is ideal for one or two passengers, with two comfortable reclining seats on either side of a big picture window. At night, the seats convert to a comfortable bed, and an upper berth folds down from above. Roomettes are located on both upper and lower levels of our double-decker Superliner train cars.</p>
+</blockquote>
+<p>No in-cabin toilet or shower; restrooms, showers nearby in same train car</p>
+<h1 id="The_View">The View</h1>
+<p>Leaving New Orleans, when the train moved on the [Huey P Long Bridge] across the Mississippi River, SuperDome and the Big Easy, Bayous of Louisiana behind us.</p>
+<p><img src="https://farm3.staticflickr.com/2839/13808949353_8a8ee3f71f_c.jpg" alt="Riding across Huey P Long Bridge leaving New Orleans"></p>
+<p>Bayous of Louisiana:</p>
+<p><img src="https://farm3.staticflickr.com/2827/13809371475_408d6c42ca_c.jpg" alt="Bayous of Louisiana"></p>
+<p>The first stop in Texas is Beaumont, TX.</p>
+<p>In the South, it is truck dominant area:</p>
+<h1 id="The_Conclusion">The Conclusion</h1>
+<p>The biggest problem is the Internet access.</p>
+<p>☑ Travel from the East Coast to the West Coast of the United States by train</p>
+<p>Where the journey will take me next?</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-03-07T22:30:00.000Z"><a href="/2014/03/07/traveling-from-the-big-apple-to-the-big-easy-via-amtrak-crescent/">Mar 7, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/07/traveling-from-the-big-apple-to-the-big-easy-via-amtrak-crescent/">Traveling from the Big Apple to the Big Easy via Amtrak Crescent</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><img src="http://farm3.staticflickr.com/2839/13234934445_e1c993a278_n.jpg" alt="Amtrak Crescent"></p>
+<p>“That’s 30 hours on the train, don’t you get sick?” Well, I told them that the actual trip is 80 hours, 30 hours are just from New York to New Orleans via <a href="http://www.amtrak.com/crescent-train" target="_blank" rel="external">Amtrak Crescent</a>, the longer journey is from New Orleans to Los Angeles, which is close to 50 hours.</p>
+<p>Traveling by air is no fun. When you are at 30,000 feet high, there are only clouds accompanying you outside the small plane window. And no, you don’t get sick watching ever-changing landscape. What’s sightseeing!</p>
+<p>This is the first part of the journey from the East Coast to the West Coast. Let’s get started.</p>
+<h2 id="The_Route">The Route</h2>
+<p><iframe src="https://www.google.com/maps/embed?pb=!1m29!1m12!1m3!1d25243787.08302642!2d-82.17110033425408!3d39.435045753675496!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m14!1i0!3e3!4m5!1s0x89c259ae1434b7f9%3A0x3e64008c2728c60b!2sPenn+Station!3m2!1d40.75058!2d-73.99358!4m5!1s0x8620a5deb8e58bb9%3A0x975cfe51a0dc0e13!2sNew+Orleans+Union+Passenger+Terminal!3m2!1d29.946085!2d-90.078291!5e0!3m2!1sen!2sus!4v1395117149399" width="100%" height="600" frameborder="0" style="border:0"></iframe></p>
+
+<p>There is a <a href="/doc/2014-03-07/amtrak-crescent-train-route-guide.pdf">route guide</a>, but I found it not be much useful. An iOS or Android app with GPS enabled voice guide could be nice.</p>
+<p>The train travels from the Northeast to the South, crossing New York, New Jersey, Pennsylvania, Delaware, Maryland, DC, Virginia, North Carolina, South Carolina, Georgia, Alabama, Mississippi, and Louisiana (finally be able to spell them out without making a mistake). That’s a lot of states. But from Virginia to South Carolina, it is night time, nothing too see at all. I was feeling the 9-to-5 schedule, sleep at 9pm and get up at 5am to catch the sunrise.</p>
+<h2 id="The_Train">The Train</h2>
+<p><img src="http://farm4.staticflickr.com/3732/13236307315_74f2f7eaa9_c.jpg" alt="Amtrak Viewliner"></p>
+<p>On the Amtrak Crescent line, the train is called <a href="https://en.wikipedia.org/wiki/Viewliner" target="_blank" rel="external">Viewliner</a>. Viewliner is small single deck comparing to <a href="https://en.wikipedia.org/wiki/Superliner_(railcar)" target="_blank" rel="external">Superliner</a>. According to a train conductor, because of the tunnels in the East Coast, all the trains are Viewliners, but to the west of Chicago, there are all Superliners.</p>
+<p>The top windows on the car are for people who sleeping on the upper bunk in the room. That is really helpful for me to catch the outside view without climbing up and down.</p>
+<h2 id="The_Car_and_the_Room">The Car and the Room</h2>
+<p>We are on the right side of the train, but the side does not really matter on this route.</p>
+<p><img src="http://farm4.staticflickr.com/3666/13235649993_81edbca065_c.jpg" alt="Amtrak Viewliner Roomette"></p>
+<p>First step into my room, the room is not small at all. The thing you have to get used to is having a toilet next to your seat. But with the cover down, that is not a big deal. Flushing the toilet is just like in the airplane, pressurized system that sucks everything out.</p>
+<p><img src="http://farm3.staticflickr.com/2878/13235969244_1a4dd49565_c.jpg" alt="Table, sink and toilet"></p>
+<p>The only thing I do not like is the burning smell during each start the train. I need to adjust myself to the smell, so went to the end of car for some coffee and juice. There are light coffee and some apple and orange juices in containers. Don’t expect any fancy even you are in the sleeping car.</p>
+<h2 id="The_Food">The Food</h2>
+<p>During the stop on the Trenton, NJ, the dining service person came by for a dinner reservation. We booked the slot at 6:30pm. She was definitely from the south, the ascent tells it all.</p>
+<p>The dining room is pretty standard. The table on each side can be seated by four people. The only complaint I had was the heat coming from underneath the table. Too much heat and too dry.</p>
+<p><img src="http://farm8.staticflickr.com/7237/13257967684_dcc687cec4_c.jpg" alt="Steak and salmon"></p>
+<p>We ordered salmon and steak (medium rare). The steak did not look like a frozen food. But the sides probably are. We also ordered a small bottle of white wine ($6.50), enough for two glasses. I took a peek at the dining car kitchen, I saw the chef and the grill! That is a lot more than traveling on the plane.</p>
+<h2 id="The_View">The View</h2>
+<p>Talking about sightseeing. The ever-changing landscape can only be described by pictures.</p>
+<p>There are many bridges and overpasses coming from the Northeast.</p>
+<p><img src="http://farm3.staticflickr.com/2859/13256019574_b271de3cf1_c.jpg" alt="Bridges and overpasses"></p>
+<p>But once leaving the big cities, there are only lakes, trees and tracks waiting.</p>
+<p><img src="http://farm4.staticflickr.com/3807/13256907393_a313b182f3_c.jpg" alt="Large lakes and small ponds"></p>
+<p>Large lakes are really magnificent, but once a while there are small lakes or ponds hiding behind the trees. It is the never ending tree line.</p>
+<p><img src="http://farm8.staticflickr.com/7020/13257094184_7d4304efec_c.jpg" alt="Tree lines"></p>
+<p>And rolling green or yellowish grasses.</p>
+<p><img src="http://farm4.staticflickr.com/3822/13256859093_1ce4bdedd1_c.jpg" alt="Grasses"></p>
+<p>Moving away from the natural beauty, houses and communities are seen along the route.</p>
+<p><img src="http://farm8.staticflickr.com/7333/13257083434_f925f758c7_c.jpg" alt="Houses"></p>
+<p>There are different structures (some are abandoned), a car factory (Honda) and tanks from Anniston Army Depot.</p>
+<p><img src="http://farm8.staticflickr.com/7442/13256868083_e5c4109ed4_c.jpg" alt="Structures and tanks"></p>
+<p>From the steady objects to moving things. When train is moving, cars stop.</p>
+<p><img src="http://farm4.staticflickr.com/3699/13256896873_41df7ff2be_c.jpg" alt="Railroad crossing"></p>
+<p>Of course, there is the never ending blue sky.</p>
+<p><img src="http://farm4.staticflickr.com/3754/13257054424_670eb0fbea_c.jpg" alt="Blue sky"></p>
+<p>Well it does end. After we get past Washington DC, the sun went down. At night, there is really nothing much to see. I was hoping stars, but all were scattered lights from desolated houses.</p>
+<h2 id="The_Mobile_Network">The Mobile Network</h2>
+<p>This is really important. Not just about checking Facebook or Twitter, but making a conference phone call. Unfortunately there is no WiFi service on board. And this is the case with the most of Amtrak trains. We have to rely on mobile network.</p>
+<p>Once we got past Alexander, VA, the cell signal drops considerably, probably because that I was using T-Mobile, and frequently I was on AT&amp;T network.</p>
+<p>Without a good mobile network coverage, I think that this is the most frustrated thing traveling by the train. But if you are a reader, you can open up your Kindle or iBook and start reading. Talking about disconnecting yourself!</p>
+<h2 id="The_Conclusion">The Conclusion</h2>
+<p>Getting yourself comfortable is important. Even though the seat is much wider than in the plane, but the hours are longer. On large stations such as Birmingham AL, get a smoke break and take a walk on the station platform to stretch yourself.</p>
+<p>Amtrak is frequently late, and the same happened to us. We finally got to New Orleans more than two hours late.</p>
+<p>This is the road trip without driving. Driving is better, because you are in charge, the landscape will wait for you. But this is much better than flying. Let the scenery come to you, stop and take a picture with your phone and say wow, then let it roll by you.</p>
+<p>Next: <a href="/2014/03/14/traveling-from-the-big-easy-to-hollywood-via-amtrak-sunset-limited/">Traveling via Amtrak Sunset Limited</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article class="blog">
   
   <div class="post-content">
@@ -460,288 +670,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-19T19:54:25.000Z"><a href="/2014/01/19/not-ready-for-xiaomi/">Jan 19, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/19/not-ready-for-xiaomi/">Not Ready for Xiaomi</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When I was in the United States, I have heard of many good news about <a href="http://www.xiaomi.com/en" target="_blank" rel="external">Xiaomi</a>, a Chinese smartphone company. And people are comparing the founder <a href="http://www.weibo.com/leijun" target="_blank" rel="external">Lei Jun</a> to Steve Jobs. I was very excited when I got to China and eager to get my hand on a <a href="http://www.xiaomi.com/en/mi3" target="_blank" rel="external">Mi3</a>.</p>
-<p><img src="/img/2014-01-19/mi3.jpg" alt="Mi3"></p>
-<p>Well, I didn’t get it, not saying that I did not try, maybe I didn’t try hard enough. But in some situations, this might be a good thing.</p>
-<p>The phones were quickly sold out within minutes. The official number of phones sold is remarkable according the manufacturer. But first do you trust these numbers? Maybe I just dislike the marketing technique more. I have read many reviews, people are saying that the marketing technique is awful. While they keep up the demand by limiting the supply from the company website. You can actually buy higher price ones from other retailers.</p>
-<p>Another problem is the quality of the phone. When I first asked my friend for the opinion of buying, he simply replied “trash”. When I asked another friend, she told me that she had two previous version Xiaomi phones, and they both broke down. I have used two iPhones and I have never had any problem with it.</p>
-<p>It boils down to quality vs. quantity. Selling by creating a tricky marketing technique and with <a href="http://en.miui.com/thread-12840-1-1.html" target="_blank" rel="external">misleading</a> information to boost the quantity without really focusing on the quality is sad. Without changing the DNA, the company is not going far, no matter how much money raises.</p>
-<p>I am just happy with my Nexus for now.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-17T14:13:03.000Z"><a href="/2014/01/17/a-new-nodejs-web-framework-koa/">Jan 17, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/17/a-new-nodejs-web-framework-koa/">A New NodeJS Web Framework - Koa</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Taking the first spin on <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>, a new web framework designed by the team behind <a href="http://expressjs.com/" target="_blank" rel="external">Express</a>.</p>
-<h2 id="Requirements">Requirements</h2>
-<ol>
-<li>Node v0.11.9 or higher is required for generator support.</li>
-<li><code>--harmony</code> flag must be used when running Node.</li>
-</ol>
-<p>Without the <code>--harmony</code> flag, genertor function cannot be defined:</p>
-<pre><code><span class="function"><span class="keyword">function</span> *<span class="title">fn</span>(</span>) {
-           ^
-SyntaxError: Unexpected token *
-    at exports.runInThisContext (vm.js:<span class="number">69</span>:<span class="number">16</span>)
-    at <span class="keyword">Module</span>._compile (<span class="keyword">module</span>.js:<span class="number">432</span>:<span class="number">25</span>)
-    at Object.<span class="keyword">Module</span>._extensions..js (<span class="keyword">module</span>.js:<span class="number">467</span>:<span class="number">10</span>)
-    at <span class="keyword">Module</span>.load (<span class="keyword">module</span>.js:<span class="number">349</span>:<span class="number">32</span>)
-    at <span class="function"><span class="keyword">Function</span>.<span class="title">Module</span>.<span class="title">_load</span> (</span><span class="keyword">module</span>.js:<span class="number">305</span>:<span class="number">12</span>)
-    at <span class="function"><span class="keyword">Function</span>.<span class="title">Module</span>.<span class="title">runMain</span> (</span><span class="keyword">module</span>.js:<span class="number">490</span>:<span class="number">10</span>)
-    at startup (node.js:<span class="number">123</span>:<span class="number">16</span>)
-    at node.js:<span class="number">1031</span>:<span class="number">3</span>
-</code></pre><p>So, set the <code>--harmony</code> flag in shell alias:</p>
-<pre><code><span class="variable">$ </span><span class="keyword">alias</span> node=<span class="string">'node --harmony'</span>
-</code></pre><p>To know more:</p>
-<pre><code>$ man node
---harmony (enable all harmony features (except <span class="keyword">typeof</span>))
-      type: <span class="keyword">bool</span>  <span class="keyword">default</span>: <span class="keyword">false</span>
-</code></pre><p><em>Harmony</em> is the codename of ECMAScript 6, the next version of the standard.</p>
-<h2 id="Install">Install</h2>
-<pre><code><span class="variable">$ </span>npm install koa
-</code></pre><p>The footprint of the framework is small. Therefore, there is no executable binary like Express, and we do not need to install it globally.</p>
-<h2 id="Dependencies">Dependencies</h2>
-<p>Dependencies on version 0.2.1:</p>
-<pre><code><span class="string">"dependencies"</span>: {
-  <span class="string">"accepts"</span>: <span class="string">"~1.0.0"</span>,
-  <span class="string">"type-is"</span>: <span class="string">"~1.0.0"</span>,
-  <span class="string">"on-socket-error"</span>: <span class="string">"~1.0.1"</span>,
-  <span class="string">"co"</span>: <span class="string">"~3.0.1"</span>,
-  <span class="string">"debug"</span>: <span class="string">"*"</span>,
-  <span class="string">"mime"</span>: <span class="string">"~1.2.11"</span>,
-  <span class="string">"fresh"</span>: <span class="string">"~0.2.0"</span>,
-  <span class="string">"koa-compose"</span>: <span class="string">"~2.1.0"</span>,
-  <span class="string">"cookies"</span>: <span class="string">"~0.3.7"</span>,
-  <span class="string">"keygrip"</span>: <span class="string">"~1.0.0"</span>
-}
-</code></pre><h2 id="Middleware">Middleware</h2>
-<p>Middleware system is the core of either Express or Koa based application. This needs a separate post. Here just describes the difference in design.</p>
-<p>In a simple assembly design, each unit passes control to the next one until the last one terminates and responses to the request:</p>
-<pre><code>    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-<span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">o</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-</code></pre><p>Express middleware passes control to the next one like an assembly line, but each unit is capable of responding to the request:</p>
-<pre><code>       <span class="comment">o</span>           <span class="comment">o</span>           <span class="comment">o</span>
-       <span class="comment">|</span>           <span class="comment">|</span>           <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-<span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-</code></pre><p>Koa provides a traceback via generator, each unit is capable of working on the request twice instead of once as previous two designs. It is stack alike, where the first generator will also be the last one prior to responding to request:</p>
-<pre><code>       <span class="comment">o</span>
-       <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-<span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span> <span class="literal">-</span><span class="literal">-</span>&gt; <span class="comment">|</span>     <span class="comment">|</span>
-    <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>     <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-       <span class="comment">^</span>          <span class="comment">|</span> <span class="comment">^</span>         <span class="comment">|</span>
-       <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span> <span class="literal">+</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span><span class="literal">+</span>
-</code></pre><p>This is sort of an assembly loop, where the starting station is also be the ending station.</p>
-<h2 id="Usage">Usage</h2>
-<p>Here is one liner:</p>
-<pre><code><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{ <span class="keyword">this</span>.body = <span class="string">'OK'</span>; }).listen(<span class="number">3000</span>);
-</code></pre><p><code>app.use</code> requires a generator function or <code>function *()</code>. Koa middleware uses <code>this</code> (context) instead of <code>req</code> and <code>res</code> in Express. It also encapsulates Node’s <code>request</code> and <code>response</code> objects. For example, <code>this</code> or context has the following properties:</p>
-<pre><code>[ <span class="string">'request'</span>,     <span class="comment">// Koa request</span>
-  <span class="string">'response'</span>,    <span class="comment">// Koa response</span>
-  <span class="string">'app'</span>,
-  <span class="string">'req'</span>,         <span class="comment">// Node request</span>
-  <span class="string">'res'</span>,         <span class="comment">// Node response</span>
-  <span class="string">'onerror'</span>,
-  <span class="string">'originalUrl'</span>,
-  <span class="string">'cookies'</span>,
-  <span class="string">'accept'</span> ]
-</code></pre><h3 id="Status_and_Body">Status and Body</h3>
-<p>Status can be used as a flag indicating whether a request has been processed or not:</p>
-<pre><code>app.use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{
-  <span class="built_in">console</span>.log(<span class="keyword">this</span>.status); <span class="comment">// undefined</span>
-  <span class="keyword">this</span>.body = <span class="string">'processed'</span>;
-  <span class="built_in">console</span>.log(<span class="keyword">this</span>.status); <span class="comment">// 200</span>
-});
-</code></pre><p>When the <code>body</code> is populated, <code>status</code> is automatically updated, probably via the <code>nextTick</code> method. So, we can use it as the flag to design a response such as a custom not found response.</p>
-<h3 id="Not_Found">Not Found</h3>
-<p>Create a custom <code>Not Found</code> in JSON content type:</p>
-<pre><code>app.use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{
-  <span class="keyword">yield</span> next; <span class="comment">// The operation is yet to start.</span>
-  <span class="keyword">if</span> (<span class="keyword">this</span>.status) { <span class="keyword">return</span>; }
-
-  <span class="keyword">this</span>.status = <span class="number">404</span>;
-  <span class="keyword">this</span>.body = { message: <span class="string">'Cannot find what you are looking for :('</span> };
-});
-app.use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{}); <span class="comment">// Do nothing to simulate not found.</span>
-</code></pre><h3 id="Error_Handling">Error Handling</h3>
-<p>Koa app is capable of catching the error event:</p>
-<pre><code>app.on(<span class="string">'error'</span>, <span class="function"><span class="keyword">function</span> <span class="params">(err, ctx)</span> </span>{
-  <span class="comment">// Log errors.</span>
-});
-</code></pre><p>where <code>ctx</code> is a context instance. But you cannot modify the response body. This is more for server side logging and debugging purpose. The <code>500 Internal Server Error</code> will be returned to the client.</p>
-<p>We can use <code>try..catch</code> to define a custom error handling middleware:</p>
-<pre><code>app.use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{
-  <span class="keyword">try</span> {
-    <span class="keyword">yield</span> next;
-  } <span class="keyword">catch</span> (err) {
-    <span class="keyword">this</span>.status = err.status || <span class="number">500</span>;
-    <span class="keyword">this</span>.body   = { message: err.message || <span class="string">'Bad stuff happened!'</span> };
-    <span class="keyword">this</span>.app.emit(<span class="string">'error'</span>, err, <span class="keyword">this</span>); <span class="comment">// Enable error event handling</span>
-  }
-});
-</code></pre><p>Make sure to emit the error event and let the server log the error.</p>
-<p>All non-operational middleware (e.g., not found or error) should be defined first, so it can be traced back as the last guards before sending response back.</p>
-<h3 id="Routing">Routing</h3>
-<p>Out of the box, Koa does not support routing, but it can be achieved via routing middleware, see <a href="https://github.com/koajs/koa/wiki" target="_blank" rel="external">examples</a>.</p>
-<h2 id="Examples">Examples</h2>
-<p>Define an app with only one middleware generator function:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="built_in">console</span>.log(<span class="string">'foo'</span>);</div><div class="line">  <span class="keyword">this</span>.status = <span class="number">204</span>;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>Instead of using status code <code>200</code>, we use <code>204</code> here, because the response contains no body. If using <code>200</code>, the server does not know the total content length, will result in <code>Transfer-Encoding: chunked</code> header instead of <code>Content-Length</code>. See <a href="http://en.wikipedia.org/wiki/Chunked_transfer_encoding" target="_blank" rel="external">chunked transfer encoding</a>.</p>
-<p>This app simply prints out <code>foo</code> on the server side, and respond to a client with status code <code>204</code> and an empty body. We can even omit the <code>next</code> parameter, since we are not using it.</p>
-<p>Now let’s use two middleware generator functions:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Response: foo</span></div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo'</span>;</div><div class="line">}</div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">bar</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'bar'</span>;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).use(bar).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>Since generator <code>foo</code> sets the body, generator <code>bar</code> will never be reached. We can change that by adding the <code>yield</code>: </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Response: bar</span></div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}</div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">bar</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'bar'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).use(bar).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>This looks alot like Express, <code>yeild next</code> is similar to <code>next()</code>. Request travels through the middleware system first via <code>foo</code> then <code>bar</code>. But actually by using generator, it also returns back to <code>foo</code> as <code>foo-&gt;bar-&gt;foo</code>:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Response: foo again</span></div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'foo again'</span>;</div><div class="line">}</div><div class="line"><span class="function"><span class="keyword">function</span> *<span class="title">bar</span><span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="string">'bar'</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}</div><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(foo).use(bar).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>This is similar to a stack alike request model, where the first middleware should also be the last middleware to touch the request. There is a no-op middleware in the end to catch the last <code>yield next</code> produced by <code>bar</code> middleware generator and traces back the stack.</p>
-<h2 id="Debugging">Debugging</h2>
-<p>Set environment variable <code>DEBUG=koa*</code> to enable Koa specific debugging information in development environment:</p>
-<pre><code><span class="attribute">$ DEBUG</span>=<span class="string">koa* node app.js</span>
-</code></pre><p>You will see a list of middleware. If a middleware is an anonymous function, we can set <code>._name</code> to define a custom name:</p>
-<pre><code><span class="function"><span class="keyword">function</span> *<span class="title">foo</span><span class="params">(next)</span> </span>{
-  <span class="comment">// Middleware definition starts here.</span>
-}
-foo._name = <span class="string">'bar'</span>;
-app.<span class="keyword">use</span>(foo);
-</code></pre><p>The middleware name will be <code>bar</code> instead of <code>foo</code>.</p>
-<h2 id="Resources">Resources</h2>
-<ol>
-<li><a href="http://koajs.com/" target="_blank" rel="external">Koa</a></li>
-<li><a href="https://github.com/koajs/koa" target="_blank" rel="external">Koa | GitHub</a></li>
-<li><a href="https://github.com/koajs/koa/blob/master/docs/guide.md" target="_blank" rel="external">Koa Quick Guide</a></li>
-<li><a href="https://github.com/koajs/koa/wiki" target="_blank" rel="external">Koa Middleware List</a></li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-09T09:18:19.000Z"><a href="/2014/01/09/working-with-big-number-in-javascript/">Jan 9, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/09/working-with-big-number-in-javascript/">Working with Big Number in JavaScript</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>JavaScript is only capable of handling 53-bit numbers, if you are working with a big number such as <a href="https://dev.twitter.com/docs/twitter-ids-json-and-snowflake" target="_blank" rel="external">Twitter ID</a>, which is using 64-bit number, then you need to find an external library to do that, otherwise, there will be precision lost:</p>
-<pre><code>&gt; num = <span class="number">420938523475451904</span>
-<span class="input"><span class="prompt">420938523475451900
-&gt;</span> num = <span class="number">420938523475451904</span> + <span class="number">1</span></span>
-<span class="input"><span class="prompt">420938523475451900
-&gt;</span> num = <span class="number">420938523475451904</span> - <span class="number">1</span></span>
-<span class="number">420938523475451900</span>
-</code></pre><p>Here is one library to use in Node environment, install <a href="https://github.com/MikeMcl/big.js/" target="_blank" rel="external">Big.js</a>:</p>
-<pre><code><span class="variable">$ </span>npm install big.js
-</code></pre><p>Load the module:</p>
-<pre><code>&gt; BigNum = <span class="built_in">require</span>(<span class="string">'big.js'</span>)
-{ [<span class="built_in">Function</span>: Big] DP: <span class="number">20</span>, RM: <span class="number">1</span> }
-</code></pre><p>Use string to create the big number:</p>
-<pre><code>&gt; num = <span class="constant">BigNum</span>(<span class="string">'420938523475451904'</span>)
-<span class="input"><span class="prompt">{ s: 1,
-  e: 17,
-  c: [ 4, 2, 0, 9, 3, 8, 5, 2, 3, 4, 7, 5, 4, 5, 1, 9, 0, 4 ] }
-&gt;</span> num.toString()</span>
-<span class="string">'420938523475451904'</span>
-</code></pre><p>Perform addition:</p>
-<pre><code>&gt; num.<span class="keyword">plus</span>(<span class="number">1</span>).toString()
-<span class="string">'420938523475451905'</span>
-</code></pre><p>Perform substraction:</p>
-<pre><code>&gt; num.<span class="keyword">minus</span>(<span class="number">1</span>).toString()
-<span class="string">'420938523475451903'</span>
-</code></pre><p>There are other packages that yet to be tested:</p>
-<ul>
-<li><a href="https://github.com/MikeMcl/bignumber.js/" target="_blank" rel="external">bignumber.js</a></li>
-<li><a href="https://github.com/rauschma/strint" target="_blank" rel="external">strint.js</a></li>
-<li><a href="http://jsfromhell.com/classes/bignumber" target="_blank" rel="external">bignumber</a></li>
-<li><a href="https://github.com/jtobey/javascript-bignum" target="_blank" rel="external">JavaScript bignumber</a></li>
-</ul>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -767,17 +695,17 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>2</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>3</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -866,7 +794,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>3</small></li>
+    <li><a href="/tags/array/">array</a><small>4</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -885,6 +813,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
     <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
@@ -930,6 +860,8 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/ca/">ca</a><small>1</small></li>
+  
     <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
@@ -937,6 +869,10 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+  
+    <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
@@ -1042,9 +978,9 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+    <li><a href="/tags/debian/">debian</a><small>3</small></li>
   
-    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>2</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -1154,9 +1090,11 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>3</small></li>
+    <li><a href="/tags/git/">git</a><small>4</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/git-tag/">git-tag</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitLab</a><small>0</small></li>
   
@@ -1246,7 +1184,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>11</small></li>
+    <li><a href="/tags/install/">install</a><small>12</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1295,6 +1233,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1363,6 +1303,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
   
     <li><a href="/tags/nb/">nb</a><small>1</small></li>
   
@@ -1472,7 +1414,7 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>2</small></li>
+    <li><a href="/tags/random/">random</a><small>3</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1571,6 +1513,8 @@ app.<span class="keyword">use</span>(foo);
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/sort/">sort</a><small>2</small></li>
   
     <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
   
@@ -1714,7 +1658,9 @@ app.<span class="keyword">use</span>(foo);
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>5</small></li>
+    <li><a href="/tags/version/">version</a><small>6</small></li>
+  
+    <li><a href="/tags/version-sort/">version-sort</a><small>1</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

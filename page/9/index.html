@@ -64,6 +64,119 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-11-01T12:00:00.000Z"><a href="/2014/11/01/stumbled-upon-lean-coffee/">Nov 1, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/01/stumbled-upon-lean-coffee/">Stumbled Upon Lean Coffee</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Stumbled upon <a href="http://leancoffee.org/" target="_blank" rel="external">Lean Coffee</a>. <a href="http://theleanstartup.com/" target="_blank" rel="external">Lean</a> movement adventures into coffee brewing? No, it is about structured, but agenda-less meeting with participants generated topics, or <em>lean meeting</em>. It is not truly agenda-less, but the topics of the meeting agenda are participant-sourced and participant-judged or voted. So, instead of top-down, but more democratic and bottom-up approach.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/11/01/stumbled-upon-lean-coffee/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-10-25T15:37:25.000Z"><a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/">Oct 25, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/">Use CNAME for Resovling Private and Public IP Address in Amazon EC2</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>“A security group acts as a virtual firewall that controlls the traffic for one or more instances.” <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">1</a> The <a href="https://aws.amazon.com/ec2/" target="_blank" rel="external">Amazon EC2</a> <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html" target="_blank" rel="external">Security Groups</a> are not just capable controlling traffic from an IP address, but also from all EC2 instances belong to a specific security group. I want to allow an instance belonging to one security group to access an instance belongs to another security group via a custom domain name (subdomain.example.com).</p>
+<p>But when I configured the subdomain via <a href="https://aws.amazon.com/route53/" target="_blank" rel="external">Amazon Route 53</a>, I have misconfigured it by assigning a A record, an IP address or the <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" target="_blank" rel="external">Elastic IP address</a> of the instance. I should have used CNAME, and assigned the public DNS (the public hostname of the EC2 instance).</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/10/25/use-cname-for-resovling-private-and-public-ip-address-in-amazon-ec2/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-10-15T08:13:42.000Z"><a href="/2014/10/15/hello-comcast-why-is-my-internet-so-slow/">Oct 15, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/10/15/hello-comcast-why-is-my-internet-so-slow/">Hello Comcast, Why is My Internet So Slow?</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Have you ever seen your home Internet speed topping 50MB/s?</p>
+<p>Here is a comparison between <a href="http://www.comcast.com/" target="_blank" rel="external">Comcast</a> in the United States and <a href="http://www.cht.com.tw/" target="_blank" rel="external">Chunghwa Telecom</a> in Taiwan:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/10/15/hello-comcast-why-is-my-internet-so-slow/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-09-28T12:00:00.000Z"><a href="/2014/09/28/patch-shellshock-vulnerability/">Sep 28, 2014</a></time>
       
       
@@ -470,138 +583,6 @@ undefined
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-22T13:48:50.000Z"><a href="/2014/06/22/get-rid-of-200e-control-character-in-vim/">Jun 22, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/22/get-rid-of-200e-control-character-in-vim/">Get Rid of &#39;&lt;200e&gt;&#39; Control Characters in VIM</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>The <a href="http://en.wikipedia.org/wiki/Left-to-right_mark" target="_blank" rel="external">left-to-right mark</a> character is an invisible control character. If you open up a text file in VIM containing such a character, you will see it as <code>&lt;200e&gt;</code> in Unicode.</p>
-<p>If you want to get rid of all occurrences of this control character, you can do:</p>
-<pre><code><span class="symbol">:%s/&lt;ctrl&gt;+&lt;shift&gt;+u200e&lt;enter&gt;//g</span>
-</code></pre><p>That’s <code>&lt;ctrl&gt;+&lt;shift&gt;+u</code> to enable entering the character by Unicode code points, followed by the actual character code and <code>&lt;enter&gt;</code> key. It will loke like this:</p>
-<pre><code><span class="symbol">:%s/&lt;</span><span class="number">200</span>e&gt;<span class="regexp">//g</span>
-</code></pre><p>However, not all terminals are supported.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-21T21:24:54.000Z"><a href="/2014/06/21/tiny-http-servers/">Jun 21, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/21/tiny-http-servers/">Tiny HTTP Servers</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>This is a simple way to run a tiny web server via command line:</p>
-<pre><code>$ <span class="keyword">python</span> -<span class="keyword">m</span> SimpleHTTPServer <span class="number">8080</span>
-</code></pre><p>which will server static files from the current directory.</p>
-<p>There is <a href="https://github.com/moserrya/knod" target="_blank" rel="external">Knod</a> for Ruby, and of course there is one for Node: <a href="https://github.com/nodeapps/http-server" target="_blank" rel="external">http-server</a>.</p>
-<p>To install:</p>
-<pre><code>$ sudo npm <span class="operator"><span class="keyword">install</span> -g http-<span class="keyword">server</span></span>
-</code></pre><p>To run:</p>
-<pre><code><span class="variable">$ </span>http-server
-</code></pre><p>Server will be accessible via <a href="http://localhost:8080/" target="_blank" rel="external">http://localhost:8080/</a>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-21T11:58:22.000Z"><a href="/2014/06/21/avoid-assigning-undefined-to-an-object-property/">Jun 21, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/21/avoid-assigning-undefined-to-an-object-property/">Avoid Assigning undefined to an Object Property</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>A property value should be any JavaScript value except for <code>undefined</code>. If you do something like this (albeit it is legal):</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = { bar: <span class="literal">undefined</span> };</div></pre></td></tr></table></figure>
-
-<p>will leads to confusing code. Because when accessing the property value:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(foo.bar); <span class="comment">// undefined</span></div></pre></td></tr></table></figure>
-
-<p>It will returns <code>undefined</code>. But you are not sure if it means the property exists or not or the value of the property is set to <code>undefined</code>. Therefore, you should do:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = { bar: <span class="literal">null</span> };</div></pre></td></tr></table></figure>
-
-<p>This indicates that the property is expected, and with the value of <code>null</code>.</p>
-<p>You do be able to check the existence of a property by:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.keys(foo); <span class="comment">// ['bar']</span></div><div class="line">foo.hasOwnProperty(<span class="string">'bar'</span>); <span class="comment">// true</span></div></pre></td></tr></table></figure>
-
-<p>But more importantly, if you serialize the object with <code>JSON.stringify</code>, properties with <code>undefined</code> will be omitted:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">JSON</span>.stringify({ bar: <span class="literal">undefined</span> }); <span class="comment">// '{}'</span></div></pre></td></tr></table></figure>
-
-<p>According to <a href="http://www.json.org/" target="_blank" rel="external">JSON specification</a>, <em>a value can be a <code>string</code> in double quotes, or a <code>number</code>, or <code>true</code> or <code>false</code> or <code>null</code>, or an <code>object</code> or an <code>array</code></em>. <code>undefined</code> is not a valid JSON value.</p>
-<p><code>null</code> is fine:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">JSON</span>.stringify({ bar: <span class="literal">null</span> }); <span class="comment">// '{"bar":null}'</span></div></pre></td></tr></table></figure>
-
-<p>So, for the best practice, avoid assigning <code>undefined</code> to a property of an object. Use <code>null</code> to indicate the expected property without a value. This will increase portability when using JSON to serialize.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -627,17 +608,17 @@ undefined
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>2</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>3</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -726,7 +707,7 @@ undefined
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>3</small></li>
+    <li><a href="/tags/array/">array</a><small>4</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -745,6 +726,8 @@ undefined
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
     <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
@@ -790,6 +773,8 @@ undefined
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/ca/">ca</a><small>1</small></li>
+  
     <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
@@ -797,6 +782,10 @@ undefined
     <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+  
+    <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
@@ -902,9 +891,9 @@ undefined
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+    <li><a href="/tags/debian/">debian</a><small>3</small></li>
   
-    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>2</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -1014,9 +1003,11 @@ undefined
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>3</small></li>
+    <li><a href="/tags/git/">git</a><small>4</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/git-tag/">git-tag</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitLab</a><small>0</small></li>
   
@@ -1106,7 +1097,7 @@ undefined
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>11</small></li>
+    <li><a href="/tags/install/">install</a><small>12</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1155,6 +1146,8 @@ undefined
     <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1223,6 +1216,8 @@ undefined
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
   
     <li><a href="/tags/nb/">nb</a><small>1</small></li>
   
@@ -1332,7 +1327,7 @@ undefined
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>2</small></li>
+    <li><a href="/tags/random/">random</a><small>3</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1431,6 +1426,8 @@ undefined
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/sort/">sort</a><small>2</small></li>
   
     <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
   
@@ -1574,7 +1571,9 @@ undefined
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>5</small></li>
+    <li><a href="/tags/version/">version</a><small>6</small></li>
+  
+    <li><a href="/tags/version-sort/">version-sort</a><small>1</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

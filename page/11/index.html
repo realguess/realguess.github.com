@@ -64,6 +64,162 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-05-11T14:11:43.000Z"><a href="/2014/05/11/sharpening-the-ax-before-chopping-down-a-tree/">May 11, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/05/11/sharpening-the-ax-before-chopping-down-a-tree/">Sharpening the Ax Before Chopping Down a Tree</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I was helping to examine a server that was impacted by <a href="http://heartbleed.com/" target="_blank" rel="external">Heartbleed</a>. According to the developer who was patching the server, he had updated the <a href="http://www.openssl.org/" target="_blank" rel="external">OpenSSL</a> library to the following:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$ openssl version -a</div><div class="line">OpenSSL 1.0.1g 7 Apr 2014</div><div class="line">built on: Fri Apr 18 11:04:34 EDT 2014</div><div class="line">platform: linux-x86_64</div><div class="line">options: bn(64,64) rc4(16x,int) des(idx,cisc,16,int) idea(int) </div><div class="line">blowfish(idx) </div><div class="line">compiler: gcc -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H </div><div class="line">-<span class="ruby"><span class="constant">Wa</span>,--noexecstack -m64 -<span class="constant">DL_ENDIAN</span> -<span class="constant">DTERMIO</span> -<span class="constant">O3</span> -<span class="constant">Wall</span> -<span class="constant">DOPENSSL_IA32_SSE2</span></span></div><div class="line"> -<span class="ruby"><span class="constant">DOPENSSL_BN_ASM_MONT</span> -<span class="constant">DOPENSSL_BN_ASM_MONT5</span> -<span class="constant">DOPENSSL_BN_ASM_GF2m</span> </span></div><div class="line">-<span class="ruby"><span class="constant">DSHA1_ASM</span> -<span class="constant">DSHA256_ASM</span> -<span class="constant">DSHA512_ASM</span> -<span class="constant">DMD5_ASM</span> -<span class="constant">DAES_ASM</span> -<span class="constant">DVPAES_ASM</span> </span></div><div class="line">-<span class="ruby"><span class="constant">DBSAES_ASM</span> -<span class="constant">DWHIRLPOOL_ASM</span> -<span class="constant">DGHASH_ASM</span></span></div><div class="line">OPENSSLDIR: "/usr/ssl"</div></pre></td></tr></table></figure>
+
+<p>And the developer claimed: “According to <a href="http://heartbleed.com/" target="_blank" rel="external">http://heartbleed.com/</a>. OpenSSL 1.0.1g is NOT vulnerable. Also I have restarted all services on this server.”</p>
+<p>So, OpenSSL has been updated and the all services have been restarted, but why does the problem still persist?</p>
+<p>I took a look at the command history he ran:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">wget http://www.openssl.org/<span class="built_in">source</span>/openssl-<span class="number">1.0</span>.<span class="number">1</span>g.tar.gz</div><div class="line">ls</div><div class="line">tar xvzf openssl-<span class="number">1.0</span>.<span class="number">1</span>g.tar.gz</div><div class="line"><span class="built_in">cd</span> openssl-<span class="number">1.0</span>.<span class="number">1</span>g/</div><div class="line"><span class="built_in">sudo</span> ./config --prefix=/usr</div><div class="line"><span class="built_in">sudo</span> make</div><div class="line"><span class="built_in">sudo</span> make install</div><div class="line"><span class="keyword">exit</span></div><div class="line">openssl version <span class="operator">-a</span></div><div class="line"><span class="built_in">sudo</span> reboot</div></pre></td></tr></table></figure>
+
+<p>The OpenSSL library has been built from the source, which is fine, but the problem is that the Nginx server was still using the old library distributed by Ubuntu:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ ldd `which nginx` | <span class="keyword">grep</span> ssl</div><div class="line">        libssl.<span class="keyword">so</span>.<span class="number">1.0</span>.<span class="number">0</span> =&gt; /lib/x86_64-linux-gnu/libssl.<span class="keyword">so</span>.<span class="number">1.0</span>.<span class="number">0</span> (<span class="number">0</span>x00007fafe82a3000)</div><div class="line">$ strings /lib/x86_64-linux-gnu/libssl.<span class="keyword">so</span>.<span class="number">1.0</span>.<span class="number">0</span> | <span class="keyword">grep</span> <span class="string">'^OpenSSL '</span></div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span><span class="keyword">c</span> <span class="number">10</span> May <span class="number">2012</span></div></pre></td></tr></table></figure>
+
+<p>In effect, there were two versions of OpenSSL library installed in the system, one was built from the source, and another one was managed by <code>dpkg</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ dpkg -l openssl</div><div class="line"><span class="header">||/ Name                          Version             Architecture</span></div><div class="line">+++-=============================-===================-===================</div><div class="line">ii  openssl                       1.0.1c-4ubuntu8.2   amd64</div></pre></td></tr></table></figure>
+
+<p>However, the bigger problem is the version of the operating system:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ lsb_release -a</div><div class="line">No LSB modules are available.</div><div class="line">Distributor ID: Ubuntu</div><div class="line"><span class="label">Description:</span>    Ubuntu <span class="number">13.04</span></div><div class="line"><span class="label">Release:</span>        <span class="number">13.04</span></div><div class="line"><span class="label">Codename:</span>       raring</div></pre></td></tr></table></figure>
+
+<p>Ubuntu 13.04 is not supported anymore according to <a href="https://wiki.ubuntu.com/Releases" target="_blank" rel="external">https://wiki.ubuntu.com/Releases</a>. The developer probably issued <code>apt-get upgrade</code>, but nothing to be updated, because Ubuntu stopped supporting the release. Therefore, no security update. And Ubuntu 13.04 is not listed in <a href="http://www.ubuntu.com/usn/usn-2165-1/" target="_blank" rel="external">Ubuntu Security Notice USN-2165-1</a>. So, the developer opted for building the library from the source. After installation from the source, the binary <code>openssl</code> was overridden by the source build, and the command <code>openssl version</code> showed the latest and patched version <code>1.0.1g</code>.</p>
+<p>To fix the problem, we need to reinstall the package first:</p>
+<pre><code>$ sudo apt-get <span class="operator"><span class="keyword">install</span> <span class="comment">--reinstall openssl</span></span>
+</code></pre><p>Now, this will revert control back to <code>apt-get</code> and overwrite the binary <code>/usr/bin/openssl</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ openssl version -a</div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span>c <span class="number">10</span> May <span class="number">2012</span></div><div class="line">built on: Wed Jan  <span class="number">8</span> <span class="number">20</span>:<span class="number">51</span>:<span class="number">55</span> UTC <span class="number">2014</span></div><div class="line">platform: debian-amd64</div><div class="line">options:  bn(<span class="number">64</span>,<span class="number">64</span>) rc4(<span class="number">16</span>x,int) des(idx,cisc,<span class="number">16</span>,int) blowfish(idx) </div><div class="line">compiler: cc -fPIC -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -m64 -DL_ENDIAN -DTERMIO -g -O2 -fstack-protector <span class="variable">--param=</span><span class="variable">ssp-buffer-size=</span><span class="number">4</span> -Wformat <span class="variable">-Werror=</span>format-security <span class="variable">-D_FORTIFY_SOURCE=</span><span class="number">2</span> -Wl,-Bsymbolic-functions -Wl,-z,relro -Wa,--noexecstack -Wall -DOPENSSL_NO_TLS1_2_CLIENT <span class="variable">-DOPENSSL_MAX_TLS1_2_CIPHER_LENGTH=</span><span class="number">50</span> <span class="variable">-DMD32_REG_T=</span>int -DOPENSSL_IA32_SSE2 -DOPENSSL_BN_ASM_MONT -DOPENSSL_BN_ASM_MONT5 -DOPENSSL_BN_ASM_GF2m -DSHA1_ASM -DSHA256_ASM -DSHA512_ASM -DMD5_ASM -DAES_ASM -DVPAES_ASM -DBSAES_ASM -DWHIRLPOOL_ASM -DGHASH_ASM</div><div class="line">OPENSSLDIR: <span class="string">"/usr/lib/ssl"</span></div></pre></td></tr></table></figure>
+
+<p>And then we must perform the distribution upgrade to the latest long term support version, in order to continue receiving updates.</p>
+<p>The lesson I have learned from this is that if you are going the wrong direction, no matter how hard you work, you are not going to make it. Make sure to take the initial investment, and really understand the true cause of the problem before attempting to resolve the issue. And don’t blindly follow the procedure. Understand it first, and adapt to your specific situation. As Abraham Lincoln once said:</p>
+<blockquote>
+<p>“If I have nine hours to chop down a tree, I’d spend the first six sharpening my ax.”</p>
+</blockquote>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-05-10T21:37:20.000Z"><a href="/2014/05/10/anonymous-like/">May 10, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/05/10/anonymous-like/">Anonymous Like</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><img src="/img/2014-05-10/anonymous-login.png" alt="Log in Anonymously"></p>
+<p>Facebook announced a new product called “<a href="https://developers.facebook.com/products/anonymous-login" target="_blank" rel="external">Anonymous Login</a>“ during <a href="https://fbf8.com/" target="_blank" rel="external">F8 Conference</a> on April 30, 2014. The concept is great, it allows you to try out an app without releasing your personal information. We believe that we can take it a step further with <a href="http://anonymouslike.net/" target="_blank" rel="external">Anonymous Like</a>.</p>
+<p><img src="/img/2014-05-10/anonymous-like-button.png" alt="Anonymous Like Button"></p>
+<p>So, during the <a href="http://techcrunch.com/events/disrupt-ny-hackathon-2014/" target="_blank" rel="external">TechCrunch Disrupt 2014 Hackathon</a> in New York, we hacked together an <a href="http://disruptnyhackathon.challengepost.com/submissions/23602-anonymous-like" target="_blank" rel="external">Anonymous Like Button</a> to allow users to <em>Like it Anonymously</em>, similar to <a href="https://developers.facebook.com/docs/plugins/like-button/" target="_blank" rel="external">Facebook Like Button</a>. However, the underlying principle is vastly different.</p>
+<p>We want to create something that is simply to use and has privacy in its core. People no longer need to sign in to a platform or a service in order express their opinions. We believe that the willness of people who will click the <em>Anonymous Like Button</em> will be much higher than the <em>Facebook Like Button</em>. Therefore, it represents a better metric on user opinions.</p>
+<p>Check back later, as we slowly make improvement. In the meantime, feel free to click or press the <em>Anonymous Like</em> button on <a href="http://anonymouslike.net" target="_blank" rel="external">http://anonymouslike.net</a>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-04-29T12:26:48.000Z"><a href="/2014/04/29/update-github-pages-deprecated-ip-addresses-with-zone-apex-domain/">Apr 29, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/04/29/update-github-pages-deprecated-ip-addresses-with-zone-apex-domain/">Update GitHub Pages Deprecated IP Addresses with Zone Apex Domain</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Recently, I have received a warning email from GitHub:</p>
+<blockquote>
+<p>GitHub Pages recently underwent some improvements (<a href="https://github.com/blog/1715-faster-more-awesome-github-pages" target="_blank" rel="external">https://github.com/blog/1715-faster-more-awesome-github-pages</a>) to make your site faster and more awesome, but we’ve noticed that realguess.net isn’t properly configured to take advantage of these new features. While your site will continue to work just fine, updating your domain’s configuration offers some additional speed and performance benefits. Instructions on updating your site’s IP address can be found at <a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages#step-2-configure-dns-records" target="_blank" rel="external">https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages#step-2-configure-dns-records</a>, and of course, you can always get in touch with a human at support@github.com. For the more technical minded folks who want to skip the help docs: your site’s DNS records are pointed to a deprecated IP address.</p>
+</blockquote>
+<p>What are the improvements on <a href="https://pages.github.com/" target="_blank" rel="external">GitHub Pages</a>? Here are the two major improvements [<a href="https://github.com/blog/1715-faster-more-awesome-github-pages" target="_blank" rel="external">1</a>]:</p>
+<ul>
+<li>Pages are served via CDN (Content Delivery Network)</li>
+<li>DoS (Denial of Service) protection</li>
+</ul>
+<p>But my site wasn’t properly configured to take advantage of speed and performance due to that the “DNS records are pointed to a deprecated IP address”.</p>
+<p><em>What are the IP addresses that GitHub Pages uses before but have been deprecated now?</em></p>
+<p>The domain <code>realguess.net</code> is an custom zone apex domain (also called bare, naked, or root domain). The domain <code>blog.realguess.net</code> is not a zone apex domain, but a subdomain. “A custom subdomain will not be affected by changes in the underlying IP addresses of GitHub’s servers.” [<a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages" target="_blank" rel="external">2</a>] But, I am not using a subdomain. I have configured the zone apex domain to point to currently deprecated IP addresses. “If you are using an A record that points to 207.97.227.245 or 204.232.175.78, you will need to update your DNS settings, as we no longer serve Pages directly from those servers.” [<a href="https://help.github.com/articles/my-custom-domain-isn-t-working" target="_blank" rel="external">3</a>] So, these IP addresses are deprecated, and need to update the current DNS from:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ dig realguess.<span class="winutils">net</span> +nostats +nocomments +nocmd</div><div class="line">;realguess.<span class="winutils">net</span>.                 <span class="flow">IN</span>      A</div><div class="line">realguess.<span class="winutils">net</span>.          <span class="number">86400</span>   <span class="flow">IN</span>      A       <span class="number">204</span>.<span class="number">232</span>.<span class="number">175</span>.<span class="number">78</span></div></pre></td></tr></table></figure>
+
+<p>to the new ones pointed by <code>username.github.io</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ dig realguess.github.io +nostats +nocomments +nocmd</div><div class="line">;realguess.github.io.           <span class="keyword">IN</span>      A</div><div class="line">realguess.github.io.    <span class="number">3600</span>    <span class="keyword">IN</span>      CNAME   github.<span class="keyword">map</span>.fastly.net.</div><div class="line">github.<span class="keyword">map</span>.fastly.net.  <span class="number">28</span>      <span class="keyword">IN</span>      A       <span class="number">199.27</span><span class="number">.73</span><span class="number">.133</span></div></pre></td></tr></table></figure>
+
+<p>And the new IP address are:</p>
+<pre><code>192.30.252.153
+192.30.252.154
+</code></pre><p>Using a subdomain is a better solution, so I don’t need to care about the changing GitHub Pages IP addresses in the future. But I don’t think the frequency of IP address updating is going to be very often. So, I will stick with my zone apex domain.</p>
+<ol>
+<li><a href="https://github.com/blog/1715-faster-more-awesome-github-pages" target="_blank" rel="external">Faster, More Awesome GitHub Pages</a></li>
+<li><a href="https://help.github.com/articles/setting-up-a-custom-domain-with-github-pages" target="_blank" rel="external">Setting up a custom domain with GitHub Pages</a></li>
+<li><a href="https://help.github.com/articles/my-custom-domain-isn-t-working" target="_blank" rel="external">My custom domain isn’t working</a></li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-04-27T16:41:01.000Z"><a href="/2014/04/27/understand-google-trends-search-term-and-topic/">Apr 27, 2014</a></time>
       
       
@@ -506,216 +662,6 @@ $ <span class="built_in">source</span> ~/.bashrc
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-03-22T13:20:10.000Z"><a href="/2014/03/22/writing-custom-yeoman-generator/">Mar 22, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/03/22/writing-custom-yeoman-generator/">Writing Custom Yeoman Generator</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Writing a custom <a href="http://yeoman.io/" target="_blank" rel="external">Yeoman</a> generator, you need to install <a href="https://github.com/yeoman/generator-generator" target="_blank" rel="external">generator-generator</a> first.</p>
-<blockquote>
-<p>(generator-generator) Scaffolds out a new basic Yeoman generator with some sensible defaults.</p>
-</blockquote>
-<p>So it creates some basic structure for writing your own custom generators. It is a generator for writing Node generator application.</p>
-<p>First Install generator-generator:</p>
-<pre><code>$ <span class="built_in">sudo</span> npm install -g generator-generator
-</code></pre><p>Then generate some basic files for writing your own generator by issuing:</p>
-<pre><code><span class="variable">$ </span>yo generator
-</code></pre><p>You can use generator-generator to write both a custom generator and a custom sub-generator. What is sub-generator? For example, Angular directive or service is a sub-generator.</p>
-<p>Use naming convention <code>generator-[name]</code>.</p>
-<p>Create a directory for your new generator:</p>
-<pre><code><span class="variable">$ </span>mkdir -p ~<span class="regexp">/generators/generator</span>-hello &amp;&amp; cd <span class="variable">$_</span>
-</code></pre><p>Make sure entering the newly created directory (<code>cd $_</code>), otherwise all files generated will be placed under the current directory. Then, scaffold your generator:</p>
-<pre><code><span class="variable">$ </span>yo generator
-</code></pre><p>As versions yo@1.1.2 and generator-generator@0.4.3, the generator creates the following directories and files:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── app</div><div class="line">│   ├── index.js</div><div class="line">│   └── templates</div><div class="line">├── <span class="string">.editorconfig</span></div><div class="line">├── <span class="string">.gitattributes</span></div><div class="line">├── <span class="string">.gitignore</span></div><div class="line">├── <span class="string">.jshintrc</span></div><div class="line">├── node_modules</div><div class="line">│   ├── <span class="string">.bin</span></div><div class="line">│   ├── chalk</div><div class="line">│   ├── mocha</div><div class="line">│   └── yeoman-generator</div><div class="line">├── package.json</div><div class="line">├── README.md</div><div class="line">├── <span class="keyword">test</span></div><div class="line">│   ├── <span class="keyword">test</span>-creation.js</div><div class="line">│   └── <span class="keyword">test</span>-load.js</div><div class="line">└── <span class="string">.travis</span>.yml</div><div class="line"></div><div class="line"><span class="number">8</span> directories, <span class="number">10</span> files</div></pre></td></tr></table></figure>
-
-<p>You might want to make your initial commit:</p>
-<pre><code>$ git init &amp;&amp; git <span class="built_in">add</span> <span class="string">'*'</span> &amp;&amp; git commit -<span class="keyword">m</span> <span class="string">'Initial commit'</span>
-</code></pre><p>While in development, make it accessible globally:</p>
-<pre><code>$ <span class="built_in">sudo</span> npm link
-</code></pre><p>This is similar to:</p>
-<pre><code>$ <span class="built_in">sudo</span> npm install -g [generator-name]
-</code></pre><p>They both will be discoverable from <code>/usr/local/lib/node_modules</code>.</p>
-<p>There isn’t much going on there, we need to customize our own generator. The main file is <code>./app/index.js</code>.</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> HelloGenerator = yeoman.generators.Base.extend({</div><div class="line">});</div><div class="line"><span class="built_in">module</span>.exports = HelloGenerator;</div></pre></td></tr></table></figure>
-
-<p>The <code>HelloGenerator</code> extends <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> generator. There are four properties (functions) that it has extended: <code>init</code>, <code>askFor</code>, <code>app</code>, and <code>projectfiles</code>.</p>
-<p>All these functions will be invoked by Yeoman one by one in order (the order is important), meaning that <code>init</code> will be called first to perform initialization, and then <code>askFor</code> will be called to get user prompts, then <code>app</code> and <code>projectfiles</code> will be called afterward to build the application.</p>
-<p>However, it is not a must to have four properties, it just brings more structure and modularity. In fact, you can merge all four functions into a single one.</p>
-<p>The method name does not matter. Just don’t name it <code>prompt</code> because you will override the existing property inherited from <code>yeoman.generators.Base</code>. </p>
-<p>If we need to declare a “private” property, just appending it with an underscore as a hidden property, e.g. <code>_dontAskFor: function(){}</code>, or if you just use it in the same file, you can simply define a global <code>function myFunc()</code>.</p>
-<p>Personal, I don’t think it is necessary to break it into many functions, three are enough, initialization, prompting user for input, and generating files.</p>
-<p>When choosing property names, the <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> object contains many properties which is not a good idea to be overridden, such as <code>[&quot;append&quot;, &quot;help&quot;, &quot;log&quot;, &quot;prompt&quot;, &quot;remote&quot;]</code>. This design has limitation on choosing a right property name. For example, I was thinking about using <code>prompt</code> instead of <code>askFor</code>, but <code>prompt</code> is an inherited property. Therefore, it is a good idea to keep fewer properties in <code>HelloGenerator</code>. Three are enough. All these properties can be accessible from the context <code>this</code>. From <code>this</code> object you can access everything from <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> object to newly defined <code>_dontAskFor</code> hidden property.</p>
-<p>Time to test the custom generator:</p>
-<pre><code>$ <span class="built_in">cd</span> /tmp &amp;&amp; mkdir hello &amp;&amp; yo <span class="variable">$_</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-03-14T23:12:50.000Z"><a href="/2014/03/14/traveling-from-the-big-easy-to-hollywood-via-amtrak-sunset-limited/">Mar 14, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/03/14/traveling-from-the-big-easy-to-hollywood-via-amtrak-sunset-limited/">Traveling from the Big Easy to Hollywood via Amtrak Sunset Limited</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>If 30 hours on the train was long, how about 50 more hours? This is the second part of the train traveling journey from New York to Los Angeles. <a href="/2014/03/07/traveling-from-the-big-apple-to-the-big-easy-via-amtrak-crescent/">Traveling from New York to New Orleans</a> took about 30 hours with one night sleep on the train, and this trip, from New Orleans to Los Angeles is about 50 hours, and two nights were spent on the train.</p>
-<h1 id="The_Route">The Route</h1>
-<p>The train travels from New Orleans, Louisiana to Los Angeles, California, passing notable cities such as Houston, San Antonio, El Paso, and Tuscon. Not many states involved comparing to <a href="/2014/03/07/traveling-from-the-big-apple-to-the-big-easy-via-amtrak-crescent/">the first leg</a> of the trip. There are only Louisiana, Texas, New Mexico, Arizona and California.</p>
-<p>If you look at the Amtrak System map, it is a hub for three long distance Amtrak routes, Sunset Limited, Crescent and City of New Orleans (between Chicago and New Orleans). Next hub is San Antonio. The Sunset Limited is used to extend to Jacksonville, Florida. But due to Katrina, the service is suspended.</p>
-<p>The train travels close to the United States and Mexico border, sometimes, it was very close, like in El Paso. I was able to see the Mexico side from the train.</p>
-<h1 id="The_Train">The Train</h1>
-<p>The type of train in this route is called <a href="https://en.wikipedia.org/wiki/Superliner_(railcar)" target="_blank" rel="external">Superliner</a>, a double decker train. We were staying on the second floor, on the left side, able to see the border between the United States and Mexico.</p>
-<p>Superliner has a sightseeing lounge, where two decks of windows on each side of the car. And you can turn the chair facing the windows. This provides a really comfortable scenery view along the route.</p>
-<h1 id="The_Room">The Room</h1>
-<p>The Superliner roomette we booked still has two beds, one is assembled by pulling the seats together, and the other one can be pulled down from the ceiling. But it has no sink and toilet like the one from the last leg. And we have to use the shared toilet on the end of car. By the way, there is a shower room to use. Feeling taking a shower on a moving train?</p>
-<blockquote>
-<p>Our Superliner Roomette is ideal for one or two passengers, with two comfortable reclining seats on either side of a big picture window. At night, the seats convert to a comfortable bed, and an upper berth folds down from above. Roomettes are located on both upper and lower levels of our double-decker Superliner train cars.</p>
-</blockquote>
-<p>No in-cabin toilet or shower; restrooms, showers nearby in same train car</p>
-<h1 id="The_View">The View</h1>
-<p>Leaving New Orleans, when the train moved on the [Huey P Long Bridge] across the Mississippi River, SuperDome and the Big Easy, Bayous of Louisiana behind us.</p>
-<p><img src="https://farm3.staticflickr.com/2839/13808949353_8a8ee3f71f_c.jpg" alt="Riding across Huey P Long Bridge leaving New Orleans"></p>
-<p>Bayous of Louisiana:</p>
-<p><img src="https://farm3.staticflickr.com/2827/13809371475_408d6c42ca_c.jpg" alt="Bayous of Louisiana"></p>
-<p>The first stop in Texas is Beaumont, TX.</p>
-<p>In the South, it is truck dominant area:</p>
-<h1 id="The_Conclusion">The Conclusion</h1>
-<p>The biggest problem is the Internet access.</p>
-<p>☑ Travel from the East Coast to the West Coast of the United States by train</p>
-<p>Where the journey will take me next?</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-03-07T22:30:00.000Z"><a href="/2014/03/07/traveling-from-the-big-apple-to-the-big-easy-via-amtrak-crescent/">Mar 7, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/03/07/traveling-from-the-big-apple-to-the-big-easy-via-amtrak-crescent/">Traveling from the Big Apple to the Big Easy via Amtrak Crescent</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><img src="http://farm3.staticflickr.com/2839/13234934445_e1c993a278_n.jpg" alt="Amtrak Crescent"></p>
-<p>“That’s 30 hours on the train, don’t you get sick?” Well, I told them that the actual trip is 80 hours, 30 hours are just from New York to New Orleans via <a href="http://www.amtrak.com/crescent-train" target="_blank" rel="external">Amtrak Crescent</a>, the longer journey is from New Orleans to Los Angeles, which is close to 50 hours.</p>
-<p>Traveling by air is no fun. When you are at 30,000 feet high, there are only clouds accompanying you outside the small plane window. And no, you don’t get sick watching ever-changing landscape. What’s sightseeing!</p>
-<p>This is the first part of the journey from the East Coast to the West Coast. Let’s get started.</p>
-<h2 id="The_Route">The Route</h2>
-<p><iframe src="https://www.google.com/maps/embed?pb=!1m29!1m12!1m3!1d25243787.08302642!2d-82.17110033425408!3d39.435045753675496!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m14!1i0!3e3!4m5!1s0x89c259ae1434b7f9%3A0x3e64008c2728c60b!2sPenn+Station!3m2!1d40.75058!2d-73.99358!4m5!1s0x8620a5deb8e58bb9%3A0x975cfe51a0dc0e13!2sNew+Orleans+Union+Passenger+Terminal!3m2!1d29.946085!2d-90.078291!5e0!3m2!1sen!2sus!4v1395117149399" width="100%" height="600" frameborder="0" style="border:0"></iframe></p>
-
-<p>There is a <a href="/doc/2014-03-07/amtrak-crescent-train-route-guide.pdf">route guide</a>, but I found it not be much useful. An iOS or Android app with GPS enabled voice guide could be nice.</p>
-<p>The train travels from the Northeast to the South, crossing New York, New Jersey, Pennsylvania, Delaware, Maryland, DC, Virginia, North Carolina, South Carolina, Georgia, Alabama, Mississippi, and Louisiana (finally be able to spell them out without making a mistake). That’s a lot of states. But from Virginia to South Carolina, it is night time, nothing too see at all. I was feeling the 9-to-5 schedule, sleep at 9pm and get up at 5am to catch the sunrise.</p>
-<h2 id="The_Train">The Train</h2>
-<p><img src="http://farm4.staticflickr.com/3732/13236307315_74f2f7eaa9_c.jpg" alt="Amtrak Viewliner"></p>
-<p>On the Amtrak Crescent line, the train is called <a href="https://en.wikipedia.org/wiki/Viewliner" target="_blank" rel="external">Viewliner</a>. Viewliner is small single deck comparing to <a href="https://en.wikipedia.org/wiki/Superliner_(railcar)" target="_blank" rel="external">Superliner</a>. According to a train conductor, because of the tunnels in the East Coast, all the trains are Viewliners, but to the west of Chicago, there are all Superliners.</p>
-<p>The top windows on the car are for people who sleeping on the upper bunk in the room. That is really helpful for me to catch the outside view without climbing up and down.</p>
-<h2 id="The_Car_and_the_Room">The Car and the Room</h2>
-<p>We are on the right side of the train, but the side does not really matter on this route.</p>
-<p><img src="http://farm4.staticflickr.com/3666/13235649993_81edbca065_c.jpg" alt="Amtrak Viewliner Roomette"></p>
-<p>First step into my room, the room is not small at all. The thing you have to get used to is having a toilet next to your seat. But with the cover down, that is not a big deal. Flushing the toilet is just like in the airplane, pressurized system that sucks everything out.</p>
-<p><img src="http://farm3.staticflickr.com/2878/13235969244_1a4dd49565_c.jpg" alt="Table, sink and toilet"></p>
-<p>The only thing I do not like is the burning smell during each start the train. I need to adjust myself to the smell, so went to the end of car for some coffee and juice. There are light coffee and some apple and orange juices in containers. Don’t expect any fancy even you are in the sleeping car.</p>
-<h2 id="The_Food">The Food</h2>
-<p>During the stop on the Trenton, NJ, the dining service person came by for a dinner reservation. We booked the slot at 6:30pm. She was definitely from the south, the ascent tells it all.</p>
-<p>The dining room is pretty standard. The table on each side can be seated by four people. The only complaint I had was the heat coming from underneath the table. Too much heat and too dry.</p>
-<p><img src="http://farm8.staticflickr.com/7237/13257967684_dcc687cec4_c.jpg" alt="Steak and salmon"></p>
-<p>We ordered salmon and steak (medium rare). The steak did not look like a frozen food. But the sides probably are. We also ordered a small bottle of white wine ($6.50), enough for two glasses. I took a peek at the dining car kitchen, I saw the chef and the grill! That is a lot more than traveling on the plane.</p>
-<h2 id="The_View">The View</h2>
-<p>Talking about sightseeing. The ever-changing landscape can only be described by pictures.</p>
-<p>There are many bridges and overpasses coming from the Northeast.</p>
-<p><img src="http://farm3.staticflickr.com/2859/13256019574_b271de3cf1_c.jpg" alt="Bridges and overpasses"></p>
-<p>But once leaving the big cities, there are only lakes, trees and tracks waiting.</p>
-<p><img src="http://farm4.staticflickr.com/3807/13256907393_a313b182f3_c.jpg" alt="Large lakes and small ponds"></p>
-<p>Large lakes are really magnificent, but once a while there are small lakes or ponds hiding behind the trees. It is the never ending tree line.</p>
-<p><img src="http://farm8.staticflickr.com/7020/13257094184_7d4304efec_c.jpg" alt="Tree lines"></p>
-<p>And rolling green or yellowish grasses.</p>
-<p><img src="http://farm4.staticflickr.com/3822/13256859093_1ce4bdedd1_c.jpg" alt="Grasses"></p>
-<p>Moving away from the natural beauty, houses and communities are seen along the route.</p>
-<p><img src="http://farm8.staticflickr.com/7333/13257083434_f925f758c7_c.jpg" alt="Houses"></p>
-<p>There are different structures (some are abandoned), a car factory (Honda) and tanks from Anniston Army Depot.</p>
-<p><img src="http://farm8.staticflickr.com/7442/13256868083_e5c4109ed4_c.jpg" alt="Structures and tanks"></p>
-<p>From the steady objects to moving things. When train is moving, cars stop.</p>
-<p><img src="http://farm4.staticflickr.com/3699/13256896873_41df7ff2be_c.jpg" alt="Railroad crossing"></p>
-<p>Of course, there is the never ending blue sky.</p>
-<p><img src="http://farm4.staticflickr.com/3754/13257054424_670eb0fbea_c.jpg" alt="Blue sky"></p>
-<p>Well it does end. After we get past Washington DC, the sun went down. At night, there is really nothing much to see. I was hoping stars, but all were scattered lights from desolated houses.</p>
-<h2 id="The_Mobile_Network">The Mobile Network</h2>
-<p>This is really important. Not just about checking Facebook or Twitter, but making a conference phone call. Unfortunately there is no WiFi service on board. And this is the case with the most of Amtrak trains. We have to rely on mobile network.</p>
-<p>Once we got past Alexander, VA, the cell signal drops considerably, probably because that I was using T-Mobile, and frequently I was on AT&amp;T network.</p>
-<p>Without a good mobile network coverage, I think that this is the most frustrated thing traveling by the train. But if you are a reader, you can open up your Kindle or iBook and start reading. Talking about disconnecting yourself!</p>
-<h2 id="The_Conclusion">The Conclusion</h2>
-<p>Getting yourself comfortable is important. Even though the seat is much wider than in the plane, but the hours are longer. On large stations such as Birmingham AL, get a smoke break and take a walk on the station platform to stretch yourself.</p>
-<p>Amtrak is frequently late, and the same happened to us. We finally got to New Orleans more than two hours late.</p>
-<p>This is the road trip without driving. Driving is better, because you are in charge, the landscape will wait for you. But this is much better than flying. Let the scenery come to you, stop and take a picture with your phone and say wow, then let it roll by you.</p>
-<p>Next: <a href="/2014/03/14/traveling-from-the-big-easy-to-hollywood-via-amtrak-sunset-limited/">Traveling via Amtrak Sunset Limited</a></p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -741,17 +687,17 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>2</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>3</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -840,7 +786,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>3</small></li>
+    <li><a href="/tags/array/">array</a><small>4</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -859,6 +805,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
     <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
@@ -904,6 +852,8 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/ca/">ca</a><small>1</small></li>
+  
     <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
@@ -911,6 +861,10 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+  
+    <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
@@ -1016,9 +970,9 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+    <li><a href="/tags/debian/">debian</a><small>3</small></li>
   
-    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>2</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -1128,9 +1082,11 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>3</small></li>
+    <li><a href="/tags/git/">git</a><small>4</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/git-tag/">git-tag</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitLab</a><small>0</small></li>
   
@@ -1220,7 +1176,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>11</small></li>
+    <li><a href="/tags/install/">install</a><small>12</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1269,6 +1225,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1337,6 +1295,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
   
     <li><a href="/tags/nb/">nb</a><small>1</small></li>
   
@@ -1446,7 +1406,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>2</small></li>
+    <li><a href="/tags/random/">random</a><small>3</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1545,6 +1505,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/sort/">sort</a><small>2</small></li>
   
     <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
   
@@ -1688,7 +1650,9 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>5</small></li>
+    <li><a href="/tags/version/">version</a><small>6</small></li>
+  
+    <li><a href="/tags/version-sort/">version-sort</a><small>1</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

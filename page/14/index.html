@@ -64,6 +64,162 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-12-09T18:09:08.000Z"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Dec 9, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Insert Text to the Beginning of a File</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>It is easy to append some text to the end of another file:</p>
+<pre><code><span class="input"><span class="prompt">$ cat foo &gt;&gt;</span> bar</span>
+</code></pre><p>or even just portion of a file:</p>
+<pre><code><span class="input"><span class="prompt">$ head -n 2 foo &gt;&gt;</span> bar</span>
+</code></pre><p>but how about to the beginning of a file? Well, it is not that bad to do either:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">"<span class="variable">$(cat foo bar)</span>"</span> &gt; bar
+</code></pre><p>just a portion of a file:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">"<span class="variable">$(head -n 2 foo)</span>\n<span class="variable">$(cat bar)</span>"</span> &gt; bar
+</code></pre><p>Now you can easily add some text such as copyright information to the beginning of another file with one command.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-12-06T10:55:55.000Z"><a href="/2013/12/06/amazon-route-53-via-command-line/">Dec 6, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/06/amazon-route-53-via-command-line/">Amazon Route 53 via Command Line</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Retrieve a list of hosted zones:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53 list-hosted-zones          </div><div class="line">{</div><div class="line">  <span class="string">"HostedZones"</span><span class="symbol">:</span> [</div><div class="line">    {</div><div class="line">        <span class="string">"ResourceRecordSetCount"</span><span class="symbol">:</span> <span class="number">4</span>,</div><div class="line">        <span class="string">"CallerReference"</span><span class="symbol">:</span> <span class="string">"12345678-ABCD-EFGH-IJKL-ABCDEFGHIJKL"</span>,</div><div class="line">        <span class="string">"Config"</span><span class="symbol">:</span> {},</div><div class="line">        <span class="string">"Id"</span><span class="symbol">:</span> <span class="string">"/hostedzone/1234567890ABC"</span>,</div><div class="line">        <span class="string">"Name"</span><span class="symbol">:</span> <span class="string">"realguess.net."</span></div><div class="line">    }</div><div class="line">  ], </div><div class="line">  <span class="string">"IsTruncated"</span><span class="symbol">:</span> <span class="keyword">false</span>, </div><div class="line">  <span class="string">"MaxItems"</span><span class="symbol">:</span> <span class="string">"100"</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Get a single hosted zone with delegation set (four Route 53 name servers that were assigned to the hosted zone):</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="built_in">get</span>-hosted-zone <span class="comment">--id 1234567890ABC</span></div><div class="line">{</div><div class="line">  <span class="string">"HostedZone"</span>: {</div><div class="line">    <span class="string">"ResourceRecordSetCount"</span>: <span class="number">4</span>,</div><div class="line">    <span class="string">"CallerReference"</span>: <span class="string">"12345678-ABCD-EFGH-IJKL-ABCDEFGHIJKL"</span>,</div><div class="line">    <span class="string">"Config"</span>: {},</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"/hostedzone/1234567890ABC"</span>,</div><div class="line">    <span class="string">"Name"</span>: <span class="string">"realguess.net."</span></div><div class="line">  },</div><div class="line">  <span class="string">"DelegationSet"</span>: {</div><div class="line">    <span class="string">"NameServers"</span>: [</div><div class="line">      <span class="string">"ns-1727.awsdns-23.co.uk"</span>,</div><div class="line">      <span class="string">"ns-1312.awsdns-36.org"</span>,</div><div class="line">      <span class="string">"ns-402.awsdns-50.com"</span>,</div><div class="line">      <span class="string">"ns-587.awsdns-09.net"</span></div><div class="line">    ]</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>List all resource record sets in a hosted zone:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="type">list</span>-resource-<span class="type">record</span>-sets <span class="comment">--hosted-zone-id 1234567890ABC</span></div><div class="line">{</div><div class="line">  <span class="string">"IsTruncated"</span>: <span class="constant">false</span>,</div><div class="line">  <span class="string">"ResourceRecordSets"</span>: [</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">172800</span></div><div class="line">    },</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1727.awsdns-23.co.uk."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1312.awsdns-36.org."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-402.awsdns-50.com."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-587.awsdns-09.net."</span></div><div class="line">        }</div><div class="line">      ], </div><div class="line">      <span class="string">"Type"</span>: <span class="string">"NS"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">172800</span></div><div class="line">    }, </div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1727.awsdns-23.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"</span></div><div class="line">        }</div><div class="line">      ], </div><div class="line">      <span class="string">"Type"</span>: <span class="string">"SOA"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">900</span></div><div class="line">    },</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"www.realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">86400</span></div><div class="line">    }</div><div class="line">  ],</div><div class="line">  <span class="string">"MaxItems"</span>: <span class="string">"100"</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Retrieve a single record set:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="type">list</span>-resource-<span class="type">record</span>-sets <span class="comment">--hosted-zone-id 1234567890ABC \</span></div><div class="line">  <span class="comment">--start-record-name www.realguess.net --start-record-type A --max-items 1</span></div><div class="line">{</div><div class="line">  <span class="string">"IsTruncated"</span>: <span class="constant">false</span>,</div><div class="line">  <span class="string">"ResourceRecordSets"</span>: [</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"www.realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">86400</span></div><div class="line">    }</div><div class="line">  ],</div><div class="line">  <span class="string">"MaxItems"</span>: <span class="string">"1"</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>In order to create a new record set, first create a JSON file to describe the new record:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">Comment</span>": <span class="value"><span class="string">"A new record set for the zone."</span></span>,</div><div class="line">  "<span class="attribute">Changes</span>": <span class="value">[</span></div><div class="line">    {</div><div class="line">      "<span class="attribute">Action</span>": <span class="value"><span class="string">"CREATE"</span></span>,</div><div class="line">      "<span class="attribute">ResourceRecordSet</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">Name</span>": <span class="value"><span class="string">"api.realguess.net."</span></span>,</div><div class="line">        "<span class="attribute">Type</span>": <span class="value"><span class="string">"CNAME"</span></span>,</div><div class="line">        "<span class="attribute">TTL</span>": <span class="value"><span class="number">60</span></span>,</div><div class="line">        "<span class="attribute">ResourceRecords</span>": <span class="value">[</span></div><div class="line">          {</div><div class="line">            "<span class="attribute">Value</span>": <span class="value"><span class="string">"www.realguess.net"</span></span></div><div class="line">          }</div><div class="line">        ]</div><div class="line">      }</div><div class="line">    }</div><div class="line">  ]</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Add a new record set (note that the JSON file must use <code>file://</code> starting path):</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53 change-resource-record-sets --hosted-zone-id <span class="number">1234567890</span>ABC \</div><div class="line">  --change-batch <span class="symbol">file:</span>/<span class="regexp">//path</span><span class="regexp">/to/record</span>.json</div><div class="line">{</div><div class="line">  <span class="string">"ChangeInfo"</span><span class="symbol">:</span> {</div><div class="line">    <span class="string">"Status"</span><span class="symbol">:</span> <span class="string">"PENDING"</span>,</div><div class="line">    <span class="string">"Comment"</span><span class="symbol">:</span> <span class="string">"A new record set for the zone."</span>,</div><div class="line">    <span class="string">"SubmittedAt"</span><span class="symbol">:</span> <span class="string">"2013-12-06T00:00:00.000Z"</span>,</div><div class="line">    <span class="string">"Id"</span><span class="symbol">:</span> <span class="string">"/change/CHANGEID123"</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>The status of adding the new record is currently <em>pending</em>. Poll the server to get the updated status:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ aws route53 get-<span class="operator"><span class="keyword">change</span> <span class="comment">--id CHANGEID123</span></span></div><div class="line">{</div><div class="line">  <span class="string">"ChangeInfo"</span>: {</div><div class="line">    <span class="string">"Status"</span>: <span class="string">"INSYNC"</span>,</div><div class="line">    <span class="string">"Comment"</span>: <span class="string">"A new record set for the zone."</span>,</div><div class="line">    <span class="string">"SubmittedAt"</span>: <span class="string">"2013-12-06T00:00:00.000Z"</span>,</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"/change/CHANGEID123"</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>A new record has been created and has been propagated to all hosts.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-12-04T17:34:59.000Z"><a href="/2013/12/04/configuration-setup-and-loading-precedence/">Dec 4, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/04/configuration-setup-and-loading-precedence/">Configuration Setup and Loading Precedence</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Loading precedence (latter overrides former):</p>
+<ol>
+<li>Load application default settings (<code>config/default.yml</code>)</li>
+<li>Load environment settings</li>
+<li>Load custom settings</li>
+</ol>
+<p>Default settings of the application is provided by the upstream, therefore, it should not be modified.</p>
+<p>There are four types of environments: <code>development</code>, <code>testing</code>, <code>staging</code> and <code>production</code>. Environment can be set by using the shell environment variable: <code>ENV</code>. If the environment variable is not specified, it is set to <code>development</code> as default. Environment settings override default settings.</p>
+<p>Custom settings override environment settings. The search path for custom settings is:</p>
+<ol>
+<li>Environment variable <code>SETTINGS</code></li>
+<li><code>config/settings.yml</code></li>
+</ol>
+<p>If both paths are not available, that means the custom settings are not specified.</p>
+<p><code>config/settings.yml</code> is a custom settings, therefore, it will be ignored by git in <code>.gitignore</code> file:</p>
+<pre><code>config/settings.yml
+</code></pre><p>The complete directory structure regarding to the configuration setup:</p>
+<pre><code><span class="title">config</span>/
+├── <span class="default"><span class="keyword">default</span>.yml</span>
+├── environments
+│   ├── development.yml
+│   ├── production.yml
+│   ├── staging.yml
+│   └── testing.yml
+└── settings.yml
+</code></pre><p>Quick start command:</p>
+<pre><code><span class="variable">$ </span>node app
+</code></pre><p>Fully customized start command:</p>
+<pre><code><span class="variable">$ </span><span class="constant">ENV</span>=production <span class="constant">SETTINGS</span>=<span class="regexp">/path/to</span><span class="regexp">/settings.yml node app</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-29T12:00:30.000Z"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Nov 29, 2013</a></time>
       
       
@@ -451,144 +607,6 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-11T12:00:00.000Z"><a href="/2013/11/11/keep-it-simple-and-small-(kiss)/">Nov 11, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/11/keep-it-simple-and-small-(kiss)/">Keep It Simple and Small (KISS)</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>We are all aware of the <a href="http://en.wikipedia.org/wiki/KISS_principle" target="_blank" rel="external">KISS</a> principle: Keep It Simple and Stupid. Let me introduce your a similar principle: <strong>Keep It Simple and Small</strong>.</p>
-<p>Maciej Cegłowski who created <a href="https://pinboard.in/" target="_blank" rel="external">Pinboard</a> deliberately wants to avoid rapid growth.</p>
-<blockquote>
-<p>“I have seen a lot of free services burn up all their development time scaling for users,” he said. He has no plan to cap the gate fee as more people sign on. “I am tempted to just let it go up and see what happens,” he says. <strong>- <a href="http://news.cnet.com/8301-19882_3-10310347-250.html" target="_blank" rel="external">http://news.cnet.com/8301-19882_3-10310347-250.html</a></strong></p>
-</blockquote>
-<p>It gives you time to try out different features without upsetting many of your user base.</p>
-<blockquote>
-<p>What if a little site you love doesn’t have a business model? Yell at the developers! Explain that you are tired of good projects folding and are willing to pay cash American dollar to prevent that from happening. It doesn’t take prohibitive per-user revenue to put a project in the black. It just requires a number greater than zero. <strong>- <a href="https://blog.pinboard.in/2011/12/don_t_be_a_free_user/" target="_blank" rel="external">Don’t Be A Free User</a></strong></p>
-</blockquote>
-<p>Why there has to be an exit strategy? If you love what you are doing, and you want to do it for the rest of your life. Why do you need an exit strategy? For some people, it might be better to <a href="http://content.time.com/time/specials/packages/article/0,28804,2094921_2094923_2094924-1,00.html" target="_blank" rel="external">strike it alone</a>, by keeping it small and having a business model.</p>
-<blockquote>
-<p>Make a living without being beholden to a boss or investors. <strong>- Maciej Cegłowski</strong></p>
-</blockquote>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-08T15:59:36.000Z"><a href="/2013/11/08/preserve-command-history-in-node-repl/">Nov 8, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/08/preserve-command-history-in-node-repl/">Preserve command history in Node REPL</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Node <a href="http://nodejs.org/api/repl.html" target="_blank" rel="external">REPL</a> (Read-Eval-Print-Loop) is a standalone JavaScript interpreter for Node. To invoke it, simply type:</p>
-<pre><code><span class="variable">$ </span>node
-</code></pre><p>However, after exit and re-enter the REPL, all the previous commands are lost. This behaves very much different from what we expect from shell.</p>
-<p>To maintain a persistent history, we can use <a href="http://utopia.knoware.nl/~hlub/uck/rlwrap/rlwrap.html" target="_blank" rel="external">rlwrap</a> as suggested in this <a href="http://stackoverflow.com/a/18513951" target="_blank" rel="external">answer</a>.</p>
-<p>Install <a href="http://utopia.knoware.nl/~hlub/uck/rlwrap/rlwrap.html" target="_blank" rel="external">rlwrap</a>:</p>
-<pre><code>$ <span class="built_in">sudo</span> apt-get install rlwrap
-</code></pre><p>Create an alias:</p>
-<pre><code>alias <span class="variable">node=</span>'env <span class="variable">NODE_NO_READLINE=</span><span class="number">1</span> rlwrap -s <span class="number">1000</span> -S <span class="string">"node&gt; "</span> node'
-</code></pre><p>Persistent history file is saved in:</p>
-<pre><code>~/.node_history
-</code></pre><p>However, if by perserving the command history, Node REPL loses familiarity of color output and tab completion. This is a <a href="http://stackoverflow.com/a/9219349" target="_blank" rel="external">trade-off</a>. To get around this problem, we can roll our own REPL or use an alternative. The best alternative I have found so far is also the one I am already using: <a href="http://coffeescript.org/#changelog" target="_blank" rel="external">CoffeeScript</a> (see 1.6.3 change log). There is a history command built-in:</p>
-<pre><code>$ coffee
-coffee&gt; .help
-.break  Sometimes you <span class="built_in">get</span> stuck, this gets you out
-.<span class="built_in">clear</span>  Break, <span class="operator">and</span> also <span class="built_in">clear</span> <span class="operator">the</span> <span class="built_in">local</span> context
-.exit   Exit <span class="operator">the</span> repl
-.help   Show repl options
-.history        Show <span class="command"><span class="keyword">command</span> <span class="title">history</span></span>
-.<span class="built_in">load</span>   Load JS <span class="built_in">from</span> <span class="operator">a</span> <span class="built_in">file</span> <span class="keyword">into</span> <span class="operator">the</span> REPL session
-.save   Save all evaluated commands <span class="operator">in</span> this REPL session <span class="built_in">to</span> <span class="operator">a</span> <span class="built_in">file</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-10-27T10:39:40.000Z"><a href="/2013/10/27/change-time-zone-in-ubuntu-linux/">Oct 27, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/10/27/change-time-zone-in-ubuntu-linux/">Change Time Zone in Ubuntu Linux</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>All time zone files are located:</p>
-<pre><code><span class="regexp">/usr/</span>share<span class="regexp">/zoneinfo</span>
-</code></pre><p>Locate the timezone file name such as <code>Asia/Hong_Kong</code>:</p>
-<p>Change the time zone as root:</p>
-<pre><code><span class="input"><span class="prompt">echo 'Asia/Hong_Kong' &gt;</span> /etc/timezone </span>
-</code></pre><p>Configure time zone data:</p>
-<pre><code><span class="comment">dpkg</span><span class="literal">-</span><span class="comment">reconfigure</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">frontend</span> <span class="comment">noninteractive</span> <span class="comment">tzdata</span>
-</code></pre><p>Sync clock:</p>
-<pre><code>ntpdate pool.ntp<span class="preprocessor">.org</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -614,17 +632,17 @@ coffee&gt; .help
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>2</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>3</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -713,7 +731,7 @@ coffee&gt; .help
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>3</small></li>
+    <li><a href="/tags/array/">array</a><small>4</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -732,6 +750,8 @@ coffee&gt; .help
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
     <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
@@ -777,6 +797,8 @@ coffee&gt; .help
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/ca/">ca</a><small>1</small></li>
+  
     <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
@@ -784,6 +806,10 @@ coffee&gt; .help
     <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+  
+    <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
@@ -889,9 +915,9 @@ coffee&gt; .help
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+    <li><a href="/tags/debian/">debian</a><small>3</small></li>
   
-    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>2</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -1001,9 +1027,11 @@ coffee&gt; .help
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>3</small></li>
+    <li><a href="/tags/git/">git</a><small>4</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/git-tag/">git-tag</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitLab</a><small>0</small></li>
   
@@ -1093,7 +1121,7 @@ coffee&gt; .help
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>11</small></li>
+    <li><a href="/tags/install/">install</a><small>12</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1142,6 +1170,8 @@ coffee&gt; .help
     <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1210,6 +1240,8 @@ coffee&gt; .help
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
   
     <li><a href="/tags/nb/">nb</a><small>1</small></li>
   
@@ -1319,7 +1351,7 @@ coffee&gt; .help
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>2</small></li>
+    <li><a href="/tags/random/">random</a><small>3</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1418,6 +1450,8 @@ coffee&gt; .help
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/sort/">sort</a><small>2</small></li>
   
     <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
   
@@ -1561,7 +1595,9 @@ coffee&gt; .help
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>5</small></li>
+    <li><a href="/tags/version/">version</a><small>6</small></li>
+  
+    <li><a href="/tags/version-sort/">version-sort</a><small>1</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

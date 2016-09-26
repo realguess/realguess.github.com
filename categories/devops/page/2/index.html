@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Sep 7, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">Install Docker on Ubuntu Trusty 14.04</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Install <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> on <a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> Trusty 14.04 is fairly straightforward:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div><div class="line">$ <span class="keyword">exit</span></div></pre></td></tr></table></figure>
+
+<p>Log out, then log back in to verify the installation by running a sample container:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div></pre></td></tr></table></figure>
+
+<p>Done!</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-07T12:00:00.000Z"><a href="/2015/09/07/setup-development-environment-with-vagrant-on-google-compute-engine/">Sep 7, 2015</a></time>
       
       
@@ -412,17 +451,17 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>2</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>3</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -511,7 +550,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>3</small></li>
+    <li><a href="/tags/array/">array</a><small>4</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -530,6 +569,8 @@
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
     <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
@@ -575,6 +616,8 @@
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/ca/">ca</a><small>1</small></li>
+  
     <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
@@ -582,6 +625,10 @@
     <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+  
+    <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
@@ -687,9 +734,9 @@
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+    <li><a href="/tags/debian/">debian</a><small>3</small></li>
   
-    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>2</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -799,9 +846,11 @@
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>3</small></li>
+    <li><a href="/tags/git/">git</a><small>4</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/git-tag/">git-tag</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitLab</a><small>0</small></li>
   
@@ -891,7 +940,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>11</small></li>
+    <li><a href="/tags/install/">install</a><small>12</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -940,6 +989,8 @@
     <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1008,6 +1059,8 @@
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
   
     <li><a href="/tags/nb/">nb</a><small>1</small></li>
   
@@ -1117,7 +1170,7 @@
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>2</small></li>
+    <li><a href="/tags/random/">random</a><small>3</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1216,6 +1269,8 @@
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/sort/">sort</a><small>2</small></li>
   
     <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
   
@@ -1359,7 +1414,9 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>5</small></li>
+    <li><a href="/tags/version/">version</a><small>6</small></li>
+  
+    <li><a href="/tags/version-sort/">version-sort</a><small>1</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

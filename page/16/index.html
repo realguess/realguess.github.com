@@ -64,6 +64,129 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-06-02T23:53:52.000Z"><a href="/2013/06/02/source-maps-by-uglifyjs-2-with-new-prefix/">Jun 2, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/06/02/source-maps-by-uglifyjs-2-with-new-prefix/">Source Maps by UglifyJS 2 with New Prefix</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Living on the bleeding edge means more to learn. I was learning about creating source maps by using <a href="https://github.com/mishoo/UglifyJS2" target="_blank" rel="external">UglifyJS</a>. For some reason, the uncompressed JavaScript source codes were not able to load. After some <code>diff</code> with a working version from <a href="http://net.tutsplus.com/tutorials/tools-and-tips/source-maps-101/" target="_blank" rel="external">Source Maps 101</a>, the problem is just resulting of one character difference. With newly updated <a href="https://github.com/mishoo/UglifyJS2" target="_blank" rel="external">UglifyJS</a> v2.3.6, <a href="https://github.com/mishoo/UglifyJS2/commit/1dbffd48ea49ee278454d6b1c632b7ba4bbf1868" target="_blank" rel="external">SourceMapping pragma has changed to //#</a>:</p>
+<pre><code>//<span class="comment"># sourceMappingURL=script.uglify.js.map</span>
+</code></pre><p>but my Chrome browser lags behind. It recognizes source maps as <code>//@</code>:</p>
+<pre><code>//@ <span class="variable">sourceMappingURL=</span>script.uglify.js.<span class="built_in">map</span>
+</code></pre><p>I did not use the latest or dev build, the current Chrome browser I am using is yet to support <code>//#</code>. What I really need is <a href="http://www.paulirish.com/2012/chrome-canary-for-developers/" target="_blank" rel="external">Chrome Canary</a>. Unfortunately, it is not available for Linux :(.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-05-30T12:41:29.000Z"><a href="/2013/05/30/configure-grunt-contrib-jshint-options-with-multiple-targets/">May 30, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/05/30/configure-grunt-contrib-jshint-options-with-multiple-targets/">Configure grunt-contrib-jshint options with multiple targets</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When linting, different JSHint options are needed for front-end and back-end<br>JavaScript. We can specify different targets in <a href="https://github.com/gruntjs/grunt-contrib-jshint" target="_blank" rel="external">grunt-contrib-jshint</a>. But<br>there is something to be careful:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">jshint: {</div><div class="line">  <span class="comment">// Task level options</span></div><div class="line">  options: {</div><div class="line">    jshintrc: <span class="string">'./.jshintrc'</span></div><div class="line">  },</div><div class="line">  node: {</div><div class="line">    <span class="comment">// Target level options</span></div><div class="line">    options: {</div><div class="line">      node: <span class="literal">true</span></div><div class="line">    }</div><div class="line">  },</div><div class="line">  jquery: {</div><div class="line">    <span class="comment">// Target level options</span></div><div class="line">    options: {</div><div class="line">      globals: {</div><div class="line">        jQuery: <span class="literal">true</span></div><div class="line">      }</div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>I thought the target level options will merge with the task level, but it does<br>not happen. Need to dig deeper to figure out why <code>jshintrc</code> option is not merged<br>with JSHint options. A quick fix is to load the JSHint JSON file directly:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">jshint: {</div><div class="line">  <span class="comment">// Task level options</span></div><div class="line">  options: grunt.file.readJSON(<span class="string">'./.jshintrc'</span>),</div><div class="line">  node: {</div><div class="line">    <span class="comment">// Target level options</span></div><div class="line">    options: {</div><div class="line">      node: <span class="literal">true</span></div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>In this case, if <code>jshint:node</code> target was run, the merged options will be parsed<br>to JSHint.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2013-05-29T15:10:10.000Z"><a href="/2013/05/29/character-by-character-diff/">May 29, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/05/29/character-by-character-diff/">Character by Character Diff</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I have two very long JSON strings. In a glance, they are the same, but their<br>MD5 hashes are not. The <code>diff</code> tool is line based, but those two JSON strings<br>are single line without newline character. So, I really need a tool that can<br><code>diff</code> character by character instead of line by line and with highlighting.<br>What I have found is <code>vimdiff</code>.</p>
+<p>Must have <code>vim</code> installed not just <code>vi</code>:</p>
+<pre><code>The program 'vimdiff' can be found in the following packages:
+ <span class="keyword">*</span> vim
+ <span class="keyword">*</span> vim-gnome
+ <span class="keyword">*</span> vim-tiny
+ <span class="keyword">*</span> vim-athena
+ <span class="keyword">*</span> vim-gtk
+ <span class="keyword">*</span> vim-nox
+Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
+</code></pre><p>What I have found out by using <code>vimdiff</code> is that both JSON strings are the<br>same if converting to objects, but the ordering of properties are different,<br>which is very difficult to tell by eyeballing.</p>
+<p>References:</p>
+<ul>
+<li><a href="http://unix.stackexchange.com/questions/11128/diff-within-a-line" target="_blank" rel="external">http://unix.stackexchange.com/questions/11128/diff-within-a-line</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-05-25T18:26:38.000Z"><a href="/2013/05/25/hello-world/">May 25, 2013</a></time>
       
       
@@ -203,17 +326,17 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>2</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>3</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -302,7 +425,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>3</small></li>
+    <li><a href="/tags/array/">array</a><small>4</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -321,6 +444,8 @@
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
     <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
@@ -366,6 +491,8 @@
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/ca/">ca</a><small>1</small></li>
+  
     <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
@@ -373,6 +500,10 @@
     <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+  
+    <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
@@ -478,9 +609,9 @@
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+    <li><a href="/tags/debian/">debian</a><small>3</small></li>
   
-    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>2</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -590,9 +721,11 @@
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>3</small></li>
+    <li><a href="/tags/git/">git</a><small>4</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/git-tag/">git-tag</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitLab</a><small>0</small></li>
   
@@ -682,7 +815,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>11</small></li>
+    <li><a href="/tags/install/">install</a><small>12</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -731,6 +864,8 @@
     <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -799,6 +934,8 @@
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
   
     <li><a href="/tags/nb/">nb</a><small>1</small></li>
   
@@ -908,7 +1045,7 @@
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>2</small></li>
+    <li><a href="/tags/random/">random</a><small>3</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1007,6 +1144,8 @@
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/sort/">sort</a><small>2</small></li>
   
     <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
   
@@ -1150,7 +1289,9 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>5</small></li>
+    <li><a href="/tags/version/">version</a><small>6</small></li>
+  
+    <li><a href="/tags/version-sort/">version-sort</a><small>1</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

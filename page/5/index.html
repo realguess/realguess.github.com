@@ -64,6 +64,133 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-07-22T12:00:00.000Z"><a href="/2015/07/22/run-lodash-in-context-to-change-template-settings/">Jul 22, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/22/run-lodash-in-context-to-change-template-settings/">Run LoDash in Context to Change Template Settings</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://lodash.com/" target="_blank" rel="external">LoDash</a> has <code>_.template</code> function:</p>
+<blockquote>
+<p>Creates a compiled template function that can interpolate data properties in “interpolate” delimiters, HTML-escape interpolated data properties in “escape” delimiters, and execute JavaScript in “evaluate” delimiters. Data properties may be accessed as free variables in the template. If a setting object is provided it takes precedence over _.templateSettings values.</p>
+</blockquote>
+<p>The template settings affect the behavior of <a href="https://lodash.com/" target="_blank" rel="external">LoDash</a>, and due to Node’s <a href="https://nodejs.org/api/modules.html#modules_caching" target="_blank" rel="external">module caching</a>, this will affect the entire application. This will likely cause unexpected error, especially you are writing a module or a library, and the application that requires the module will also use LoDash but with a different template setting:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">SyntaxError: Unexpected token =</div></pre></td></tr></table></figure>
+
+<p>The rule of thumb: <strong>Don’t do it!</strong></p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/07/22/run-lodash-in-context-to-change-template-settings/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-07-17T12:00:00.000Z"><a href="/2015/07/17/use-custom-message-in-chai/">Jul 17, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/17/use-custom-message-in-chai/">Use Custom Message in Chai</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When running a test in a loop with <a href="http://mochajs.org/" target="_blank" rel="external">Mocha</a> and <a href="http://chaijs.com/" target="_blank" rel="external">Chai</a>, it might not be easy to pinpoint the element where the error occurred. For example:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, len = arr.length; i &lt; len; i += <span class="number">1</span>) {</div><div class="line">  expect(arr[i]).to.equal(<span class="literal">true</span>);</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Run the test:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ mocha --harmony test/message.js</div><div class="line"></div><div class="line"></div><div class="line">  Custom Message</div><div class="line">    <span class="number">1</span>) Should <span class="keyword">return</span> <span class="literal">true</span></div><div class="line"></div><div class="line"></div><div class="line">  <span class="number">0</span> passing (<span class="number">37</span>ms)</div><div class="line">  <span class="number">1</span> failing</div><div class="line"></div><div class="line">  <span class="number">1</span>) Custom Message Should <span class="keyword">return</span> <span class="literal">true</span>:</div><div class="line"></div><div class="line">      AssertionError: expected <span class="literal">false</span> to equal <span class="literal">true</span></div><div class="line">      + expected - actual</div><div class="line"></div><div class="line">      -false</div><div class="line">      +<span class="literal">true</span></div><div class="line"></div><div class="line">      at Context.&lt;anonymous&gt; (test/message.js:<span class="number">16</span>:<span class="number">25</span>)</div></pre></td></tr></table></figure>
+
+<p>It failed on the <code>expect</code> statement, but the error message does not show which element is in error.</p>
+<p>Instead, we can add a custom message to the <code>expect</code> statement:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>, len = arr.length; i &lt; len; i += <span class="number">1</span>) {</div><div class="line">  expect(arr[i], <span class="string">'i = '</span> + i).to.equal(<span class="literal">true</span>);</div><div class="line">}</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/07/17/use-custom-message-in-chai/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-07-11T12:00:00.000Z"><a href="/2015/07/11/what-is-the-this-binding-in-async-seq-and-compose-functions/">Jul 11, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/11/what-is-the-this-binding-in-async-seq-and-compose-functions/">What is the &#39;this&#39; Binding in Async &#39;seq&#39; and &#39;compose&#39; Functions?</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>TLDR: <code>global</code></p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/07/11/what-is-the-this-binding-in-async-seq-and-compose-functions/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-07-06T12:00:00.000Z"><a href="/2015/07/06/fields-in-package-json-for-private-and-unlicensed-modules/">Jul 6, 2015</a></time>
       
       
@@ -374,142 +501,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-03-28T12:00:00.000Z"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Mar 28, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Locate HTTP Port Number from http.Server Instance</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>This is a bare minimal HTTP server:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer().listen(port);</div></pre></td></tr></table></figure>
-
-<p>If the <code>port</code> number is evaluated to be <em>falsy</em>, such as <code>0</code>, <code>null</code>, <code>undefined</code> or an empty string, a random port will be assigned.</p>
-<blockquote>
-<p>Begin accepting connections on the specified <code>port</code> and <code>hostname</code>. If the <code>hostname</code> is omitted, the server will accept connections on any IPv6 address (::) when IPv6 is available, or any IPv4 address (0.0.0.0) otherwise. <strong>A port value of zero will assign a random port.</strong> - <a href="https://iojs.org/api/http.html#http_server_listen_port_hostname_backlog_callback" target="_blank" rel="external">https://iojs.org/api/http.html#http_server_listen_port_hostname_backlog_callback</a></p>
-</blockquote>
-<p>We can use command line tool such as <code>netstat</code> to find out the port number:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ netstat -ltpn | grep node</div><div class="line">tcp6     <span class="number">0</span>    <span class="number">0</span> :::<span class="number">44055</span>             :::*            LISTEN      <span class="number">5624</span>/node</div></pre></td></tr></table></figure>
-
-<p>However, it will be very convenient without relying on external tools.</p>
-<p>Luckily, we can find out the port number by using the <code>address</code> method:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer().listen().address()</div></pre></td></tr></table></figure>
-
-<p>The result will be similar to:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">{ address: <span class="string">'::'</span>, family: <span class="string">'IPv6'</span>, port: <span class="number">44055</span> }</div></pre></td></tr></table></figure>
-
-<p>Furthermore, it works with all popular libraries that create an <code>http.Server</code> instance:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/03/28/locate-http-port-number-from-http-server-instance/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-03-18T12:00:00.000Z"><a href="/2015/03/18/use-array-of-middleware-in-koa-router/">Mar 18, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/03/18/use-array-of-middleware-in-koa-router/">Use Array of Middleware in Koa Router</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://github.com/alexmingoia/koa-router" target="_blank" rel="external">Koa Router</a> <em>v4.2</em> does not support an array of middleware, multiple middleware must be entered one by one:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.get(<span class="string">'/foo'</span>, middleware1, middleware2);</div></pre></td></tr></table></figure>
-
-<p>Using an array is much cleaner than multiple arguments.</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.get(<span class="string">'/foo'</span>, [middleware1, middleware2]);</div></pre></td></tr></table></figure>
-
-<p>But the above will throw error:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Error: GET: `middleware` must be a function, not `object`</div></pre></td></tr></table></figure>
-
-<p>This can be easily fixed by using <a href="https://github.com/koajs/compose" target="_blank" rel="external">Koa Compose</a>:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> app = <span class="built_in">require</span>(<span class="string">'koa'</span>)();</div><div class="line"><span class="keyword">var</span> router = <span class="built_in">require</span>(<span class="string">'koa-router'</span>);</div><div class="line"><span class="keyword">var</span> compose = <span class="built_in">require</span>(<span class="string">'koa-compose'</span>);</div><div class="line"></div><div class="line">app.use(router(app));</div><div class="line"></div><div class="line">app.get(<span class="string">'/foo'</span>, compose([</div><div class="line">  <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">    <span class="keyword">this</span>.body = {};</div><div class="line">    <span class="keyword">yield</span> next;</div><div class="line">  },</div><div class="line">  <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">    <span class="keyword">this</span>.body.foo = <span class="string">'foo'</span>;</div><div class="line">    <span class="keyword">yield</span> next;</div><div class="line">  },</div><div class="line">  <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">    <span class="keyword">this</span>.body.bar = <span class="string">'bar'</span>;</div><div class="line">    <span class="keyword">yield</span> next;</div><div class="line">  }</div><div class="line">]));</div></pre></td></tr></table></figure>
-
-<p>Hence:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.get(<span class="string">'/foo'</span>, compose([middleware1, middleware2]));</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-03-15T12:00:00.000Z"><a href="/2015/03/15/several-cli-ways-to-find-out-your-public-ip-address/">Mar 15, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/03/15/several-cli-ways-to-find-out-your-public-ip-address/">Several CLI Ways to Find Out Your Public IP Address</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Need to know your public IP address? Use one of the following:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span> checkip.amazonaws.com</div><div class="line">$ curl <span class="operator">-s</span> ipinfo.io/ip</div><div class="line">$ curl <span class="operator">-s</span> www.trackip.net/ip</div><div class="line">$ curl <span class="operator">-s</span> whatsmyip.me</div><div class="line">$ curl <span class="operator">-s</span> whatismyip.akamai.com</div><div class="line">$ curl <span class="operator">-s</span> icanhazip.com</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -535,17 +526,17 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>2</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>3</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -634,7 +625,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>3</small></li>
+    <li><a href="/tags/array/">array</a><small>4</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -653,6 +644,8 @@
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
     <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
@@ -698,6 +691,8 @@
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/ca/">ca</a><small>1</small></li>
+  
     <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
@@ -705,6 +700,10 @@
     <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+  
+    <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
@@ -810,9 +809,9 @@
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+    <li><a href="/tags/debian/">debian</a><small>3</small></li>
   
-    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>2</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -922,9 +921,11 @@
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>3</small></li>
+    <li><a href="/tags/git/">git</a><small>4</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/git-tag/">git-tag</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitLab</a><small>0</small></li>
   
@@ -1014,7 +1015,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>11</small></li>
+    <li><a href="/tags/install/">install</a><small>12</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1063,6 +1064,8 @@
     <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1131,6 +1134,8 @@
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
   
     <li><a href="/tags/nb/">nb</a><small>1</small></li>
   
@@ -1240,7 +1245,7 @@
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>2</small></li>
+    <li><a href="/tags/random/">random</a><small>3</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1339,6 +1344,8 @@
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/sort/">sort</a><small>2</small></li>
   
     <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
   
@@ -1482,7 +1489,9 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>5</small></li>
+    <li><a href="/tags/version/">version</a><small>6</small></li>
+  
+    <li><a href="/tags/version-sort/">version-sort</a><small>1</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   

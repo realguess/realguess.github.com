@@ -68,6 +68,186 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-07-29T12:00:00.000Z"><a href="/2016/07/29/escaping-in-json-with-backslash/">Jul 29, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/29/escaping-in-json-with-backslash/">Escaping in JSON with Backslash</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <blockquote>
+<p>Escape characters are part of the syntax for many programming languages, <em>data formats</em>, and communication protocols. For a given alphabet an escape character’s purpose is to start character sequences (so named escape sequences), which have to be interpreted differently from the same characters occurring without the prefixed escape character.[^2]</p>
+</blockquote>
+<p>JSON or JavaScript Object Notation is a <em>data interchange format</em>. It has an escape character as well.</p>
+<blockquote>
+<p>In many programming languages such as C, Perl, and PHP and in Unix scripting languages, the backslash is an escape character, used to indicate that the character following it should be treated specially (if it would otherwise be treated normally), or normally (if it would otherwise be treated specially).[^3]</p>
+</blockquote>
+<p>JavaScript also uses backslash as an escape character. JSON is based on a subset of the JavaScript Programming Language, therefore, JSON also uses backslash as the escape character:</p>
+<blockquote>
+<p>A string is a sequence of zero or more Unicode characters, wrapped in double quotes, using backslash escapes.[^1]</p>
+</blockquote>
+<p>A character can be:</p>
+<ul>
+<li>Any Unicode character except <code>&quot;</code> or <code>\</code> or control character</li>
+<li><code>\&quot;</code></li>
+<li><code>\\</code></li>
+<li><code>\/</code></li>
+<li><code>\b</code></li>
+<li><code>\f</code></li>
+<li><code>\n</code></li>
+<li><code>\r</code></li>
+<li><code>\t</code></li>
+<li><code>\u</code> + four-hex-digits</li>
+</ul>
+<p>Only a few characters can be escaped in JSON. If the character is not one of the listed:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cat <span class="typedef"><span class="keyword">data</span>.json</span></div><div class="line"><span class="string">"\a"</span></div></pre></td></tr></table></figure>
+
+<p>it returns a <code>SyntaxError</code>[^4]:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>node -e <span class="string">'console.log(require("./data.json"))'</span></div><div class="line"><span class="class"><span class="keyword">module</span>.<span class="title">js</span>:561</span></div><div class="line">    throw err;</div><div class="line">    ^</div><div class="line"></div><div class="line"><span class="constant">SyntaxError</span><span class="symbol">:</span> /home/chao/tmp/js/data.<span class="symbol">json:</span> <span class="constant">Unexpected</span> token a <span class="keyword">in</span> <span class="constant">JSON</span> at position <span class="number">2</span></div><div class="line">    at <span class="constant">Object</span>.parse (native)</div><div class="line">    at <span class="constant">Object</span>.<span class="constant">Module</span>._extensions..json (<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:558:27)</span></div><div class="line">    at <span class="constant">Module</span>.load (<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:458:32)</span></div><div class="line">    at tryModuleLoad (<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:417:12)</span></div><div class="line">    at <span class="constant">Function</span>.<span class="constant">Module</span>._load (<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:409:3)</span></div><div class="line">    at <span class="constant">Module</span>.<span class="keyword">require</span> (<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:468:17)</span></div><div class="line">    at <span class="keyword">require</span> (internal/<span class="class"><span class="keyword">module</span>.<span class="title">js</span>:20:19)</span></div><div class="line">    at [eval]<span class="symbol">:</span><span class="number">1</span><span class="symbol">:</span><span class="number">13</span></div><div class="line">    at <span class="constant">ContextifyScript</span>.<span class="constant">Script</span>.runInThisContext (vm.<span class="symbol">js:</span><span class="number">25</span><span class="symbol">:</span><span class="number">33</span>)</div><div class="line">    at <span class="constant">Object</span>.exports.runInThisContext (vm.<span class="symbol">js:</span><span class="number">77</span><span class="symbol">:</span><span class="number">17</span>)</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/07/29/escaping-in-json-with-backslash/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-07-18T12:00:00.000Z"><a href="/2016/07/18/getting-the-version-of-the-latest-release/">Jul 18, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/18/getting-the-version-of-the-latest-release/">Getting the Version of the Latest Release</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>What’s the latest release of <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a>?</p>
+<p>Its homepage doesn’t tell you anything. Have to poke around, click on a few links, may or may not get you what you want. If there’s a quick way, even better a CLI method, that will be great.</p>
+<p>Couple things we can do. First, when <a href="/2015/09/07/install-docker-on-ubuntu-trusty-14-04/">installing docker</a>, we use the URL <a href="https://get.docker.com/" target="_blank" rel="external">https://get.docker.com/</a>. It has a path that will return an installation instruction with the version number:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ curl https://get.docker.com/builds/</div><div class="line"># To <span class="operator"><span class="keyword">install</span>, run the following command <span class="keyword">as</span> root:</span></div><div class="line">curl -sSL -O https://<span class="keyword">get</span>.docker.com/builds/Linux/x86_64/docker-<span class="number">1.11</span><span class="number">.2</span>.tgz && sudo tar zxf docker-<span class="number">1.11</span><span class="number">.2</span>.tgz -C /</div><div class="line"># <span class="keyword">Then</span> <span class="keyword">start</span> docker <span class="keyword">in</span> daemon <span class="keyword">mode</span>:</div><div class="line">sudo /usr/<span class="keyword">local</span>/<span class="keyword">bin</span>/docker daemon</div></pre></td></tr></table></figure>
+
+<p>There is another way. <em>Well, there is always another way.</em> Docker project is hosted in <a href="https://github.com/" target="_blank" rel="external">GitHub</a>, we can use this URL:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http<span class="variable">s:</span>//github.<span class="keyword">com</span>/docker/docker/releases/latest</div></pre></td></tr></table></figure>
+
+<p>which will be redirected to the latest release:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">http<span class="variable">s:</span>//github.<span class="keyword">com</span>/docker/docker/releases/<span class="keyword">tag</span>/v1.<span class="number">11.2</span></div></pre></td></tr></table></figure>
+
+<p>Since it’s a redirect, we can use <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank" rel="external">HTTP HEAD</a> method without download the entire response body:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ curl --silent --head https://github.com/docker/docker/releases/latest</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">302</span> Found</div><div class="line"><span class="label">Server:</span> GitHub.com</div><div class="line">Content-Type: text/html<span class="comment">; charset=utf-8</span></div><div class="line"><span class="label">Status:</span> <span class="number">302</span> Found</div><div class="line">Cache-Control: no-cache</div><div class="line"><span class="label">Vary:</span> <span class="built_in">X</span>-PJAX</div><div class="line"><span class="label">Location:</span> https://github.com/docker/docker/releases/tag/v1<span class="number">.11</span><span class="number">.2</span></div><div class="line"><span class="label">Vary:</span> Accept-Encoding</div></pre></td></tr></table></figure>
+
+<p>Extract and process the value of the <code>Location</code> field will get us what we are looking for.</p>
+<p>Let’s construct a simple command to obtain such an information:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ curl                                                       \</div><div class="line">    -<span class="ruby">-silent                                                 \</span></div><div class="line">    -<span class="ruby">-head                                                   \</span></div><div class="line">    -<span class="ruby">-url <span class="symbol">https:</span>/<span class="regexp">/github.com/docker</span><span class="regexp">/docker/releases</span><span class="regexp">/latest | \</span></span></div><div class="line">  grep                                                       \</div><div class="line">    -<span class="ruby">-regexp=^<span class="constant">Location</span>                                     | \</span></div><div class="line">  cut                                                        \</div><div class="line">    -<span class="ruby">-delimiter=<span class="regexp">/                                            \</span></span></div><div class="line">    -<span class="ruby">-fields=<span class="number">8</span></span></div></pre></td></tr></table></figure>
+
+<p>or:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>curl -sI <span class="symbol">https:</span>/<span class="regexp">/github.com/docker</span><span class="regexp">/docker/releases</span><span class="regexp">/latest | \</span></div><div class="line">    grep ^Location | \</div><div class="line">    cut -d / -f <span class="number">8</span></div></pre></td></tr></table></figure>
+
+<p>Both commands will return <code>v1.11.2</code>.</p>
+<p>By using GitHub, not only we can get the latest stable release version of Docker, we can also obtain other projects. In fact, if the project was hosted in GitHub, and it was tagged properly with the releases, you can use this method to obtain the version. However, if it’s not properly tagged, such as <a href="https://github.com/nodejs/node" target="_blank" rel="external">Node.js</a>, you need to find another way.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/07/18/getting-the-version-of-the-latest-release/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Jul 5, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Node.js Installation Methods July 2016 Edition</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Follow up with the <a href="https://realguess.net/2015/09/02/various-node-js-installation-methods/" target="_blank" rel="external">previous blog</a> on various methods to install <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a>, here is the updated one with Node.js v4.x and v6.x versions.</p>
+<p>Install Node.js v4.x via <a href="https://nodesource.com/" target="_blank" rel="external">NodeSource</a>[^1] setup script:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_4.<span class="keyword">x</span> | sudo -E bash -</div><div class="line">$ sudo apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
+
+<p><code>sudo -E</code> option indicates to the security policy that the user wishes to preserve their existing environment variables[^2].</p>
+<p>With <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> and <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a>, <code>sudo</code> should be removed, because root:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RUN curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_4.<span class="keyword">x</span> | bash - && \</div><div class="line">    apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
+
+<p>Install Node.js v6.x via the same method:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_6.<span class="keyword">x</span> | sudo -E bash -</div><div class="line">$ sudo apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
+
+<p>The above installation method has been tested on:</p>
+<ul>
+<li>Debian 8.5</li>
+<li>Node.js v4.4.7 and v6.2.2</li>
+</ul>
+<p>In summary, the methods to install Node.js covered are:</p>
+<ul>
+<li>Package manager</li>
+<li>Nodesource script</li>
+<li>From the source</li>
+</ul>
+<p>[^1]: NodeSource provides <a href="https://github.com/nodesource/distributions" target="_blank" rel="external">binary distribution setup and support scripts</a>.<br>[^2]: See <code>man sudo</code>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-v4-x-http-server-one-liner/">Jul 5, 2016</a></time>
       
       
@@ -219,17 +399,17 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>8</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>2</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>3</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>16</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -318,7 +498,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>3</small></li>
+    <li><a href="/tags/array/">array</a><small>4</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -337,6 +517,8 @@
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
     <li><a href="/tags/backslash/">backslash</a><small>1</small></li>
   
@@ -382,6 +564,8 @@
   
     <li><a href="/tags/byobu/">byobu</a><small>1</small></li>
   
+    <li><a href="/tags/ca/">ca</a><small>1</small></li>
+  
     <li><a href="/tags/caddy/">caddy</a><small>1</small></li>
   
     <li><a href="/tags/caret/">caret</a><small>1</small></li>
@@ -389,6 +573,10 @@
     <li><a href="/tags/caret-range/">caret-range</a><small>1</small></li>
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
+  
+    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+  
+    <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
     <li><a href="/tags/chai/">chai</a><small>1</small></li>
   
@@ -494,9 +682,9 @@
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
-    <li><a href="/tags/debian/">debian</a><small>2</small></li>
+    <li><a href="/tags/debian/">debian</a><small>3</small></li>
   
-    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>1</small></li>
+    <li><a href="/tags/debian-jessie/">debian-jessie</a><small>2</small></li>
   
     <li><a href="/tags/december/">december</a><small>1</small></li>
   
@@ -606,9 +794,11 @@
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>3</small></li>
+    <li><a href="/tags/git/">git</a><small>4</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
+  
+    <li><a href="/tags/git-tag/">git-tag</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitLab</a><small>0</small></li>
   
@@ -698,7 +888,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>11</small></li>
+    <li><a href="/tags/install/">install</a><small>12</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -747,6 +937,8 @@
     <li><a href="/tags/lean-startup/">lean-startup</a><small>1</small></li>
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
+  
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -815,6 +1007,8 @@
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
+  
+    <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
   
     <li><a href="/tags/nb/">nb</a><small>1</small></li>
   
@@ -924,7 +1118,7 @@
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>2</small></li>
+    <li><a href="/tags/random/">random</a><small>3</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1023,6 +1217,8 @@
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
+  
+    <li><a href="/tags/sort/">sort</a><small>2</small></li>
   
     <li><a href="/tags/source-maps/">source-maps</a><small>1</small></li>
   
@@ -1166,7 +1362,9 @@
   
     <li><a href="/tags/validation/">validation</a><small>1</small></li>
   
-    <li><a href="/tags/version/">version</a><small>5</small></li>
+    <li><a href="/tags/version/">version</a><small>6</small></li>
+  
+    <li><a href="/tags/version-sort/">version-sort</a><small>1</small></li>
   
     <li><a href="/tags/video/">video</a><small>1</small></li>
   
