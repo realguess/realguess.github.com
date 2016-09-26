@@ -68,6 +68,63 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-03-29T12:00:00.000Z"><a href="/2015/03/29/supertest-listen-at-random-port/">Mar 29, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/29/supertest-listen-at-random-port/">SuperTest: Listen at Random Port</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In the example section of <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> (<em>v0.15.0</em>), it mentions something about <em>ephemeral port</em>:</p>
+<blockquote>
+<p>You may pass an <code>http.Server</code>, or a <code>Function</code> to <code>request()</code> - if the server is not already listening for connections then it is bound to an ephemeral port for you so there is no need to keep track of ports. - <a href="https://github.com/visionmedia/supertest#example" target="_blank" rel="external">https://github.com/visionmedia/supertest#example</a></p>
+</blockquote>
+<p>Let’s dissect this sentence. There are a few key concepts to grasp:</p>
+<ol>
+<li>The <code>request</code> function will accept either a function or an <code>http.Server</code> object.</li>
+<li>When does the server not listening for connections?</li>
+<li>What is an ephemeral port?</li>
+</ol>
+<p>Taking a peek at the <code>index.js</code> file in <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> source code, it is easy to see that it accepts both function and <code>http.Server</code> object, but prefer latter:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// See `index.js` in [SuperTest] source code.</span></div><div class="line"><span class="keyword">if</span> (<span class="string">'function'</span> == <span class="keyword">typeof</span> app) app = http.createServer(app);</div><div class="line"></div><div class="line"><span class="comment">// See `lib/test.js` in [SuperTest] source code.</span></div><div class="line">Test.prototype.serverAddress = <span class="function"><span class="keyword">function</span> <span class="params">(app, path)</span> </span>{</div><div class="line">  <span class="keyword">var</span> addr = app.address();</div><div class="line">  <span class="keyword">if</span> (!addr) <span class="keyword">this</span>._server = app.listen(<span class="number">0</span>);</div><div class="line">  <span class="keyword">var</span> port = app.address().port;</div><div class="line">  <span class="keyword">var</span> protocol = app <span class="keyword">instanceof</span> htts.Server ? <span class="string">'https'</span> : <span class="string">'http'</span>;</div><div class="line">  <span class="keyword">return</span> protocol + <span class="string">'://1270.0.0.1:'</span> + port + path;</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Why it does this? This has to do with <a href="http://expressjs.com/" target="_blank" rel="external">Express</a>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'http'</span>).createServer()</div><div class="line"><span class="string">'object'</span></div><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'express'</span>)()</div><div class="line"><span class="string">'function'</span></div><div class="line">&gt; <span class="keyword">typeof</span> <span class="built_in">require</span>(<span class="string">'koa'</span>)()</div><div class="line"><span class="string">'object'</span></div><div class="line">&gt; <span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="built_in">require</span>(<span class="string">'express'</span>)()).address()</div><div class="line"><span class="literal">null</span></div></pre></td></tr></table></figure>
+
+<p>Only when initiating an <a href="http://expressjs.com/" target="_blank" rel="external">Express</a> app, it returns a function, not an object. And follows up on <code>lib/test.js</code>, when <a href="https://github.com/visionmedia/supertest" target="_blank" rel="external">SuperTest</a> detects the created server is yet to bind to any port number, it will invoke <code>app.listen(0)</code>, so called <em>ephemeral port</em>. In fact, it is just a random port.</p>
+<p>When something is <em>ephemeral</em>, it last for a very short time. When allowing a server to accept connections, we usually do is setting the server to listen on a specific port:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">app.listen(<span class="number">3001</span>);</div></pre></td></tr></table></figure>
+
+<p>What if setting this to <code>0</code> like above or omit this port number?</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/03/29/supertest-listen-at-random-port/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-03-28T12:00:00.000Z"><a href="/2015/03/28/locate-http-port-number-from-http-server-instance/">Mar 28, 2015</a></time>
       
       
@@ -458,52 +515,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-02-07T12:00:00.000Z"><a href="/2015/02/07/launch-byobu-automatically-on-vagrant-ssh/">Feb 7, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/02/07/launch-byobu-automatically-on-vagrant-ssh/">Launch Byobu Automatically on Vagrant SSH</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I can <a href="/2014/12/10/use-ssh-directly-instead-of-vagrant-ssh-command/">use SSH directly instead of Vagrant SSH command</a> for interactive programs such as <code>top</code> or running <code>tmux</code> sessions. But I frequently just want to run <a href="http://tmux.sourceforge.net/" target="_blank" rel="external">Tmux</a> or <a href="http://byobu.co/" target="_blank" rel="external">Byobu</a> upon login. I can do:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh -F ssh-config vagrant -t byobu</div></pre></td></tr></table></figure>
-
-<p>But still too much trouble to go through all SSH configuration steps. So, I ended up with two-step process:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh</div></pre></td></tr></table></figure>
-
-<p>Now inside the guest machine, I immediately type:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ byobu</div></pre></td></tr></table></figure>
-
-<p>To bring up new Tmux session or attach existing sessions.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/02/07/launch-byobu-automatically-on-vagrant-ssh/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -540,7 +551,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -705,7 +716,7 @@
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -911,7 +922,7 @@
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gae/">gae</a><small>1</small></li>
+    <li><a href="/tags/gae/">gae</a><small>2</small></li>
   
     <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
@@ -948,6 +959,8 @@
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-app-engine/">google-app-engine</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
@@ -1019,7 +1032,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>12</small></li>
+    <li><a href="/tags/install/">install</a><small>13</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1069,7 +1082,7 @@
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1149,7 +1162,7 @@
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
-    <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
+    <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
     <li><a href="/tags/node/">node</a><small>28</small></li>
   
@@ -1362,6 +1375,8 @@
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

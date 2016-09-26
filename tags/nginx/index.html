@@ -68,6 +68,60 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-09-26T12:00:00.000Z"><a href="/2016/09/26/installing-let-s-encrypt-ssl-certificate-on-google-app-engine-using-certbot/">Sep 26, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/09/26/installing-let-s-encrypt-ssl-certificate-on-google-app-engine-using-certbot/">Installing Let&#39;s Encrypt SSL Certificate on Google App Engine Using Certbot</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://letsencrypt.org/" target="_blank" rel="external">Let’s Encrypt</a> is a free, open, and automated certificate authority. And its <a href="https://certbot.eff.org/" target="_blank" rel="external">Certbot</a> is a fully-featured, extensible client for Let’s Encrypt CA that can automate the tasks of getting, renewing and even installing SSL certificates.</p>
+<p>Sounds great! However, not yet to be simple and automated, especially working cloud providers such as <a href="https://cloud.google.com/" target="_blank" rel="external">Google Cloud Platform</a> and its <a href="https://appengine.google.com/" target="_blank" rel="external">Google App Engine</a> or GAE.</p>
+<p><em>But it’s free. Yes, it’s free. Free software works better. Free certificate authority works better than others.</em></p>
+<p>GAE is a managed service. The place to stored SSL certificate is in separate machines (load balancers). The current automated domain validation by Certbot mostly work with a single machine. Therefore, when the machine issues certificate request is not the same machine to be validated, we need find another way, hopefully an automated method to perform domain validation across machines.</p>
+<p>Before creating an automated method, let’s see if we can do it manually. Certbot supports a number of different plugins that can be used to obtain and/or install certificates. A plugin is like an extension that supports a particular web server. Let’s see if we can find a plugin that supports GAE.</p>
+<p>Here are some supported by Certbot:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">$ certbot --help plugins</div><div class="line"></div><div class="line">plugins:</div><div class="line">  Certbot client supports an extensible plugins architecture. See 'certbot</div><div class="line">  plugins' for a list of all installed plugins and their names. You can</div><div class="line">  force a particular plugin by setting options provided below. Running</div><div class="line">  --help <plugin_name> will list flags specific to that plugin.</plugin_name></div><div class="line"></div><div class="line">  --apache              Obtain and install certs using Apache (default: False)</div><div class="line">  --nginx               Obtain and install certs using Nginx (default: False)</div><div class="line">  --standalone          Obtain certs using a "standalone" webserver. (default:</div><div class="line">                        False)</div><div class="line">  --manual              Provide laborious manual instructions for obtaining a</div><div class="line">                        cert (default: False)</div><div class="line">  --webroot             Obtain certs by placing files in a webroot directory.</div><div class="line">                        (default: False)</div></pre></td></tr></table></figure>
+
+<p>And there are also a number of third-party plugins, see the User Guide in <a href="https://certbot.eff.org/docs" target="_blank" rel="external">Certbot Documentation</a>. But there is none for GAE. It looks like there are only three possible options to try: standalone, webroot and manual.</p>
+<p>Let’s start with the standalone method, and issue that from the local machine:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo certbot certonly --standalone -d example.com</div></pre></td></tr></table></figure>
+
+<p>If you’re the first time running the command, you will be prompted for email and agreement screens. Both email and agreement can be <em>automated</em> via <code>--email</code> and <code>--agree-tos</code> options. That’s the <em>automated</em> part.</p>
+<p>After freeing up the ports 80 and 443, run into some issues:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">Failed authorization procedure. example.com (tls-sni-01): urn:acme:error:connection </div><div class="line">:: The server could not connect to the client to verify the domain :: Failed to </div><div class="line">connect to 0.0.0.0:443 for TLS-SNI-01 challenge, example.com (tls-sni-01): </div><div class="line">urn:acme:error:connection :: The server could not connect to the client to verify the </div><div class="line">domain :: Failed to connect to 0.0.0.0:443 for TLS-SNI-01 challenge</div><div class="line"></div><div class="line">IMPORTANT NOTES:</div><div class="line"> - The following errors were reported by the server:</div><div class="line"></div><div class="line">   Domain: example.com</div><div class="line">   Type:   connection</div><div class="line">   Detail: Failed to connect to 0.0.0.0:443 for TLS-SNI-01</div><div class="line">   challenge</div><div class="line"></div><div class="line">   To fix these errors, please make sure that your domain name was</div><div class="line">   entered correctly and the DNS A record(s) for that domain</div><div class="line">   contain(s) the right IP address. Additionally, please check that</div><div class="line">   your computer has a publicly routable IP address and that no</div><div class="line">   firewalls are preventing the server from communicating with the</div><div class="line">   client. If you're using the webroot plugin, you should also verify</div><div class="line">   that you are serving files from the webroot path you provided.</div></pre></td></tr></table></figure>
+
+<p>The standalone plugin runs its own simple web server to prove that you control the domain. Ownership or domain validation is the key here. It needs the current computer that just issued the <code>certbot</code> command to have a publicly routable IP address. That’s not going to be happening in my local computer behind NAT. And webroot plugin needs a running web server. It can’t be run from the local machine as well. Domain validation are done automatically with both <code>standalone</code> and <code>webroot</code> plugins. Furthermore, domain validation requests are coming from Let’s Encrypt servers, therefore, you can’t have the machine issuing the certificate request behind a NAT or load balancing methods without properly routing the requests.</p>
+<p>Since automated methods mostly require the requester and domain owner to be residing on the same machine, we can try to move the request to the Google cloud. Otherwise, there is one more plugin to try, the manual plugin. The manual method (plugin) <em>helps you obtain a cert by giving you instructions to perform domain validation yourself</em>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/09/26/installing-let-s-encrypt-ssl-certificate-on-google-app-engine-using-certbot/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-06-25T12:00:00.000Z"><a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/">Jun 25, 2015</a></time>
       
       
@@ -207,7 +261,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -372,7 +426,7 @@
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -578,7 +632,7 @@
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gae/">gae</a><small>1</small></li>
+    <li><a href="/tags/gae/">gae</a><small>2</small></li>
   
     <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
@@ -615,6 +669,8 @@
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-app-engine/">google-app-engine</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
@@ -686,7 +742,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>12</small></li>
+    <li><a href="/tags/install/">install</a><small>13</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -736,7 +792,7 @@
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -816,7 +872,7 @@
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
-    <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
+    <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
     <li><a href="/tags/node/">node</a><small>28</small></li>
   
@@ -1029,6 +1085,8 @@
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

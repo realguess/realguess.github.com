@@ -64,6 +64,97 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-03-29T10:44:53.000Z"><a href="/2014/03/29/amazon-aws-command-line-interface-cli/">Mar 29, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/29/amazon-aws-command-line-interface-cli/">Amazon AWS Command Line Interface (CLI)</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>This is a brief guide for installing <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS Command Line Interface (CLI)</a> on Ubuntu Linux.</p>
+<blockquote>
+<p>The AWS Command Line Interface (CLI)] is a unified tool to manage your AWS services. With just one tool to download and configure, you can control multiple AWS services from the command line and automate them through scripts. [2]</p>
+</blockquote>
+<p>The point here is <strong>unified</strong>, one tool to run all Amazon AWS services.</p>
+<h2 id="Install">Install</h2>
+<p><em>The installation procedure applies to Ubuntu Linux with Zsh and Bash.</em></p>
+<p>Install <a href="http://www.pip-installer.org/en/latest/" target="_blank" rel="external">pip</a>, a Python package manager:</p>
+<pre><code>$ sudo apt-<span class="built_in">get</span> install <span class="keyword">python</span>-pip
+</code></pre><p>Install <em>awscli</em>:</p>
+<pre><code>$ <span class="built_in">sudo</span> pip install awscli
+</code></pre><p>Install autocompletion:</p>
+<pre><code>$ which aws_zsh_completer.<span class="keyword">sh</span>
+/usr/local/bin/aws_zsh_completer.<span class="keyword">sh</span>
+$ <span class="keyword">source</span> aws_zsh_completer.<span class="keyword">sh</span>
+</code></pre><p>Add this line to <code>~/.zshrc</code> as well.</p>
+<p>Or for Bash <code>~/.bashrc</code>:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">'\n# Enable AWS CLI autocompletion'</span> &gt;&gt; ~/.bashrc
+$ <span class="built_in">echo</span> <span class="string">'complete -C aws_completer aws'</span> &gt;&gt; ~/.bashrc
+$ <span class="built_in">source</span> ~/.bashrc
+</code></pre><p>Test installation:</p>
+<pre><code><span class="variable">$ </span>which aws
+/usr/local/bin/aws
+<span class="variable">$ </span>aws help
+</code></pre><p>Test autocompletion:</p>
+<pre><code>$ aws &lt;<span class="keyword">tab</span>&gt;&lt;<span class="keyword">tab</span>&gt;
+</code></pre><p>You should see a list of all available AWS commands.</p>
+<h2 id="Usage">Usage</h2>
+<p>Before using aws-cli, you need to tell it about your AWS credentials. There are three ways to specify AWS credentials:</p>
+<ol>
+<li>Environment variables</li>
+<li>Config file</li>
+<li>IAM Role</li>
+</ol>
+<p>Using config file is preferred, which is a simple <a href="http://en.wikipedia.org/wiki/INI_file" target="_blank" rel="external">ini</a> file format to be stored in <code>~/.aws/config</code>. A soft link can be used to link it or just tell awscli where to find it:</p>
+<pre><code><span class="variable">$ </span>export <span class="constant">AWS_CONFIG_FILE</span>=<span class="regexp">/path/to</span><span class="regexp">/config_file</span>
+</code></pre><p>It is better to use IAM roles with any of the AWS services:</p>
+<blockquote>
+<p>The final option for credentials is highly recommended if you are using aws-cli on an EC2 instance. IAM Roles are a great way to have credentials installed automatically on your instance. If you are using IAM Roles, aws-cli will find them and use them automatically. [4]</p>
+</blockquote>
+<p>The default output is in JSON format. Other formats are tab-delimited text and ASCII-formatted table. For example, using <code>--query</code> filter and table output:</p>
+<pre><code><span class="formula">$ aws ec2 describe-instances --query 'Reservations<span class="special">[</span>*<span class="special">]</span>.Instances<span class="special">[</span>*<span class="special">]</span>.<span class="special">{</span> <span class="command">\
+</span>  ID:InstanceId, TYPE:InstanceType, ZONE:Placement.AvailabilityZone, <span class="command">\
+</span>  SECURITY:SecurityGroups<span class="special">[</span>0<span class="special">]</span>.GroupId, KEY:KeyName, VPC:VpcId, <span class="command">\
+</span>  STATE:State.Name<span class="special">}</span>' --output table</span>
+</code></pre><p>This will print a nice looking table of all EC2 instances.</p>
+<p>The command line options also accept JSON format. But when passing in large blocks of data, referring a JSON file is much easier. Both local file and remote URL can be used.</p>
+<h2 id="Upgrade">Upgrade</h2>
+<p>Check the installed and the latest versions:</p>
+<pre><code>$ pip <span class="built_in">search</span> awscli
+</code></pre><p>Upgrade AWS CLI to the latest version:</p>
+<pre><code>$ sudo pip <span class="operator"><span class="keyword">install</span> <span class="comment">--upgrade awscli</span></span>
+</code></pre><h2 id="References">References</h2>
+<ol>
+<li><a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS Command Line Interface</a></li>
+<li><a href="http://docs.aws.amazon.com/cli/latest/userguide/" target="_blank" rel="external">User Guide</a></li>
+<li><a href="http://docs.aws.amazon.com/cli/latest/reference/" target="_blank" rel="external">Reference</a></li>
+<li><a href="https://github.com/aws/aws-cli/" target="_blank" rel="external">GitHub repository</a></li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-03-22T13:20:10.000Z"><a href="/2014/03/22/writing-custom-yeoman-generator/">Mar 22, 2014</a></time>
       
       
@@ -633,43 +724,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-19T23:05:04.000Z"><a href="/2014/01/19/difference-between-http-head-and-get/">Jan 19, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/19/difference-between-http-head-and-get/">Difference between HTTP HEAD and GET</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <blockquote>
-<p>The HEAD method is identical to GET except that the server MUST NOT return a message-body in the response. The metainformation contained in the HTTP headers in response to a HEAD request SHOULD be identical to the information sent in response to a GET request. - <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank" rel="external">Method Definitions</a></p>
-</blockquote>
-<p>I was a little bit confused when I encoutered the HTTP status code <code>204</code>, which states that the response MUST NOT include a message body. The <code>HEAD</code> method contains no body content as well. Should I use <code>204</code> instead of <code>200</code>?</p>
-<p>The answer is <strong>NO</strong>. <code>GET</code> method should always return HTTP status code of 200. Since <code>HEAD</code> method is idential to <code>GET</code>, it should return <code>200</code> as well. Just keep in mind that the cost of processing both <code>HEAD</code> and <code>GET</code> requests are almost the same.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -705,7 +759,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -870,7 +924,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -1076,7 +1130,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gae/">gae</a><small>1</small></li>
+    <li><a href="/tags/gae/">gae</a><small>2</small></li>
   
     <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
@@ -1113,6 +1167,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-app-engine/">google-app-engine</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
@@ -1184,7 +1240,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>12</small></li>
+    <li><a href="/tags/install/">install</a><small>13</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1234,7 +1290,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1314,7 +1370,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
-    <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
+    <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
     <li><a href="/tags/node/">node</a><small>28</small></li>
   
@@ -1527,6 +1583,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

@@ -64,6 +64,70 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-12T12:32:34.000Z"><a href="/2013/11/12/live-browser-reload-and-command-execution-on-file-change/">Nov 12, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/12/live-browser-reload-and-command-execution-on-file-change/">Live Browser Reload and Command Execution on File Change</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="Execute_Command">Execute Command</h2>
+<p>When I am editting comments in my code, I would like to use <a href="http://jashkenas.github.io/docco/" target="_blank" rel="external">Docco</a> to generate a pretty print source code documentation and review it in web browser. However, every time I made a change, I had to issue <code>docco</code> command again, even I could use the up arrow key, but still a pain. Lucky, there is a way to eliminate this step. One way is to use <a href="https://github.com/gruntjs/grunt-contrib-watch" target="_blank" rel="external">grunt-contrib-watch</a>, but the limitation is that this is not for an individual file on the command line, it is more for a build process. A better alternative is to use <a href="https://github.com/remy/nodemon" target="_blank" rel="external">nodemon</a>:</p>
+<blockquote>
+<p>For use during development of a node.js based application. nodemon will watch the files in the directory that nodemon was started, and if they change, it will automatically restart your node application.</p>
+</blockquote>
+<p>It does not have to be limited to Node and JavaScript files. We can use it with any command:</p>
+<pre><code>nodemon -<span class="keyword">x</span> docco /path/<span class="keyword">to</span>/app.coffee
+</code></pre><p>With this command, <code>docco</code> will be executed upon any change to the file.</p>
+<h2 id="Reload_Browser">Reload Browser</h2>
+<p>Making live reload in browser is a little bit trickier, it involves using some <a href="http://rubygems.org/" target="_blank" rel="external">Ruby gems</a>.</p>
+<p><em>TODO: Need to find a way to avoid using Ruby and its gems.</em></p>
+<p>I have followed some of the steps from the post: <a href="https://vickev.com/#!/article/auto-refresh-your-browser-when-saving-files-or-restarting-node-js" target="_blank" rel="external">Auto-refresh your browser when saving files or restarting node.js</a>.</p>
+<p>First install <a href="https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei" target="_blank" rel="external">LiveReload</a> Chrome extension, and then install <a href="https://github.com/guard/guard" target="_blank" rel="external">Guard</a> and <a href="https://github.com/guard/guard-livereload" target="_blank" rel="external">Guard::LiveReload</a> gems:</p>
+<pre><code><span class="built_in">sudo</span> gem install guard guard-livereload
+</code></pre><p>You need to have a web server to make the livereload work, live reload does not work on files directly served from the file system:</p>
+<pre><code><span class="symbol">file:</span>/<span class="regexp">//home</span><span class="regexp">/chao/docs</span><span class="regexp">/app.html</span>
+</code></pre><p>Therefore, an easy way is to set up a web server, such as Nginx, and configure a directory for this usage, such as:</p>
+<pre><code><span class="regexp">/usr/</span>share<span class="regexp">/nginx/</span>www<span class="regexp">/livereload</span>
+</code></pre><p>Add the following <code>Guardfile</code> into the directory:</p>
+<pre><code>guard <span class="string">'livereload'</span> <span class="keyword">do</span>
+  watch(<span class="regexp">%r{.+\.(css|js|ejs|html)}</span>)
+<span class="keyword">end</span>
+</code></pre><p>Launch <a href="https://github.com/guard/guard" target="_blank" rel="external">Guard</a>:</p>
+<pre><code>cd <span class="regexp">/usr/</span>share<span class="regexp">/nginx/</span>www<span class="regexp">/livereload &amp;&amp; guard</span>
+</code></pre><p>Enable the live reload by clicking the menu icon. You should see the dot in the middle becomes solid.</p>
+<p>Now you need to make sure set the generated files into the correct directory:</p>
+<pre><code>nodemon -<span class="keyword">x</span> <span class="string">'docco -o /usr/share/nginx/www/livereload'</span> /path/<span class="keyword">to</span>/app.coffee
+</code></pre><p>Another way is to create a soft link to the directory, since the <code>docs</code> in the current execution directory is the default output directory:</p>
+<pre><code>ln -s <span class="regexp">/usr/</span>share<span class="regexp">/nginx/</span>www<span class="regexp">/livereload docs</span>
+</code></pre><p>Then, you can use <a href="https://github.com/remy/nodemon" target="_blank" rel="external">nodemon</a> as you normally do:</p>
+<pre><code>nodemon -<span class="keyword">x</span> docco /path/<span class="keyword">to</span>/app.coffee
+</code></pre><p>Having live browser reload is a bit complicated. I wish there is a method as easy as using <a href="https://github.com/remy/nodemon" target="_blank" rel="external">nodemon</a> via a single command. But in the meantime, I just need to have two panes open and have both monitoring tools running independently. No more browser fresh and command re-issuing.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-11T12:00:00.000Z"><a href="/2013/11/11/keep-it-simple-and-small-(kiss)/">Nov 11, 2013</a></time>
       
       
@@ -462,45 +526,6 @@ coffee&gt; .help
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-06-09T09:55:23.000Z"><a href="/2013/06/09/repeat-character-serveral-times-in-javascript/">Jun 9, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/06/09/repeat-character-serveral-times-in-javascript/">Repeat Character Serveral Times in JavaScript</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In <a href="http://daringfireball.net/projects/markdown/" target="_blank" rel="external">Markdown</a>, a header can be written as:</p>
-<figure class="highlight markdown"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="header">Header</span></div><div class="line">======</div></pre></td></tr></table></figure>
-
-<p>This is a Setext-style headers, which are <em>‘underlined’ using equal signs (for<br>first-level headers) and dashes (for second-level headers)</em>. In order to<br>generate those underlined equal signs, a simple loop could be used to repeat<br>the character <code>=</code> several times. By the way, it is not necessary to have exact<br>number of the equal signs as the header length, but it just looks better. But<br>there is <a href="http://stackoverflow.com/a/1877479/594696" target="_blank" rel="external">another way</a>:</p>
-<figure class="highlight JavaScript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Array</span>(heading.length + <span class="number">1</span>).join(<span class="string">'='</span>)</div></pre></td></tr></table></figure>
-
-<p>It is using the JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array" target="_blank" rel="external">Array</a> global object to construct an empty Array<br>with the specified array length. Clever indeed!</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -536,7 +561,7 @@ coffee&gt; .help
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -701,7 +726,7 @@ coffee&gt; .help
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -907,7 +932,7 @@ coffee&gt; .help
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gae/">gae</a><small>1</small></li>
+    <li><a href="/tags/gae/">gae</a><small>2</small></li>
   
     <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
@@ -944,6 +969,8 @@ coffee&gt; .help
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-app-engine/">google-app-engine</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
@@ -1015,7 +1042,7 @@ coffee&gt; .help
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>12</small></li>
+    <li><a href="/tags/install/">install</a><small>13</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1065,7 +1092,7 @@ coffee&gt; .help
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1145,7 +1172,7 @@ coffee&gt; .help
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
-    <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
+    <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
     <li><a href="/tags/node/">node</a><small>28</small></li>
   
@@ -1358,6 +1385,8 @@ coffee&gt; .help
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

@@ -68,6 +68,58 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/">Sep 14, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/">Understand the Limitation of the String Property Type of Google Cloud Datastore</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> supports a variety of data types for property values:</p>
+<ul>
+<li>Integers</li>
+<li>Floating-point numbers</li>
+<li>Strings</li>
+<li>Dates</li>
+<li>Binary data</li>
+</ul>
+<p>Strings are likely the most frequently used. When working with strings, the most important question to ask is how many bytes can be inserted into the property/field. According to the table listed in <a href="https://cloud.google.com/datastore/docs/concepts/entities#Datastore_Properties_and_value_types" target="_blank" rel="external">properties and value types</a>:</p>
+<blockquote>
+<p>Up to 1500 bytes if property is indexed, up to 1MB otherwise</p>
+</blockquote>
+<p>Let’s give a try:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">// String Property Type</div><div class="line">// ====================</div><div class="line">//</div><div class="line">// Investigate the string property <span class="built_in">type</span> of Google Cloud Datastore.</div><div class="line">//</div><div class="line">// Dependencies tested:</div><div class="line">//</div><div class="line">// - `gcloud@v0.<span class="number">21.0</span>`</div><div class="line">// - `lorem-ipsum@<span class="number">1.0</span>.<span class="number">3</span>`</div><div class="line"></div><div class="line"><span class="string">'use strict'</span>;</div><div class="line"></div><div class="line">// Define dependencies.</div><div class="line">var params = {</div><div class="line">  projectId: <span class="string">'myproj'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'test'</span></div><div class="line">};</div><div class="line">var dataset = require(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line">var kind = <span class="string">'String'</span>;</div><div class="line">var lorem = require(<span class="string">'lorem-ipsum'</span>);</div><div class="line"></div><div class="line">// Save an entity to the datastore.</div><div class="line">function run(params) {</div><div class="line">  var size = params.size;</div><div class="line">  var index = params.index;</div><div class="line">  var str = lorem({ count: size }).substr(<span class="number">0</span>, size);</div><div class="line">  var key = dataset.key(kind);</div><div class="line">  var data = [</div><div class="line">    {</div><div class="line">      name: <span class="string">'title'</span>,</div><div class="line">      value: str,</div><div class="line">      excludeFromIndexes: !index</div><div class="line">    }</div><div class="line">  ];</div><div class="line">  var entity = {</div><div class="line">    key: key,</div><div class="line">    data: data</div><div class="line">  };</div><div class="line"></div><div class="line">  dataset.save(entity, function (err) {</div><div class="line">    console.log(size, new Buffer(str).length, index,</div><div class="line">      err ? err.code + <span class="string">' '</span> + err.message : <span class="string">'200 OK'</span>);</div><div class="line">  });</div><div class="line">}</div><div class="line"></div><div class="line">// Explanation of fields:</div><div class="line">//</div><div class="line">// - `size`: Total number of bytes to produce</div><div class="line">// - `index`: Whether to index the string field</div><div class="line">//</div><div class="line">// In-line comment indicates the expected result.</div><div class="line">[</div><div class="line">  { size: <span class="number">1500</span>, index: <span class="literal">true</span>  },             // OK</div><div class="line">  { size: <span class="number">1501</span>, index: <span class="literal">false</span> },             // OK</div><div class="line">  { size: <span class="number">1501</span>, index: <span class="literal">true</span>  },             // Error</div><div class="line">  { size: <span class="number">1024</span> * <span class="number">1024</span> - <span class="number">92</span>, index: <span class="literal">false</span> }, // OK</div><div class="line">  { size: <span class="number">1024</span> * <span class="number">1024</span> - <span class="number">91</span>, index: <span class="literal">false</span> }, // Error</div><div class="line">].forEach(run);</div></pre></td></tr></table></figure>
+
+<p>Don’t ask me where <code>91</code> or <code>92</code> is coming from. Apparently, this is somewhere closer to 1 MB, but not exactly. The result of the test script:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
       
       
@@ -489,52 +541,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-08-03T12:00:00.000Z"><a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/">Aug 3, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/">Rules on Structuring the Test Directory Structure with Mocha</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When writing tests, the framework I use for <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> is <a href="http://mochajs.org/" target="_blank" rel="external">Mocha</a> (reviewed version: v2.2.x). But how should I structure the <code>./test</code> directory? I first started by grouping related tests into directory, for example:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ tree ./test</div><div class="line">./test</div><div class="line">├── posts</div><div class="line">│   └── main.js</div><div class="line">└── users</div><div class="line">    └── main.js</div></pre></td></tr></table></figure>
-
-<p>You can use <code>mocha --recursive</code> to run all test suites.</p>
-<p>However, it’s unlikely that all files in the test directory are test suites. You might need to define some shared utilities, data generation scripts, or even setup files. You don’t want these files to be executed by Mocha. You can get away by using:</p>
-<ul>
-<li><code>mocha --grep</code> or <code>mocha --fgrep</code></li>
-<li>Use <code>find</code> and <code>xargs</code> to locate the files to be executed by Mocha</li>
-</ul>
-<p>But these are getting more and more complex. You want something simple and dumb frankly. Therefore, a better approach is to follow the two guidelines. One is the default behavior of Mocha:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -571,7 +577,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -736,7 +742,7 @@
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -942,7 +948,7 @@
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gae/">gae</a><small>1</small></li>
+    <li><a href="/tags/gae/">gae</a><small>2</small></li>
   
     <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
@@ -979,6 +985,8 @@
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-app-engine/">google-app-engine</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
@@ -1050,7 +1058,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>12</small></li>
+    <li><a href="/tags/install/">install</a><small>13</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1100,7 +1108,7 @@
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1180,7 +1188,7 @@
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
-    <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
+    <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
     <li><a href="/tags/node/">node</a><small>28</small></li>
   
@@ -1393,6 +1401,8 @@
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

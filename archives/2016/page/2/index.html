@@ -68,6 +68,58 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-08-06T12:00:00.000Z"><a href="/2016/08/06/creating-a-data-volume-container-in-dockerfile/">Aug 6, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/06/creating-a-data-volume-container-in-dockerfile/">Creating a Data Volume Container in Dockerfile</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Create a <a href="https://docker.com/" target="_blank" rel="external">Docker</a> data volume container in <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a> is unbelievably simple, just use the <a href="https://docs.docker.com/engine/reference/builder/#/volume" target="_blank" rel="external">VOLUME</a> instruction:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FROM debian:8.5</div><div class="line">VOLUME ["/data"]</div></pre></td></tr></table></figure>
+
+<p>The instruction creates a mount point and attach the volumes from native host or other containers.</p>
+<p>Build the data container:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ docker build -t data .</div><div class="line">Sending build context to Docker daemon 2.048 kB</div><div class="line">Step 1 : FROM debian:8.5</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">1</span>b088884749b</span></span></div><div class="line">Step 2 : VOLUME /data</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="constant">Running</span> in <span class="number">5511</span>f34a489c</span></span></div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">7</span>b723b2b3d13</span></span></div><div class="line">Removing intermediate container 5511f34a489c</div><div class="line">Successfully built 7b723b2b3d13</div></pre></td></tr></table></figure>
+
+<p>The built size is just about 125.1 MB.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="operator"><span class="keyword">create</span> <span class="comment">--name data data</span></span></div></pre></td></tr></table></figure>
+
+<p>The first <code>data</code> is the name of the container, the second <code>data</code> is the name of Docker image.</p>
+<p>To attach the data volume container to another, we use <code>--volumes-from</code> option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">$</span> <span class="comment">docker</span> <span class="comment">run</span> <span class="literal">-</span><span class="comment">it</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">rm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">name</span> <span class="comment">foo</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">volumes</span><span class="literal">-</span><span class="comment">from=data</span> <span class="comment">debian:8</span><span class="string">.</span><span class="comment">5</span> <span class="comment">/bin/bash</span></div></pre></td></tr></table></figure>
+
+<p>If there’re initial data to copy, then add the <code>COPY</code> instruction:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">FROM debian:8.5</div><div class="line">VOLUME ["/data"]</div><div class="line">COPY . /data</div></pre></td></tr></table></figure>
+
+<p>Settings:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker --<span class="keyword">version</span></div><div class="line">Docker <span class="keyword">version</span> <span class="number">1.11</span>.<span class="number">2</span>, build b9f10c9</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-29T12:00:00.000Z"><a href="/2016/07/29/escaping-in-json-with-backslash/">Jul 29, 2016</a></time>
       
       
@@ -409,7 +461,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -574,7 +626,7 @@
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -780,7 +832,7 @@
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gae/">gae</a><small>1</small></li>
+    <li><a href="/tags/gae/">gae</a><small>2</small></li>
   
     <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
@@ -817,6 +869,8 @@
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-app-engine/">google-app-engine</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
@@ -888,7 +942,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>12</small></li>
+    <li><a href="/tags/install/">install</a><small>13</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -938,7 +992,7 @@
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1018,7 +1072,7 @@
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
-    <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
+    <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
     <li><a href="/tags/node/">node</a><small>28</small></li>
   
@@ -1231,6 +1285,8 @@
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

@@ -68,27 +68,49 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-10-02T12:00:00.000Z"><a href="/2015/10/02/re-assembling-the-requested-url/">Oct 2, 2015</a></time>
+        <time datetime="2015-10-06T12:00:00.000Z"><a href="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/">Oct 6, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/10/02/re-assembling-the-requested-url/">Re-assembling the Requested URL</a></h1>
+    <h1 class="title"><a href="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/">Overriding the Default Forwarded SSH Port in Vagrant</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>It is simple to know the request URL path, it’s one (<code>this.url</code> in <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>) used by routing, but if you are looking to get the complete URL, it’s a little bit complicated. Luckily, there is a quick way to re-assemble the requested URL in <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>, if proxy is not a concern:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> url = <span class="keyword">this</span>.request.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.request.host + <span class="keyword">this</span>.request.originalUrl;</div></pre></td></tr></table></figure>
+        <p>TLDR:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Must specified `id: "ssh"` in order to override the default forwarded SSH port.</span></div><div class="line">config.vm.network <span class="symbol">:forwarded_port</span>, <span class="symbol">guest:</span> <span class="number">22</span>, <span class="symbol">host:</span> <span class="number">2322</span>, <span class="symbol">id:</span> <span class="string">"ssh"</span></div></pre></td></tr></table></figure>
 
-<p>Or a shorter version:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> url = <span class="keyword">this</span>.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.host + <span class="keyword">this</span>.originalUrl;</div></pre></td></tr></table></figure>
+<p>What’s the problem? If running multiple virtual machines managed by Vagrant, SSH port collision will happen:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Vagrant cannot forward the specified ports on this VM, since they</div><div class="line">would collide with some other application that is already listening</div><div class="line">on these ports. The forwarded port to 2222 is already in use</div><div class="line">on the host machine.</div><div class="line"></div><div class="line">To fix this, modify your current projects Vagrantfile to use another</div><div class="line">port. Example, where '1234' would be replaced by a unique host port:</div><div class="line"></div><div class="line">  config.vm.network :forwarded_port, guest: 22, host: 1234</div><div class="line"></div><div class="line">Sometimes, Vagrant will attempt to auto-correct this for you. In this</div><div class="line">case, Vagrant was unable to. This is usually because the guest machine</div><div class="line">is in a state which doesn't allow modifying port forwarding.</div></pre></td></tr></table></figure>
 
-<p>The port number is included in <code>this.host</code>, for example: <code>localhost:3000</code>.</p>
-<p>Putting into a complete script:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{</div><div class="line">  <span class="comment">// Echo back the request URL.</span></div><div class="line">  <span class="keyword">this</span>.body = <span class="keyword">this</span>.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.host + <span class="keyword">this</span>.originalUrl;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+<p>The example is <em>correct</em> but <em>incomplete</em>. By default the SSH port (<code>22</code>) on the guest machine is forwarded to port <code>2222</code> on the host machine:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Source: https://github.com/mitchellh/vagrant/blob/v1.7.2/plugins/kernel_v2/config/vm.rb</span></div><div class="line"><span class="keyword">if</span> !<span class="variable">@__networks</span>[<span class="string">"forwarded_port-ssh"</span>]</div><div class="line">  network <span class="symbol">:forwarded_port</span>,</div><div class="line">    <span class="symbol">guest:</span> <span class="number">22</span>,</div><div class="line">    <span class="symbol">host:</span> <span class="number">2222</span>,</div><div class="line">    <span class="symbol">host_ip:</span> <span class="string">"127.0.0.1"</span>,</div><div class="line">    <span class="symbol">id:</span> <span class="string">"ssh"</span>,</div><div class="line">    <span class="symbol">auto_correct:</span> <span class="keyword">true</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
 
-<p>Assume that you have a server running on the host <code>www.example.com</code> with SSL enabled. If you make a request to the server with the URL: <code>https://www.example.com/path</code>, this URL will be echoed back in the response by the above script.</p>
+<p>Changing to another port in <code>Vagrantfile</code> does not solve the problem. For example, switching from <code>2222</code> to <code>2322</code>:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Create a forwarded port mapping which allows access to a specific port</span></div><div class="line"><span class="comment"># within the machine from a port on the host machine. In the example below,</span></div><div class="line"><span class="comment"># accessing "localhost:8080" will access port 80 on the guest machine.</span></div><div class="line">config.vm.network <span class="string">"forwarded_port"</span>, <span class="symbol">guest:</span> <span class="number">22</span>, <span class="symbol">host:</span> <span class="number">2322</span></div></pre></td></tr></table></figure>
+
+<p>In this situation, you are forwarding both ports <code>2222</code> and <code>2322</code> to the SSH port on the guest machine, as shown in <a href="https://www.virtualbox.org/" target="_blank" rel="external">VirtualBox</a> port forwarding settings:</p>
+<p><img src="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/port-forwarding-rules.jpg" alt="Port Forwarding Rules"></p>
+<p>When bringing up the machine, there will be multiple host machine ports forwarding to the same SSH port.</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ vagrant up</div><div class="line">==&gt; default: Forwarding ports...</div><div class="line">    default: <span class="number">22</span> =&gt; <span class="number">2322</span> (adapter <span class="number">1</span>)</div><div class="line">    default: <span class="number">22</span> =&gt; <span class="number">2222</span> (adapter <span class="number">1</span>)</div></pre></td></tr></table></figure>
+
+<p>The SSH configuration shows the same outcome:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh-config</div><div class="line">Host default</div><div class="line">  HostName <span class="number">127.0</span>.<span class="number">0.1</span></div><div class="line">  User chao</div><div class="line">  Port <span class="number">2222</span></div></pre></td></tr></table></figure>
+
+<p>Of course, you can do:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh -p <span class="number">2322</span> chao@localhost</div></pre></td></tr></table></figure>
+
+<p>This works, but we like the simple <code>vagrant ssh</code> command, and we just want to retain a single port <code>2322</code>.</p>
+<p>The solution is appending <code>id: &quot;ssh&quot;</code>, and it must be specified in order to override the default forwarded SSH port. See &lt; <a href="https://github.com/mitchellh/vagrant/issues/3232#issuecomment-39354659&gt;" target="_blank" rel="external">https://github.com/mitchellh/vagrant/issues/3232#issuecomment-39354659&gt;</a>:</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Must specified `id: "ssh"` in order to override the default forwarded SSH port.</span></div><div class="line">config.vm.network <span class="symbol">:forwarded_port</span>, <span class="symbol">guest:</span> <span class="number">22</span>, <span class="symbol">host:</span> <span class="number">2322</span>, <span class="symbol">id:</span> <span class="string">"ssh"</span></div></pre></td></tr></table></figure>
+
+<p>After appending <code>id: &quot;ssh&quot;</code>, the SSH configuration has also been updated:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh-config</div><div class="line">Host default</div><div class="line">  HostName <span class="number">127.0</span>.<span class="number">0.1</span></div><div class="line">  User chao</div><div class="line">  Port <span class="number">2322</span></div></pre></td></tr></table></figure>
+
+<p>Now, you are good to go:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh</div></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -111,28 +133,27 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-27T12:00:00.000Z"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Sep 27, 2015</a></time>
+        <time datetime="2015-10-02T12:00:00.000Z"><a href="/2015/10/02/re-assembling-the-requested-url/">Oct 2, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Calculate Hashes for All OpenSSL Digest Algorithms</a></h1>
+    <h1 class="title"><a href="/2015/10/02/re-assembling-the-requested-url/">Re-assembling the Requested URL</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Based on the following <a href="https://nodejs.org/api/crypto.html" target="_blank" rel="external">Node.js</a> statement:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(algorithm).update(<span class="string">'secret'</span>, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div></pre></td></tr></table></figure>
+        <p>It is simple to know the request URL path, it’s one (<code>this.url</code> in <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>) used by routing, but if you are looking to get the complete URL, it’s a little bit complicated. Luckily, there is a quick way to re-assemble the requested URL in <a href="http://koajs.com/" target="_blank" rel="external">Koa</a>, if proxy is not a concern:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> url = <span class="keyword">this</span>.request.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.request.host + <span class="keyword">this</span>.request.originalUrl;</div></pre></td></tr></table></figure>
 
-<p>On a Ubuntu 14.04 system with <a href="http://www.openssl.org/" target="_blank" rel="external">OpenSSL</a>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ openssl version</div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span>f <span class="number">6</span> Jan <span class="number">2014</span></div></pre></td></tr></table></figure>
+<p>Or a shorter version:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> url = <span class="keyword">this</span>.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.host + <span class="keyword">this</span>.originalUrl;</div></pre></td></tr></table></figure>
 
-<p>List available digest algorithms:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">$ openssl list-message-digest-algorithms</div><div class="line">DSA</div><div class="line">DSA-SHA</div><div class="line">DSA-SHA1 =&gt; DSA</div><div class="line">DSA-SHA1-old =&gt; DSA-SHA1</div><div class="line">DSS1 =&gt; DSA-SHA1</div><div class="line">MD4</div><div class="line">MD5</div><div class="line">RIPEMD160</div><div class="line">RSA-MD4 =&gt; MD4</div><div class="line">RSA-MD5 =&gt; MD5</div><div class="line">RSA-RIPEMD160 =&gt; RIPEMD160</div><div class="line">RSA-SHA =&gt; SHA</div><div class="line">RSA-SHA1 =&gt; SHA1</div><div class="line">RSA-SHA1-<span class="number">2</span> =&gt; RSA-SHA1</div><div class="line">RSA-SHA224 =&gt; SHA224</div><div class="line">RSA-SHA256 =&gt; SHA256</div><div class="line">RSA-SHA384 =&gt; SHA384</div><div class="line">RSA-SHA512 =&gt; SHA512</div><div class="line">SHA</div><div class="line">SHA1</div><div class="line">SHA224</div><div class="line">SHA256</div><div class="line">SHA384</div><div class="line">SHA512</div><div class="line">DSA</div><div class="line">DSA-SHA</div><div class="line">dsaWithSHA1 =&gt; DSA</div><div class="line">dss1 =&gt; DSA-SHA1</div><div class="line">ecdsa-with-SHA1</div><div class="line">MD4</div><div class="line">md4WithRSAEncryption =&gt; MD4</div><div class="line">MD5</div><div class="line">md5WithRSAEncryption =&gt; MD5</div><div class="line">ripemd =&gt; RIPEMD160</div><div class="line">RIPEMD160</div><div class="line">ripemd160WithRSA =&gt; RIPEMD160</div><div class="line">rmd160 =&gt; RIPEMD160</div><div class="line">SHA</div><div class="line">SHA1</div><div class="line">sha1WithRSAEncryption =&gt; SHA1</div><div class="line">SHA224</div><div class="line">sha224WithRSAEncryption =&gt; SHA224</div><div class="line">SHA256</div><div class="line">sha256WithRSAEncryption =&gt; SHA256</div><div class="line">SHA384</div><div class="line">sha384WithRSAEncryption =&gt; SHA384</div><div class="line">SHA512</div><div class="line">sha512WithRSAEncryption =&gt; SHA512</div><div class="line">shaWithRSAEncryption =&gt; SHA</div><div class="line">ssl2-md5 =&gt; MD5</div><div class="line">ssl3-md5 =&gt; MD5</div><div class="line">ssl3-sha1 =&gt; SHA1</div><div class="line">whirlpool</div></pre></td></tr></table></figure>
+<p>The port number is included in <code>this.host</code>, for example: <code>localhost:3000</code>.</p>
+<p>Putting into a complete script:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">()</span> </span>{</div><div class="line">  <span class="comment">// Echo back the request URL.</span></div><div class="line">  <span class="keyword">this</span>.body = <span class="keyword">this</span>.protocol + <span class="string">'://'</span> + <span class="keyword">this</span>.host + <span class="keyword">this</span>.originalUrl;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
 
-<p>Calculate hashes for each and every uniquely listed algorithm:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">$ openssl list-message-digest-algorithms | \</div><div class="line">  cut <span class="operator">-d</span> <span class="string">' '</span> <span class="operator">-f</span> <span class="number">1</span> | \</div><div class="line">  xargs -n <span class="number">1</span> -I {} node <span class="operator">-e</span> <span class="string">"algorithm = '{}'; \</span></div><div class="line">  digest = require('crypto').createHash('{}').update('secret', 'utf8').digest('base64'); \</div><div class="line">  console.log(algorithm, digest)" | \</div><div class="line">  sort -u</div><div class="line">DSA <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA1-old <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">dsaWithSHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">dss1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSS1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">ecdsa-with-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">md4WithRSAEncryption Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">MD4 Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">md5WithRSAEncryption Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">MD5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ripemd160WithRSA zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RIPEMD160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">ripemd zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">rmd160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RSA-MD4 Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">RSA-MD5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">RSA-RIPEMD160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RSA-SHA1-<span class="number">2</span> <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">RSA-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">RSA-SHA224 lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">RSA-SHA256 K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">RSA-SHA384 WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">RSA-SHA512 vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">RSA-SHA f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">sha1WithRSAEncryption <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">SHA224 lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">sha224WithRSAEncryption lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">SHA256 K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">sha256WithRSAEncryption K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">sha384WithRSAEncryption WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">SHA384 WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">SHA512 vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">sha512WithRSAEncryption vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">SHA f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">shaWithRSAEncryption f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">ssl2-md5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ssl3-md5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ssl3-sha1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">whirlpool <span class="number">4</span>GG4emdK44gOFZq1XtNdbF6Kau+sarCDBKUFiAGNN3soY5uxX97t8AbVfkX3tCmObf786vfJLIJqcI/m0RVusw==</div></pre></td></tr></table></figure>
-
+<p>Assume that you have a server running on the host <code>www.example.com</code> with SSL enabled. If you make a request to the server with the URL: <code>https://www.example.com/path</code>, this URL will be echoed back in the response by the above script.</p>
 
       
     </div>
@@ -232,6 +253,50 @@
 
 <p>When cut multiple fields, the fields are separated by the same delimiter used (indicated by <code>-d</code> field or TAB as the default). If change the output delimiter, it’s not the job of <code>cut</code>, pipe to another program:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ cut <span class="operator">-f</span> <span class="number">3</span>-<span class="number">5</span> tab.txt | sed <span class="string">'s/\t/ /g'</span></div><div class="line"><span class="number">13</span> <span class="number">14</span> <span class="number">15</span></div><div class="line"><span class="number">23</span> <span class="number">24</span> <span class="number">25</span></div><div class="line"><span class="number">33</span> <span class="number">34</span> <span class="number">35</span></div><div class="line"><span class="number">43</span> <span class="number">44</span> <span class="number">45</span></div><div class="line"><span class="number">53</span> <span class="number">54</span> <span class="number">55</span></div><div class="line"><span class="number">63</span> <span class="number">64</span> <span class="number">65</span></div><div class="line"><span class="number">73</span> <span class="number">74</span> <span class="number">75</span></div><div class="line"><span class="number">83</span> <span class="number">84</span> <span class="number">85</span></div><div class="line"><span class="number">93</span> <span class="number">94</span> <span class="number">95</span></div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-09-27T12:00:00.000Z"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Sep 27, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Calculate Hashes for All OpenSSL Digest Algorithms</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Based on the following <a href="https://nodejs.org/api/crypto.html" target="_blank" rel="external">Node.js</a> statement:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(algorithm).update(<span class="string">'secret'</span>, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div></pre></td></tr></table></figure>
+
+<p>On a Ubuntu 14.04 system with <a href="http://www.openssl.org/" target="_blank" rel="external">OpenSSL</a>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ openssl version</div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span>f <span class="number">6</span> Jan <span class="number">2014</span></div></pre></td></tr></table></figure>
+
+<p>List available digest algorithms:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">$ openssl list-message-digest-algorithms</div><div class="line">DSA</div><div class="line">DSA-SHA</div><div class="line">DSA-SHA1 =&gt; DSA</div><div class="line">DSA-SHA1-old =&gt; DSA-SHA1</div><div class="line">DSS1 =&gt; DSA-SHA1</div><div class="line">MD4</div><div class="line">MD5</div><div class="line">RIPEMD160</div><div class="line">RSA-MD4 =&gt; MD4</div><div class="line">RSA-MD5 =&gt; MD5</div><div class="line">RSA-RIPEMD160 =&gt; RIPEMD160</div><div class="line">RSA-SHA =&gt; SHA</div><div class="line">RSA-SHA1 =&gt; SHA1</div><div class="line">RSA-SHA1-<span class="number">2</span> =&gt; RSA-SHA1</div><div class="line">RSA-SHA224 =&gt; SHA224</div><div class="line">RSA-SHA256 =&gt; SHA256</div><div class="line">RSA-SHA384 =&gt; SHA384</div><div class="line">RSA-SHA512 =&gt; SHA512</div><div class="line">SHA</div><div class="line">SHA1</div><div class="line">SHA224</div><div class="line">SHA256</div><div class="line">SHA384</div><div class="line">SHA512</div><div class="line">DSA</div><div class="line">DSA-SHA</div><div class="line">dsaWithSHA1 =&gt; DSA</div><div class="line">dss1 =&gt; DSA-SHA1</div><div class="line">ecdsa-with-SHA1</div><div class="line">MD4</div><div class="line">md4WithRSAEncryption =&gt; MD4</div><div class="line">MD5</div><div class="line">md5WithRSAEncryption =&gt; MD5</div><div class="line">ripemd =&gt; RIPEMD160</div><div class="line">RIPEMD160</div><div class="line">ripemd160WithRSA =&gt; RIPEMD160</div><div class="line">rmd160 =&gt; RIPEMD160</div><div class="line">SHA</div><div class="line">SHA1</div><div class="line">sha1WithRSAEncryption =&gt; SHA1</div><div class="line">SHA224</div><div class="line">sha224WithRSAEncryption =&gt; SHA224</div><div class="line">SHA256</div><div class="line">sha256WithRSAEncryption =&gt; SHA256</div><div class="line">SHA384</div><div class="line">sha384WithRSAEncryption =&gt; SHA384</div><div class="line">SHA512</div><div class="line">sha512WithRSAEncryption =&gt; SHA512</div><div class="line">shaWithRSAEncryption =&gt; SHA</div><div class="line">ssl2-md5 =&gt; MD5</div><div class="line">ssl3-md5 =&gt; MD5</div><div class="line">ssl3-sha1 =&gt; SHA1</div><div class="line">whirlpool</div></pre></td></tr></table></figure>
+
+<p>Calculate hashes for each and every uniquely listed algorithm:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">$ openssl list-message-digest-algorithms | \</div><div class="line">  cut <span class="operator">-d</span> <span class="string">' '</span> <span class="operator">-f</span> <span class="number">1</span> | \</div><div class="line">  xargs -n <span class="number">1</span> -I {} node <span class="operator">-e</span> <span class="string">"algorithm = '{}'; \</span></div><div class="line">  digest = require('crypto').createHash('{}').update('secret', 'utf8').digest('base64'); \</div><div class="line">  console.log(algorithm, digest)" | \</div><div class="line">  sort -u</div><div class="line">DSA <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA1-old <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">dsaWithSHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">dss1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSS1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">ecdsa-with-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">md4WithRSAEncryption Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">MD4 Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">md5WithRSAEncryption Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">MD5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ripemd160WithRSA zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RIPEMD160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">ripemd zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">rmd160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RSA-MD4 Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">RSA-MD5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">RSA-RIPEMD160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RSA-SHA1-<span class="number">2</span> <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">RSA-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">RSA-SHA224 lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">RSA-SHA256 K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">RSA-SHA384 WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">RSA-SHA512 vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">RSA-SHA f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">sha1WithRSAEncryption <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">SHA224 lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">sha224WithRSAEncryption lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">SHA256 K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">sha256WithRSAEncryption K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">sha384WithRSAEncryption WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">SHA384 WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">SHA512 vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">sha512WithRSAEncryption vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">SHA f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">shaWithRSAEncryption f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">ssl2-md5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ssl3-md5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ssl3-sha1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">whirlpool <span class="number">4</span>GG4emdK44gOFZq1XtNdbF6Kau+sarCDBKUFiAGNN3soY5uxX97t8AbVfkX3tCmObf786vfJLIJqcI/m0RVusw==</div></pre></td></tr></table></figure>
 
 
       
@@ -523,58 +588,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/">Sep 14, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/">Understand the Limitation of the String Property Type of Google Cloud Datastore</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> supports a variety of data types for property values:</p>
-<ul>
-<li>Integers</li>
-<li>Floating-point numbers</li>
-<li>Strings</li>
-<li>Dates</li>
-<li>Binary data</li>
-</ul>
-<p>Strings are likely the most frequently used. When working with strings, the most important question to ask is how many bytes can be inserted into the property/field. According to the table listed in <a href="https://cloud.google.com/datastore/docs/concepts/entities#Datastore_Properties_and_value_types" target="_blank" rel="external">properties and value types</a>:</p>
-<blockquote>
-<p>Up to 1500 bytes if property is indexed, up to 1MB otherwise</p>
-</blockquote>
-<p>Let’s give a try:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line">// String Property Type</div><div class="line">// ====================</div><div class="line">//</div><div class="line">// Investigate the string property <span class="built_in">type</span> of Google Cloud Datastore.</div><div class="line">//</div><div class="line">// Dependencies tested:</div><div class="line">//</div><div class="line">// - `gcloud@v0.<span class="number">21.0</span>`</div><div class="line">// - `lorem-ipsum@<span class="number">1.0</span>.<span class="number">3</span>`</div><div class="line"></div><div class="line"><span class="string">'use strict'</span>;</div><div class="line"></div><div class="line">// Define dependencies.</div><div class="line">var params = {</div><div class="line">  projectId: <span class="string">'myproj'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'test'</span></div><div class="line">};</div><div class="line">var dataset = require(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line">var kind = <span class="string">'String'</span>;</div><div class="line">var lorem = require(<span class="string">'lorem-ipsum'</span>);</div><div class="line"></div><div class="line">// Save an entity to the datastore.</div><div class="line">function run(params) {</div><div class="line">  var size = params.size;</div><div class="line">  var index = params.index;</div><div class="line">  var str = lorem({ count: size }).substr(<span class="number">0</span>, size);</div><div class="line">  var key = dataset.key(kind);</div><div class="line">  var data = [</div><div class="line">    {</div><div class="line">      name: <span class="string">'title'</span>,</div><div class="line">      value: str,</div><div class="line">      excludeFromIndexes: !index</div><div class="line">    }</div><div class="line">  ];</div><div class="line">  var entity = {</div><div class="line">    key: key,</div><div class="line">    data: data</div><div class="line">  };</div><div class="line"></div><div class="line">  dataset.save(entity, function (err) {</div><div class="line">    console.log(size, new Buffer(str).length, index,</div><div class="line">      err ? err.code + <span class="string">' '</span> + err.message : <span class="string">'200 OK'</span>);</div><div class="line">  });</div><div class="line">}</div><div class="line"></div><div class="line">// Explanation of fields:</div><div class="line">//</div><div class="line">// - `size`: Total number of bytes to produce</div><div class="line">// - `index`: Whether to index the string field</div><div class="line">//</div><div class="line">// In-line comment indicates the expected result.</div><div class="line">[</div><div class="line">  { size: <span class="number">1500</span>, index: <span class="literal">true</span>  },             // OK</div><div class="line">  { size: <span class="number">1501</span>, index: <span class="literal">false</span> },             // OK</div><div class="line">  { size: <span class="number">1501</span>, index: <span class="literal">true</span>  },             // Error</div><div class="line">  { size: <span class="number">1024</span> * <span class="number">1024</span> - <span class="number">92</span>, index: <span class="literal">false</span> }, // OK</div><div class="line">  { size: <span class="number">1024</span> * <span class="number">1024</span> - <span class="number">91</span>, index: <span class="literal">false</span> }, // Error</div><div class="line">].forEach(run);</div></pre></td></tr></table></figure>
-
-<p>Don’t ask me where <code>91</code> or <code>92</code> is coming from. Apparently, this is somewhere closer to 1 MB, but not exactly. The result of the test script:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -611,7 +624,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -776,7 +789,7 @@
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -982,7 +995,7 @@
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gae/">gae</a><small>1</small></li>
+    <li><a href="/tags/gae/">gae</a><small>2</small></li>
   
     <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
@@ -1019,6 +1032,8 @@
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-app-engine/">google-app-engine</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
@@ -1090,7 +1105,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>12</small></li>
+    <li><a href="/tags/install/">install</a><small>13</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1140,7 +1155,7 @@
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1220,7 +1235,7 @@
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
-    <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
+    <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
     <li><a href="/tags/node/">node</a><small>28</small></li>
   
@@ -1433,6 +1448,8 @@
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

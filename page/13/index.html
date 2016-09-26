@@ -64,6 +64,43 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-01-19T23:05:04.000Z"><a href="/2014/01/19/difference-between-http-head-and-get/">Jan 19, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/19/difference-between-http-head-and-get/">Difference between HTTP HEAD and GET</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <blockquote>
+<p>The HEAD method is identical to GET except that the server MUST NOT return a message-body in the response. The metainformation contained in the HTTP headers in response to a HEAD request SHOULD be identical to the information sent in response to a GET request. - <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html" target="_blank" rel="external">Method Definitions</a></p>
+</blockquote>
+<p>I was a little bit confused when I encoutered the HTTP status code <code>204</code>, which states that the response MUST NOT include a message body. The <code>HEAD</code> method contains no body content as well. Should I use <code>204</code> instead of <code>200</code>?</p>
+<p>The answer is <strong>NO</strong>. <code>GET</code> method should always return HTTP status code of 200. Since <code>HEAD</code> method is idential to <code>GET</code>, it should return <code>200</code> as well. Just keep in mind that the cost of processing both <code>HEAD</code> and <code>GET</code> requests are almost the same.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-19T19:54:25.000Z"><a href="/2014/01/19/not-ready-for-xiaomi/">Jan 19, 2014</a></time>
       
       
@@ -610,48 +647,6 @@ Binary <span class="keyword">file</span> encrypted.txt matches
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-12T12:00:00.000Z"><a href="/2013/12/12/http-methods-truth-table/">Dec 12, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/12/http-methods-truth-table/">HTTP Methods Truth Table</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>My take on on HTTP methods and resources:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="code">+-----------------------------------------------------------+</span></div><div class="line"><span class="header">| # | Request-URI              | Method         | RE  | RNE |</span></div><div class="line">+-----------------------------------------------------------+</div><div class="line">| 0 | GET    /resources        | list           | 200 | 200 |</div><div class="line">| 1 | GET    /resources/entity | load/insert    | 200 | 404 |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 2 | POST   /resources        | create         | 201 | 409 |</div><div class="line">| 3 | POST   /resources/entity | N/A            | N/A | N/A |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 4 | PUT    /resources        | (batch)        | 200 | 200 |</div><div class="line">| 5 | PUT    /resources/entity | replace/save   | 204 | 201 |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 6 | PATCH  /resources        | (batch)        | 200 | 200 |</div><div class="line">| 7 | PATCH  /resources/entity | update         | 204 | 404 |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 8 | DELETE /resources        | (batch)        | 200 | 200 |</div><div class="line"><span class="header">| 9 | DELETE /resources/entity | remove/delete  | 204 | 404 |</span></div><div class="line">+-----------------------------------------------------------+</div></pre></td></tr></table></figure>
-
-<p>Notes:</p>
-<ol>
-<li>RE: resource exists</li>
-<li>RNE: resource not exists</li>
-<li>For batch request, whether resource/entity exists or not, the resulting HTTP<br>status code is always <code>200</code>, because the code is used to indicate the status<br>of the operation. The actual status code of each entity is enclosed in the<br>response array. When there are no matching entities, the response is an empty<br>array, therefore, status code <code>204</code> is not used.</li>
-<li>There are two situation, a new resource is being created, then the <code>Location</code><br>header must indicate the fully qualified resource URI.</li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -687,7 +682,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>17</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -852,7 +847,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>1</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -1058,7 +1053,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/function-innovation/">function-innovation</a><small>1</small></li>
   
-    <li><a href="/tags/gae/">gae</a><small>1</small></li>
+    <li><a href="/tags/gae/">gae</a><small>2</small></li>
   
     <li><a href="/tags/gce/">gce</a><small>2</small></li>
   
@@ -1095,6 +1090,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
     <li><a href="/tags/goal/">goal</a><small>1</small></li>
   
     <li><a href="/tags/google-analytics/">google-analytics</a><small>4</small></li>
+  
+    <li><a href="/tags/google-app-engine/">google-app-engine</a><small>1</small></li>
   
     <li><a href="/tags/google-cloud-datastore/">google-cloud-datastore</a><small>3</small></li>
   
@@ -1166,7 +1163,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>12</small></li>
+    <li><a href="/tags/install/">install</a><small>13</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1216,7 +1213,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>1</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1296,7 +1293,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/new-york/">new-york</a><small>1</small></li>
   
-    <li><a href="/tags/nginx/">nginx</a><small>2</small></li>
+    <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
     <li><a href="/tags/node/">node</a><small>28</small></li>
   
@@ -1509,6 +1506,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
     <li><a href="/tags/ssh-copy-id/">ssh-copy-id</a><small>1</small></li>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
+  
+    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   
