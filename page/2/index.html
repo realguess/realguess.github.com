@@ -58,6 +58,141 @@
 <div class="clearfix"></div></header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="image">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-08-14T12:00:00.000Z"><a href="/2016/08/14/will-docker-container-restart-pick-up-updated-image/">Aug 14, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/14/will-docker-container-restart-pick-up-updated-image/">Will Docker Container Restart Pick Up Updated Image?</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When a <a href="https://docker.com/" target="_blank" rel="external">Docker</a> image has been updated, will restarting the running container via <code>docker restart</code> pick up the change? Educated guess will be <em>no</em>, because like restarting a process, the memory is still retained. The best way to find out is to give a try.</p>
+<p>Let’s start with a <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Version Foo</span></div><div class="line">FROM debian:<span class="number">8.5</span></div><div class="line">CMD <span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span> <span class="built_in">echo</span> foo; sleep <span class="number">5</span>; <span class="keyword">done</span></div></pre></td></tr></table></figure>
+
+<p>The command will keep printing <code>foo</code> every 5 seconds.</p>
+<p>Create the image:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ docker build -t example .</div><div class="line">Sending build context to Docker daemon 2.048 kB</div><div class="line">Step 1 : FROM debian:8.5</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">1</span>b088884749b</span></span></div><div class="line">Step 2 : CMD while true; do echo foo; sleep 5; done</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="constant">Running</span> in <span class="number">38</span>fdeb15f629</span></span></div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">6</span>a56a50ef254</span></span></div><div class="line">Removing intermediate container 38fdeb15f629</div><div class="line">Successfully built 6a56a50ef254</div></pre></td></tr></table></figure>
+
+<p>Notice the image ID starting with <code>6a56</code>.</p>
+<p>Start the container:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="command">run</span> -d <span class="comment">--name example example</span></div><div class="line">dac42e7194e4ec2bdca8e24db29a3333ae2f422d316e341c5cb1499034a4357b</div></pre></td></tr></table></figure>
+
+<p>Check the log:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>docker logs example</div><div class="line">foo</div><div class="line">foo</div></pre></td></tr></table></figure>
+
+<p>This is expected output.</p>
+<p>Inspect the container:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>docker inspect example</div></pre></td></tr></table></figure>
+
+<p>The important field is the corresponding image, which matches to the previous built image:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  <span class="keyword">...</span></div><div class="line">  <span class="string">"Image"</span>: <span class="string">"sha256:6a56a50ef254bb1d07117b0a0750ef81fafe9735ab3b0f2b0a14511f38d5b83d"</span></div><div class="line">  <span class="keyword">...</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Now update the Dockerfile:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Version Bar</span></div><div class="line">FROM debian:<span class="number">8.5</span></div><div class="line">CMD <span class="keyword">while</span> <span class="literal">true</span>; <span class="keyword">do</span> <span class="built_in">echo</span> bar; sleep <span class="number">5</span>; <span class="keyword">done</span></div></pre></td></tr></table></figure>
+
+<p>This time it prints <code>bar</code> instead of <code>foo</code>.</p>
+<p>Rebuild the image:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ docker build -t example .</div><div class="line">Sending build context to Docker daemon 2.048 kB</div><div class="line">Step 1 : FROM debian:8.5</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">1</span>b088884749b</span></span></div><div class="line">Step 2 : CMD while true; do echo bar; sleep 5; done</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="constant">Running</span> in <span class="number">7</span>fc297e12005</span></span></div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> a6c04345afb9</span></span></div><div class="line">Removing intermediate container 7fc297e12005</div><div class="line">Successfully built a6c04345afb9</div></pre></td></tr></table></figure>
+
+<p>Now we have a different image. The image ID is different: <code>a6c0</code>. But the old image is still there:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="input"><span class="prompt">$ docker images</span></span></div><div class="line">REPOSITORY                        TAG                 IMAGE ID            CREATED             SIZE</div><div class="line">example                           latest              a6c04345afb9        24 seconds ago      125.1 MB</div><div class="line">&lt;none&gt;                            &lt;none&gt;              <span class="number">6</span>a56a50ef254        <span class="number">3</span> minutes ago       <span class="number">125.1</span> <span class="constant">MB</span></div></pre></td></tr></table></figure>
+
+<p>Restart the container:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>docker restart example</div><div class="line">example</div></pre></td></tr></table></figure>
+
+<p>Got <code>bar</code>? No still <code>foo</code> all the way with the log. And when you inspect the container, it still uses the old image.</p>
+<p>So, <code>docker restart</code> will <strong>not</strong> pick up the changes from updated image, it will still use the old image built previously. Therefore, the correct way is to drop the container entirely and run it again:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="operator"><span class="keyword">stop</span> example && docker rm example && docker run -d <span class="comment">--name example example</span></span></div><div class="line">example</div><div class="line">example</div><div class="line"><span class="number">55</span>cec9110fed0257060673a085a08f143003336b1720894f43c6ac5a22104935</div></pre></td></tr></table></figure>
+
+<p>The log shows the correct message:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>docker logs example</div><div class="line">bar</div><div class="line">bar</div></pre></td></tr></table></figure>
+
+<p>Inspecting the container, now it has the correct image:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ docker inspect example</div><div class="line">{</div><div class="line">  <span class="keyword">...</span></div><div class="line">  <span class="string">"Image"</span>: <span class="string">"sha256:a6c04345afb953ab392241f56c04f72110c772a6ee3a36e248c1ffd03f81b7d6"</span></div><div class="line">  <span class="keyword">...</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>And don’t forget to delete the old image.</p>
+<p>Settings:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker --<span class="keyword">version</span></div><div class="line">Docker <span class="keyword">version</span> <span class="number">1.12</span>.<span class="number">0</span>, build <span class="number">8</span>eab29e</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-08-09T12:00:00.000Z"><a href="/2016/08/09/fixing-authorization-failure-in-aws-cli-by-synchronizing-the-clock/">Aug 9, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/09/fixing-authorization-failure-in-aws-cli-by-synchronizing-the-clock/">Fixing Authorization Failure in AWS CLI by Synchronizing the Clock</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Running into an error when executing an <a href="https://aws.amazon.com/" target="_blank" rel="external">AWS</a> command:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ aws ec2 <span class="operator"><span class="keyword">describe</span>-instances</span></div><div class="line"></div><div class="line">An error occurred (AuthFailure) <span class="keyword">when</span> calling the DescribeInstances operation: AWS</div><div class="line">was <span class="keyword">not</span> able <span class="keyword">to</span> validate the provided access credentials</div></pre></td></tr></table></figure>
+
+<p>From the error message, it appears to be an error with access credentials. But after updating to a new credential, and even updated the AWS package, the error still persisted. After trying out other commands, there was an error message containing “signature not yet current” with timestamps. So, the actual problem was due to inaccurate local clock. Hence, the solution is to sync the local date and time by polling the Network Time Protocol (NTP) server:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> ntpdate pool.ntp.org</div></pre></td></tr></table></figure>
+
+<blockquote>
+<p>ntpdate can be run manually as necessary to set the host clock, or it can be run from the host startup script to set the clock at boot time.  This is useful  in some cases to set the clock initially before starting the NTP daemon ntpd. It is also possible to run ntpdate from a cron script. However, it is important to note that ntpdate with contrived cron scripts is no substitute for the NTP daemon, which uses sophisticated algorithms to maximize accuracy  and  reliability while minimizing resource use. Finally, since ntpdate does not discipline the host clock frequency as does ntpd, the accuracy using ntpdate is limited.[^1]</p>
+</blockquote>
+<p>From the description, we can learn that we can make things even easier by installing NTP package:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> apt-get install -y ntp</div></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Network Time Protocol daemon and utility programs NTP, the Network Time Protocol, is used to keep computer clocks accurate by synchronizing them over the Internet or a local network, or by following an accurate hardware receiver that interprets GPS, DCF-77, NIST or similar time signals.[^2]</p>
+</blockquote>
+<p>Verify the installation and execution:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ps <span class="operator">-e</span> | grep ntpd</div><div class="line"> <span class="number">4964</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> ntpd</div></pre></td></tr></table></figure>
+
+<p>with the environment:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ aws --version</div><div class="line">aws-cli<span class="regexp">/1.10.53 Python/</span><span class="number">2.7</span>.<span class="number">6</span> Linux<span class="regexp">/3.13.0-92-generic botocore/</span><span class="number">1.4</span>.<span class="number">43</span></div></pre></td></tr></table></figure>
+
+<p>[^1]: <code>$ man nptdate</code><br>[^2]: <code>$ apt-cache show ntp</code></p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article class="post">
   
   <div class="post-content">
@@ -477,92 +612,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/keeping-routing-simple-and-separated-with-koa-router/">Oct 11, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/10/11/keeping-routing-simple-and-separated-with-koa-router/">Keeping Routing Simple and Separated with Koa Router</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Debugging an error when using <a href="https://github.com/alexmingoia/koa-router" target="_blank" rel="external">koa-router</a> module that multiple routes were invoked on a single HTTP request:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> app = <span class="built_in">require</span>(<span class="string">'koa'</span>)();</div><div class="line"><span class="keyword">var</span> router = <span class="built_in">require</span>(<span class="string">'koa-router'</span>)();</div><div class="line"></div><div class="line">router.use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = {};</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">});</div><div class="line"></div><div class="line">router.get(<span class="string">'/users'</span>, <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body[<span class="string">'/users'</span>] = <span class="literal">true</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">});</div><div class="line"></div><div class="line">router.get(<span class="string">'/users/:id?'</span>, <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body[<span class="string">'/users/:id?'</span>] = <span class="literal">true</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">});</div><div class="line"></div><div class="line">app.use(router.routes());</div><div class="line">app.listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>When making a request to get a list of users, it will match both routes:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">3000</span>/users</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">34</span></div><div class="line">Content-Type: application/json; charset=utf-<span class="number">8</span></div><div class="line"></div><div class="line">{</div><div class="line">    <span class="string">"/users"</span>: <span class="literal">true</span>,</div><div class="line">    <span class="string">"/users/:id?"</span>: <span class="literal">true</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Because in the second route <code>:id</code> is optional, and since there is <code>yield next</code> statement in the first route, the second route will be executed subsequently.</p>
-<p>The cause of the bug is the design of the routing <code>GET /users/:id?</code>. The correct routes are:</p>
-<ul>
-<li><code>GET /users</code>: Retrieve a list (array) of users.</li>
-<li><code>GET /users/:id</code>: Retrieve a single user object.</li>
-</ul>
-<p>The question mark should not be appended to the end of <code>id</code> parameter, which effectively marking the route to perform both duties. It’s better to <strong>keep them simple and keep them separated</strong>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Oct 11, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Passing Information Through Koa Middleware Via &quot;this.state&quot;</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="http://koajs.com/" target="_blank" rel="external">Koa</a> has a <a href="http://koajs.com/#context" target="_blank" rel="external">context</a> object created during every request/response cycle. The context is referenced via <code>this</code> in the middleware. Much information are captured in the context, such as <code>req</code> and <code>res</code>. In order to avoid polluting the context and colliding with other middleware, the information from your application should be encapsulated into <code>this.state</code> property, a namespace for passing information through middleware during request/response cycle:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">var</span> state = <span class="keyword">this</span>.state;</div><div class="line"></div><div class="line">  state.user = <span class="keyword">yield</span> users.create(<span class="keyword">this</span>.request.body);</div><div class="line">  state.code = <span class="number">201</span>;</div><div class="line">  state.body = {</div><div class="line">    name: user.name,</div><div class="line">    mail: user.mail</div><div class="line">  };</div><div class="line"></div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>The <code>this.state</code> has been initialized into an empty object:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="keyword">this</span>.state;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>Therefore, we can start using it right away without doing our own initialization:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">3000</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">2</span></div><div class="line">Content-Type: application/json; charset=utf-<span class="number">8</span></div><div class="line"></div><div class="line">{}</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -598,7 +647,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -763,7 +812,7 @@
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>4</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -909,7 +958,7 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>12</small></li>
+    <li><a href="/tags/docker/">docker</a><small>14</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1079,7 +1128,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>13</small></li>
+    <li><a href="/tags/install/">install</a><small>14</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1129,7 +1178,7 @@
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>4</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1329,6 +1378,8 @@
   
     <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
   
+    <li><a href="/tags/renew/">renew</a><small>1</small></li>
+  
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
   
     <li><a href="/tags/require/">require</a><small>2</small></li>
@@ -1423,7 +1474,7 @@
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
+    <li><a href="/tags/ssl/">ssl</a><small>3</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

@@ -68,6 +68,92 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/keeping-routing-simple-and-separated-with-koa-router/">Oct 11, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/10/11/keeping-routing-simple-and-separated-with-koa-router/">Keeping Routing Simple and Separated with Koa Router</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Debugging an error when using <a href="https://github.com/alexmingoia/koa-router" target="_blank" rel="external">koa-router</a> module that multiple routes were invoked on a single HTTP request:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> app = <span class="built_in">require</span>(<span class="string">'koa'</span>)();</div><div class="line"><span class="keyword">var</span> router = <span class="built_in">require</span>(<span class="string">'koa-router'</span>)();</div><div class="line"></div><div class="line">router.use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = {};</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">});</div><div class="line"></div><div class="line">router.get(<span class="string">'/users'</span>, <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body[<span class="string">'/users'</span>] = <span class="literal">true</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">});</div><div class="line"></div><div class="line">router.get(<span class="string">'/users/:id?'</span>, <span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body[<span class="string">'/users/:id?'</span>] = <span class="literal">true</span>;</div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">});</div><div class="line"></div><div class="line">app.use(router.routes());</div><div class="line">app.listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>When making a request to get a list of users, it will match both routes:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">3000</span>/users</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">34</span></div><div class="line">Content-Type: application/json; charset=utf-<span class="number">8</span></div><div class="line"></div><div class="line">{</div><div class="line">    <span class="string">"/users"</span>: <span class="literal">true</span>,</div><div class="line">    <span class="string">"/users/:id?"</span>: <span class="literal">true</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Because in the second route <code>:id</code> is optional, and since there is <code>yield next</code> statement in the first route, the second route will be executed subsequently.</p>
+<p>The cause of the bug is the design of the routing <code>GET /users/:id?</code>. The correct routes are:</p>
+<ul>
+<li><code>GET /users</code>: Retrieve a list (array) of users.</li>
+<li><code>GET /users/:id</code>: Retrieve a single user object.</li>
+</ul>
+<p>The question mark should not be appended to the end of <code>id</code> parameter, which effectively marking the route to perform both duties. It’s better to <strong>keep them simple and keep them separated</strong>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Oct 11, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Passing Information Through Koa Middleware Via &quot;this.state&quot;</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://koajs.com/" target="_blank" rel="external">Koa</a> has a <a href="http://koajs.com/#context" target="_blank" rel="external">context</a> object created during every request/response cycle. The context is referenced via <code>this</code> in the middleware. Much information are captured in the context, such as <code>req</code> and <code>res</code>. In order to avoid polluting the context and colliding with other middleware, the information from your application should be encapsulated into <code>this.state</code> property, a namespace for passing information through middleware during request/response cycle:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">var</span> state = <span class="keyword">this</span>.state;</div><div class="line"></div><div class="line">  state.user = <span class="keyword">yield</span> users.create(<span class="keyword">this</span>.request.body);</div><div class="line">  state.code = <span class="number">201</span>;</div><div class="line">  state.body = {</div><div class="line">    name: user.name,</div><div class="line">    mail: user.mail</div><div class="line">  };</div><div class="line"></div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>The <code>this.state</code> has been initialized into an empty object:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="keyword">this</span>.state;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>Therefore, we can start using it right away without doing our own initialization:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">3000</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">2</span></div><div class="line">Content-Type: application/json; charset=utf-<span class="number">8</span></div><div class="line"></div><div class="line">{}</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-10-06T12:00:00.000Z"><a href="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/">Oct 6, 2015</a></time>
       
       
@@ -503,91 +589,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
-<ol>
-<li>Having multiple images means more configuration files to manage and update.</li>
-<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
-<li>Steeper learning curve for new developers.</li>
-</ol>
-<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-15T12:00:00.000Z"><a href="/2015/09/15/scaffold-an-explicit-document-to-avoid-error-when-creating-indexes-in-google-cloud-datastore/">Sep 15, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/15/scaffold-an-explicit-document-to-avoid-error-when-creating-indexes-in-google-cloud-datastore/">Scaffold an Explicit Document to Avoid Error When Creating Indexes in Google Cloud Datastore</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When working with <a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a>, I would like to design each <a href="https://cloud.google.com/datastore/docs/concepts/entities#Datastore_Kinds_and_identifiers" target="_blank" rel="external">kind</a> (collection or table) with its own schema and index files:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── index.yml</div><div class="line">└── schema.yml</div></pre></td></tr></table></figure>
-
-<p>But not every kind has to have something in the <code>index.yml</code> file. So, what to do? Will the index creation command accept an empty <code>index.yml</code> file with zero byte? Let’s give try:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ gcloud preview datastore create-indexes index.yml</div><div class="line"></div><div class="line">ERROR: (gcloud.preview.datastore.create-indexes) An error occurred <span class="keyword">while</span> parsing file: [/home/chao/kind/index.yml]</div><div class="line">The file is empty</div></pre></td></tr></table></figure>
-
-<p>No, it does not like it. Then, what’s the minimum required? The answer is an <a href="http://www.yaml.org/spec/1.2/spec.html#id2801301" target="_blank" rel="external">explicit document</a> with an empty document content:</p>
-<figure class="highlight yml"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="literal">-</span><span class="literal">-</span><span class="literal">-</span></div></pre></td></tr></table></figure>
-
-<p>The three dashes form a <a href="http://www.yaml.org/spec/1.2/spec.html#marker/directives%20end/" target="_blank" rel="external">directives end marker</a> line. <a href="http://www.yaml.org/" target="_blank" rel="external">YAML</a> uses three dashes to separate directives from document content.</p>
-<p>When creating indexes with the file, it will proceed without errors or warnings:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ gcloud preview datastore create-indexes index.yml</div><div class="line"></div><div class="line">You are about to update the following configurations:</div><div class="line">- myproj/index  From: [/home/chao/kind/index.yml]</div><div class="line">Do you want to <span class="keyword">continue</span> (Y/n)?</div></pre></td></tr></table></figure>
-
-<p>Therefore, to avoid error, when scaffold an <code>index.yml</code> file for indexing, use an explicit document with an empty document content.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -624,7 +625,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -789,7 +790,7 @@
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>4</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -935,7 +936,7 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>12</small></li>
+    <li><a href="/tags/docker/">docker</a><small>14</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1105,7 +1106,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>13</small></li>
+    <li><a href="/tags/install/">install</a><small>14</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1155,7 +1156,7 @@
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>4</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1355,6 +1356,8 @@
   
     <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
   
+    <li><a href="/tags/renew/">renew</a><small>1</small></li>
+  
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
   
     <li><a href="/tags/require/">require</a><small>2</small></li>
@@ -1449,7 +1452,7 @@
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
+    <li><a href="/tags/ssl/">ssl</a><small>3</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

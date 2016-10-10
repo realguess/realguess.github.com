@@ -68,6 +68,131 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-10-09T12:00:00.000Z"><a href="/2016/10/09/renewing-let-s-encrypt-ssl-certificate-with-docker/">Oct 9, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/10/09/renewing-let-s-encrypt-ssl-certificate-with-docker/">Renewing Let&#39;s Encrypt SSL Certificate with Docker</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://letsencrypt.org/" target="_blank" rel="external">Let’s Encrypt CA</a> issues short-lived certificates (90 days). Automated renewal process is preferred, recommended, and encouraged. But in a few situations, automated process is not available, here is how to do it manually when <a href="https://realguess.net/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/" target="_blank" rel="external">SSL certificate was installed with Docker</a>:</p>
+<p>First, update the container to the latest version. The latest version can be found from the <a href="https://github.com/certbot/certbot/releases" target="_blank" rel="external">release page</a> in GitHub.</p>
+<p>The latest is <code>v0.9.1</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker pull quay.io/letsencrypt/letsencrypt:v0.9.1</div></pre></td></tr></table></figure>
+
+<p>Turn off application (if running as a Docker container) to free up the HTTPS port 443:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker stop app</div></pre></td></tr></table></figure>
+
+<p>Renew the certificate by issuing <code>renew</code> command:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm -p 443:443 --name certbot \</div><div class="line">  -v /etc/letsencrypt:/etc/letsencrypt          \</div><div class="line">  -v /var/log/letsencrypt:/var/log/letsencrypt  \</div><div class="line">  quay.io/letsencrypt/letsencrypt:v0.9.1 renew</div><div class="line">Saving debug log to /var/log/letsencrypt/letsencrypt.log</div><div class="line"></div><div class="line">-------------------------------------------------------------------------------</div><div class="line">Processing /etc/letsencrypt/renewal/example.com.conf</div><div class="line">-------------------------------------------------------------------------------</div><div class="line">Cert is due for renewal, auto-renewing...</div><div class="line">Starting new HTTPS connection (1): acme-v01.api.letsencrypt.org</div><div class="line">Renewing an existing certificate</div><div class="line">Performing the following challenges:</div><div class="line">tls-sni-01 challenge for example.com</div><div class="line">Waiting for verification...</div><div class="line">Cleaning up challenges</div><div class="line">Generating key (2048 bits): /etc/letsencrypt/keys/0001_key-certbot.pem</div><div class="line">Creating CSR: /etc/letsencrypt/csr/0001_csr-certbot.pem</div><div class="line"></div><div class="line">-------------------------------------------------------------------------------</div><div class="line">new certificate deployed without reload, fullchain is</div><div class="line">/etc/letsencrypt/live/example.com/fullchain.pem</div><div class="line">-------------------------------------------------------------------------------</div><div class="line"></div><div class="line">Congratulations, all renewals succeeded. The following certs have been renewed:</div><div class="line">  /etc/letsencrypt/live/example.com/fullchain.pem (success)</div></pre></td></tr></table></figure>
+
+<p>Restart app (it’s <code>start</code> not <code>restart</code>):</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker start app</div></pre></td></tr></table></figure>
+
+<p>Check the expiration date:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ echo | openssl s_client -connect example.com:443 2> /dev/null | \</div><div class="line">  openssl x509 -noout -dates</div><div class="line">notBefore=Oct  9 12:00:00 2016 GMT</div><div class="line">notAfter=Jan  7 12:00:00 2017 GMT</div></pre></td></tr></table></figure>
+
+<p>For more information on renewing, see the <a href="https://certbot.eff.org/docs/using.html#renewing-certificates" target="_blank" rel="external">Renewing Certificates</a> section from the Certbot documentation.</p>
+<p>Settings:</p>
+<ul>
+<li>Certbot v0.9.1</li>
+<li>Docker v1.12.1</li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-10-09T12:00:00.000Z"><a href="/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/">Oct 9, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/">Getting Let&#39;s Encrypt SSL Certificate with Docker</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://letsencrypt.org/" target="_blank" rel="external">Let’s Encrypt</a> is a free, open, and automated certificate authority (CA). And its <a href="https://certbot.eff.org/" target="_blank" rel="external">Certbot</a> is a fully-featured, extensible client for Let’s Encrypt CA that can automate the tasks of getting, renewing and even installing SSL certificates.</p>
+<p>First, you need to get Certbot. There are a few ways to <a href="https://certbot.eff.org/docs/using.html" target="_blank" rel="external">install Certbot</a>. But with <a href="https://docker.com/" target="_blank" rel="external">Docker</a>, you don’t need to install, you just need to download the <a href="https://quay.io/repository/letsencrypt/letsencrypt" target="_blank" rel="external">Docker image</a> and run the container. However, the caveat is that this method does not <em>install</em> the certificate automatically respecting to your web server. But if you’re like me, running your server in another Docker container, this might be the way to go.</p>
+<p>Let’s start.</p>
+<p>First, download the image. You can download the <code>latest</code> version (tag):</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker pull quay.io/letsencrypt/letsencrypt:latest</div></pre></td></tr></table></figure>
+
+<p>But the latest usually is not a stable release:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm quay.io/letsencrypt/letsencrypt:latest --version</div><div class="line">certbot 0.10.0.dev0</div></pre></td></tr></table></figure>
+
+<p>Therefore, it’s better to use a specific release, which can be found in Certbot’s GitHub page: <a href="https://github.com/certbot/certbot/releases" target="_blank" rel="external">https://github.com/certbot/certbot/releases</a>.</p>
+<p>The latest one now is <code>v0.9.1</code>. We can pull that from Quay.io:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker pull quay.io/letsencrypt/letsencrypt:v0.<span class="number">9.1</span></div></pre></td></tr></table></figure>
+
+<p>Confirm the release version:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm quay.io/letsencrypt/letsencrypt:v0.9.1 --version</div><div class="line">certbot 0.9.1</div></pre></td></tr></table></figure>
+
+<p>Let’s take a look at the Docker image:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker inspect quay.io/letsencrypt/letsencrypt:v0.<span class="number">9.1</span></div></pre></td></tr></table></figure>
+
+<p>Dropping things don’t care, the output is:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">    {</div><div class="line">        "<span class="attribute">RepoTags</span>": <span class="value">[</span></div><div class="line">            <span class="string">"quay.io/letsencrypt/letsencrypt:v0.9.1"</span></div><div class="line">        ],</div><div class="line">        "<span class="attribute">ContainerConfig</span>": <span class="value">{</span></div><div class="line">            "<span class="attribute">ExposedPorts</span>": <span class="value">{</span></div><div class="line">                "<span class="attribute">443/tcp</span>": <span class="value">{}</span></div><div class="line">            },</div><div class="line">            "<span class="attribute">Cmd</span>": <span class="value">[</span></div><div class="line">                <span class="string">"/bin/sh"</span>,</div><div class="line">                <span class="string">"-c"</span>,</div><div class="line">                <span class="string">"#(nop) ENTRYPOINT \u0026{[\"certbot\"]}"</span></div><div class="line">            ],</div><div class="line">            "<span class="attribute">Volumes</span>": <span class="value">{</span></div><div class="line">                "<span class="attribute">/etc/letsencrypt</span>": <span class="value">{}</span>,</div><div class="line">                "<span class="attribute">/var/lib/letsencrypt</span>": <span class="value">{}</span></div><div class="line">            },</div><div class="line">            "<span class="attribute">Entrypoint</span>": <span class="value">[</span></div><div class="line">                <span class="string">"certbot"</span></div><div class="line">            ]</div><div class="line">        }</div><div class="line">    }</div><div class="line">]</div></pre></td></tr></table></figure>
+
+<p>The <code>ENTRYPOINT</code> is <code>certbot</code> binary:</p>
+<blockquote>
+<p>An <code>ENTRYPOINT</code> allows you to configure a container that will run as an executable.[^1]</p>
+</blockquote>
+<p>And the command line arguments to <code>docker run</code> becomes the arguments to <code>certbot</code> command. As we saw earlier to obtain the release version by using <code>--version</code>.</p>
+<blockquote>
+<p>You can override the <code>ENTRYPOINT</code> instruction using the <code>docker run --entrypoint</code> flag.[^1]</p>
+</blockquote>
+<p>For example, to override and run the container without executing the <code>certbot</code> command:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name certbot --entrypoint /bin/bash \</div><div class="line">  quay.io/letsencrypt/letsencrypt:v0.<span class="number">9.1</span></div></pre></td></tr></table></figure>
+
+<p>But we are more concerning about others, such as exposed port and mapped volumes. The exposed port is 443, HTTPS port. The most important volume (directory) is <code>/etc/letsencrypt</code>. All generated keys and issued certificates can be found in there. Directory <code>/var/lib/letsencrypt</code> is the default working directory, some backup stuff are stored. I have yet to find it useful. However, the logs directory <code>/var/log/letsencrypt</code> is not being used. This could be useful if things went haywire.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-09-26T12:00:00.000Z"><a href="/2016/09/26/installing-let-s-encrypt-ssl-certificate-on-google-app-engine-using-certbot/">Sep 26, 2016</a></time>
       
       
@@ -547,109 +672,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-10-06T12:00:00.000Z"><a href="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/">Oct 6, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/">Overriding the Default Forwarded SSH Port in Vagrant</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>TLDR:</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Must specified `id: "ssh"` in order to override the default forwarded SSH port.</span></div><div class="line">config.vm.network <span class="symbol">:forwarded_port</span>, <span class="symbol">guest:</span> <span class="number">22</span>, <span class="symbol">host:</span> <span class="number">2322</span>, <span class="symbol">id:</span> <span class="string">"ssh"</span></div></pre></td></tr></table></figure>
-
-<p>What’s the problem? If running multiple virtual machines managed by Vagrant, SSH port collision will happen:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Vagrant cannot forward the specified ports on this VM, since they</div><div class="line">would collide with some other application that is already listening</div><div class="line">on these ports. The forwarded port to 2222 is already in use</div><div class="line">on the host machine.</div><div class="line"></div><div class="line">To fix this, modify your current projects Vagrantfile to use another</div><div class="line">port. Example, where '1234' would be replaced by a unique host port:</div><div class="line"></div><div class="line">  config.vm.network :forwarded_port, guest: 22, host: 1234</div><div class="line"></div><div class="line">Sometimes, Vagrant will attempt to auto-correct this for you. In this</div><div class="line">case, Vagrant was unable to. This is usually because the guest machine</div><div class="line">is in a state which doesn't allow modifying port forwarding.</div></pre></td></tr></table></figure>
-
-<p>The example is <em>correct</em> but <em>incomplete</em>. By default the SSH port (<code>22</code>) on the guest machine is forwarded to port <code>2222</code> on the host machine:</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Source: https://github.com/mitchellh/vagrant/blob/v1.7.2/plugins/kernel_v2/config/vm.rb</span></div><div class="line"><span class="keyword">if</span> !<span class="variable">@__networks</span>[<span class="string">"forwarded_port-ssh"</span>]</div><div class="line">  network <span class="symbol">:forwarded_port</span>,</div><div class="line">    <span class="symbol">guest:</span> <span class="number">22</span>,</div><div class="line">    <span class="symbol">host:</span> <span class="number">2222</span>,</div><div class="line">    <span class="symbol">host_ip:</span> <span class="string">"127.0.0.1"</span>,</div><div class="line">    <span class="symbol">id:</span> <span class="string">"ssh"</span>,</div><div class="line">    <span class="symbol">auto_correct:</span> <span class="keyword">true</span></div><div class="line"><span class="keyword">end</span></div></pre></td></tr></table></figure>
-
-<p>Changing to another port in <code>Vagrantfile</code> does not solve the problem. For example, switching from <code>2222</code> to <code>2322</code>:</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Create a forwarded port mapping which allows access to a specific port</span></div><div class="line"><span class="comment"># within the machine from a port on the host machine. In the example below,</span></div><div class="line"><span class="comment"># accessing "localhost:8080" will access port 80 on the guest machine.</span></div><div class="line">config.vm.network <span class="string">"forwarded_port"</span>, <span class="symbol">guest:</span> <span class="number">22</span>, <span class="symbol">host:</span> <span class="number">2322</span></div></pre></td></tr></table></figure>
-
-<p>In this situation, you are forwarding both ports <code>2222</code> and <code>2322</code> to the SSH port on the guest machine, as shown in <a href="https://www.virtualbox.org/" target="_blank" rel="external">VirtualBox</a> port forwarding settings:</p>
-<p><img src="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/port-forwarding-rules.jpg" alt="Port Forwarding Rules"></p>
-<p>When bringing up the machine, there will be multiple host machine ports forwarding to the same SSH port.</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ vagrant up</div><div class="line">==&gt; default: Forwarding ports...</div><div class="line">    default: <span class="number">22</span> =&gt; <span class="number">2322</span> (adapter <span class="number">1</span>)</div><div class="line">    default: <span class="number">22</span> =&gt; <span class="number">2222</span> (adapter <span class="number">1</span>)</div></pre></td></tr></table></figure>
-
-<p>The SSH configuration shows the same outcome:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh-config</div><div class="line">Host default</div><div class="line">  HostName <span class="number">127.0</span>.<span class="number">0.1</span></div><div class="line">  User chao</div><div class="line">  Port <span class="number">2222</span></div></pre></td></tr></table></figure>
-
-<p>Of course, you can do:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ ssh -p <span class="number">2322</span> chao@localhost</div></pre></td></tr></table></figure>
-
-<p>This works, but we like the simple <code>vagrant ssh</code> command, and we just want to retain a single port <code>2322</code>.</p>
-<p>The solution is appending <code>id: &quot;ssh&quot;</code>, and it must be specified in order to override the default forwarded SSH port. See &lt; <a href="https://github.com/mitchellh/vagrant/issues/3232#issuecomment-39354659&gt;" target="_blank" rel="external">https://github.com/mitchellh/vagrant/issues/3232#issuecomment-39354659&gt;</a>:</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Must specified `id: "ssh"` in order to override the default forwarded SSH port.</span></div><div class="line">config.vm.network <span class="symbol">:forwarded_port</span>, <span class="symbol">guest:</span> <span class="number">22</span>, <span class="symbol">host:</span> <span class="number">2322</span>, <span class="symbol">id:</span> <span class="string">"ssh"</span></div></pre></td></tr></table></figure>
-
-<p>After appending <code>id: &quot;ssh&quot;</code>, the SSH configuration has also been updated:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh-config</div><div class="line">Host default</div><div class="line">  HostName <span class="number">127.0</span>.<span class="number">0.1</span></div><div class="line">  User chao</div><div class="line">  Port <span class="number">2322</span></div></pre></td></tr></table></figure>
-
-<p>Now, you are good to go:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
-
-<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -684,7 +706,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -849,7 +871,7 @@
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>4</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -995,7 +1017,7 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>12</small></li>
+    <li><a href="/tags/docker/">docker</a><small>14</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1165,7 +1187,7 @@
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>13</small></li>
+    <li><a href="/tags/install/">install</a><small>14</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1215,7 +1237,7 @@
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>4</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1415,6 +1437,8 @@
   
     <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
   
+    <li><a href="/tags/renew/">renew</a><small>1</small></li>
+  
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
   
     <li><a href="/tags/require/">require</a><small>2</small></li>
@@ -1509,7 +1533,7 @@
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
+    <li><a href="/tags/ssl/">ssl</a><small>3</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

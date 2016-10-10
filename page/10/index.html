@@ -58,6 +58,150 @@
 <div class="clearfix"></div></header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="blog">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-07-05T14:51:30.000Z"><a href="/2014/07/05/extended-pattern-matching/">Jul 5, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/07/05/extended-pattern-matching/">Extended Pattern Matching</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Bash supports <a href="https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html" target="_blank" rel="external">extended pattern matching</a>. By using the built-in utility we can check if it is enabled or not:</p>
+<pre><code>$ <span class="built_in">shopt</span> extglob
+</code></pre><p>If not, to enable it:</p>
+<pre><code>$ <span class="built_in">shopt</span> <span class="operator">-s</span> extglob
+</code></pre><p>By default <code>extglob</code> is on in interactive shells, but <strong>off in non-interactive shells</strong>.</p>
+<p>The key about extended pattern matching is pattern list via <code>|</code> (what we usually see as a <code>OR</code> operator). But do not think about it as that, think about it as a list of array pattern that are separated by <code>|</code> instead of <code>,</code>. And actually one of them is the same as <code>{}</code> or brace expansion, but it can do more than expanding.</p>
+<p>Here are the pattern operators:</p>
+<pre><code>? <span class="keyword">*</span> + @ !
+</code></pre><p>Create some example files:</p>
+<pre><code>$ touch <span class="operator">a</span>{,<span class="number">1</span>,<span class="number">2</span>,<span class="number">11</span>,<span class="number">12</span>}.js &amp;&amp; ls
+a11.js  a12.js  a1.js  a2.js  <span class="operator">a</span>.js
+</code></pre><p><strong><code>?(pattern-list)</code></strong></p>
+<p>Zero or one (any one) occurrence of the giving pattern:</p>
+<pre><code>$ ls <span class="operator">a</span>?(<span class="number">2</span>|<span class="number">1</span>).js
+a1.js  a2.js  <span class="operator">a</span>.js
+</code></pre><p><strong><code>*(pattern-list)</code></strong></p>
+<p>Zero or more occurrences of the giving pattern (essentially everything):</p>
+<pre><code>$ ls <span class="operator">a</span>*(<span class="number">2</span>|<span class="number">1</span>).js
+a11.js  a12.js  a1.js  a2.js  <span class="operator">a</span>.js
+</code></pre><p><strong><code>+(pattern-list)</code></strong></p>
+<p>One or more of the giving pattern (notice <code>a.js</code> is missing):</p>
+<pre><code>$ <span class="keyword">ls</span> <span class="keyword">a</span>+(<span class="number">2</span>|<span class="number">1</span>).js
+a11.js  a12.js  a1.js  a2.js
+</code></pre><p><strong><code>@(pattern-list)</code></strong></p>
+<p>Any one of giving pattern:</p>
+<pre><code>$ <span class="keyword">ls</span> a<span class="variable">@(</span><span class="number">2</span>|<span class="number">1</span>).js
+a1.js  a2.js
+</code></pre><p><strong><code>!(pattern-list)</code></strong></p>
+<p>None of the giving pattern:</p>
+<pre><code>$ ls <span class="operator">a</span>!(<span class="number">2</span>|<span class="number">1</span>).js
+a11.js  a12.js  <span class="operator">a</span>.js
+</code></pre><p>One mistake I had was getting confused between extended pattern matching and brace expansion, for example:</p>
+<pre><code><span class="variable">$ </span>ls test/@{src|spec}/*.js
+<span class="symbol">ls:</span> cannot access test/<span class="variable">@src</span>/*.<span class="symbol">js:</span> <span class="constant">No</span> such file <span class="keyword">or</span> directory
+<span class="symbol">ls:</span> cannot access test/<span class="variable">@spec</span>/*.<span class="symbol">js:</span> <span class="constant">No</span> such file <span class="keyword">or</span> directory
+</code></pre><p>Extended pattern uses parentheses <code>()</code> not braces <code>{}</code> as in brace expansion.</p>
+<p>Also, these two patterns are the same:</p>
+<pre><code>test/<span class="comment">@(src|spec)/*.js</span>
+test/{src,spec}/<span class="keyword">*</span>.js
+</code></pre><p>In some situations, extended pattern matching does not work, for example, matching files from the current directory and from one of the subdirectories with the following directory structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── app.js</div><div class="line">├── lib</div><div class="line">│   └── util.js</div><div class="line">└── test</div><div class="line">    └── main.js</div><div class="line"></div><div class="line"><span class="number">2</span> <span class="built_in">directories</span>, <span class="number">3</span> <span class="built_in">files</span></div></pre></td></tr></table></figure>
+
+<p>I would like to match js files from the current directory and <code>lib/</code> directory, sort of like:</p>
+<pre><code>$ ls <span class="keyword">*</span>.js lib/<span class="keyword">*</span>.js
+app.js  lib/util.js
+</code></pre><p>But this does not do it:</p>
+<pre><code>$ <span class="keyword">ls</span> <span class="variable">@(</span>.|lib)<span class="comment">/*.js</span>
+</code></pre><p>Instead, use brace expansion:</p>
+<pre><code><span class="variable">$ </span>ls {.,lib}/*.js
+</code></pre><p>Finally, Node’s <a href="https://github.com/isaacs/minimatch" target="_blank" rel="external">Minimatch</a> supports brace expansion, <em>extended globbing</em> and globstar.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-06-29T21:07:07.000Z"><a href="/2014/06/29/inherited-accessor-property-can-only-be-overridden-by-accessor-property/">Jun 29, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/06/29/inherited-accessor-property-can-only-be-overridden-by-accessor-property/">Inherited Accessor Property Can Only Be Overridden by Accessor Property</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In Javascript, define a property <code>prop</code> as an accessor property via getter/setter:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = {</div><div class="line">  get prop() {},</div><div class="line">  set prop() {}</div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>And the property will have the following attributes:</p>
+<pre><code>&gt; <span class="built_in">Object</span>.keys(obj)
+[ <span class="string">'prop'</span> ]
+&gt; <span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, <span class="string">'prop'</span>)
+{ <span class="keyword">get</span>: [<span class="built_in">Function</span>: prop],
+  <span class="keyword">set</span>: [<span class="built_in">Function</span>: prop],
+  enumerable: <span class="literal">true</span>,
+  configurable: <span class="literal">true</span> }
+</code></pre><p>Now, create a new object that inherits <code>obj</code>, and attempt to overwrite the accessor property by a data property:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = <span class="built_in">Object</span>.create(obj);</div><div class="line">foo.prop = <span class="string">'data'</span>;</div></pre></td></tr></table></figure>
+
+<p>But, the same property of the new object cannot be created:</p>
+<pre><code><span class="input"><span class="prompt">&gt; Object.keys(foo)
+[]
+&gt;</span> <span class="constant">Object</span>.getOwnPropertyDescriptor(foo, <span class="string">'prop'</span>)</span>
+undefined
+</code></pre><p>That is because that the property is an accessor property and it cannot be overridden by a data property. It can only be overridden by an accessor property:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(foo, <span class="string">'prop'</span>, {</div><div class="line">  get: <span class="function"><span class="keyword">function</span> <span class="title">prop</span><span class="params">()</span> </span>{},</div><div class="line">  set: <span class="function"><span class="keyword">function</span> <span class="title">prop</span><span class="params">()</span> </span>{},</div><div class="line">  enumerable: <span class="literal">true</span>,</div><div class="line">  configurable: <span class="literal">true</span>,</div><div class="line">});</div></pre></td></tr></table></figure>
+
+<p>Then, the <code>foo</code> object will have its own property named <code>prop</code>:</p>
+<pre><code>&gt; <span class="built_in">Object</span>.keys(foo)
+[ <span class="string">'prop'</span> ]
+&gt; <span class="built_in">Object</span>.getOwnPropertyDescriptor(foo, <span class="string">'prop'</span>)
+{ <span class="keyword">get</span>: [<span class="built_in">Function</span>: prop],
+  <span class="keyword">set</span>: [<span class="built_in">Function</span>: prop],
+  enumerable: <span class="literal">true</span>,
+  configurable: <span class="literal">true</span> }
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article class="post">
   
   <div class="post-content">
@@ -559,151 +703,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-05-20T13:49:37.000Z"><a href="/2014/05/20/node-version-manager/">May 20, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/05/20/node-version-manager/">Node Version Manager</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://github.com/creationix/nvm" target="_blank" rel="external">Node Version Manager</a> is a simple bash script to manage multiple active <a href="http://nodejs.org/" target="_blank" rel="external">Node</a> versions. <em>Why do you want to use it?</em> If you like me, you want to try out the latest unstable version of the Node, but you still need to use the older and stable versions to develop and maintain your projects, then you should use <a href="https://github.com/creationix/nvm" target="_blank" rel="external">NVM</a>.</p>
-<p>You can find out more information on <a href="https://github.com/creationix/nvm" target="_blank" rel="external">NVM GitHub page</a>, below are just my take on installing and using it.</p>
-<h2 id="Install">Install</h2>
-<p>You can install NVM via the install script, but always do it the hard way by installing it manually:</p>
-<pre><code><span class="variable">$ </span>git clone <span class="symbol">https:</span>/<span class="regexp">/github.com/creationix</span><span class="regexp">/nvm.git ~/</span>.nvm
-</code></pre><p>Check out the latest version:</p>
-<pre><code>$ <span class="built_in">cd</span> ~/.nvm &amp;&amp; git checkout v0.<span class="number">7.0</span>
-</code></pre><p>Enable NVM:</p>
-<pre><code>$ <span class="keyword">source</span> ~/.nvm/nvm.<span class="keyword">sh</span>
-</code></pre><p>Add this to <code>~/.bashrc</code> to make it available upon login:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">"\n# Enable NVM"</span>           &gt;&gt; ~/.bashrc
-$ <span class="built_in">echo</span> <span class="string">'source $HOME/.nvm/nvm.sh'</span> &gt;&gt; ~/.bashrc
-</code></pre><p>Enable Bash completion:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">'source $HOME/.nvm/bash_completion'</span> &gt;&gt; ~/.bashrc
-</code></pre><p>Try it by opening a new terminal:</p>
-<pre><code><span class="variable">$ </span>nvm
-</code></pre><h2 id="Usage">Usage</h2>
-<p>Get help:</p>
-<pre><code>$ nvm <span class="built_in">help</span>
-</code></pre><p>Show current NVM version:</p>
-<pre><code>$ nvm --<span class="keyword">version</span>
-</code></pre><p>Display the currently active Node version:</p>
-<pre><code>$ nvm <span class="literal">current</span>
-</code></pre><p>Install Node v0.10.28:</p>
-<pre><code><span class="variable">$ </span>nvm install <span class="number">0</span>.<span class="number">10.28</span>
-</code></pre><p>The installed Node version will reside in <code>~/.nvm/v0.10.28</code>.</p>
-<p>List installed versions:</p>
-<pre><code>$ nvm <span class="keyword">ls</span>
-    .nvm
-v0.<span class="number">10.28</span>
-</code></pre><p>Use a specific Node version:</p>
-<pre><code><span class="variable">$ </span>which node
-/usr/local/bin/node
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">11.13</span>
-<span class="variable">$ </span>nvm <span class="keyword">use</span> <span class="number">0</span>.<span class="number">10.28</span>
-<span class="constant">Now </span>using node v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>which node
-/home/chao/.nvm/v<span class="number">0</span>.<span class="number">10.28</span>/bin/node
-</code></pre><p>Basically, NVM modified the search path.</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="variable">$PATH</span>
-/home/chao/.nvm/v0.<span class="number">10.28</span>/bin
-</code></pre><p>To roll back:</p>
-<pre><code><span class="char">$ </span>nvm deactivate
-/home/chao/.nvm/*/bin removed from <span class="char">$P</span>ATH
-/home/chao/.nvm/*/share/man removed from <span class="char">$M</span>ANPATH
-/home/chao/.nvm/*/lib/node_modules removed from <span class="char">$N</span>ODE_PATH
-</code></pre><p>List Node versions available to install:</p>
-<pre><code>$ nvm <span class="keyword">ls</span>-remote
-</code></pre><p>Use <code>.nvmrc</code> file:</p>
-<pre><code><span class="input"><span class="prompt">$ echo '0.10.28' &gt;&gt;</span> .nvmrc</span>
-<span class="variable">$ </span>nvm use
-<span class="constant">Found</span> <span class="string">'/home/chao/.nvmrc'</span> with version &lt;<span class="number">0</span>.<span class="number">10.28</span>&gt;
-<span class="constant">Now</span> using node v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">10.28</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-05-18T22:05:34.000Z"><a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">May 18, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">Split a Large JSON file into Smaller Pieces</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In the <a href="/2013/12/19/split-json-file-into-multiple-parts/">previous post</a>, I have written about how to split a large JSON file into multiple parts, but that was limited to the default behavior of <code>mongoexport</code>, where each line in the output file represents a JSON string. If you have to deal with a large JSON file, such as the one generated with <code>--jsonArray</code> option in <code>mongoexport</code>, you can to parse the file incrementally or streaming.</p>
-<p>I have downloaded a large JOSN <a href="https://health.data.ny.gov/api/views/vafa-pf2s/rows.json?accessType=DOWNLOAD" target="_blank" rel="external">data set</a> (about 144MB) from <a href="http://catalog.data.gov/dataset/genealogical-research-death-index-beginning-1957" target="_blank" rel="external">Data.gov</a>. If you try to read the entire data set into memory:</p>
-<pre><code>&gt; <span class="keyword">var</span> json = <span class="built_in">require</span>(<span class="string">'./data.json'</span>)
-Killed
-</code></pre><p>The process is not able to handle it. Use streaming is necessary. And luckily, our <a href="/2014/05/18/command-line-json-processing/">command line JSON processing</a> tool, <a href="http://stedolan.github.io/jq/" target="_blank" rel="external">jq</a>, supports streaming.</p>
-<p>The parts we are interested are encapsulated in an array under <code>data</code> property of the data set. We are going to split each element of the array into its own file.</p>
-<p>Don’t try to use <code>-f</code> option in <em>jq</em> to read file from the command line, it will read everything into a memory. Instead, do <code>cat data.json | jq</code>.</p>
-<pre><code>$ <span class="built_in">mkdir</span> parts
-$ <span class="keyword">cat</span> data.json | jq -<span class="keyword">c</span> -M <span class="string">'.data[]'</span> | \
-  <span class="keyword">while</span> <span class="keyword">read</span> <span class="built_in">line</span>; <span class="keyword">do</span> <span class="keyword">echo</span> $<span class="built_in">line</span> &gt; parts/$(date +%<span class="keyword">s</span>%<span class="keyword">N</span>).json; done
-</code></pre><p>The entire data set is piped into <em>jq</em> to filter and compress each array element. Each element is printed in one line, and each line is saved into its own JSON file by using UNIX timestamp plus nanosecond as the filename. All pieces are saved into <code>parts/</code> directory.</p>
-<p>But there is one problem with embedded JSON string, which has to do with <code>echo</code>, due to backslash. For example, if echoing the following string:</p>
-<pre><code>{<span class="string">"name"</span>:<span class="string">"{\"first\":\"Foo\",\"last\":\"Foo\"}"</span>,<span class="string">"username"</span>:<span class="string">"foo"</span>,<span class="string">"id"</span>:<span class="number">1</span>}
-</code></pre><p>It will be printed as an invalid JSON:</p>
-<pre><code>{<span class="string">"name"</span><span class="symbol">:<span class="string">"{"</span>first<span class="string">":"</span>Foo<span class="string">","</span>last<span class="string">":"</span>Foo<span class="string">"}"</span></span>,<span class="string">"username"</span><span class="symbol">:<span class="string">"foo"</span></span>,<span class="string">"id"</span><span class="symbol">:</span><span class="number">1</span>}
-</code></pre><p>Backslashes are stripped. To fix this problem, we can simply double backslash:</p>
-<pre><code>$ <span class="keyword">cat</span> data.json | jq -<span class="keyword">c</span> -M <span class="string">'.data[]'</span> | sed <span class="string">'s/\\"/\\\\"/g'</span> | \
-  <span class="keyword">while</span> <span class="keyword">read</span> <span class="built_in">line</span>; <span class="keyword">do</span> <span class="keyword">echo</span> $<span class="built_in">line</span> &gt; parts/$(date +%<span class="keyword">s</span>%<span class="keyword">N</span>).json; done
-</code></pre><p>You can even try <code>curl</code> the remote JSON file instead using <code>cat</code> from the downloaded file. But you might want to try with a smaller file first, because, with my slow machine, it took me nearly an hour to finish splitting into 678,733 parts:</p>
-<pre><code>real    <span class="number">49</span>m35.<span class="number">780</span>s
-<span class="literal">user</span>    <span class="number">2</span>m42.<span class="number">888</span>s
-sys     <span class="number">6</span>m48.<span class="number">048</span>s
-</code></pre><p>To take it a little bit further, the next step is to decide how many lines or array elements to write into a single file.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -739,7 +738,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -904,7 +903,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>4</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -1050,7 +1049,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>12</small></li>
+    <li><a href="/tags/docker/">docker</a><small>14</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1220,7 +1219,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>13</small></li>
+    <li><a href="/tags/install/">install</a><small>14</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1270,7 +1269,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>4</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1470,6 +1469,8 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
   
+    <li><a href="/tags/renew/">renew</a><small>1</small></li>
+  
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
   
     <li><a href="/tags/require/">require</a><small>2</small></li>
@@ -1564,7 +1565,7 @@ sys     <span class="number">6</span>m48.<span class="number">048</span>s
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
+    <li><a href="/tags/ssl/">ssl</a><small>3</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   

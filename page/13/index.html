@@ -64,6 +64,96 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-01-24T21:19:23.000Z"><a href="/2014/01/24/null/">Jan 24, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/24/null/">null</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In JavaScript, you assign value <code>null</code> to an object property to indicate that the property is defined but with no value. But using <code>null</code> outside the JavaScript domain becomes tricky. For example, in URL query parameters:</p>
+<pre><code>?<span class="variable">foo=</span><span class="constant">null</span>&amp;<span class="variable">bar=</span>bar
+</code></pre><p>after parsing the query:</p>
+<pre><code>{
+  "<span class="attribute">foo</span>": <span class="value"><span class="string">"null"</span></span>,
+  "<span class="attribute">bar</span>": <span class="value"><span class="string">"bar"</span>
+</span>}
+</code></pre><p>Should the value of <code>foo</code> be parsed from <code>&quot;null&quot;</code> string into <code>null</code> object? Unless you know the context.</p>
+<p>Using <code>null</code> in both schema design and URL query gave me a few headaches. So, I have decided to use string and throw away <code>null</code>.  As string is the most basic data type across many applications. For simplier design and greater compatibility and portability, use empty string instead of <code>null</code>.</p>
+<p>Therefore, the value of query parameter <code>foo</code> should be:</p>
+<pre><code>?<span class="variable">foo=</span><span class="constant">null</span>&amp;<span class="variable">bar=</span>bar // <span class="string">"null"</span>
+?<span class="variable">foo=</span>&amp;<span class="variable">bar=</span>bar     // <span class="string">""</span>
+</code></pre><p>and:</p>
+<pre><code><span class="string">"null"</span> <span class="exclamation_mark">!</span>== <span class="string">""</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-01-22T11:59:01.000Z"><a href="/2014/01/22/hipchat/">Jan 22, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/22/hipchat/">HipChat</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>While I was learning more on distributed team and remote working. I saw many startups are using <a href="https://www.hipchat.com/" target="_blank" rel="external">HipChat</a>, a group chatting service. If you have been using IRC, you will feel right at home. But it is not just a group chat, you can also share files and source code. Here are a few things I like so far.</p>
+<p><strong>Virtual office</strong></p>
+<p>The most appealing is the concept of “virtual office”. This certainly will help a distributed team. It gives you a sense of being in the office at the same time but without constant disruption.</p>
+<p><strong>Reduce emails</strong></p>
+<p>The advantage it has over email is that all messages are within team only. Team messages should take priority over others. And you know that you cannot control your inbox. Hopefully this will cut down the unnecessary emails and facilitate quicker response.</p>
+<p><strong>Search past chat history</strong></p>
+<p>All chats are saved and indexed, so if you say that you are going to do something, you’d better do it, because it will be recorded and searcheable in the future. Meetings could be conducted in the chat room as well, as all details are saved, without pulling all people out of their seats at the same time.</p>
+<p><strong>Integration and API</strong></p>
+<p>I have integrated with <a href="https://bitbucket.org/" target="_blank" rel="external">BitBucket</a>, so all commits will show up in one of our chat rooms. This chat room becomes our notification center. There are many other integration such as Basecamp, Evernote. And There is also an API that can be used to create custom integration.</p>
+<p><strong>Slash commands and emoticons</strong></p>
+<p>I also like the <a href="http://help.hipchat.com/knowledgebase/articles/64451-work-faster-with-slash-commands" target="_blank" rel="external">slash commands</a> and <a href="http://hipchat-emoticons.nyh.name/" target="_blank" rel="external">emoticons</a>.</p>
+<p>So, I just got it started with my team, let me see how it goes.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-19T23:05:04.000Z"><a href="/2014/01/19/difference-between-http-head-and-get/">Jan 19, 2014</a></time>
       
       
@@ -557,96 +647,6 @@ Binary <span class="keyword">file</span> encrypted.txt matches
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-18T15:12:43.000Z"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Dec 18, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Set Filename Path with process.cwd()</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When working with <a href="http://nodejs.org/api/fs.html" target="_blank" rel="external">file system</a> in Node, you will need a fully qualified filename to do things like reading the content of a file:</p>
-<pre><code><span class="built_in">require</span>(<span class="string">'fs'</span>).readFile(filename, <span class="function"><span class="keyword">function</span> <span class="params">(err, data)</span> </span>{});
-</code></pre><p>If you have the following directory structure:</p>
-<pre><code>.
-├── app.js
-├── <span class="typedef"><span class="keyword">data</span></span>
-│   └── file.txt
-└── lib
-    └── reader.js
-</code></pre><p>There are two ways to read the content of <code>data/file.txt</code> from <code>lib/reader.js</code>:</p>
-<p>Use the current directory of the script <code>__dirname</code>:</p>
-<pre><code><span class="title">filename</span> = __dirname + '/../<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
-</code></pre><p>or with <code>path.join</code> to normalize the resulting path:</p>
-<pre><code>filename = path.<span class="keyword">join</span>(__dirname, <span class="string">'../data/file.txt'</span>);
-</code></pre><p>The second method is to use the current working directory of the process <code>process.cwd()</code>:</p>
-<pre><code><span class="title">filename</span> = process.cwd() + '/<span class="typedef"><span class="keyword">data</span>/file.txt';</span>
-</code></pre><p>The second approach is more portable. If you move <code>lib/reader.js</code> to <code>lib/utils/reader.js</code>, no code change will be needed. But make sure the directory of the Node process is the application root directory where <code>node app.js</code> is being issued.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-17T18:05:38.000Z"><a href="/2013/12/17/small-markdown-features-on-ghost-blogging-platform/">Dec 17, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/17/small-markdown-features-on-ghost-blogging-platform/">Small Markdown Features on Ghost Blogging Platform</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I have known about <a href="http://ghost.org/" target="_blank" rel="external">Ghost</a> since its <a href="http://www.kickstarter.com/projects/johnonolan/ghost-just-a-blogging-platform" target="_blank" rel="external">KickStarter campaign</a>. And recently they just launched the hosted platform for Ghost. I like to set up and run it myself, but the hosted platform is 100% customized to run Ghost blogs. So it could be more efficient and reliable than tinkering on my own. While I was testing it, I have noticed two small <a href="http://daringfireball.net/projects/markdown/" target="_blank" rel="external">Markdown</a> features supported by Ghost:</p>
-<p><strong>Automatic links</strong></p>
-<p>You do not need to enclose the fully qualified URL in angular brackets, URL like <code>http://ghost.org</code> will be automatically linked up. But this works well without language like English where a space denotes as a separator. When I work with language like Chinese, this frequently creating a problem where the Chinese characters are treated as parts of the link. Therefore, I still prefer to write it with angular brackets and get into the habit in doing:</p>
-<pre><code>&lt;http:<span class="comment">//ghost.org/&gt;</span>
-</code></pre><p><strong>Line divider</strong></p>
-<p>One feature I like so far is the support of a line divider. Just need three dashes in a line, it will be converted into a fancy divider. This is great for writing references and footnotes.</p>
-<p><em><small>This is a quick blog for getting started with Ghost.</small></em></p>
-<hr>
-<p>Exploration continues…</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -682,7 +682,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>18</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -847,7 +847,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/cat/">cat</a><small>1</small></li>
   
-    <li><a href="/tags/certbot/">certbot</a><small>2</small></li>
+    <li><a href="/tags/certbot/">certbot</a><small>4</small></li>
   
     <li><a href="/tags/certificate-authority/">certificate-authority</a><small>1</small></li>
   
@@ -993,7 +993,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>12</small></li>
+    <li><a href="/tags/docker/">docker</a><small>14</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1163,7 +1163,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/inheritance/">inheritance</a><small>1</small></li>
   
-    <li><a href="/tags/install/">install</a><small>13</small></li>
+    <li><a href="/tags/install/">install</a><small>14</small></li>
   
     <li><a href="/tags/instance/">instance</a><small>1</small></li>
   
@@ -1213,7 +1213,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/left-to-right-mark/">left-to-right-mark</a><small>1</small></li>
   
-    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>2</small></li>
+    <li><a href="/tags/lets-encrypt/">lets-encrypt</a><small>4</small></li>
   
     <li><a href="/tags/lf/">lf</a><small>1</small></li>
   
@@ -1413,6 +1413,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/remote-working/">remote-working</a><small>1</small></li>
   
+    <li><a href="/tags/renew/">renew</a><small>1</small></li>
+  
     <li><a href="/tags/repl/">repl</a><small>1</small></li>
   
     <li><a href="/tags/require/">require</a><small>2</small></li>
@@ -1507,7 +1509,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/ssl/">ssl</a><small>1</small></li>
+    <li><a href="/tags/ssl/">ssl</a><small>3</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   
