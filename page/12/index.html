@@ -64,6 +64,42 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-04-11T02:00:00.000Z"><a href="/2014/04/11/nota-bene/">Apr 11, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/04/11/nota-bene/">Nota Bene</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Everyday, there are always new things to learn, even just at reading the comments from <code>/etc/apt/sources.list</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">## N.B. software <span class="keyword">from</span> this repository <span class="keyword">is</span> ENTIRELY UNSUPPORTED <span class="keyword">by</span> the Ubuntu</div><div class="line">## team, <span class="keyword">and</span> may <span class="keyword">not</span> be under a free licence. Please satisfy yourself <span class="keyword">as</span> <span class="keyword">to</span></div><div class="line">## your rights <span class="keyword">to</span> use the software. Also, please note that software <span class="keyword">in</span></div><div class="line">## multiverse WILL <span class="keyword">NOT</span> receive any review <span class="keyword">or</span> updates <span class="keyword">from</span> the Ubuntu</div><div class="line">## security team.</div></pre></td></tr></table></figure>
+
+<p>“N.B.” is an abbreviation for <a href="http://en.wikipedia.org/wiki/Nota_bene" target="_blank" rel="external">nota bene</a>, a Latin expression meaning “note well”. N.B. every detail matters.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-04-02T00:30:00.000Z"><a href="/2014/04/02/difference-between-require-and-fs-in-loading-files/">Apr 2, 2014</a></time>
       
       
@@ -678,72 +714,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-02-11T22:42:55.000Z"><a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">Feb 11, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">Defining Correct Environment for CoffeeScript in Cron</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I have written a bunch of CoffeeScript scripts that I would like to run them regularly. <a href="http://en.wikipedia.org/wiki/Cron" target="_blank" rel="external">Cron</a> is certainly the right choice in many situation.</p>
-<p>The default executable path recognized by cron is limited:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> echo $PATH &gt; /tmp/log/cron.log
-</code></pre><p>This cron job will recognize the following path:</p>
-<pre><code><span class="regexp">/usr/</span>bin:<span class="regexp">/bin</span>
-</code></pre><p>However the default executable path for Node.js is usually at:</p>
-<pre><code>$ which node
-<span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>node
-</code></pre><p>Therefore, if you attempt to run a cron job:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> node -v &gt; /tmp/log/cron.log 2&gt; /tmp/log/cron.err.log
-</code></pre><p>It will return an error, where the executable is not found:</p>
-<pre><code><span class="attribute">bin/sh</span>: <span class="string">1: node: not found</span>
-</code></pre><p>The easiest way to solve it is by specifying the fully qualified path:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/local/bin/node -v &gt; /tmp/log/cron.log
-</code></pre><p>To ensure the process is installed, we can check the file existence and permission before launching it:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> test -x /usr/local/bin/node &amp;&amp; /usr/local/bin/node -v
-</code></pre><p>But when working with CoffeeScript, the same method does not working:</p>
-<pre><code><span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /usr/local/bin/coffee -v 2&gt; /tmp/log/cron.err.log
-</code></pre><p>Because CoffeeScript binary (<code>coffee</code>) use the following format:</p>
-<pre><code><span class="shebang">#!/usr/bin/env node</span>
-</code></pre><p>Which does not specify fully qualified path on the shebang line, and will result in:</p>
-<pre><code>/usr/bin/env: node: No such <span class="built_in">file</span> <span class="operator">or</span> <span class="built_in">directory</span>
-</code></pre><p>We can compile CoffeeScript into JavaScript and use fully qualified <code>node</code> executable. But this is not necessary. Since we are using Debian based system, which uses Vixie cron. It allows environment variables to be defined. We can make Cron aware of the custom path in environment variable:</p>
-<pre><code>* * * * * <span class="constant">PATH</span>=<span class="variable">$PATH</span><span class="symbol">:/usr/local/bin</span> coffee -v &gt; <span class="regexp">/tmp/log</span><span class="regexp">/cron.log</span>
-</code></pre><p>Now the executable path include the one where both <code>node</code> and <code>coffee</code> commands reside.</p>
-<p>We can also move it to its own line. But Cron is not shell, it does not expand the variable, so you have to specify all paths:</p>
-<pre><code><span class="comment"># Error: `PATH=$PATH:/usr/local/bin`</span>
-<span class="constant">PATH</span>=<span class="regexp">/usr/bin</span><span class="symbol">:/bin</span><span class="symbol">:/usr/local/bin</span>
-<span class="input"><span class="prompt">* * * * * coffee -v &gt;</span> /tmp/log/cron.log</span>
-</code></pre><p>The good practice is to set environment variables in a script:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># This script is intended to be run as a cron job.</span></div><div class="line"></div><div class="line">PATH=<span class="variable">$PATH</span>:/usr/local/bin</div><div class="line">coffee -v</div></pre></td></tr></table></figure>
-
-<p>and run the script as a cron job:</p>
-<pre><code>* * * * * /path/<span class="keyword">to</span>/script &gt; /tmp/<span class="built_in">log</span>/cron.<span class="built_in">log</span> <span class="number">2</span>&gt;&gt; /tmp/<span class="built_in">log</span>/cron.<span class="built_in">err</span>.<span class="built_in">log</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -773,7 +743,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>3</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>4</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -960,7 +930,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>12</small></li>
+    <li><a href="/tags/cli/">cli</a><small>13</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -1048,7 +1018,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/datastore/">datastore</a><small>1</small></li>
   
-    <li><a href="/tags/date/">date</a><small>1</small></li>
+    <li><a href="/tags/date/">date</a><small>2</small></li>
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
@@ -1119,6 +1089,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
     <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
   
     <li><a href="/tags/escape-character/">escape-character</a><small>1</small></li>
+  
+    <li><a href="/tags/expiration/">expiration</a><small>1</small></li>
   
     <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
   
@@ -1426,7 +1398,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/one-liner/">one-liner</a><small>2</small></li>
   
-    <li><a href="/tags/openssl/">openssl</a><small>2</small></li>
+    <li><a href="/tags/openssl/">openssl</a><small>3</small></li>
   
     <li><a href="/tags/order/">order</a><small>1</small></li>
   
@@ -1606,7 +1578,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/ssl/">ssl</a><small>3</small></li>
+    <li><a href="/tags/ssl/">ssl</a><small>4</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   
@@ -1771,6 +1743,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
   
     <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
+  
+    <li><a href="/tags/xargs/">xargs</a><small>1</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   

@@ -68,6 +68,55 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-12-19T16:56:13.000Z"><a href="/2013/12/19/split-json-file-into-multiple-parts/">Dec 19, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/19/split-json-file-into-multiple-parts/">Split JSON File into Multiple Parts</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><code>mongoexport</code> allows us to export documents from MongoDB into a JSON file:</p>
+<pre><code>$ mongoexport <span class="operator">-d</span> mydb -c mycollection -o myfile.json --jsonArray
+</code></pre><p>The <code>--jsonArray</code> option writes the entire content of the export as a single JSON array. Sometimes, the size of individual file is quite large, we need to break it down into small pieces, because most web servers will have a limit on how much data can be submitted at once. However, with the option, the entire document is a single line. Any line processing command cannot be easily used. (If you are looking to do so, you can use <code>jq</code> to <a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">split a large JSON file into smaller pieces</a>.) We can omit the option (default behavior) and have the export utility to dump it one document at a time. The entire exported JSON file is technically not in correct JSON format, but each line, which represents a MongoDB document, is valid JSON, and can be used to do some command line processing.</p>
+<p>To break a large file into many smaller pieces, we can use <code>split</code> command:</p>
+<pre><code>$ split -l <span class="number">10</span> <span class="typedef"><span class="keyword">data</span>.json</span>
+</code></pre><p>The <code>-l</code> or <code>--lines</code> option limits each file with a maximum of 10 lines.</p>
+<p>Another way we can use <code>-C</code> or <code>--line-bytes</code> option to put at most 1k bytes of lines per output file:</p>
+<pre><code>$ split <span class="operator">-d</span> <span class="operator">-a</span> <span class="number">3</span> -C <span class="number">1</span>k data.json
+</code></pre><p>One thing needs to make sure is that the size of each line is no more than the maximum size specified by the option, otherwise, partial lines will be generated.</p>
+<p>It is good to keep all those parts in their own directory:</p>
+<pre><code>$ mkdir pieces &amp;&amp; <span class="built_in">cd</span> pieces &amp;&amp; split <span class="operator">-d</span> <span class="operator">-a</span> <span class="number">3</span> -C <span class="number">1</span>k ../data.json &amp;&amp; <span class="built_in">cd</span> ..
+</code></pre><p>Unless breaking the file into one line at a time, otherwise, we need to convert individual JSON file into correct JSON format:</p>
+<pre><code><span class="formula">$ find pieces/* -exec sh -c <span class="command">\
+</span>&gt; "awk 'BEGIN<span class="special">{</span>l=<span class="command">\"</span><span class="special">[</span><span class="command">\"</span><span class="special">}</span><span class="special">{</span>print l;l=<span class="command">\$</span>0<span class="command">\"</span>,<span class="command">\"</span><span class="special">}</span>END<span class="special">{</span>print<span class="command">\$</span>0<span class="command">\"</span><span class="command">\n</span><span class="special">]</span><span class="command">\"</span><span class="special">}</span>' <span class="command">\
+</span>&gt; <span class="special">{</span><span class="special">}</span> &gt; <span class="special">{</span><span class="special">}</span>.json <span class="special">&amp;</span><span class="special">&amp;</span> rm <span class="special">{</span><span class="special">}</span>" <span class="command">\;</span></span>
+</code></pre><p>The output JSON file will contains an array of MongoDB documents. The main idea of the AWK script is to print out previous line as it reads the current line. <code>BEGIN { l = &quot;[&quot; }</code> defines the first line as the opening square bracket, and the <code>END { print $0&quot;\n&quot; }</code> prints the last line of the file and the closing square bracket.</p>
+<p>There bounds to be a better way. Just need to keep looking.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-12-18T15:12:43.000Z"><a href="/2013/12/18/set-filename-path-with-processcwd()/">Dec 18, 2013</a></time>
       
       
@@ -482,103 +531,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-23T18:44:35.000Z"><a href="/2013/11/23/ping/">Nov 23, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/23/ping/">Ping</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>There are many network utilities that are ready to use out of Linux box. <code>ping</code> is one of them:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DESCRIPTION</div><div class="line">       ping uses the ICMP protocol's mandatory ECHO_REQUEST datagram to elicit</div><div class="line">       an  ICMP  ECHO_RESPONSE from a host or gateway.  ECHO_REQUEST datagrams</div><div class="line">       (``pings'') have an IP and ICMP header, followed by  a  struct  timeval</div><div class="line">       and  then  an  arbitrary  number  of ``pad'' bytes used to fill out the</div><div class="line">       packet.</div><div class="line"></div><div class="line">       ping6 can also send Node Information Queries (RFC4620).</div></pre></td></tr></table></figure>
-
-<p><strong>pings</strong> are ECHO_REQUEST datagrams.</p>
-<p>For a quick usage:</p>
-<pre><code>% ping localhost
-PING localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>) <span class="number">56</span>(<span class="number">84</span>) <span class="keyword">bytes</span> <span class="operator">of</span> data.
-<span class="number">64</span> <span class="keyword">bytes</span> <span class="built_in">from</span> localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>): icmp_req=<span class="number">1</span> ttl=<span class="number">64</span> <span class="built_in">time</span>=<span class="number">0.034</span> ms
-<span class="number">64</span> <span class="keyword">bytes</span> <span class="built_in">from</span> localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>): icmp_req=<span class="number">2</span> ttl=<span class="number">64</span> <span class="built_in">time</span>=<span class="number">0.045</span> ms
-<span class="number">64</span> <span class="keyword">bytes</span> <span class="built_in">from</span> localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>): icmp_req=<span class="number">3</span> ttl=<span class="number">64</span> <span class="built_in">time</span>=<span class="number">0.039</span> ms
-^C
-<span class="comment">--- localhost ping statistics ---</span>
-<span class="number">3</span> packets transmitted, <span class="number">3</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">1999</span>ms
-rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">0.034</span>/<span class="number">0.039</span>/<span class="number">0.045</span>/<span class="number">0.006</span> ms
-</code></pre><p><code>rrt</code> is the round-trip time in milliseconds. The statistics includes minimum, average, maximum and mean deviation times.</p>
-<p>The manual page explains many options. Here are onces I found helpful to me:</p>
-<pre><code>ping -<span class="keyword">D</span> -n -q -c <span class="number">100</span> localhost
-</code></pre><ul>
-<li><code>-D</code>: UNIX timestamp + microseconds</li>
-<li><code>-n</code>: no lookup symbolic names for host addresses (faster)</li>
-<li><code>-c</code>: number of pings to send</li>
-<li><code>-q</code>: result only</li>
-</ul>
-<p>Ping localhost to verify that the local network interface is up and running:</p>
-<pre><code>% ping -d -n -q -c <span class="number">100</span> localhost
-PING localhost (<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>) <span class="number">56</span>(<span class="number">84</span>) <span class="keyword">bytes</span> <span class="operator">of</span> data.
-
-<span class="comment">--- localhost ping statistics ---</span>
-<span class="number">100</span> packets transmitted, <span class="number">100</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">99005</span>ms
-rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">0.029</span>/<span class="number">0.047</span>/<span class="number">0.059</span>/<span class="number">0.007</span> ms
-</code></pre><p>Ping local gateway, usually router:</p>
-<pre><code>% ping -D -n -q -c <span class="number">100</span> <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>
-PING <span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span> (<span class="number">192.168</span><span class="number">.1</span><span class="number">.1</span>) <span class="number">56</span>(<span class="number">84</span>) <span class="keyword">bytes</span> <span class="operator">of</span> data.
-
-<span class="comment">--- 192.168.1.1 ping statistics ---</span>
-<span class="number">100</span> packets transmitted, <span class="number">100</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">98997</span>ms
-rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">0.416</span>/<span class="number">0.502</span>/<span class="number">1.448</span>/<span class="number">0.100</span> ms
-</code></pre><p>If we ping a remote server without using <code>-n</code> option, it will be slower due to the host address lookup:</p>
-<pre><code>% ping -c <span class="number">20</span> baidu.com
-<span class="number">20</span> packets transmitted, <span class="number">20</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">96034</span>ms
-rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">46.061</span>/<span class="number">49.096</span>/<span class="number">92.912</span>/<span class="number">10.061</span> ms
-</code></pre><p>Without lookup:</p>
-<pre><code>% ping -c <span class="number">20</span> -n baidu.com
-<span class="number">20</span> packets transmitted, <span class="number">20</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">19029</span>ms
-rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">45.802</span>/<span class="number">46.428</span>/<span class="number">47.391</span>/<span class="number">0.458</span> ms
-</code></pre><p>Look up the actual IP address of the domain:</p>
-<pre><code>% nslookup baidu.com
-<span class="label">Server:</span>         <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>
-<span class="label">Address:</span>        <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span><span class="preprocessor">#53</span>
-
-Non-authoritative answer:
-<span class="label">Name:</span>   baidu.com
-<span class="label">Address:</span> <span class="number">220.181</span><span class="number">.111</span><span class="number">.86</span>
-<span class="label">Name:</span>   baidu.com
-<span class="label">Address:</span> <span class="number">220.181</span><span class="number">.111</span><span class="number">.85</span>
-<span class="label">Name:</span>   baidu.com
-<span class="label">Address:</span> <span class="number">123.125</span><span class="number">.114</span><span class="number">.144</span>   
-</code></pre><p>We can send pings by using IP address directly, which is almost the same as using <code>-n</code> option. It is faster:</p>
-<pre><code>% ping -c <span class="number">20</span> <span class="number">220.181</span><span class="number">.11</span><span class="number">.86</span>
-<span class="comment">--- 220.181.111.86 ping statistics ---</span>
-<span class="number">20</span> packets transmitted, <span class="number">20</span> received, <span class="number">0</span>% packet loss, <span class="built_in">time</span> <span class="number">19026</span>ms
-rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span class="built_in">max</span>/mdev = <span class="number">46.103</span>/<span class="number">53.019</span>/<span class="number">86.077</span>/<span class="number">12.831</span> ms
-</code></pre><p>But not all servers support ping, pings might be dropped altogether. Also, even a server does support ping, it does not mean that you can browser the website hosted by the server. The port might get blocked, or server is down.</p>
-<p>Pinging an IP address is fun, but what is more exciting to actually find out more information about the address, such as the <a href="http://whatismyipaddress.com/ip/220.181.11.86" target="_blank" rel="external">geographical location of the IP</a>. <a href="http://whatismyipaddress.com/" target="_blank" rel="external">What Is My IP Address</a> is good tool to use.</p>
-<p>Next: <code>ping6</code>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -609,7 +561,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>3</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>4</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -796,7 +748,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>12</small></li>
+    <li><a href="/tags/cli/">cli</a><small>13</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -884,7 +836,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/datastore/">datastore</a><small>1</small></li>
   
-    <li><a href="/tags/date/">date</a><small>1</small></li>
+    <li><a href="/tags/date/">date</a><small>2</small></li>
   
     <li><a href="/tags/db/">db</a><small>1</small></li>
   
@@ -955,6 +907,8 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
     <li><a href="/tags/ephemeral/">ephemeral</a><small>1</small></li>
   
     <li><a href="/tags/escape-character/">escape-character</a><small>1</small></li>
+  
+    <li><a href="/tags/expiration/">expiration</a><small>1</small></li>
   
     <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
   
@@ -1262,7 +1216,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/one-liner/">one-liner</a><small>2</small></li>
   
-    <li><a href="/tags/openssl/">openssl</a><small>2</small></li>
+    <li><a href="/tags/openssl/">openssl</a><small>3</small></li>
   
     <li><a href="/tags/order/">order</a><small>1</small></li>
   
@@ -1442,7 +1396,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/sshuttle/">sshuttle</a><small>1</small></li>
   
-    <li><a href="/tags/ssl/">ssl</a><small>3</small></li>
+    <li><a href="/tags/ssl/">ssl</a><small>4</small></li>
   
     <li><a href="/tags/starter/">starter</a><small>6</small></li>
   
@@ -1607,6 +1561,8 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
     <li><a href="/tags/workflow/">workflow</a><small>1</small></li>
   
     <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
+  
+    <li><a href="/tags/xargs/">xargs</a><small>1</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   
