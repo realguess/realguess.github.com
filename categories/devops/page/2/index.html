@@ -68,6 +68,57 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-07-02T12:00:00.000Z"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Jul 2, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Resetting GitLab User Password with a Simple Shell Script</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <h2 id="Problem">Problem</h2>
+<p>Resetting password is one of the most common requests virtually in any system. In <a href="https://gitlab.com/" target="_blank" rel="external">GitLab</a>, user password can be updated by visiting the <code>/admin/users</code> page. But if you forgot the password for the root user or the admin user. You need another method to reset it.</p>
+<h2 id="Objective">Objective</h2>
+<p>The goal is to simplify the process of resetting GitLab user password by using CLI, so next time when encountering the same problem again, it will be quick and easy.</p>
+<h2 id="Settings">Settings</h2>
+<p>Self-hosted <a href="https://gitlab.com/" target="_blank" rel="external">GitLab</a>, installed in a <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> container.</p>
+<h2 id="Solutions">Solutions</h2>
+<p>Step by step procedure to reset the root password is already provided by <a href="http://docs.gitlab.com/ce/security/reset_root_password.html" target="_blank" rel="external">this GitLab documentation</a>. By converting it into a Bash shell script and placing it in user’s home <code>bin</code> directory as an executable <code>~/bin/gitlab-password-reset</code> file, we will have created a simple command to be run repeatedly:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> -n <span class="string">"Email: "</span>;    <span class="built_in">read</span> MAIL</div><div class="line"><span class="built_in">echo</span> -n <span class="string">"Password: "</span>; <span class="built_in">read</span> <span class="operator">-s</span> PASS</div><div class="line"><span class="built_in">echo</span> <span class="comment"># Ensure a new line</span></div><div class="line"></div><div class="line">docker <span class="keyword">exec</span> gitlab gitlab-rails runner <span class="operator">-e</span> production <span class="string">"  \</span></div><div class="line">  user = User.find_by(email: '<span class="variable">$MAIL</span>');                  \</div><div class="line">  user.password = user.password_confirmation = '<span class="variable">$PASS</span>'; \</div><div class="line">  user.save!"</div></pre></td></tr></table></figure>
+
+<p>We could simply run the long <code>docker</code> command instead of shell script. But since we’re dealing with password, it’s a good practice to avoid placing sensitive information on command line history log.</p>
+<p>No trailing spaces are allowed on the password field, by the way.</p>
+<p>Another solution is turning the Ruby evaluation into a script and save into somewhere like <code>/srv/gitlab/config</code> directory. Then, we can just run:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="keyword">exec</span> gitlab gitlab-rails runner <span class="operator">-e</span> production /etc/gitlab/scripts/password-reset.rb</div></pre></td></tr></table></figure>
+
+<p>Because we are using Docker to run GitLab, and the following directories are mapped from the host to the guest:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/srv/gitlab/confi<span class="variable">g:</span>/etc/gitlab</div><div class="line">/srv/gitlab/<span class="built_in">log</span><span class="variable">s:</span>/var/<span class="built_in">log</span>/gitlab</div><div class="line">/srv/gitlab/dat<span class="variable">a:</span>/var/<span class="keyword">opt</span>/gitlab</div></pre></td></tr></table></figure>
+
+<p>Therefore, when executing the Ruby script, it’s <code>/etc/gitlab</code> instead of <code>/srv/gitlab</code>. However, you will need to figure out how to get the email and password into the script. That’s for you to answer.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-10-06T12:00:00.000Z"><a href="/2015/10/06/overriding-the-default-forwarded-ssh-port-in-vagrant/">Oct 6, 2015</a></time>
       
       
@@ -512,68 +563,13 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-12-07T12:00:00.000Z"><a href="/2014/12/07/vagrant/">Dec 7, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/12/07/vagrant/">Vagrant</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <ol>
-<li>What is Vagrant?</li>
-<li>What are the main features?</li>
-<li>Why do they build it?</li>
-<li>How would it benefit me?</li>
-<li>Where does this fit into the stack?</li>
-</ol>
-<h2 id="What_is_Vagrant?">What is Vagrant?</h2>
-<p><a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a> is a configuration management tool for creating, configuring, and managing complete development environments in virtual machine.</p>
-<h2 id="What_are_the_main_features?">What are the main features?</h2>
-<p><strong>Development environment version control</strong></p>
-<p>Configuration for setting up development environment is in code (<code>Vagrantfile</code>), so the development environment can be version controlled.</p>
-<p><strong>Consistent but distributed development environments</strong></p>
-<p>Consistent development environment, build one development environment, and distribute to the rest of the team. Create identical development environment for everyone on the team.</p>
-<p>Distributed development environment, but linked by source control. “I like to think of Vagrant as the Git of development clouds. Centralized development and test environments create bottlenecks. Vagrant lets developers work at their own pace and in their own environment, while keeping all the environment synchronized with each other.” (By Jeff Sussna) [<a href="https://www.safaribooksonline.com/library/view/vagrant-up-and/9781449336103/cover.html" target="_blank" rel="external">1</a>].</p>
-<p><strong>Disposable computing resource</strong></p>
-<p>“Vagrant lowers development environment setup time, increases development/production parity, and brings the idea of disposable compute resources down to the desktop.” [<a href="https://www.safaribooksonline.com/library/view/vagrant-up-and/9781449336103/cover.html" target="_blank" rel="external">1</a>]</p>
-<p>“At the end of the day, Vagrant can suspend, halt, or destroy the development environment, keeping the overall system clean. Never again can developers forget to shut down a stray server process and waste precious compute resources.” [<a href="https://www.safaribooksonline.com/library/view/vagrant-up-and/9781449336103/cover.html" target="_blank" rel="external">1</a>]</p>
-<p><strong>Simple development environment setup</strong></p>
-<p>Forget about <code>README</code> or <code>INSTALL</code> instructions, type <code>vagrant up</code> and you are good to go.</p>
-<p>“Say goodbye to ‘works on my machine’ bugs.” [<a href="http://docs.vagrantup.com/" target="_blank" rel="external">2</a>] For designers, “no more bothering other developers to help you fix your environment so you can test designs. Just check out the code, <code>vagrant up</code>, and start designing.” [<a href="http://docs.vagrantup.com/" target="_blank" rel="external">2</a>]</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/12/07/vagrant/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
     <a href="/categories/devops/" class="alignleft prev">Prev</a>
   
+  
+    <a href="/categories/devops/page/3/" class="alignright next">Next</a>
   
   <div class="clearfix"></div>
 </nav>
@@ -603,7 +599,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -914,7 +910,9 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>14</small></li>
+    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+  
+    <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1204,6 +1202,8 @@
   
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
+    <li><a href="/tags/mysql/">mysql</a><small>1</small></li>
+  
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
   
     <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
@@ -1329,6 +1329,8 @@
     <li><a href="/tags/record-set/">record-set</a><small>1</small></li>
   
     <li><a href="/tags/redis/">redis</a><small>1</small></li>
+  
+    <li><a href="/tags/redmine/">redmine</a><small>1</small></li>
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   

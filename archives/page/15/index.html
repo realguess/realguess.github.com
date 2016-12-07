@@ -68,6 +68,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-24T10:19:24.000Z"><a href="/2013/11/24/treading-on-startup-scene-in-hong-kong/">Nov 24, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/24/treading-on-startup-scene-in-hong-kong/">Treading On Startup Scene in Hong Kong</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>On the morning of November 22, 2013, the Sun was yet to rise behind all the tall buildings. I was up and preparing to leave Hong Kong. Streets were quiet, the taxi driver was still stretching his arms while waiting us outside. I was in Hong Kong for a month and working remotely. As a startup founder, there is always a drive to explore the local startup culture and scene.</p>
+<p>Hong Kong government is actively promoting and attracting talents into the region. They have built a <a href="http://www.hkstp.org/en-US/Homepage.aspx" target="_blank" rel="external">Science &amp; Technology Parks</a> for concentrating researchers, entrepreneurs and student into a Silicon Valley alike location. The program like <a href="http://www.hkstp.org/en-US/Services-Programmes/Incubation-Programme/Incu-App/About-Incu-App-Programme.aspx" target="_blank" rel="external">Incu-App</a> is most closely resemble to startup incubator/accelerator.</p>
+<p><img src="/img/2013-11-14/hong-kong-science-park.jpg" alt="Hong Kong Science &amp; Technology Parks" title="Hong Kong Science &amp; Technology Parks"></p>
+<p>This is a community in a small scale, you need the bigger community support. So, I went to watch the pitch event in <a href="http://www.hkcocoon.org/" target="_blank" rel="external">CoCoon</a> (a co-working space). There were 5 companies, 3 of them are ecommerce companies, selling products originated in Hong Kong or nearby to Western audience. The quality of pitch (presentation and slides) were quite bad.</p>
+<p><img src="/img/2013-11-14/cocoon-pitch-event.jpg" alt="CoCoon Pitch Event"><br><img src="/img/2013-11-14/cocoon-wall.jpg" alt="CoCoon Shared Board"><br><img src="/img/2013-11-14/cocoon-shared-desks.jpg" alt="CoCoon Shared Desks"></p>
+<p>Set aside the pitch for now. I chatted with a few founders after the event, one of the issues people here face here is the lack of funding. Funding is difficult here, might be better than before, but still so far away comparing to the US. They actually limit the entrepreneurs here to bootstrap and get to profit earlier. Ecommerce is obviously an easy way to go. But it does not mean that you cannot dream bigger. It might just take longer to get to where you want to go. Sometimes it is not a bad thing. Good stuff takes a longer and more troubled journey.</p>
+<p>I think this comes down to the mindset of people here. The mindset of entrepreneurs here are much narrower than entrepreneurs from Silicon Valley, New York or other places. Finance and entertainment are still dominant factors here. As the influence of mainland Chinese companies and integration of transportation, it is going to make it harder and harder for it becoming a tech hub.</p>
+<p><img src="/img/2013-11-14/lamma-island-seafood.jpg" alt="Lamma Island Seafood"></p>
+<p>Let’s end with a positive note there. Food and tech go hand to hand. Just by walking downstairs, I was at a shopping mall. Inside the shopping mall, there are restaurants with variety of food. Don’t like those, take an indoor sky bridge or subway tunnels across the street to the adjacent mall, there are more restaurants and more food. You can get everything you need without going outside to the streets. But if you do, every street corner is a new exploration. For authenticated Chinese food, there is nothing you can beat that.</p>
+<p>Hong Kong has its special place, but in tech, it needs a lot of work.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-23T18:44:35.000Z"><a href="/2013/11/23/ping/">Nov 23, 2013</a></time>
       
       
@@ -535,60 +577,6 @@ coffee&gt; .help
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-10-02T22:23:58.000Z"><a href="/2013/10/02/javascript-parseint(array)-only-converts-the-first-element/">Oct 2, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/10/02/javascript-parseint(array)-only-converts-the-first-element/">JavaScript parseInt(array) Only Converts the First Element</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Converting from one type to another frequently causes bugs or unexpected result if you’re not careful. For example, when converting a string to an integer, we use the following function:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> num = <span class="built_in">parseInt</span>(string, radix);</div></pre></td></tr></table></figure>
-
-<p>Accidentally, I used an array of numeric strings in place of string for conversion.</p>
-<p>As stated in <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt" target="_blank" rel="external">MDN parseInt</a>:</p>
-<blockquote>
-<p>If string is not a string, then it is converted to one. Leading whitespace in the string is ignored.</p>
-</blockquote>
-<p>The array is converted to string.</p>
-<p>If the array has only one element, then there won’t be any problem:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[<span class="number">10</span>].toString()</div><div class="line">&gt; <span class="string">'10'</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'10'</span>, <span class="number">10</span>)</div><div class="line">&gt; <span class="number">10</span></div></pre></td></tr></table></figure>
-
-<p>But when there are more than one element, only the first element will be parsed:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">[<span class="number">10</span>, <span class="number">5</span>].toString()</div><div class="line">&gt; <span class="string">'10,5'</span></div><div class="line"><span class="built_in">parseInt</span>(<span class="string">'10,5'</span>, <span class="number">10</span>)</div><div class="line">&gt; <span class="number">10</span></div></pre></td></tr></table></figure>
-
-<p>Therefore, you have to be very careful when processing query parameter like:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">?<span class="variable">year=</span><span class="number">2013</span>&<span class="variable">year=</span><span class="number">2012</span></div></pre></td></tr></table></figure>
-
-<p>In many cases, it will be converted to:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">year: [<span class="string">'2013'</span>, <span class="string">'2012'</span>]</div></pre></td></tr></table></figure>
-
-<p>After running through <code>parseInt</code>, it will result in <code>2013</code>, might not be what you are looking for.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -625,7 +613,7 @@ coffee&gt; .help
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -936,7 +924,9 @@ coffee&gt; .help
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>14</small></li>
+    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+  
+    <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1226,6 +1216,8 @@ coffee&gt; .help
   
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
+    <li><a href="/tags/mysql/">mysql</a><small>1</small></li>
+  
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
   
     <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
@@ -1351,6 +1343,8 @@ coffee&gt; .help
     <li><a href="/tags/record-set/">record-set</a><small>1</small></li>
   
     <li><a href="/tags/redis/">redis</a><small>1</small></li>
+  
+    <li><a href="/tags/redmine/">redmine</a><small>1</small></li>
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   

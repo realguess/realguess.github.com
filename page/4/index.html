@@ -64,6 +64,40 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-23T12:00:00.000Z"><a href="/2015/09/23/the-first-release-version/">Sep 23, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/23/the-first-release-version/">The First Release Version</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When you have a release for the first time, how do you name your release version based on <a href="http://semver.org/" target="_blank" rel="external">SemVer</a>? <code>1.0.0</code>, <code>0.1.0</code> or <code>0.0.1</code>?</p>
+<p>I like to start off with <code>0.1.0</code>. Because version <code>0.0.0</code> means there is nothing. Then from nothing to something, that’s breaking change, hence version <code>0.1.0</code>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
       
       
@@ -481,45 +515,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-04T12:00:00.000Z"><a href="/2015/09/04/node-js-http-server-one-liner/">Sep 4, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/04/node-js-http-server-one-liner/">Node.js HTTP Server One Liner</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>One liner to create a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> HTTP server:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">'OK'</span>); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>Print out the process ID instead:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'http'</span>).createServer(<span class="function"><span class="keyword">function</span> <span class="params">(req, res)</span> </span>{ res.end(<span class="string">''</span> + process.pid); }).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>This is useful with the worker process when implementing the <a href="https://nodejs.org/api/cluster.html" target="_blank" rel="external">cluster</a> module.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -555,7 +550,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -866,7 +861,9 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>14</small></li>
+    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+  
+    <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1156,6 +1153,8 @@
   
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
+    <li><a href="/tags/mysql/">mysql</a><small>1</small></li>
+  
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
   
     <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
@@ -1281,6 +1280,8 @@
     <li><a href="/tags/record-set/">record-set</a><small>1</small></li>
   
     <li><a href="/tags/redis/">redis</a><small>1</small></li>
+  
+    <li><a href="/tags/redmine/">redmine</a><small>1</small></li>
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   

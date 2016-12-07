@@ -68,6 +68,88 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-12-07T12:00:00.000Z"><a href="/2016/12/07/dockerizing-redmine/">Dec 7, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/12/07/dockerizing-redmine/">Dockerizing Redmine</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Migrate an existing <a href="https://redmine.org/" target="_blank" rel="external">Redmine</a> application into a <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> based container. There are two main steps:</p>
+<ol>
+<li>Migrate MySQL database</li>
+<li>Migrate Redmine application</li>
+</ol>
+<h1 id="MySQL">MySQL</h1>
+<p>Create an archive from the source data directory, where data to be migrated:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> tar -C /var/lib/mysql -czf ~/mysql.tar.gz .</div></pre></td></tr></table></figure>
+
+<p>The directory <code>/var/lib/mysql</code> is the default location where all database related data are stored.</p>
+<p>Download the archive:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ scp example.com:~/mysql.tar.gz .</div></pre></td></tr></table></figure>
+
+<p>Extract to the directory where we will map the host volume to the guest:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> mkdir -p /srv/mysql && <span class="built_in">sudo</span> tar -C <span class="variable">$_</span> -xzf mysql.tar.gz</div></pre></td></tr></table></figure>
+
+<p>Download the latest (<code>5.7.16</code> <strong>make sure it is the latest, because <code>8.x</code> branch might not work</strong>) <a href="https://hub.docker.com/_/mysql/" target="_blank" rel="external">MySQL Docker image</a>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker pull mysql && docker pull mysql:<span class="number">5.7</span>.<span class="number">16</span></div></pre></td></tr></table></figure>
+
+<p>Run a MySQL container with the data directory mounted from the host:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ docker run                         \</div><div class="line">  --detach                           \</div><div class="line">  --name mysql                       \</div><div class="line">  --restart always                   \</div><div class="line">  --volume /srv/mysql:/var/lib/mysql \</div><div class="line">  mysql</div></pre></td></tr></table></figure>
+
+<p>Environment variables (<code>MYSQL_ROOT_PASSWORD</code>, <code>MYSQL_DATABASE</code>, <code>MYSQL_USER</code>, or <code>MYSQL_PASSWORD</code>) become unnecessary:</p>
+<blockquote>
+<p>Do note that none of the variables below will have any effect if you start the container with a data directory that already contains a database: any pre-existing database will always be left untouched on container startup.[^1]</p>
+</blockquote>
+<p>Now I should be able to access my existing database:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ docker exec -it mysql sh -c 'mysql -uredmine -p redmine'</div><div class="line">Enter password:</div><div class="line">Reading table information for completion of table and column names</div><div class="line">You can turn off this feature to get a quicker startup with -A</div><div class="line"></div><div class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</div><div class="line">Your MySQL connection id is 5</div><div class="line">Server version: 5.7.16 MySQL Community Server (GPL)</div><div class="line"></div><div class="line">Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.</div><div class="line"></div><div class="line">Oracle is a registered trademark of Oracle Corporation and/or its</div><div class="line">affiliates. Other names may be trademarks of their respective</div><div class="line">owners.</div><div class="line"></div><div class="line">Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.</div><div class="line"></div><div class="line">mysql></div></pre></td></tr></table></figure>
+
+<p>But when accessing MySQL database from another host, we have to update the permissions. Let’s log into MySQL with <code>root</code> user:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="keyword">exec</span> -it mysql sh -c <span class="string">'mysql -uroot -p mysql'</span></div></pre></td></tr></table></figure>
+
+<p>Issue SQL commands:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT Host, User FROM db WHERE Db='redmine';</div><div class="line">+-----------+---------+</div><div class="line">| Host      | User    |</div><div class="line">+-----------+---------+</div><div class="line">| localhost | redmine |</div><div class="line">+-----------+---------+</div><div class="line">1 row in set (0.00 sec)</div><div class="line"></div><div class="line">mysql&gt; SELECT Host, User FROM user WHERE User='redmine';</div><div class="line">+-----------+---------+</div><div class="line">| host      | user    |</div><div class="line">+-----------+---------+</div><div class="line">| localhost | redmine |</div><div class="line">+-----------+---------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
+
+<p>Only <code>localhost</code> is allowed for both the database and the user. This is problematic. How does one know the host of the container yet to be created? The easiest way is to allow access from all hosts:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql&gt; UPDATE db SET Host='%' WHERE Db='redmine';</div><div class="line">Query OK, 1 row affected (0.01 sec)</div><div class="line">Rows matched: 1  Changed: 1  Warnings: 0</div><div class="line"></div><div class="line">mysql&gt; UPDATE user SET Host='%' WHERE User='redmine';</div><div class="line">Query OK, 1 row affected (0.00 sec)</div><div class="line">Rows matched: 1  Changed: 1  Warnings: 0</div></pre></td></tr></table></figure>
+
+<p>We can restrict to a set of IP addresses such as <code>172.17.0.%</code> or sub domains <code>%.example.com</code>. Docker networking uses <code>172.17.0.x</code> range.</p>
+<p>The better way is that when linking containers, should be able to update <code>mysql</code> container <code>/etc/hosts</code> file to include a <code>redmine</code> container field. Then, a wild card is not necessary.</p>
+<p>But having to allow all hosts to connect is fine, because all hosts do not mean <em>all hosts</em>. The port is not bind or map to any open port in the host machine. Only the host (<code>172.17.0.1</code>) and other Docker containers inside the host can discover the service provided. Other machines or containers outside the host is not able to access at all.</p>
+<p>Restart the container to have the update taking effect:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker restart mysql</div></pre></td></tr></table></figure>
+
+<h1 id="Redmine">Redmine</h1>
+<p>For a basic Redmine setup, there aren’t much to migrate, mainly just three directories, <code>config</code>, <code>files</code>, and <code>log</code>, others are application data. Configuration could be done via environment variables, and if logs weren’t important to migrate, we just need to move the <code>files</code> directory, which is used for file upload.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/12/07/dockerizing-redmine/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-10-11T12:00:00.000Z"><a href="/2016/10/11/a-cli-method-to-check-ssl-certificate-expiration-date/">Oct 11, 2016</a></time>
       
       
@@ -411,21 +493,28 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
+        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
       
       
   
-    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
+    <h1 class="title"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Listing Tags in Natural Sort of Version Numbers</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
+        <p>Using the Node.js repository as an example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git remote -<span class="keyword">v</span></div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (fetch)</div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (push)</div></pre></td></tr></table></figure>
 
-<p>For example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
+<p>If we would like to list all tags with <code>v0.12</code> versions, we could do:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git tag <span class="operator">-l</span> <span class="string">'v0.12.*'</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div></pre></td></tr></table></figure>
+
+<p>However, <code>v0.12.2</code> should come after <code>v0.12.1</code>.</p>
+<p>To fix it, we use the <code>sort</code> command with option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-V, <span class="comment">--version-sort</span></div><div class="line">    natural <span class="built_in">sort</span> <span class="operator">of</span> (<span class="built_in">version</span>) numbers <span class="operator">within</span> <span class="keyword">text</span></div></pre></td></tr></table></figure>
+
+<p>Thus:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git <span class="keyword">tag</span> -<span class="keyword">l</span> <span class="string">'v0.12.*'</span> | <span class="built_in">sort</span> --<span class="keyword">version</span>-<span class="built_in">sort</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div></pre></td></tr></table></figure>
 
 
       
@@ -449,28 +538,21 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
+        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
       
       
   
-    <h1 class="title"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Listing Tags in Natural Sort of Version Numbers</a></h1>
+    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Using the Node.js repository as an example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git remote -<span class="keyword">v</span></div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (fetch)</div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (push)</div></pre></td></tr></table></figure>
+        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
 
-<p>If we would like to list all tags with <code>v0.12</code> versions, we could do:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git tag <span class="operator">-l</span> <span class="string">'v0.12.*'</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div></pre></td></tr></table></figure>
-
-<p>However, <code>v0.12.2</code> should come after <code>v0.12.1</code>.</p>
-<p>To fix it, we use the <code>sort</code> command with option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-V, <span class="comment">--version-sort</span></div><div class="line">    natural <span class="built_in">sort</span> <span class="operator">of</span> (<span class="built_in">version</span>) numbers <span class="operator">within</span> <span class="keyword">text</span></div></pre></td></tr></table></figure>
-
-<p>Thus:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git <span class="keyword">tag</span> -<span class="keyword">l</span> <span class="string">'v0.12.*'</span> | <span class="built_in">sort</span> --<span class="keyword">version</span>-<span class="built_in">sort</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div></pre></td></tr></table></figure>
+<p>For example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
 
 
       
@@ -606,60 +688,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-08-18T12:00:00.000Z"><a href="/2016/08/18/accessing-upwork-json-data-without-the-api/">Aug 18, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/08/18/accessing-upwork-json-data-without-the-api/">Accessing Upwork JSON Data without the API</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://www.upwork.com/" target="_blank" rel="external">Upwork</a>, formerly Elance-oDesk, is the world’s largest freelancing marketplace. I’m interested to know what types of jobs they are in the platform, and how many. For a lazy programmer, browsing each job category and clicking on each link, and copying those numbers is not the way to go. I need to automate this. There is an <a href="https://developers.upwork.com/" target="_blank" rel="external">API</a>. But before diving into the API documentation, let’s see if there is another way (“Rule of Diversity”).</p>
-<p>Before continuing, a word of warning, <strong>this is prohibited</strong>:</p>
-<blockquote>
-<p>Using any robot, spider, scraper, or other automated means to access the Site for any purpose without our express written permission or collecting or harvesting any personally identifiable information, including Account names, from the Site;[^2]</p>
-</blockquote>
-<p>After poking around the web app, it communicates with its backend by using <a href="http://json.org/" target="_blank" rel="external">JSON</a> data exchange format via the URL: <a href="https://www.upwork.com/o/jobs/browse/url" target="_blank" rel="external">https://www.upwork.com/o/jobs/browse/url</a>. However, if accessing the URL directly, it will respond with 404 page not exist error. Something is missing.</p>
-<p>Well, the web app is able to successfully make the request, so this is not difficult to tackle. Just use the process of elimination from the working request, it will reveal the required information.</p>
-<p>After a couple tries, just need to add the request header: <code>X-Requested-With: XMLHttpRequest</code>, then the JSON response with the status code <code>200</code> will be returned:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ http --verbose https://<span class="filename">www.upwork.com/o/jobs/browse/url \</span></div><div class="line">  X-Requested-With:XMLHttpRequest</div><div class="line">GET /o/jobs/browse/url HTTP/<span class="number">1.1</span></div><div class="line">Accept: */*</div><div class="line">Accept-Encoding: gzip, deflate</div><div class="line">Connection: keep-alive</div><div class="line">Host: <span class="filename">www.upwork.com</span></div><div class="line">User-Agent: HTTPie/<span class="number">0.9</span><span class="number">.6</span></div><div class="line">X-Requested-With: XMLHttpRequest</div></pre></td></tr></table></figure>
-
-<p>The default sort is by creation time in descending order, so you don’t need to add the query parameters: <code>sort==create_time+desc</code> (<a href="https://github.com/jkbrzt/httpie" target="_blank" rel="external">HTTPie</a>).</p>
-<p>Let’s load the response data into Node.js and perform a quick analysis:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">$ node</div><div class="line">&gt; data = <span class="built_in">require</span>(<span class="string">'./upwork.json'</span>)</div><div class="line">{ url: <span class="string">'/o/jobs/browse/'</span>,</div><div class="line">  searchResults:</div><div class="line">   { q: <span class="string">''</span>,</div><div class="line">     paging: { total: <span class="number">87654</span>, offset: <span class="number">0</span> },</div><div class="line">     spellcheck: { corrected_queries: [] },</div><div class="line">     jobs:</div><div class="line">      [ [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>],</div><div class="line">        [<span class="built_in">Object</span>] ],</div><div class="line">     smartSearch: { downloadTeamApplication: <span class="literal">false</span> },</div><div class="line">     facets:</div><div class="line">      { jobType: [<span class="built_in">Object</span>],</div><div class="line">        workload: [<span class="built_in">Object</span>],</div><div class="line">        duration: [<span class="built_in">Object</span>],</div><div class="line">        clientHires: [<span class="built_in">Object</span>],</div><div class="line">        contractorTier: [<span class="built_in">Object</span>],</div><div class="line">        categories: [<span class="built_in">Object</span>],</div><div class="line">        previousClients: [<span class="built_in">Object</span>],</div><div class="line">        subcategories: [] },</div><div class="line">     isSearchWithEmptyParams: <span class="literal">true</span>,</div><div class="line">     subcategories: [],</div><div class="line">     currentQuery: {},</div><div class="line">     rssLink: <span class="string">'/ab/feed/jobs/rss?api_params=1&q='</span>,</div><div class="line">     atomLink: <span class="string">'/ab/feed/jobs/atom?api_params=1&q='</span>,</div><div class="line">     queryParsedParams: [],</div><div class="line">     pageTitle: <span class="string">'Freelance Jobs - Upwork'</span> } }</div></pre></td></tr></table></figure>
-
-<p>The property <code>searchResults.paging.total</code> is the total number of jobs available:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&gt; <span class="tag">data</span><span class="class">.searchResults</span><span class="class">.paging</span></div><div class="line"><span class="rules">{ <span class="rule"><span class="attribute">total</span>:<span class="value"> <span class="number">87654</span>, offset: <span class="number">0</span> </span></span></span>}</div></pre></td></tr></table></figure>
-
-<p>But, the number is different from the web app, a lot less, 50% less jobs found. Is that because the request is not recognized as a logged-in user? Let’s find out.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2016/08/18/accessing-upwork-json-data-without-the-api/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -694,7 +722,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -1005,7 +1033,9 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>14</small></li>
+    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+  
+    <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1295,6 +1325,8 @@
   
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
+    <li><a href="/tags/mysql/">mysql</a><small>1</small></li>
+  
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
   
     <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
@@ -1420,6 +1452,8 @@
     <li><a href="/tags/record-set/">record-set</a><small>1</small></li>
   
     <li><a href="/tags/redis/">redis</a><small>1</small></li>
+  
+    <li><a href="/tags/redmine/">redmine</a><small>1</small></li>
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   

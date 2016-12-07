@@ -64,6 +64,52 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-01-24T12:00:00.000Z"><a href="/2016/01/24/why-using-exact-versions-in-npm-package-dependencies/">Jan 24, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/01/24/why-using-exact-versions-in-npm-package-dependencies/">Why Using Exact Versions in NPM Package Dependencies</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Versions frequently used in <a href="https://docs.npmjs.com/files/package.json#dependencies" target="_blank" rel="external">NPM package dependencies</a> are <a href="https://docs.npmjs.com/misc/semver#caret-ranges-1-2-3-0-2-5-0-0-4" target="_blank" rel="external">caret ranges</a> or <code>^version</code>. And <code>npm install</code> uses caret ranges as well.</p>
+<p>Caret range:</p>
+<blockquote>
+<p>Allows changes that do not modify the left-most non-zero digit in the <strong>[major, minor, patch]</strong> tuple. In other words, this allows patch and minor updates for versions <strong>1.0.0</strong> and above, patch updates for version <strong>0.x &gt;=0.1.0</strong>, and <em>no</em> updates for version <strong>0.0.x</strong>.</p>
+</blockquote>
+<p>Most of time, using caret ranges as dependency versions work perfectly fine. But once a while, there are bugs. In one of projects, <a href="https://github.com/nodeca/js-yaml" target="_blank" rel="external">JS-YAML</a> with caret version <code>^3.4.3</code> was used and installed:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">dependencies</span>": <span class="value">{</span></div><div class="line">    "<span class="attribute">js-yaml</span>": <span class="value"><span class="string">"^3.4.3"</span></span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Time passes. When <code>npm install</code> was run again from a freshly cloned project code base, version <code>3.5.2</code> was installed. Since JS-YAML version <code>3.5.0</code>, errors are thrown when safe loading a spec with duplicate keys. If there are no duplicate keys in the YAML file, this will be fine. However, one of the files has it. The correct approach is to actually fix the duplicate keys. But it requires additional work back and forth. You’ve heard this before: “Hey it works when I installed it.”</p>
+<p>The point here is to use <strong>exact versions</strong> instead of letting the package manager decides by dropping the caret character:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">dependencies</span>": <span class="value">{</span></div><div class="line">    "<span class="attribute">js-yaml</span>": <span class="value"><span class="string">"3.4.3"</span></span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>This will avoid the above mentioned problem. We can manually <a href="https://realguess.net/2014/12/13/update-outdated-npm-packages/" target="_blank" rel="external">update the outdated NPM packages</a>.</p>
+<p>Don’t let machine decide. You Do!</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-11-26T12:00:00.000Z"><a href="/2015/11/26/setting-up-local-dns-server-for-multi-devices/">Nov 26, 2015</a></time>
       
       
@@ -567,40 +613,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-23T12:00:00.000Z"><a href="/2015/09/23/the-first-release-version/">Sep 23, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/23/the-first-release-version/">The First Release Version</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When you have a release for the first time, how do you name your release version based on <a href="http://semver.org/" target="_blank" rel="external">SemVer</a>? <code>1.0.0</code>, <code>0.1.0</code> or <code>0.0.1</code>?</p>
-<p>I like to start off with <code>0.1.0</code>. Because version <code>0.0.0</code> means there is nothing. Then from nothing to something, that’s breaking change, hence version <code>0.1.0</code>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -636,7 +648,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -947,7 +959,9 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>14</small></li>
+    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+  
+    <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1237,6 +1251,8 @@
   
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
+    <li><a href="/tags/mysql/">mysql</a><small>1</small></li>
+  
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
   
     <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
@@ -1362,6 +1378,8 @@
     <li><a href="/tags/record-set/">record-set</a><small>1</small></li>
   
     <li><a href="/tags/redis/">redis</a><small>1</small></li>
+  
+    <li><a href="/tags/redmine/">redmine</a><small>1</small></li>
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   

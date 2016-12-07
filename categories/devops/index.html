@@ -68,6 +68,88 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-12-07T12:00:00.000Z"><a href="/2016/12/07/dockerizing-redmine/">Dec 7, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/12/07/dockerizing-redmine/">Dockerizing Redmine</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Migrate an existing <a href="https://redmine.org/" target="_blank" rel="external">Redmine</a> application into a <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> based container. There are two main steps:</p>
+<ol>
+<li>Migrate MySQL database</li>
+<li>Migrate Redmine application</li>
+</ol>
+<h1 id="MySQL">MySQL</h1>
+<p>Create an archive from the source data directory, where data to be migrated:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> tar -C /var/lib/mysql -czf ~/mysql.tar.gz .</div></pre></td></tr></table></figure>
+
+<p>The directory <code>/var/lib/mysql</code> is the default location where all database related data are stored.</p>
+<p>Download the archive:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ scp example.com:~/mysql.tar.gz .</div></pre></td></tr></table></figure>
+
+<p>Extract to the directory where we will map the host volume to the guest:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> mkdir -p /srv/mysql && <span class="built_in">sudo</span> tar -C <span class="variable">$_</span> -xzf mysql.tar.gz</div></pre></td></tr></table></figure>
+
+<p>Download the latest (<code>5.7.16</code> <strong>make sure it is the latest, because <code>8.x</code> branch might not work</strong>) <a href="https://hub.docker.com/_/mysql/" target="_blank" rel="external">MySQL Docker image</a>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker pull mysql && docker pull mysql:<span class="number">5.7</span>.<span class="number">16</span></div></pre></td></tr></table></figure>
+
+<p>Run a MySQL container with the data directory mounted from the host:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ docker run                         \</div><div class="line">  --detach                           \</div><div class="line">  --name mysql                       \</div><div class="line">  --restart always                   \</div><div class="line">  --volume /srv/mysql:/var/lib/mysql \</div><div class="line">  mysql</div></pre></td></tr></table></figure>
+
+<p>Environment variables (<code>MYSQL_ROOT_PASSWORD</code>, <code>MYSQL_DATABASE</code>, <code>MYSQL_USER</code>, or <code>MYSQL_PASSWORD</code>) become unnecessary:</p>
+<blockquote>
+<p>Do note that none of the variables below will have any effect if you start the container with a data directory that already contains a database: any pre-existing database will always be left untouched on container startup.[^1]</p>
+</blockquote>
+<p>Now I should be able to access my existing database:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ docker exec -it mysql sh -c 'mysql -uredmine -p redmine'</div><div class="line">Enter password:</div><div class="line">Reading table information for completion of table and column names</div><div class="line">You can turn off this feature to get a quicker startup with -A</div><div class="line"></div><div class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</div><div class="line">Your MySQL connection id is 5</div><div class="line">Server version: 5.7.16 MySQL Community Server (GPL)</div><div class="line"></div><div class="line">Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.</div><div class="line"></div><div class="line">Oracle is a registered trademark of Oracle Corporation and/or its</div><div class="line">affiliates. Other names may be trademarks of their respective</div><div class="line">owners.</div><div class="line"></div><div class="line">Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.</div><div class="line"></div><div class="line">mysql></div></pre></td></tr></table></figure>
+
+<p>But when accessing MySQL database from another host, we have to update the permissions. Let’s log into MySQL with <code>root</code> user:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="keyword">exec</span> -it mysql sh -c <span class="string">'mysql -uroot -p mysql'</span></div></pre></td></tr></table></figure>
+
+<p>Issue SQL commands:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT Host, User FROM db WHERE Db='redmine';</div><div class="line">+-----------+---------+</div><div class="line">| Host      | User    |</div><div class="line">+-----------+---------+</div><div class="line">| localhost | redmine |</div><div class="line">+-----------+---------+</div><div class="line">1 row in set (0.00 sec)</div><div class="line"></div><div class="line">mysql&gt; SELECT Host, User FROM user WHERE User='redmine';</div><div class="line">+-----------+---------+</div><div class="line">| host      | user    |</div><div class="line">+-----------+---------+</div><div class="line">| localhost | redmine |</div><div class="line">+-----------+---------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
+
+<p>Only <code>localhost</code> is allowed for both the database and the user. This is problematic. How does one know the host of the container yet to be created? The easiest way is to allow access from all hosts:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql&gt; UPDATE db SET Host='%' WHERE Db='redmine';</div><div class="line">Query OK, 1 row affected (0.01 sec)</div><div class="line">Rows matched: 1  Changed: 1  Warnings: 0</div><div class="line"></div><div class="line">mysql&gt; UPDATE user SET Host='%' WHERE User='redmine';</div><div class="line">Query OK, 1 row affected (0.00 sec)</div><div class="line">Rows matched: 1  Changed: 1  Warnings: 0</div></pre></td></tr></table></figure>
+
+<p>We can restrict to a set of IP addresses such as <code>172.17.0.%</code> or sub domains <code>%.example.com</code>. Docker networking uses <code>172.17.0.x</code> range.</p>
+<p>The better way is that when linking containers, should be able to update <code>mysql</code> container <code>/etc/hosts</code> file to include a <code>redmine</code> container field. Then, a wild card is not necessary.</p>
+<p>But having to allow all hosts to connect is fine, because all hosts do not mean <em>all hosts</em>. The port is not bind or map to any open port in the host machine. Only the host (<code>172.17.0.1</code>) and other Docker containers inside the host can discover the service provided. Other machines or containers outside the host is not able to access at all.</p>
+<p>Restart the container to have the update taking effect:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker restart mysql</div></pre></td></tr></table></figure>
+
+<h1 id="Redmine">Redmine</h1>
+<p>For a basic Redmine setup, there aren’t much to migrate, mainly just three directories, <code>config</code>, <code>files</code>, and <code>log</code>, others are application data. Configuration could be done via environment variables, and if logs weren’t important to migrate, we just need to move the <code>files</code> directory, which is used for file upload.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/12/07/dockerizing-redmine/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-10-09T12:00:00.000Z"><a href="/2016/10/09/renewing-let-s-encrypt-ssl-certificate-with-docker/">Oct 9, 2016</a></time>
       
       
@@ -621,57 +703,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-07-02T12:00:00.000Z"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Jul 2, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Resetting GitLab User Password with a Simple Shell Script</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <h2 id="Problem">Problem</h2>
-<p>Resetting password is one of the most common requests virtually in any system. In <a href="https://gitlab.com/" target="_blank" rel="external">GitLab</a>, user password can be updated by visiting the <code>/admin/users</code> page. But if you forgot the password for the root user or the admin user. You need another method to reset it.</p>
-<h2 id="Objective">Objective</h2>
-<p>The goal is to simplify the process of resetting GitLab user password by using CLI, so next time when encountering the same problem again, it will be quick and easy.</p>
-<h2 id="Settings">Settings</h2>
-<p>Self-hosted <a href="https://gitlab.com/" target="_blank" rel="external">GitLab</a>, installed in a <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> container.</p>
-<h2 id="Solutions">Solutions</h2>
-<p>Step by step procedure to reset the root password is already provided by <a href="http://docs.gitlab.com/ce/security/reset_root_password.html" target="_blank" rel="external">this GitLab documentation</a>. By converting it into a Bash shell script and placing it in user’s home <code>bin</code> directory as an executable <code>~/bin/gitlab-password-reset</code> file, we will have created a simple command to be run repeatedly:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> -n <span class="string">"Email: "</span>;    <span class="built_in">read</span> MAIL</div><div class="line"><span class="built_in">echo</span> -n <span class="string">"Password: "</span>; <span class="built_in">read</span> <span class="operator">-s</span> PASS</div><div class="line"><span class="built_in">echo</span> <span class="comment"># Ensure a new line</span></div><div class="line"></div><div class="line">docker <span class="keyword">exec</span> gitlab gitlab-rails runner <span class="operator">-e</span> production <span class="string">"  \</span></div><div class="line">  user = User.find_by(email: '<span class="variable">$MAIL</span>');                  \</div><div class="line">  user.password = user.password_confirmation = '<span class="variable">$PASS</span>'; \</div><div class="line">  user.save!"</div></pre></td></tr></table></figure>
-
-<p>We could simply run the long <code>docker</code> command instead of shell script. But since we’re dealing with password, it’s a good practice to avoid placing sensitive information on command line history log.</p>
-<p>No trailing spaces are allowed on the password field, by the way.</p>
-<p>Another solution is turning the Ruby evaluation into a script and save into somewhere like <code>/srv/gitlab/config</code> directory. Then, we can just run:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="keyword">exec</span> gitlab gitlab-rails runner <span class="operator">-e</span> production /etc/gitlab/scripts/password-reset.rb</div></pre></td></tr></table></figure>
-
-<p>Because we are using Docker to run GitLab, and the following directories are mapped from the host to the guest:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/srv/gitlab/confi<span class="variable">g:</span>/etc/gitlab</div><div class="line">/srv/gitlab/<span class="built_in">log</span><span class="variable">s:</span>/var/<span class="built_in">log</span>/gitlab</div><div class="line">/srv/gitlab/dat<span class="variable">a:</span>/var/<span class="keyword">opt</span>/gitlab</div></pre></td></tr></table></figure>
-
-<p>Therefore, when executing the Ruby script, it’s <code>/etc/gitlab</code> instead of <code>/srv/gitlab</code>. However, you will need to figure out how to get the email and password into the script. That’s for you to answer.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -706,7 +737,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -1017,7 +1048,9 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>14</small></li>
+    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+  
+    <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1307,6 +1340,8 @@
   
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
+    <li><a href="/tags/mysql/">mysql</a><small>1</small></li>
+  
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
   
     <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
@@ -1432,6 +1467,8 @@
     <li><a href="/tags/record-set/">record-set</a><small>1</small></li>
   
     <li><a href="/tags/redis/">redis</a><small>1</small></li>
+  
+    <li><a href="/tags/redmine/">redmine</a><small>1</small></li>
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   

@@ -68,6 +68,88 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-12-07T12:00:00.000Z"><a href="/2016/12/07/dockerizing-redmine/">Dec 7, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/12/07/dockerizing-redmine/">Dockerizing Redmine</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Migrate an existing <a href="https://redmine.org/" target="_blank" rel="external">Redmine</a> application into a <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> based container. There are two main steps:</p>
+<ol>
+<li>Migrate MySQL database</li>
+<li>Migrate Redmine application</li>
+</ol>
+<h1 id="MySQL">MySQL</h1>
+<p>Create an archive from the source data directory, where data to be migrated:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> tar -C /var/lib/mysql -czf ~/mysql.tar.gz .</div></pre></td></tr></table></figure>
+
+<p>The directory <code>/var/lib/mysql</code> is the default location where all database related data are stored.</p>
+<p>Download the archive:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ scp example.com:~/mysql.tar.gz .</div></pre></td></tr></table></figure>
+
+<p>Extract to the directory where we will map the host volume to the guest:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> mkdir -p /srv/mysql && <span class="built_in">sudo</span> tar -C <span class="variable">$_</span> -xzf mysql.tar.gz</div></pre></td></tr></table></figure>
+
+<p>Download the latest (<code>5.7.16</code> <strong>make sure it is the latest, because <code>8.x</code> branch might not work</strong>) <a href="https://hub.docker.com/_/mysql/" target="_blank" rel="external">MySQL Docker image</a>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker pull mysql && docker pull mysql:<span class="number">5.7</span>.<span class="number">16</span></div></pre></td></tr></table></figure>
+
+<p>Run a MySQL container with the data directory mounted from the host:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ docker run                         \</div><div class="line">  --detach                           \</div><div class="line">  --name mysql                       \</div><div class="line">  --restart always                   \</div><div class="line">  --volume /srv/mysql:/var/lib/mysql \</div><div class="line">  mysql</div></pre></td></tr></table></figure>
+
+<p>Environment variables (<code>MYSQL_ROOT_PASSWORD</code>, <code>MYSQL_DATABASE</code>, <code>MYSQL_USER</code>, or <code>MYSQL_PASSWORD</code>) become unnecessary:</p>
+<blockquote>
+<p>Do note that none of the variables below will have any effect if you start the container with a data directory that already contains a database: any pre-existing database will always be left untouched on container startup.[^1]</p>
+</blockquote>
+<p>Now I should be able to access my existing database:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ docker exec -it mysql sh -c 'mysql -uredmine -p redmine'</div><div class="line">Enter password:</div><div class="line">Reading table information for completion of table and column names</div><div class="line">You can turn off this feature to get a quicker startup with -A</div><div class="line"></div><div class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</div><div class="line">Your MySQL connection id is 5</div><div class="line">Server version: 5.7.16 MySQL Community Server (GPL)</div><div class="line"></div><div class="line">Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.</div><div class="line"></div><div class="line">Oracle is a registered trademark of Oracle Corporation and/or its</div><div class="line">affiliates. Other names may be trademarks of their respective</div><div class="line">owners.</div><div class="line"></div><div class="line">Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.</div><div class="line"></div><div class="line">mysql></div></pre></td></tr></table></figure>
+
+<p>But when accessing MySQL database from another host, we have to update the permissions. Let’s log into MySQL with <code>root</code> user:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="keyword">exec</span> -it mysql sh -c <span class="string">'mysql -uroot -p mysql'</span></div></pre></td></tr></table></figure>
+
+<p>Issue SQL commands:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">mysql&gt; SELECT Host, User FROM db WHERE Db='redmine';</div><div class="line">+-----------+---------+</div><div class="line">| Host      | User    |</div><div class="line">+-----------+---------+</div><div class="line">| localhost | redmine |</div><div class="line">+-----------+---------+</div><div class="line">1 row in set (0.00 sec)</div><div class="line"></div><div class="line">mysql&gt; SELECT Host, User FROM user WHERE User='redmine';</div><div class="line">+-----------+---------+</div><div class="line">| host      | user    |</div><div class="line">+-----------+---------+</div><div class="line">| localhost | redmine |</div><div class="line">+-----------+---------+</div><div class="line">1 row in set (0.00 sec)</div></pre></td></tr></table></figure>
+
+<p>Only <code>localhost</code> is allowed for both the database and the user. This is problematic. How does one know the host of the container yet to be created? The easiest way is to allow access from all hosts:</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mysql&gt; UPDATE db SET Host='%' WHERE Db='redmine';</div><div class="line">Query OK, 1 row affected (0.01 sec)</div><div class="line">Rows matched: 1  Changed: 1  Warnings: 0</div><div class="line"></div><div class="line">mysql&gt; UPDATE user SET Host='%' WHERE User='redmine';</div><div class="line">Query OK, 1 row affected (0.00 sec)</div><div class="line">Rows matched: 1  Changed: 1  Warnings: 0</div></pre></td></tr></table></figure>
+
+<p>We can restrict to a set of IP addresses such as <code>172.17.0.%</code> or sub domains <code>%.example.com</code>. Docker networking uses <code>172.17.0.x</code> range.</p>
+<p>The better way is that when linking containers, should be able to update <code>mysql</code> container <code>/etc/hosts</code> file to include a <code>redmine</code> container field. Then, a wild card is not necessary.</p>
+<p>But having to allow all hosts to connect is fine, because all hosts do not mean <em>all hosts</em>. The port is not bind or map to any open port in the host machine. Only the host (<code>172.17.0.1</code>) and other Docker containers inside the host can discover the service provided. Other machines or containers outside the host is not able to access at all.</p>
+<p>Restart the container to have the update taking effect:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker restart mysql</div></pre></td></tr></table></figure>
+
+<h1 id="Redmine">Redmine</h1>
+<p>For a basic Redmine setup, there aren’t much to migrate, mainly just three directories, <code>config</code>, <code>files</code>, and <code>log</code>, others are application data. Configuration could be done via environment variables, and if logs weren’t important to migrate, we just need to move the <code>files</code> directory, which is used for file upload.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/12/07/dockerizing-redmine/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-10-09T12:00:00.000Z"><a href="/2016/10/09/renewing-let-s-encrypt-ssl-certificate-with-docker/">Oct 9, 2016</a></time>
       
       
@@ -558,59 +640,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-06-25T12:00:00.000Z"><a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/">Jun 25, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/">Fail to Upload Large File to Google App Engine Managed VMs</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>After deploying a Node.js app with custom runtime to Google <a href="https://cloud.google.com/appengine/docs/managed-vms/" target="_blank" rel="external">App Engine</a>, when uploading file larger than 1MB, the server returns HTTP 413 status code, meaning the server is refusing to process the request because the uploading entity size is too large.</p>
-<p>I had the following setup:</p>
-<ul>
-<li>The App Engine application is Google managed</li>
-<li>The application is Node.js app with custom <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a></li>
-<li>The application Docker container runs <code>node</code> command directly on port 8080</li>
-</ul>
-<p>After accessing the server (which changed from Google managed to user managed), and checked the Docker containers:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> docker ps <span class="operator">-a</span></div><div class="line">gcr.io/google_appengine/nginx-proxy:latest      <span class="string">"/usr/sbin/nginx"</span></div></pre></td></tr></table></figure>
-
-<p>It looks like Nginx is running as the proxy to Node.js application. When uploading file that is larger than 1MB, the response is HTTP 413 error:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">head</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">title</span>&gt;</span>413 Request Entity Too Large<span class="tag">&lt;/<span class="title">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">body</span> <span class="attribute">bgcolor</span>=<span class="value">"white"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">center</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">h1</span>&gt;</span>413 Request Entity Too Large<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">center</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">hr</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">center</span>&gt;</span>nginx<span class="tag">&lt;/<span class="title">center</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">body</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">html</span>&gt;</span></div></pre></td></tr></table></figure>
-
-<p>And the Nginx access log from the server:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ tail /var/log/nginx/error.log </div><div class="line"><span class="number">2015</span>/<span class="number">06</span>/<span class="number">25</span> <span class="number">12</span>:<span class="number">00</span>:<span class="number">00</span> [error] <span class="number">7</span><span class="comment">#0: *101623 client intended to send too large body: 1696805 bytes</span></div></pre></td></tr></table></figure>
-
-<p>By default, Nginx limits uploading size or <code>client_max_body_size</code> to be 1MB. The default size is just too small. A short video upload could easily exceed the limit. So, how to accept file upload larger than 1MB via Google Managed VMs in App Engine? Is there a way to change the value through <code>app.yaml</code>custom runtime configuration file? Or a custom Nginx Docker container can be deployed along with the application Docker container?</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -645,7 +674,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>20</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -956,7 +985,9 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>14</small></li>
+    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+  
+    <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
@@ -1246,6 +1277,8 @@
   
     <li><a href="/tags/multiple/">multiple</a><small>2</small></li>
   
+    <li><a href="/tags/mysql/">mysql</a><small>1</small></li>
+  
     <li><a href="/tags/named-function/">named-function</a><small>1</small></li>
   
     <li><a href="/tags/natural-sort/">natural-sort</a><small>1</small></li>
@@ -1371,6 +1404,8 @@
     <li><a href="/tags/record-set/">record-set</a><small>1</small></li>
   
     <li><a href="/tags/redis/">redis</a><small>1</small></li>
+  
+    <li><a href="/tags/redmine/">redmine</a><small>1</small></li>
   
     <li><a href="/tags/relative-path/">relative-path</a><small>1</small></li>
   
