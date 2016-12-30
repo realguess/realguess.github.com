@@ -64,6 +64,56 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-05T12:00:00.000Z"><a href="/2015/09/05/install-docker-on-google-cloud-platform-with-ubuntu-vivid-15-04/">Sep 5, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/05/install-docker-on-google-cloud-platform-with-ubuntu-vivid-15-04/">Install Docker on Google Cloud Platform with Ubuntu Vivid 15.04</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> 15.04 (Vivid Vervet) has switched the init manager from <a href="https://en.wikipedia.org/wiki/Upstart" target="_blank" rel="external">Upstart</a> to <a href="https://en.wikipedia.org/wiki/Systemd" target="_blank" rel="external">systemd</a>. Will the <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> installation change? Let’s give a try and install it on a Google Compute Engine instance.</p>
+<p>Install Docker:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div></pre></td></tr></table></figure>
+
+<p>Add user to Docker group for running commands without sudo:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div></pre></td></tr></table></figure>
+
+<p>Log out, then log back in.</p>
+<p>Verify the installation:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div><div class="line"></div><div class="line">Hello from Docker.</div><div class="line">This message shows that your installation appears to be working correctly.</div><div class="line"></div><div class="line">To generate this message, Docker took the following steps:</div><div class="line"><span class="number">1</span>. The Docker client contacted the Docker daemon.</div><div class="line"><span class="number">2</span>. The Docker daemon pulled the <span class="string">"hello-world"</span> image from the Docker Hub.</div><div class="line"><span class="number">3</span>. The Docker daemon created a new container from that image which runs the</div><div class="line">    executable that produces the output you are currently reading.</div><div class="line"><span class="number">4</span>. The Docker daemon streamed that output to the Docker client, which sent it</div><div class="line">    to your terminal.</div><div class="line"></div><div class="line">To try something more ambitious, you can run an Ubuntu container with:</div><div class="line">$ docker run -it ubuntu bash</div><div class="line"></div><div class="line">Share images, automate workflows, and more with a free Docker Hub account:</div><div class="line">https://hub.docker.com</div><div class="line"></div><div class="line">For more examples and ideas, visit:</div><div class="line">https://docs.docker.com/userguide/</div></pre></td></tr></table></figure>
+
+<p>For upgrading, the process is the same as installing:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/09/05/install-docker-on-google-cloud-platform-with-ubuntu-vivid-15-04/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-04T12:00:00.000Z"><a href="/2015/09/04/node-js-http-server-one-liner/">Sep 4, 2015</a></time>
       
       
@@ -449,46 +499,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-06-29T12:00:00.000Z"><a href="/2015/06/29/google-cloud-pub-sub-starters-for-gcloud-version-v0-15-x/">Jun 29, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/06/29/google-cloud-pub-sub-starters-for-gcloud-version-v0-15-x/">Google Cloud Pub/Sub Starters for gcloud Version v0.15.x</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://cloud.google.com/pubsub/docs" target="_blank" rel="external">Google Cloud Pub/Sub</a> starters/examples/references for <a href="https://nodejs.org/api/" target="_blank" rel="external">Node.js</a> gcloud version v0.15.x.</p>
-<p>Usage:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ PROJECT=my-project KEYFILENAME=/path/to/keyfile.json node file.sh</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/06/29/google-cloud-pub-sub-starters-for-gcloud-version-v0-15-x/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -524,7 +534,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>22</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -627,11 +637,13 @@
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>9</small></li>
+    <li><a href="/tags/aws/">aws</a><small>10</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/awscli/">awscli</a><small>1</small></li>
   
     <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
@@ -705,7 +717,7 @@
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>13</small></li>
+    <li><a href="/tags/cli/">cli</a><small>14</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -841,7 +853,7 @@
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
-    <li><a href="/tags/domain/">domain</a><small>1</small></li>
+    <li><a href="/tags/domain/">domain</a><small>2</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
@@ -1033,7 +1045,7 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>5</small></li>
+    <li><a href="/tags/jq/">jq</a><small>6</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1277,7 +1289,7 @@
   
     <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
   
-    <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
+    <li><a href="/tags/route-53/">route-53</a><small>3</small></li>
   
     <li><a href="/tags/routing/">routing</a><small>2</small></li>
   
@@ -1525,7 +1537,7 @@
   
     <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
   
-    <li><a href="/tags/xargs/">xargs</a><small>1</small></li>
+    <li><a href="/tags/xargs/">xargs</a><small>2</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   

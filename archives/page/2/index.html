@@ -68,6 +68,64 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-08-25T12:00:00.000Z"><a href="/2016/08/25/streaming-http-request-directly-to-response-in-node-js/">Aug 25, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/25/streaming-http-request-directly-to-response-in-node-js/">Streaming HTTP Request Directly to Response in Node.js</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>This is a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> starting script to stream HTTP request directly into response:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span><span class="function"><span class="params">(<span class="string">'http'</span>)</span>.<span class="title">createServer</span><span class="params">((req, res) =&gt; {</span></span></div><div class="line">  req.pipe(res); <span class="regexp">//</span> Pipe request directly to response</div><div class="line">}).<span class="title">listen</span><span class="params">(<span class="number">3000</span>)</span>;</div></pre></td></tr></table></figure>
+
+<p>It behaves almost like an echo, you get back whatever you sent. For example, use <a href="https://github.com/jkbrzt/httpie" target="_blank" rel="external">HTTPie</a> to make a request to the above server:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">$ echo foo | http <span class="comment">--verbose --stream :3000 Content-Type:text/plain</span></div><div class="line">POST / HTTP/<span class="number">1.1</span></div><div class="line">Accept: <span class="type">application</span>/json, */*</div><div class="line">Accept-Encoding: gzip, deflate</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">4</span></div><div class="line">Host: localhost:<span class="number">3000</span></div><div class="line">User-Agent: HTTPie/<span class="number">0.9</span><span class="number">.6</span></div><div class="line">Content-Type: <span class="type">text</span>/plain</div><div class="line"></div><div class="line">foo</div><div class="line"></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Transfer-Encoding: chunked</div><div class="line"></div><div class="line">foo</div></pre></td></tr></table></figure>
+
+<p>We can also add the <code>Content-Type</code> response header to echo back what the entire media type is after assembling all chunks.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span><span class="function"><span class="params">(<span class="string">'http'</span>)</span>.<span class="title">createServer</span><span class="params">((req, res) =&gt; {</span></span></div><div class="line">  req.pipe(res); <span class="regexp">//</span> Pipe request directly to response</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (req.headers[<span class="string">'content-type'</span>]) {</div><div class="line">    res.setHeader(<span class="string">'Content-Type'</span>, req.headers[<span class="string">'content-type'</span>]);</div><div class="line">  }</div><div class="line">}).<span class="title">listen</span><span class="params">(<span class="number">3000</span>)</span>;</div></pre></td></tr></table></figure>
+
+<p>The response should have the <code>Content-Type</code> field as below:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="status">HTTP/1.1 <span class="number">200</span> OK</span></div><div class="line"><span class="attribute">Connection</span>: <span class="string">keep-alive</span></div><div class="line"><span class="attribute">Content-Type</span>: <span class="string">text/plain</span></div><div class="line"><span class="attribute">Transfer-Encoding</span>: <span class="string">chunked</span></div><div class="line"></div><div class="line"><span class="undefined">foo</span></div></pre></td></tr></table></figure>
+
+<p>Notice that instead of usual <code>Content-Length</code> in the response header, we’ve got <code>Transfer-Encoding: chunked</code>. The default transfer encoding for Node.js HTTP is <code>chunked</code>:</p>
+<blockquote>
+<p>Sending a ‘Content-length’ header will disable the default chunked encoding.[^1]</p>
+</blockquote>
+<p>About transfer encoding:</p>
+<blockquote>
+<p>Chunked transfer encoding is a data transfer mechanism in version 1.1 of the Hypertext Transfer Protocol (HTTP) in which data is sent in a series of “chunks”. It uses the Transfer-Encoding HTTP header in place of the Content-Length header, which the earlier version of the protocol would otherwise require. Because the Content-Length header is not used, the sender does not need to know the length of the content before it starts transmitting a response to the receiver. Senders can begin transmitting dynamically-generated content before knowing the total size of that content. … The size of each chunk is sent right before the chunk itself so that the receiver can tell when it has finished receiving data for that chunk. The data transfer is terminated by a final chunk of length zero.[^2]</p>
+</blockquote>
+<p>With the above starting script, now you can attach some <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform" target="_blank" rel="external">transform streams</a> to manipulate the request and stream back in chunked response.</p>
+<p>Settings:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ node <span class="comment">--version</span></div><div class="line">v6<span class="number">.3</span><span class="number">.1</span></div><div class="line">$ <span class="keyword">http</span> <span class="comment">--version</span></div><div class="line"><span class="number">0.9</span><span class="number">.6</span></div></pre></td></tr></table></figure>
+
+<p>[^1]: <a href="https://nodejs.org/api/http.html" target="_blank" rel="external">HTTP</a>, Node.js API Docs</p>
+<p>[^2]: <a href="https://en.wikipedia.org/wiki/Chunked_transfer_encoding" target="_blank" rel="external">Chunked transfer encoding</a>, Wikipedia</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-08-18T12:00:00.000Z"><a href="/2016/08/18/accessing-upwork-json-data-without-the-api/">Aug 18, 2016</a></time>
       
       
@@ -574,57 +632,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-07-02T12:00:00.000Z"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Jul 2, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Resetting GitLab User Password with a Simple Shell Script</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <h2 id="Problem">Problem</h2>
-<p>Resetting password is one of the most common requests virtually in any system. In <a href="https://gitlab.com/" target="_blank" rel="external">GitLab</a>, user password can be updated by visiting the <code>/admin/users</code> page. But if you forgot the password for the root user or the admin user. You need another method to reset it.</p>
-<h2 id="Objective">Objective</h2>
-<p>The goal is to simplify the process of resetting GitLab user password by using CLI, so next time when encountering the same problem again, it will be quick and easy.</p>
-<h2 id="Settings">Settings</h2>
-<p>Self-hosted <a href="https://gitlab.com/" target="_blank" rel="external">GitLab</a>, installed in a <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> container.</p>
-<h2 id="Solutions">Solutions</h2>
-<p>Step by step procedure to reset the root password is already provided by <a href="http://docs.gitlab.com/ce/security/reset_root_password.html" target="_blank" rel="external">this GitLab documentation</a>. By converting it into a Bash shell script and placing it in user’s home <code>bin</code> directory as an executable <code>~/bin/gitlab-password-reset</code> file, we will have created a simple command to be run repeatedly:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"></div><div class="line"><span class="built_in">echo</span> -n <span class="string">"Email: "</span>;    <span class="built_in">read</span> MAIL</div><div class="line"><span class="built_in">echo</span> -n <span class="string">"Password: "</span>; <span class="built_in">read</span> <span class="operator">-s</span> PASS</div><div class="line"><span class="built_in">echo</span> <span class="comment"># Ensure a new line</span></div><div class="line"></div><div class="line">docker <span class="keyword">exec</span> gitlab gitlab-rails runner <span class="operator">-e</span> production <span class="string">"  \</span></div><div class="line">  user = User.find_by(email: '<span class="variable">$MAIL</span>');                  \</div><div class="line">  user.password = user.password_confirmation = '<span class="variable">$PASS</span>'; \</div><div class="line">  user.save!"</div></pre></td></tr></table></figure>
-
-<p>We could simply run the long <code>docker</code> command instead of shell script. But since we’re dealing with password, it’s a good practice to avoid placing sensitive information on command line history log.</p>
-<p>No trailing spaces are allowed on the password field, by the way.</p>
-<p>Another solution is turning the Ruby evaluation into a script and save into somewhere like <code>/srv/gitlab/config</code> directory. Then, we can just run:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="keyword">exec</span> gitlab gitlab-rails runner <span class="operator">-e</span> production /etc/gitlab/scripts/password-reset.rb</div></pre></td></tr></table></figure>
-
-<p>Because we are using Docker to run GitLab, and the following directories are mapped from the host to the guest:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">/srv/gitlab/confi<span class="variable">g:</span>/etc/gitlab</div><div class="line">/srv/gitlab/<span class="built_in">log</span><span class="variable">s:</span>/var/<span class="built_in">log</span>/gitlab</div><div class="line">/srv/gitlab/dat<span class="variable">a:</span>/var/<span class="keyword">opt</span>/gitlab</div></pre></td></tr></table></figure>
-
-<p>Therefore, when executing the Ruby script, it’s <code>/etc/gitlab</code> instead of <code>/srv/gitlab</code>. However, you will need to figure out how to get the email and password into the script. That’s for you to answer.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -661,7 +668,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>22</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -764,11 +771,13 @@
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>9</small></li>
+    <li><a href="/tags/aws/">aws</a><small>10</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/awscli/">awscli</a><small>1</small></li>
   
     <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
@@ -842,7 +851,7 @@
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>13</small></li>
+    <li><a href="/tags/cli/">cli</a><small>14</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -978,7 +987,7 @@
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
-    <li><a href="/tags/domain/">domain</a><small>1</small></li>
+    <li><a href="/tags/domain/">domain</a><small>2</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
@@ -1170,7 +1179,7 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>5</small></li>
+    <li><a href="/tags/jq/">jq</a><small>6</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1414,7 +1423,7 @@
   
     <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
   
-    <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
+    <li><a href="/tags/route-53/">route-53</a><small>3</small></li>
   
     <li><a href="/tags/routing/">routing</a><small>2</small></li>
   
@@ -1662,7 +1671,7 @@
   
     <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
   
-    <li><a href="/tags/xargs/">xargs</a><small>1</small></li>
+    <li><a href="/tags/xargs/">xargs</a><small>2</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   

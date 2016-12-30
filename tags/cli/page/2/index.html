@@ -68,6 +68,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-11-28T12:00:00.000Z"><a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/">Nov 28, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/">Delete All Messages in an Amazon SQS Queue via AWS CLI</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://aws.amazon.com/sqs/" target="_blank" rel="external">Amazon SQS</a> or Simple Queue Service is a fast, reliable, scalable, fully managed message queuing service. There is also <a href="http://aws.amazon.com/cli/" target="_blank" rel="external">AWS CLI</a> or Command Line Interface available to use with the service.</p>
+<p>If you have a lot of messages in a queue, this command will show the approximate number:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ aws sqs get-queue-attributes \</div><div class="line">  --queue-url <span class="variable">$url</span> \</div><div class="line">  --attribute-names ApproximateNumberOfMessages</div></pre></td></tr></table></figure>
+
+<p>Where <code>$url</code> is the URL to the Amazon SQS queue.</p>
+<p>There is no command to delete all messages yet, but you can chain a few commands together to make it work:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/11/28/delete-all-messages-in-an-amazon-sqs-queue-via-aws-cli/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-05-18T14:49:04.000Z"><a href="/2014/05/18/command-line-json-processing/">May 18, 2014</a></time>
       
       
@@ -321,7 +363,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>22</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -424,11 +466,13 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>9</small></li>
+    <li><a href="/tags/aws/">aws</a><small>10</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/awscli/">awscli</a><small>1</small></li>
   
     <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
@@ -502,7 +546,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>13</small></li>
+    <li><a href="/tags/cli/">cli</a><small>14</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -638,7 +682,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
-    <li><a href="/tags/domain/">domain</a><small>1</small></li>
+    <li><a href="/tags/domain/">domain</a><small>2</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
@@ -830,7 +874,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>5</small></li>
+    <li><a href="/tags/jq/">jq</a><small>6</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1074,7 +1118,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
   
-    <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
+    <li><a href="/tags/route-53/">route-53</a><small>3</small></li>
   
     <li><a href="/tags/routing/">routing</a><small>2</small></li>
   
@@ -1322,7 +1366,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
   
-    <li><a href="/tags/xargs/">xargs</a><small>1</small></li>
+    <li><a href="/tags/xargs/">xargs</a><small>2</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   

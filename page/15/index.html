@@ -64,6 +64,49 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-24T23:22:24.000Z"><a href="/2013/11/24/poor-mans-vpn/">Nov 24, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/24/poor-mans-vpn/">Poor Man&#39;s VPN</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://github.com/apenwarr/sshuttle/" target="_blank" rel="external">sshuttle</a> is a very simple tool to create a VPN connection to a remote server that you have SSH access. You do not need to set up the complex VPN in a remote machine.</p>
+<p>Requirements:</p>
+<ul>
+<li>Root access on local machine</li>
+<li>SSH access to a remote machine</li>
+</ul>
+<p>Install:</p>
+<pre><code>$ <span class="built_in">sudo</span> apt-get install sshuttle
+</code></pre><p>Usage:</p>
+<pre><code><span class="variable">$ </span>sshuttle --dns -vvr username<span class="variable">@sshserver</span> <span class="number">0</span>/<span class="number">0</span>
+</code></pre><p><code>0/0</code> is the shortcut for <code>0.0.0.0/0</code>. <code>--dns</code> enables DNS queries to be proxied. Note that <code>sudo</code> is not needed but will be prompted.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-24T10:19:24.000Z"><a href="/2013/11/24/treading-on-startup-scene-in-hong-kong/">Nov 24, 2013</a></time>
       
       
@@ -534,45 +577,6 @@ coffee&gt; .help
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-10-25T14:48:10.000Z"><a href="/2013/10/25/coffeescript-array-of-objects/">Oct 25, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/10/25/coffeescript-array-of-objects/">CoffeeScript Array of Objects</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>We frequently find ourselves need to define array of objects. In CoffeeScript we can write in the following way:</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">arr = [</div><div class="line">  {</div><div class="line">    <span class="attribute">name</span>: <span class="string">'foo'</span></div><div class="line">    <span class="attribute">pass</span>: <span class="string">'oof'</span></div><div class="line">  }</div><div class="line">  {</div><div class="line">    <span class="attribute">name</span>: <span class="string">'bar'</span></div><div class="line">    <span class="attribute">pass</span>: <span class="string">'rab'</span></div><div class="line">  }</div><div class="line">]</div></pre></td></tr></table></figure>
-
-<p>Or another format is to insert a comma:</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">arr = [</div><div class="line">  <span class="attribute">name</span>: <span class="string">'foo'</span></div><div class="line">  <span class="attribute">pass</span>: <span class="string">'oof'</span></div><div class="line">,</div><div class="line">  <span class="attribute">name</span>: <span class="string">'bar'</span></div><div class="line">  <span class="attribute">pass</span>: <span class="string">'rab'</span></div><div class="line">]</div></pre></td></tr></table></figure>
-
-<p>In the spirit of CoffeeScript, we want to avoid using braces as much as possible. Therefore, the second method is preferred.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -608,7 +612,7 @@ coffee&gt; .help
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>22</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -711,11 +715,13 @@ coffee&gt; .help
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>9</small></li>
+    <li><a href="/tags/aws/">aws</a><small>10</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/awscli/">awscli</a><small>1</small></li>
   
     <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
@@ -789,7 +795,7 @@ coffee&gt; .help
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>13</small></li>
+    <li><a href="/tags/cli/">cli</a><small>14</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -925,7 +931,7 @@ coffee&gt; .help
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
-    <li><a href="/tags/domain/">domain</a><small>1</small></li>
+    <li><a href="/tags/domain/">domain</a><small>2</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
@@ -1117,7 +1123,7 @@ coffee&gt; .help
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>5</small></li>
+    <li><a href="/tags/jq/">jq</a><small>6</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1361,7 +1367,7 @@ coffee&gt; .help
   
     <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
   
-    <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
+    <li><a href="/tags/route-53/">route-53</a><small>3</small></li>
   
     <li><a href="/tags/routing/">routing</a><small>2</small></li>
   
@@ -1609,7 +1615,7 @@ coffee&gt; .help
   
     <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
   
-    <li><a href="/tags/xargs/">xargs</a><small>1</small></li>
+    <li><a href="/tags/xargs/">xargs</a><small>2</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   

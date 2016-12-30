@@ -68,6 +68,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-02-11T12:00:00.000Z"><a href="/2015/02/11/install-docker-and-then-run-docker-commands-without-sudo/">Feb 11, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/02/11/install-docker-and-then-run-docker-commands-without-sudo/">Install Docker and then Run Docker Commands without Sudo</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Commands:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.io/ubuntu/ | <span class="built_in">sudo</span> sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span> -G docker <span class="variable">$USER</span></div><div class="line">$ <span class="built_in">sudo</span> service docker restart</div><div class="line">$ logout</div></pre></td></tr></table></figure>
+
+<p>Explanation:</p>
+<ol>
+<li>One line command installation</li>
+<li>Add the user to the group <code>docker</code></li>
+<li>Restart the daemon</li>
+<li>Make sure to logout and log back in, in order to sudoless Docker taking effect.</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-12-07T12:00:00.000Z"><a href="/2014/12/07/vagrant/">Dec 7, 2014</a></time>
       
       
@@ -153,7 +195,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>21</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>22</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -256,11 +298,13 @@
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>9</small></li>
+    <li><a href="/tags/aws/">aws</a><small>10</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
     <li><a href="/tags/aws-sdk/">aws-sdk</a><small>1</small></li>
+  
+    <li><a href="/tags/awscli/">awscli</a><small>1</small></li>
   
     <li><a href="/tags/backports/">backports</a><small>1</small></li>
   
@@ -334,7 +378,7 @@
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>13</small></li>
+    <li><a href="/tags/cli/">cli</a><small>14</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -470,7 +514,7 @@
   
     <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
   
-    <li><a href="/tags/domain/">domain</a><small>1</small></li>
+    <li><a href="/tags/domain/">domain</a><small>2</small></li>
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
@@ -662,7 +706,7 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>5</small></li>
+    <li><a href="/tags/jq/">jq</a><small>6</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -906,7 +950,7 @@
   
     <li><a href="/tags/rlwrap/">rlwrap</a><small>1</small></li>
   
-    <li><a href="/tags/route-53/">route-53</a><small>2</small></li>
+    <li><a href="/tags/route-53/">route-53</a><small>3</small></li>
   
     <li><a href="/tags/routing/">routing</a><small>2</small></li>
   
@@ -1154,7 +1198,7 @@
   
     <li><a href="/tags/x-content-type-options/">x-content-type-options</a><small>1</small></li>
   
-    <li><a href="/tags/xargs/">xargs</a><small>1</small></li>
+    <li><a href="/tags/xargs/">xargs</a><small>2</small></li>
   
     <li><a href="/tags/xiaomi/">xiaomi</a><small>1</small></li>
   
