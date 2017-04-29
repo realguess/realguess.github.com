@@ -64,6 +64,100 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-01-07T12:00:00.000Z"><a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/">Jan 7, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/">Use CLI s3api to Retrieve Metadata of Amazon S3 Object</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In <a href="http://docs.aws.amazon.com/cli/latest/reference/s3/index.html#available-commands" target="_blank" rel="external">Amazon S3 CLI</a>, there are only a handful commands:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp      ls      mb      mv      rb      rm      sync    website</div></pre></td></tr></table></figure>
+
+<p>We can use <code>cp</code> command to retrieve S3 object:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp s3://mybucket/myfile.json myfile.json</div></pre></td></tr></table></figure>
+
+<p>But if only the metadata of the object, such as <code>ETag</code> or <code>Content-Type</code> is needed, the S3 CLI does not have any command to do that.</p>
+<p>Now enter <a href="http://docs.aws.amazon.com/cli/latest/reference/s3api/index.html" target="_blank" rel="external">S3API CLI</a>. Not only the CLI commands can retrieve S3 objects, but also associated <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html#object-metadata" target="_blank" rel="external">metadata</a>. For example, retrieve S3 object similar to <code>aws s3 cp</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3api get-object --bucket mybucket --key myfile.json</div></pre></td></tr></table></figure>
+
+<p>Just need the metadata of the object, use <code>head-object</code>, which retrieves metadata without the object itself, as HTTP HEAD method:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-01-01T12:00:01.000Z"><a href="/2015/01/01/passage-of-time-2014/">Jan 1, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/01/01/passage-of-time-2014/">Passage of Time 2014</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In 2014, there are 6,409 <em>unique visitors</em> making 7,497 <em>visits</em> resulting in 8,711 <em>pageviews</em>, about 24 <em>daily pageviews</em>.</p>
+<p><strong>Where are my visitors located?</strong></p>
+<p>33.37% of visits are from the United States. The second place is from India with 6.87%.</p>
+<p><strong>Where do my visitors come from?</strong></p>
+<p>Google is the top traffic source with 87.47% of all visits. Social is almost non-existing.</p>
+<p><strong>What devices and operating systems are my visitors using?</strong></p>
+<p>44.14% are using Windows, then followed closely by Macintosh with 36.63%. And 96.77% visitors are using desktop devices.</p>
+<p><strong>What is the top post?</strong></p>
+<p>The most popular post is still <a href="/2013/12/19/split-json-file-into-multiple-parts/">Split JSON File into Multiple Parts</a>.</p>
+<p><strong>How is my site speed?</strong></p>
+<p>The average page load time is 4.33 seconds and the slowest is sampled at 19.71 seconds from 56 samples.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/01/01/passage-of-time-2014/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-01-01T12:00:00.000Z"><a href="/2015/01/01/statistics-in-december-2014/">Jan 1, 2015</a></time>
       
       
@@ -477,96 +571,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-12-05T12:00:00.000Z"><a href="/2014/12/05/livereload-with-browsersync-and-gulp/">Dec 5, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/12/05/livereload-with-browsersync-and-gulp/">LiveReload with BrowserSync and Gulp</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In my <a href="/2013/11/12/live-browser-reload-and-command-execution-on-file-change/">previous blog post</a>, I have written about how to use LiveReload Chrome extension, with Guard and some Ruby gems to make a web page automatically reload in a browser, Chrome browser to be specific. Just by reading this sentence, it already sounds like a complicated task. And indeed it is. Luckily, I have found a better solution: <a href="http://www.browsersync.io/" target="_blank" rel="external">BrowserSync</a>.</p>
-<p>With LiveReload, you have to install browser extension, but BrowserSync uses Socket.io, so it can supports more than one browser at once. This is great for working with responsive design, where screens with different sizes are needed to be tested.</p>
-<p>No need to install extension and support more than one browser are really big plus.</p>
-<p>The following is a short instruction and some examples on how to use both <a href="http://www.browsersync.io/" target="_blank" rel="external">BrowserSync</a> and <a href="http://gulpjs.com/" target="_blank" rel="external">Gulp</a> to automatically reload a web documentation page generated by <a href="http://jashkenas.github.io/docco/" target="_blank" rel="external">Docco</a> in any connected browser.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/12/05/livereload-with-browsersync-and-gulp/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-12-01T12:00:00.000Z"><a href="/2014/12/01/statistics-in-november-2014/">Dec 1, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/12/01/statistics-in-november-2014/">Statistics in November 2014</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In November 2014, there are 836 <em>unique visitors</em> making 930 <em>visits</em> resulting in 1,091 <em>pageviews</em>, about 36 <em>daily pageviews</em>.</p>
-<p>As today, <a href="http://www.alexa.com/siteinfo/realguess.net" target="_blank" rel="external">my blog</a> is still estimated by <a href="http://www.alexa.com/" target="_blank" rel="external">Alexa</a>. It ranks my blog 911,093 globally and 183,366 in the United States.</p>
-<p><strong>Where are my visitors located?</strong></p>
-<p>34.09% of visits are from the United States, and the second place is from India with 7.20%. </p>
-<p><strong>Where do my visitors come from?</strong></p>
-<p>Google is the top traffic source with 83.98% of all visits. Social is almost non-existing.</p>
-<p><strong>What devices and operating systems are my visitors using?</strong></p>
-<p>43.76% are using Windows, then followed closely by Macintosh with 37.31%. 97.85% visitors are using desktop devices.</p>
-<p><strong>What is the top post?</strong></p>
-<p>The most popular post is <a href="/2014/05/18/split-a-large-json-file-into-smaller-pieces/">Split a Large JSON File into Smaller Pieces</a>, it is even popular than the site’s main index page.</p>
-<p><strong>How is my site speed?</strong></p>
-<p>The average page load time is 4.66 seconds. There is one sample coming from China resulted in almost 16 seconds of load time, ouch! That really drags down the average.</p>
-<p><strong>Is my blog getting more and more visitors?</strong></p>
-<p>Yes! The month-to-month gain is 11.32%, and year-to-year gain is 1,270.49%, more than a thousand fold. Well, I just got started by then.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/12/01/statistics-in-november-2014/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -592,7 +596,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>11</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -691,7 +695,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>4</small></li>
+    <li><a href="/tags/array/">array</a><small>5</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -899,7 +903,7 @@
   
     <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
   
-    <li><a href="/tags/directory/">directory</a><small>1</small></li>
+    <li><a href="/tags/directory/">directory</a><small>2</small></li>
   
     <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
   
@@ -947,6 +951,8 @@
   
     <li><a href="/tags/escape-character/">escape-character</a><small>1</small></li>
   
+    <li><a href="/tags/exclude/">exclude</a><small>1</small></li>
+  
     <li><a href="/tags/expiration/">expiration</a><small>1</small></li>
   
     <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
@@ -993,7 +999,7 @@
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>4</small></li>
+    <li><a href="/tags/git/">git</a><small>5</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
   
@@ -1004,6 +1010,8 @@
     <li><a href="/tags/github/">github</a><small>4</small></li>
   
     <li><a href="/tags/github-pages/">github-pages</a><small>1</small></li>
+  
+    <li><a href="/tags/gitignore/">gitignore</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitlab</a><small>1</small></li>
   
@@ -1113,7 +1121,7 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>6</small></li>
+    <li><a href="/tags/jq/">jq</a><small>7</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1121,7 +1129,7 @@
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>5</small></li>
+    <li><a href="/tags/json/">json</a><small>6</small></li>
   
     <li><a href="/tags/kiss/">kiss</a><small>1</small></li>
   
@@ -1148,6 +1156,8 @@
     <li><a href="/tags/license/">license</a><small>1</small></li>
   
     <li><a href="/tags/like-button/">like-button</a><small>1</small></li>
+  
+    <li><a href="/tags/line/">line</a><small>1</small></li>
   
     <li><a href="/tags/line-divider/">line-divider</a><small>1</small></li>
   
@@ -1421,6 +1431,8 @@
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
   
+    <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
+  
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
@@ -1451,7 +1463,7 @@
   
     <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
-    <li><a href="/tags/stream/">stream</a><small>2</small></li>
+    <li><a href="/tags/stream/">stream</a><small>3</small></li>
   
     <li><a href="/tags/streaming/">streaming</a><small>1</small></li>
   
@@ -1631,7 +1643,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2016 Chao Huang
+  &copy; 2017 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

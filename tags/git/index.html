@@ -68,6 +68,62 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2017-01-14T12:00:00.000Z"><a href="/2017/01/14/gitignore-excluding-everything-except-a-specific-directory/">Jan 14, 2017</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2017/01/14/gitignore-excluding-everything-except-a-specific-directory/">Gitignore: Excluding Everything Except a Specific Directory</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I have the following directory structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ tree -aF src/</div><div class="line">src/</div><div class="line">├── github.<span class="keyword">com</span>/</div><div class="line">│   ├── git/</div><div class="line">│   │   └── git/</div><div class="line">│   │       └── <span class="keyword">file</span></div><div class="line">│   └── realguess/</div><div class="line">│       ├── git/</div><div class="line">│       │   └── <span class="keyword">file</span></div><div class="line">│       └── hello/</div><div class="line">│           └── hello.<span class="keyword">go</span></div><div class="line">└── .gitignore</div><div class="line"></div><div class="line"><span class="number">6</span> directories, <span class="number">4</span> <span class="keyword">files</span></div></pre></td></tr></table></figure>
+
+<p>My intention is to keep the projects in <code>src/github.com/realguess/</code> only. So, I have added the following gitignore file:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">cat</span> src/.gitignore</div><div class="line">/github.<span class="keyword">com</span>/</div><div class="line">!/github.<span class="keyword">com</span>/realguess/</div></pre></td></tr></table></figure>
+
+<p>But the directory is ignored:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>git check-ignore -v github.com/realguess/</div><div class="line">src/.<span class="symbol">gitignore:</span><span class="number">1</span><span class="symbol">:/github</span>.com/      github.com/realguess/</div></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>It is not possible to re-include a file if a parent directory of that file is excluded.</strong> Git doesn’t list excluded directories for performance reasons, so any patterns on contained files have no effect, no matter where they are defined.[^1]</p>
+</blockquote>
+<p>Uh-oh! The directory <code>github.com/</code> is excluded. Therefore, it is <em>not possible to re-include a file</em> <code>github.com/realguess</code> (directory is a file). To fix it, just need to add the wildcard to the end of the parent directory:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">cat</span> src/.gitignore</div><div class="line">/github.<span class="keyword">com</span>/*</div><div class="line">!/github.<span class="keyword">com</span>/realguess/</div></pre></td></tr></table></figure>
+
+<p>By adding the wildcard character, it matches every file (including hidden ones) or directory under <code>github.com/</code> directory, the directory itself as the parent of <code>github.com/realguess/</code> is not excluded. Then, we use the negation pattern to re-include <code>github.com/realguess/</code>.</p>
+<p>Double check it:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git <span class="operator"><span class="keyword">check</span>-<span class="keyword">ignore</span> -v github.com/realguess/</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure>
+
+<p>The debugging command returns non-zero status code, which indicates that the directory is not ignored.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2017/01/14/gitignore-excluding-everything-except-a-specific-directory/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
       
       
@@ -253,7 +309,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>11</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -352,7 +408,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>4</small></li>
+    <li><a href="/tags/array/">array</a><small>5</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -560,7 +616,7 @@
   
     <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
   
-    <li><a href="/tags/directory/">directory</a><small>1</small></li>
+    <li><a href="/tags/directory/">directory</a><small>2</small></li>
   
     <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
   
@@ -608,6 +664,8 @@
   
     <li><a href="/tags/escape-character/">escape-character</a><small>1</small></li>
   
+    <li><a href="/tags/exclude/">exclude</a><small>1</small></li>
+  
     <li><a href="/tags/expiration/">expiration</a><small>1</small></li>
   
     <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
@@ -654,7 +712,7 @@
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>4</small></li>
+    <li><a href="/tags/git/">git</a><small>5</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
   
@@ -665,6 +723,8 @@
     <li><a href="/tags/github/">github</a><small>4</small></li>
   
     <li><a href="/tags/github-pages/">github-pages</a><small>1</small></li>
+  
+    <li><a href="/tags/gitignore/">gitignore</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitlab</a><small>1</small></li>
   
@@ -774,7 +834,7 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>6</small></li>
+    <li><a href="/tags/jq/">jq</a><small>7</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -782,7 +842,7 @@
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>5</small></li>
+    <li><a href="/tags/json/">json</a><small>6</small></li>
   
     <li><a href="/tags/kiss/">kiss</a><small>1</small></li>
   
@@ -809,6 +869,8 @@
     <li><a href="/tags/license/">license</a><small>1</small></li>
   
     <li><a href="/tags/like-button/">like-button</a><small>1</small></li>
+  
+    <li><a href="/tags/line/">line</a><small>1</small></li>
   
     <li><a href="/tags/line-divider/">line-divider</a><small>1</small></li>
   
@@ -1082,6 +1144,8 @@
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
   
+    <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
+  
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
@@ -1112,7 +1176,7 @@
   
     <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
-    <li><a href="/tags/stream/">stream</a><small>2</small></li>
+    <li><a href="/tags/stream/">stream</a><small>3</small></li>
   
     <li><a href="/tags/streaming/">streaming</a><small>1</small></li>
   
@@ -1292,7 +1356,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2016 Chao Huang
+  &copy; 2017 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

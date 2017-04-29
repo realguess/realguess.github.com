@@ -64,6 +64,76 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-03-15T12:00:00.000Z"><a href="/2015/03/15/several-cli-ways-to-find-out-your-public-ip-address/">Mar 15, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/15/several-cli-ways-to-find-out-your-public-ip-address/">Several CLI Ways to Find Out Your Public IP Address</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Need to know your public IP address? Use one of the following:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span> checkip.amazonaws.com</div><div class="line">$ curl <span class="operator">-s</span> ipinfo.io/ip</div><div class="line">$ curl <span class="operator">-s</span> www.trackip.net/ip</div><div class="line">$ curl <span class="operator">-s</span> whatsmyip.me</div><div class="line">$ curl <span class="operator">-s</span> whatismyip.akamai.com</div><div class="line">$ curl <span class="operator">-s</span> icanhazip.com</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-03-14T12:00:00.000Z"><a href="/2015/03/14/use-pm2-with-io-js/">Mar 14, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/03/14/use-pm2-with-io-js/">Use PM2 with io.js</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>If you have both <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> and <a href="https://iojs.org/" target="_blank" rel="external">io.js</a> installed, <a href="https://github.com/Unitech/PM2" target="_blank" rel="external">PM2</a> will run Node.js by default. To start the app with io.js, use <code>--interpreter</code> flag:</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ pm2 start app.js --name web --interpreter iojs</div><div class="line">[<span class="link_label">PM2</span>][<span class="link_reference">WARN</span>] We've notice that you are running the node script, but currently</div><div class="line">using a iojs interpreter, may be you need inspect the --interpreter option.</div><div class="line">[PM2] Process app.js launched</div><div class="line">┌──────────┬────┬──────┬──────┬────────┬─────────┬────────┬─────────────┬──────────┐</div><div class="line">│ App name │ id │ mode │ pid  │ status │ restart │ uptime │ memory      │ watching │</div><div class="line">├──────────┼────┼──────┼──────┼────────┼─────────┼────────┼─────────────┼──────────┤</div><div class="line">│ web      │ 2  │ fork │ 5074 │ online │ 0       │ 0s     │ 20.172 MB   │ disabled │</div><div class="line">└──────────┴────┴──────┴──────┴────────┴─────────┴────────┴─────────────┴──────────┘</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-02-22T12:00:00.000Z"><a href="/2015/02/22/git-end-of-line-normalization-by-autocrlf-with-input/">Feb 22, 2015</a></time>
       
       
@@ -443,100 +513,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-01-07T12:00:00.000Z"><a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/">Jan 7, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/">Use CLI s3api to Retrieve Metadata of Amazon S3 Object</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In <a href="http://docs.aws.amazon.com/cli/latest/reference/s3/index.html#available-commands" target="_blank" rel="external">Amazon S3 CLI</a>, there are only a handful commands:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp      ls      mb      mv      rb      rm      sync    website</div></pre></td></tr></table></figure>
-
-<p>We can use <code>cp</code> command to retrieve S3 object:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp s3://mybucket/myfile.json myfile.json</div></pre></td></tr></table></figure>
-
-<p>But if only the metadata of the object, such as <code>ETag</code> or <code>Content-Type</code> is needed, the S3 CLI does not have any command to do that.</p>
-<p>Now enter <a href="http://docs.aws.amazon.com/cli/latest/reference/s3api/index.html" target="_blank" rel="external">S3API CLI</a>. Not only the CLI commands can retrieve S3 objects, but also associated <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html#object-metadata" target="_blank" rel="external">metadata</a>. For example, retrieve S3 object similar to <code>aws s3 cp</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3api get-object --bucket mybucket --key myfile.json</div></pre></td></tr></table></figure>
-
-<p>Just need the metadata of the object, use <code>head-object</code>, which retrieves metadata without the object itself, as HTTP HEAD method:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-01-01T12:00:01.000Z"><a href="/2015/01/01/passage-of-time-2014/">Jan 1, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/01/01/passage-of-time-2014/">Passage of Time 2014</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In 2014, there are 6,409 <em>unique visitors</em> making 7,497 <em>visits</em> resulting in 8,711 <em>pageviews</em>, about 24 <em>daily pageviews</em>.</p>
-<p><strong>Where are my visitors located?</strong></p>
-<p>33.37% of visits are from the United States. The second place is from India with 6.87%.</p>
-<p><strong>Where do my visitors come from?</strong></p>
-<p>Google is the top traffic source with 87.47% of all visits. Social is almost non-existing.</p>
-<p><strong>What devices and operating systems are my visitors using?</strong></p>
-<p>44.14% are using Windows, then followed closely by Macintosh with 36.63%. And 96.77% visitors are using desktop devices.</p>
-<p><strong>What is the top post?</strong></p>
-<p>The most popular post is still <a href="/2013/12/19/split-json-file-into-multiple-parts/">Split JSON File into Multiple Parts</a>.</p>
-<p><strong>How is my site speed?</strong></p>
-<p>The average page load time is 4.33 seconds and the slowest is sampled at 19.71 seconds from 56 samples.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/01/01/passage-of-time-2014/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -562,7 +538,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>11</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -661,7 +637,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>4</small></li>
+    <li><a href="/tags/array/">array</a><small>5</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -869,7 +845,7 @@
   
     <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
   
-    <li><a href="/tags/directory/">directory</a><small>1</small></li>
+    <li><a href="/tags/directory/">directory</a><small>2</small></li>
   
     <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
   
@@ -917,6 +893,8 @@
   
     <li><a href="/tags/escape-character/">escape-character</a><small>1</small></li>
   
+    <li><a href="/tags/exclude/">exclude</a><small>1</small></li>
+  
     <li><a href="/tags/expiration/">expiration</a><small>1</small></li>
   
     <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
@@ -963,7 +941,7 @@
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>4</small></li>
+    <li><a href="/tags/git/">git</a><small>5</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
   
@@ -974,6 +952,8 @@
     <li><a href="/tags/github/">github</a><small>4</small></li>
   
     <li><a href="/tags/github-pages/">github-pages</a><small>1</small></li>
+  
+    <li><a href="/tags/gitignore/">gitignore</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitlab</a><small>1</small></li>
   
@@ -1083,7 +1063,7 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>6</small></li>
+    <li><a href="/tags/jq/">jq</a><small>7</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1091,7 +1071,7 @@
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>5</small></li>
+    <li><a href="/tags/json/">json</a><small>6</small></li>
   
     <li><a href="/tags/kiss/">kiss</a><small>1</small></li>
   
@@ -1118,6 +1098,8 @@
     <li><a href="/tags/license/">license</a><small>1</small></li>
   
     <li><a href="/tags/like-button/">like-button</a><small>1</small></li>
+  
+    <li><a href="/tags/line/">line</a><small>1</small></li>
   
     <li><a href="/tags/line-divider/">line-divider</a><small>1</small></li>
   
@@ -1391,6 +1373,8 @@
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
   
+    <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
+  
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
@@ -1421,7 +1405,7 @@
   
     <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
-    <li><a href="/tags/stream/">stream</a><small>2</small></li>
+    <li><a href="/tags/stream/">stream</a><small>3</small></li>
   
     <li><a href="/tags/streaming/">streaming</a><small>1</small></li>
   
@@ -1601,7 +1585,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2016 Chao Huang
+  &copy; 2017 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

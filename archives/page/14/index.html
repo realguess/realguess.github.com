@@ -68,6 +68,117 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-01-09T09:18:19.000Z"><a href="/2014/01/09/working-with-big-number-in-javascript/">Jan 9, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/09/working-with-big-number-in-javascript/">Working with Big Number in JavaScript</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>JavaScript is only capable of handling 53-bit numbers, if you are working with a big number such as <a href="https://dev.twitter.com/docs/twitter-ids-json-and-snowflake" target="_blank" rel="external">Twitter ID</a>, which is using 64-bit number, then you need to find an external library to do that, otherwise, there will be precision lost:</p>
+<pre><code>&gt; num = <span class="number">420938523475451904</span>
+<span class="input"><span class="prompt">420938523475451900
+&gt;</span> num = <span class="number">420938523475451904</span> + <span class="number">1</span></span>
+<span class="input"><span class="prompt">420938523475451900
+&gt;</span> num = <span class="number">420938523475451904</span> - <span class="number">1</span></span>
+<span class="number">420938523475451900</span>
+</code></pre><p>Here is one library to use in Node environment, install <a href="https://github.com/MikeMcl/big.js/" target="_blank" rel="external">Big.js</a>:</p>
+<pre><code><span class="variable">$ </span>npm install big.js
+</code></pre><p>Load the module:</p>
+<pre><code>&gt; BigNum = <span class="built_in">require</span>(<span class="string">'big.js'</span>)
+{ [<span class="built_in">Function</span>: Big] DP: <span class="number">20</span>, RM: <span class="number">1</span> }
+</code></pre><p>Use string to create the big number:</p>
+<pre><code>&gt; num = <span class="constant">BigNum</span>(<span class="string">'420938523475451904'</span>)
+<span class="input"><span class="prompt">{ s: 1,
+  e: 17,
+  c: [ 4, 2, 0, 9, 3, 8, 5, 2, 3, 4, 7, 5, 4, 5, 1, 9, 0, 4 ] }
+&gt;</span> num.toString()</span>
+<span class="string">'420938523475451904'</span>
+</code></pre><p>Perform addition:</p>
+<pre><code>&gt; num.<span class="keyword">plus</span>(<span class="number">1</span>).toString()
+<span class="string">'420938523475451905'</span>
+</code></pre><p>Perform substraction:</p>
+<pre><code>&gt; num.<span class="keyword">minus</span>(<span class="number">1</span>).toString()
+<span class="string">'420938523475451903'</span>
+</code></pre><p>There are other packages that yet to be tested:</p>
+<ul>
+<li><a href="https://github.com/MikeMcl/bignumber.js/" target="_blank" rel="external">bignumber.js</a></li>
+<li><a href="https://github.com/rauschma/strint" target="_blank" rel="external">strint.js</a></li>
+<li><a href="http://jsfromhell.com/classes/bignumber" target="_blank" rel="external">bignumber</a></li>
+<li><a href="https://github.com/jtobey/javascript-bignum" target="_blank" rel="external">JavaScript bignumber</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2014-01-05T14:18:22.000Z"><a href="/2014/01/05/use-vim-cryptographic-features-to-encrypt-important-text-files/">Jan 5, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/05/use-vim-cryptographic-features-to-encrypt-important-text-files/">Use Vim Cryptographic Features to Encrypt Important Text Files</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>You can protect your important text files by using <a href="http://www.vim.org/" target="_blank" rel="external">Vim</a> cryptographic features.</p>
+<p>Set cryptographic method to <a href="http://en.wikipedia.org/wiki/Blowfish_(cipher)" target="_blank" rel="external">Blowfish</a>:</p>
+<pre><code>:<span class="keyword">set</span> cryptmethod=blowfish
+</code></pre><p>Set encryption key:</p>
+<pre><code><span class="symbol">:X</span>
+</code></pre><p>Save and get out:</p>
+<pre><code><span class="symbol">:wq</span>
+</code></pre><p>But the drawback is:</p>
+<pre><code>$ <span class="keyword">grep</span> <span class="string">'Vim'</span> encrypted.txt
+Binary <span class="keyword">file</span> encrypted.txt matches
+</code></pre><p>References:</p>
+<ul>
+<li><a href="http://usevim.com/2013/11/01/vim-encryption/" target="_blank" rel="external">Protect Notes with Vim Encryption</a></li>
+<li><a href="http://vim.wikia.com/wiki/Encryption" target="_blank" rel="external">Encryption - Vim Tips Wiki</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-02T21:59:01.000Z"><a href="/2014/01/02/passage-of-time-2013/">Jan 2, 2014</a></time>
       
       
@@ -422,114 +533,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-04T17:34:59.000Z"><a href="/2013/12/04/configuration-setup-and-loading-precedence/">Dec 4, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/04/configuration-setup-and-loading-precedence/">Configuration Setup and Loading Precedence</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Loading precedence (latter overrides former):</p>
-<ol>
-<li>Load application default settings (<code>config/default.yml</code>)</li>
-<li>Load environment settings</li>
-<li>Load custom settings</li>
-</ol>
-<p>Default settings of the application is provided by the upstream, therefore, it should not be modified.</p>
-<p>There are four types of environments: <code>development</code>, <code>testing</code>, <code>staging</code> and <code>production</code>. Environment can be set by using the shell environment variable: <code>ENV</code>. If the environment variable is not specified, it is set to <code>development</code> as default. Environment settings override default settings.</p>
-<p>Custom settings override environment settings. The search path for custom settings is:</p>
-<ol>
-<li>Environment variable <code>SETTINGS</code></li>
-<li><code>config/settings.yml</code></li>
-</ol>
-<p>If both paths are not available, that means the custom settings are not specified.</p>
-<p><code>config/settings.yml</code> is a custom settings, therefore, it will be ignored by git in <code>.gitignore</code> file:</p>
-<pre><code>config/settings.yml
-</code></pre><p>The complete directory structure regarding to the configuration setup:</p>
-<pre><code><span class="title">config</span>/
-├── <span class="default"><span class="keyword">default</span>.yml</span>
-├── environments
-│   ├── development.yml
-│   ├── production.yml
-│   ├── staging.yml
-│   └── testing.yml
-└── settings.yml
-</code></pre><p>Quick start command:</p>
-<pre><code><span class="variable">$ </span>node app
-</code></pre><p>Fully customized start command:</p>
-<pre><code><span class="variable">$ </span><span class="constant">ENV</span>=production <span class="constant">SETTINGS</span>=<span class="regexp">/path/to</span><span class="regexp">/settings.yml node app</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-29T12:00:30.000Z"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Nov 29, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/29/written-in-coffeescript,-required-in-javascript/">Written in CoffeeScript, Required in JavaScript</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>If you are writing in CoffeeScript, then requiring another module written in CoffeeScript works the same as as both scripts are in JavaScript:</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cm = <span class="built_in">require</span> <span class="string">'coffee-module'</span></div></pre></td></tr></table></figure>
-
-<p>But if you are writing in JavaScript, and the dependent module is in CoffeeScript, you have to include CoffeeScript as a dependency with require statement:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'coffee-script'</span>);</div><div class="line"><span class="keyword">var</span> cm = <span class="built_in">require</span>(<span class="string">'coffee-module'</span>);</div></pre></td></tr></table></figure>
-
-<p>For better compatibility, source codes written in CoffeeScript should be compiled into JavaScript. But what is the best practice? You don’t want to maintain two languages. When to compile? Here is two options:</p>
-<ol>
-<li>Compile before publish the module</li>
-<li>Compile after module install</li>
-</ol>
-<p>The advantage of the first approach is that there is no dependency on CoffeeScript. The module has been compiled into JavaScript prior to submitting to module registry. However, this approach requires two repositories, one is source code repository, and another one is the published module repository. If you are working on a private project, it is less likely that you will publish your module to an public NPM registry or running your own private one. It is more likely to have a single source code repository. Therefore, the second approach might be better in this situation. However, <code>coffee-script</code> must be added in <code>dependency</code>, or it must be installed globally with <code>coffee</code> command available during <code>preinstall</code> phase. Although this approach is not recommended in <a href="https://npmjs.org/doc/misc/npm-scripts.html" target="_blank" rel="external">npm-scripts</a>, before setting up a private NPM registry, this is the way to go.</p>
-<p>Here is the required fields in <code>package.json</code>:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">scripts</span>": <span class="value">{</span></div><div class="line">    "<span class="attribute">preinstall</span>": <span class="value"><span class="string">"coffee --compile --bare --output lib/ src/"</span></span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -556,7 +559,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>11</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -655,7 +658,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>4</small></li>
+    <li><a href="/tags/array/">array</a><small>5</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -863,7 +866,7 @@
   
     <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
   
-    <li><a href="/tags/directory/">directory</a><small>1</small></li>
+    <li><a href="/tags/directory/">directory</a><small>2</small></li>
   
     <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
   
@@ -911,6 +914,8 @@
   
     <li><a href="/tags/escape-character/">escape-character</a><small>1</small></li>
   
+    <li><a href="/tags/exclude/">exclude</a><small>1</small></li>
+  
     <li><a href="/tags/expiration/">expiration</a><small>1</small></li>
   
     <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
@@ -957,7 +962,7 @@
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>4</small></li>
+    <li><a href="/tags/git/">git</a><small>5</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
   
@@ -968,6 +973,8 @@
     <li><a href="/tags/github/">github</a><small>4</small></li>
   
     <li><a href="/tags/github-pages/">github-pages</a><small>1</small></li>
+  
+    <li><a href="/tags/gitignore/">gitignore</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitlab</a><small>1</small></li>
   
@@ -1077,7 +1084,7 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>6</small></li>
+    <li><a href="/tags/jq/">jq</a><small>7</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1085,7 +1092,7 @@
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>5</small></li>
+    <li><a href="/tags/json/">json</a><small>6</small></li>
   
     <li><a href="/tags/kiss/">kiss</a><small>1</small></li>
   
@@ -1112,6 +1119,8 @@
     <li><a href="/tags/license/">license</a><small>1</small></li>
   
     <li><a href="/tags/like-button/">like-button</a><small>1</small></li>
+  
+    <li><a href="/tags/line/">line</a><small>1</small></li>
   
     <li><a href="/tags/line-divider/">line-divider</a><small>1</small></li>
   
@@ -1385,6 +1394,8 @@
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
   
+    <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
+  
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
@@ -1415,7 +1426,7 @@
   
     <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
-    <li><a href="/tags/stream/">stream</a><small>2</small></li>
+    <li><a href="/tags/stream/">stream</a><small>3</small></li>
   
     <li><a href="/tags/streaming/">streaming</a><small>1</small></li>
   
@@ -1595,7 +1606,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2016 Chao Huang
+  &copy; 2017 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

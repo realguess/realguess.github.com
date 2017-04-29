@@ -68,6 +68,107 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2017-04-29T12:00:00.000Z"><a href="/2017/04/29/wrapping-line-by-line-json-to-an-array/">Apr 29, 2017</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2017/04/29/wrapping-line-by-line-json-to-an-array/">Wrapping Line by Line JSON to an Array</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Some utilities print out JSON data (object) line by line. Line by line JSON is not really a valid JSON format, need to wrap it in bracket as an array.</p>
+<p>For example, here are a few lines of JSON objects:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">3</span>); <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">'{"id":'</span><span class="variable">$i</span><span class="string">'}'</span>; <span class="keyword">done</span></div><div class="line">{<span class="string">"id"</span>:<span class="number">1</span>}</div><div class="line">{<span class="string">"id"</span>:<span class="number">2</span>}</div><div class="line">{<span class="string">"id"</span>:<span class="number">3</span>}</div></pre></td></tr></table></figure>
+
+<p>To combine them into a single array, we can use <a href="https://stedolan.github.io/jq/" target="_blank" rel="external">jq</a>‘s <strong>-s, —slurp</strong> option:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">3</span>); <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">'{"id":'</span><span class="variable">$i</span><span class="string">'}'</span>; <span class="keyword">done</span> | jq -cM <span class="operator">-s</span></div><div class="line">[{<span class="string">"id"</span>:<span class="number">1</span>},{<span class="string">"id"</span>:<span class="number">2</span>},{<span class="string">"id"</span>:<span class="number">3</span>}]</div></pre></td></tr></table></figure>
+
+<p>The option reads the entire input stream into a large array. This is good until the input stream is too large to process, because jq is not producing output while <em>slurping</em> up the input. If the input is line by line JSON, and all you want to do is wrapping it into an array (with or even without the trailing newline), we can simply do the following:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">3</span>); <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">'{"id":'</span><span class="variable">$i</span><span class="string">'}'</span>; <span class="keyword">done</span> |\</div><div class="line">  awk <span class="string">'BEGIN { printf "["; getline; printf "%s", $0 } { printf ",%s", $0 } END { print "]" }'</span></div><div class="line">[{<span class="string">"id"</span>:<span class="number">1</span>},{<span class="string">"id"</span>:<span class="number">2</span>},{<span class="string">"id"</span>:<span class="number">3</span>}]</div></pre></td></tr></table></figure>
+
+<p>This is with the newline printed. And it will solve the problem of a very large input. Data will simply stream out as it comes it. Try it with a forever <code>while</code> loop.</p>
+<p>There is another option in jq named <strong>—stream</strong>, and it seems to be doing the same. But option <strong>—slurp</strong> overrides <strong>—stream</strong>, and the option itself is already so complicated.</p>
+<p>In conclusion, you can use <code>jq -s</code> to wrap line by line JSON into an array. If you want to be safe, just use the awk example above.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2017-01-14T12:00:00.000Z"><a href="/2017/01/14/gitignore-excluding-everything-except-a-specific-directory/">Jan 14, 2017</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2017/01/14/gitignore-excluding-everything-except-a-specific-directory/">Gitignore: Excluding Everything Except a Specific Directory</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I have the following directory structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ tree -aF src/</div><div class="line">src/</div><div class="line">├── github.<span class="keyword">com</span>/</div><div class="line">│   ├── git/</div><div class="line">│   │   └── git/</div><div class="line">│   │       └── <span class="keyword">file</span></div><div class="line">│   └── realguess/</div><div class="line">│       ├── git/</div><div class="line">│       │   └── <span class="keyword">file</span></div><div class="line">│       └── hello/</div><div class="line">│           └── hello.<span class="keyword">go</span></div><div class="line">└── .gitignore</div><div class="line"></div><div class="line"><span class="number">6</span> directories, <span class="number">4</span> <span class="keyword">files</span></div></pre></td></tr></table></figure>
+
+<p>My intention is to keep the projects in <code>src/github.com/realguess/</code> only. So, I have added the following gitignore file:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">cat</span> src/.gitignore</div><div class="line">/github.<span class="keyword">com</span>/</div><div class="line">!/github.<span class="keyword">com</span>/realguess/</div></pre></td></tr></table></figure>
+
+<p>But the directory is ignored:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>git check-ignore -v github.com/realguess/</div><div class="line">src/.<span class="symbol">gitignore:</span><span class="number">1</span><span class="symbol">:/github</span>.com/      github.com/realguess/</div></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>It is not possible to re-include a file if a parent directory of that file is excluded.</strong> Git doesn’t list excluded directories for performance reasons, so any patterns on contained files have no effect, no matter where they are defined.[^1]</p>
+</blockquote>
+<p>Uh-oh! The directory <code>github.com/</code> is excluded. Therefore, it is <em>not possible to re-include a file</em> <code>github.com/realguess</code> (directory is a file). To fix it, just need to add the wildcard to the end of the parent directory:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">cat</span> src/.gitignore</div><div class="line">/github.<span class="keyword">com</span>/*</div><div class="line">!/github.<span class="keyword">com</span>/realguess/</div></pre></td></tr></table></figure>
+
+<p>By adding the wildcard character, it matches every file (including hidden ones) or directory under <code>github.com/</code> directory, the directory itself as the parent of <code>github.com/realguess/</code> is not excluded. Then, we use the negation pattern to re-include <code>github.com/realguess/</code>.</p>
+<p>Double check it:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ git <span class="operator"><span class="keyword">check</span>-<span class="keyword">ignore</span> -v github.com/realguess/</span></div><div class="line"><span class="number">1</span></div></pre></td></tr></table></figure>
+
+<p>The debugging command returns non-zero status code, which indicates that the directory is not ignored.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2017/01/14/gitignore-excluding-everything-except-a-specific-directory/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
       
       
@@ -425,63 +526,11 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-09-20T11:22:33.000Z"><a href="/2014/09/20/dirname-does-not-follow-symlink/">Sep 20, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/09/20/dirname-does-not-follow-symlink/">Dirname Does Not Follow Symlink</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Node’s global object <a href="http://nodejs.org/api/globals.html#globals_dirname" target="_blank" rel="external">__dirname</a> returns the name of the directory that the currently executing script resides in. However, if a directory is symbolic linked or a symlink, it still return the original path.</p>
-<p>For example, the following directory structure:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="input"><span class="prompt">/tmp/dirname/</span></span></div><div class="line">├── foo</div><div class="line">│   └── app.js</div><div class="line">└── lib</div><div class="line">    ├── bar -&gt; ../foo</div><div class="line">    └── util.js</div><div class="line"></div><div class="line"><span class="number">3</span> directories, <span class="number">2</span> files</div></pre></td></tr></table></figure>
-
-<p>The <code>app.js</code> contains the following line:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">console.<span class="built_in">log</span>(__dirname);</div></pre></td></tr></table></figure>
-
-<p>Run the script:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd /tmp/<span class="keyword">dirname</span>/foo && node app.js</div><div class="line">/tmp/<span class="keyword">dirname</span>/foo</div></pre></td></tr></table></figure>
-
-<p>You get the directory the <code>app.js</code> script is residing it. But if you do the same from the symlinked directory:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd <span class="regexp">/tmp/</span>dirname<span class="regexp">/lib/</span>bar && node app.js</div><div class="line"><span class="regexp">/tmp/</span>dirname<span class="regexp">/foo</span></div></pre></td></tr></table></figure>
-
-<p>Well, you get the same answer, even the current working directory is different:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd <span class="regexp">/tmp/</span>dirname<span class="regexp">/lib/</span>bar && pwd</div><div class="line"><span class="regexp">/tmp/</span>dirname<span class="regexp">/lib/</span>bar</div></pre></td></tr></table></figure>
-
-<p>The return of <code>__dirname</code> does not follow symbolic link.</p>
-<p>So, have to be extra careful when requiring files that is symbolic linked. If you think you are in <code>lib/bar</code> directory and try to require the <code>util.js</code> script in <code>app.js</code>:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">var</span> path <span class="subst">=</span> <span class="keyword">require</span>(<span class="string">'path'</span>);</div><div class="line">console<span class="built_in">.</span><span class="keyword">log</span>(<span class="keyword">require</span>(<span class="string">'../util'</span>));</div><div class="line">console<span class="built_in">.</span><span class="keyword">log</span>(<span class="keyword">require</span>(path<span class="built_in">.</span><span class="keyword">join</span>(__dirname, <span class="string">'..'</span>, <span class="string">'util'</span>)));</div></pre></td></tr></table></figure>
-
-<p>Both statements will throw module not found error. Path join does not help either.</p>
-<p>The best practice is to avoid symlinks and relative directory requiring. Instead, set up required as modules, and install them in <code>node_modules</code> directory, then they will become top-level modules.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
+  
+    <a href="/categories/coding/page/2/" class="alignright next">Next</a>
   
   <div class="clearfix"></div>
 </nav>
@@ -501,7 +550,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>9</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>11</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -600,7 +649,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>4</small></li>
+    <li><a href="/tags/array/">array</a><small>5</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -808,7 +857,7 @@
   
     <li><a href="/tags/directives-end-marker/">directives-end-marker</a><small>1</small></li>
   
-    <li><a href="/tags/directory/">directory</a><small>1</small></li>
+    <li><a href="/tags/directory/">directory</a><small>2</small></li>
   
     <li><a href="/tags/dirname/">dirname</a><small>1</small></li>
   
@@ -856,6 +905,8 @@
   
     <li><a href="/tags/escape-character/">escape-character</a><small>1</small></li>
   
+    <li><a href="/tags/exclude/">exclude</a><small>1</small></li>
+  
     <li><a href="/tags/expiration/">expiration</a><small>1</small></li>
   
     <li><a href="/tags/explicit-document/">explicit-document</a><small>1</small></li>
@@ -902,7 +953,7 @@
   
     <li><a href="/tags/ghost/">ghost</a><small>1</small></li>
   
-    <li><a href="/tags/git/">git</a><small>4</small></li>
+    <li><a href="/tags/git/">git</a><small>5</small></li>
   
     <li><a href="/tags/git-branch/">git-branch</a><small>1</small></li>
   
@@ -913,6 +964,8 @@
     <li><a href="/tags/github/">github</a><small>4</small></li>
   
     <li><a href="/tags/github-pages/">github-pages</a><small>1</small></li>
+  
+    <li><a href="/tags/gitignore/">gitignore</a><small>1</small></li>
   
     <li><a href="/tags/gitlab/">gitlab</a><small>1</small></li>
   
@@ -1022,7 +1075,7 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>6</small></li>
+    <li><a href="/tags/jq/">jq</a><small>7</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1030,7 +1083,7 @@
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>5</small></li>
+    <li><a href="/tags/json/">json</a><small>6</small></li>
   
     <li><a href="/tags/kiss/">kiss</a><small>1</small></li>
   
@@ -1057,6 +1110,8 @@
     <li><a href="/tags/license/">license</a><small>1</small></li>
   
     <li><a href="/tags/like-button/">like-button</a><small>1</small></li>
+  
+    <li><a href="/tags/line/">line</a><small>1</small></li>
   
     <li><a href="/tags/line-divider/">line-divider</a><small>1</small></li>
   
@@ -1330,6 +1385,8 @@
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
   
+    <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
+  
     <li><a href="/tags/small/">small</a><small>1</small></li>
   
     <li><a href="/tags/socket-io/">socket-io</a><small>1</small></li>
@@ -1360,7 +1417,7 @@
   
     <li><a href="/tags/stdin/">stdin</a><small>1</small></li>
   
-    <li><a href="/tags/stream/">stream</a><small>2</small></li>
+    <li><a href="/tags/stream/">stream</a><small>3</small></li>
   
     <li><a href="/tags/streaming/">streaming</a><small>1</small></li>
   
@@ -1540,7 +1597,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2016 Chao Huang
+  &copy; 2017 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>
