@@ -68,6 +68,43 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-07-11T12:00:00.000Z"><a href="/2015/07/11/what-is-the-this-binding-in-async-seq-and-compose-functions/">Jul 11, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/07/11/what-is-the-this-binding-in-async-seq-and-compose-functions/">What is the &#39;this&#39; Binding in Async &#39;seq&#39; and &#39;compose&#39; Functions?</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>TLDR: <code>global</code></p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/07/11/what-is-the-this-binding-in-async-seq-and-compose-functions/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-07-06T12:00:00.000Z"><a href="/2015/07/06/fields-in-package-json-for-private-and-unlicensed-modules/">Jul 6, 2015</a></time>
       
       
@@ -478,96 +515,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-05-20T13:49:37.000Z"><a href="/2014/05/20/node-version-manager/">May 20, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/05/20/node-version-manager/">Node Version Manager</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://github.com/creationix/nvm" target="_blank" rel="external">Node Version Manager</a> is a simple bash script to manage multiple active <a href="http://nodejs.org/" target="_blank" rel="external">Node</a> versions. <em>Why do you want to use it?</em> If you like me, you want to try out the latest unstable version of the Node, but you still need to use the older and stable versions to develop and maintain your projects, then you should use <a href="https://github.com/creationix/nvm" target="_blank" rel="external">NVM</a>.</p>
-<p>You can find out more information on <a href="https://github.com/creationix/nvm" target="_blank" rel="external">NVM GitHub page</a>, below are just my take on installing and using it.</p>
-<h2 id="Install">Install</h2>
-<p>You can install NVM via the install script, but always do it the hard way by installing it manually:</p>
-<pre><code><span class="variable">$ </span>git clone <span class="symbol">https:</span>/<span class="regexp">/github.com/creationix</span><span class="regexp">/nvm.git ~/</span>.nvm
-</code></pre><p>Check out the latest version:</p>
-<pre><code>$ <span class="built_in">cd</span> ~/.nvm &amp;&amp; git checkout v0.<span class="number">7.0</span>
-</code></pre><p>Enable NVM:</p>
-<pre><code>$ <span class="keyword">source</span> ~/.nvm/nvm.<span class="keyword">sh</span>
-</code></pre><p>Add this to <code>~/.bashrc</code> to make it available upon login:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">"\n# Enable NVM"</span>           &gt;&gt; ~/.bashrc
-$ <span class="built_in">echo</span> <span class="string">'source $HOME/.nvm/nvm.sh'</span> &gt;&gt; ~/.bashrc
-</code></pre><p>Enable Bash completion:</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="string">'source $HOME/.nvm/bash_completion'</span> &gt;&gt; ~/.bashrc
-</code></pre><p>Try it by opening a new terminal:</p>
-<pre><code><span class="variable">$ </span>nvm
-</code></pre><h2 id="Usage">Usage</h2>
-<p>Get help:</p>
-<pre><code>$ nvm <span class="built_in">help</span>
-</code></pre><p>Show current NVM version:</p>
-<pre><code>$ nvm --<span class="keyword">version</span>
-</code></pre><p>Display the currently active Node version:</p>
-<pre><code>$ nvm <span class="literal">current</span>
-</code></pre><p>Install Node v0.10.28:</p>
-<pre><code><span class="variable">$ </span>nvm install <span class="number">0</span>.<span class="number">10.28</span>
-</code></pre><p>The installed Node version will reside in <code>~/.nvm/v0.10.28</code>.</p>
-<p>List installed versions:</p>
-<pre><code>$ nvm <span class="keyword">ls</span>
-    .nvm
-v0.<span class="number">10.28</span>
-</code></pre><p>Use a specific Node version:</p>
-<pre><code><span class="variable">$ </span>which node
-/usr/local/bin/node
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">11.13</span>
-<span class="variable">$ </span>nvm <span class="keyword">use</span> <span class="number">0</span>.<span class="number">10.28</span>
-<span class="constant">Now </span>using node v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>which node
-/home/chao/.nvm/v<span class="number">0</span>.<span class="number">10.28</span>/bin/node
-</code></pre><p>Basically, NVM modified the search path.</p>
-<pre><code>$ <span class="built_in">echo</span> <span class="variable">$PATH</span>
-/home/chao/.nvm/v0.<span class="number">10.28</span>/bin
-</code></pre><p>To roll back:</p>
-<pre><code><span class="char">$ </span>nvm deactivate
-/home/chao/.nvm/*/bin removed from <span class="char">$P</span>ATH
-/home/chao/.nvm/*/share/man removed from <span class="char">$M</span>ANPATH
-/home/chao/.nvm/*/lib/node_modules removed from <span class="char">$N</span>ODE_PATH
-</code></pre><p>List Node versions available to install:</p>
-<pre><code>$ nvm <span class="keyword">ls</span>-remote
-</code></pre><p>Use <code>.nvmrc</code> file:</p>
-<pre><code><span class="input"><span class="prompt">$ echo '0.10.28' &gt;&gt;</span> .nvmrc</span>
-<span class="variable">$ </span>nvm use
-<span class="constant">Found</span> <span class="string">'/home/chao/.nvmrc'</span> with version &lt;<span class="number">0</span>.<span class="number">10.28</span>&gt;
-<span class="constant">Now</span> using node v<span class="number">0</span>.<span class="number">10.28</span>
-<span class="variable">$ </span>node -v
-v<span class="number">0</span>.<span class="number">10.28</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -604,7 +551,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>22</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>23</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -889,7 +836,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
-    <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
+    <li><a href="/tags/dependency/">dependency</a><small>4</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -917,11 +864,11 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+    <li><a href="/tags/docker/">docker</a><small>16</small></li>
   
     <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
-    <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
+    <li><a href="/tags/dockerfile/">dockerfile</a><small>4</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>2</small></li>
   
@@ -1231,7 +1178,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
-    <li><a href="/tags/node/">node</a><small>28</small></li>
+    <li><a href="/tags/node/">node</a><small>29</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1273,7 +1220,7 @@ v<span class="number">0</span>.<span class="number">10.28</span>
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
   
-    <li><a href="/tags/package-json/">package.json</a><small>2</small></li>
+    <li><a href="/tags/package-json/">package.json</a><small>3</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   

@@ -64,6 +64,58 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-08T15:59:36.000Z"><a href="/2013/11/08/preserve-command-history-in-node-repl/">Nov 8, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/08/preserve-command-history-in-node-repl/">Preserve command history in Node REPL</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Node <a href="http://nodejs.org/api/repl.html" target="_blank" rel="external">REPL</a> (Read-Eval-Print-Loop) is a standalone JavaScript interpreter for Node. To invoke it, simply type:</p>
+<pre><code><span class="variable">$ </span>node
+</code></pre><p>However, after exit and re-enter the REPL, all the previous commands are lost. This behaves very much different from what we expect from shell.</p>
+<p>To maintain a persistent history, we can use <a href="http://utopia.knoware.nl/~hlub/uck/rlwrap/rlwrap.html" target="_blank" rel="external">rlwrap</a> as suggested in this <a href="http://stackoverflow.com/a/18513951" target="_blank" rel="external">answer</a>.</p>
+<p>Install <a href="http://utopia.knoware.nl/~hlub/uck/rlwrap/rlwrap.html" target="_blank" rel="external">rlwrap</a>:</p>
+<pre><code>$ <span class="built_in">sudo</span> apt-get install rlwrap
+</code></pre><p>Create an alias:</p>
+<pre><code>alias <span class="variable">node=</span>'env <span class="variable">NODE_NO_READLINE=</span><span class="number">1</span> rlwrap -s <span class="number">1000</span> -S <span class="string">"node&gt; "</span> node'
+</code></pre><p>Persistent history file is saved in:</p>
+<pre><code>~/.node_history
+</code></pre><p>However, if by perserving the command history, Node REPL loses familiarity of color output and tab completion. This is a <a href="http://stackoverflow.com/a/9219349" target="_blank" rel="external">trade-off</a>. To get around this problem, we can roll our own REPL or use an alternative. The best alternative I have found so far is also the one I am already using: <a href="http://coffeescript.org/#changelog" target="_blank" rel="external">CoffeeScript</a> (see 1.6.3 change log). There is a history command built-in:</p>
+<pre><code>$ coffee
+coffee&gt; .help
+.break  Sometimes you <span class="built_in">get</span> stuck, this gets you out
+.<span class="built_in">clear</span>  Break, <span class="operator">and</span> also <span class="built_in">clear</span> <span class="operator">the</span> <span class="built_in">local</span> context
+.exit   Exit <span class="operator">the</span> repl
+.help   Show repl options
+.history        Show <span class="command"><span class="keyword">command</span> <span class="title">history</span></span>
+.<span class="built_in">load</span>   Load JS <span class="built_in">from</span> <span class="operator">a</span> <span class="built_in">file</span> <span class="keyword">into</span> <span class="operator">the</span> REPL session
+.save   Save all evaluated commands <span class="operator">in</span> this REPL session <span class="built_in">to</span> <span class="operator">a</span> <span class="built_in">file</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-10-27T10:39:40.000Z"><a href="/2013/10/27/change-time-zone-in-ubuntu-linux/">Oct 27, 2013</a></time>
       
       
@@ -441,45 +493,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-05-30T12:41:29.000Z"><a href="/2013/05/30/configure-grunt-contrib-jshint-options-with-multiple-targets/">May 30, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/05/30/configure-grunt-contrib-jshint-options-with-multiple-targets/">Configure grunt-contrib-jshint options with multiple targets</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When linting, different JSHint options are needed for front-end and back-end<br>JavaScript. We can specify different targets in <a href="https://github.com/gruntjs/grunt-contrib-jshint" target="_blank" rel="external">grunt-contrib-jshint</a>. But<br>there is something to be careful:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">jshint: {</div><div class="line">  <span class="comment">// Task level options</span></div><div class="line">  options: {</div><div class="line">    jshintrc: <span class="string">'./.jshintrc'</span></div><div class="line">  },</div><div class="line">  node: {</div><div class="line">    <span class="comment">// Target level options</span></div><div class="line">    options: {</div><div class="line">      node: <span class="literal">true</span></div><div class="line">    }</div><div class="line">  },</div><div class="line">  jquery: {</div><div class="line">    <span class="comment">// Target level options</span></div><div class="line">    options: {</div><div class="line">      globals: {</div><div class="line">        jQuery: <span class="literal">true</span></div><div class="line">      }</div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>I thought the target level options will merge with the task level, but it does<br>not happen. Need to dig deeper to figure out why <code>jshintrc</code> option is not merged<br>with JSHint options. A quick fix is to load the JSHint JSON file directly:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">jshint: {</div><div class="line">  <span class="comment">// Task level options</span></div><div class="line">  options: grunt.file.readJSON(<span class="string">'./.jshintrc'</span>),</div><div class="line">  node: {</div><div class="line">    <span class="comment">// Target level options</span></div><div class="line">    options: {</div><div class="line">      node: <span class="literal">true</span></div><div class="line">    }</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>In this case, if <code>jshint:node</code> target was run, the merged options will be parsed<br>to JSHint.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -515,7 +528,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>22</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>23</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -800,7 +813,7 @@
   
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
-    <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
+    <li><a href="/tags/dependency/">dependency</a><small>4</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -828,11 +841,11 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+    <li><a href="/tags/docker/">docker</a><small>16</small></li>
   
     <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
-    <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
+    <li><a href="/tags/dockerfile/">dockerfile</a><small>4</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>2</small></li>
   
@@ -1142,7 +1155,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
-    <li><a href="/tags/node/">node</a><small>28</small></li>
+    <li><a href="/tags/node/">node</a><small>29</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1184,7 +1197,7 @@
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
   
-    <li><a href="/tags/package-json/">package.json</a><small>2</small></li>
+    <li><a href="/tags/package-json/">package.json</a><small>3</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   

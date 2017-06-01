@@ -68,6 +68,59 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2017-06-01T12:00:00.000Z"><a href="/2017/06/01/avoiding-dependencies-reinstall-when-building-nodejs-docker-image/">Jun 1, 2017</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2017/06/01/avoiding-dependencies-reinstall-when-building-nodejs-docker-image/">Avoiding Dependencies Reinstall When Building NodeJS Docker Image</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When I first started writing <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a> for building a <a href="https://nodejs.org/" target="_blank" rel="external">NodeJS</a> app, I will do:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">WORKDIR /app</div><div class="line">COPY . /app</div><div class="line">RUN npm install</div></pre></td></tr></table></figure>
+
+<p>Sure, this is very simple, but every time a change in the source file, the entire dependency tree needs to be re-installed. The only time you need to rebuild is when <code>package.json</code> changes.</p>
+<p>One trick is to move <code>package.json</code> elsewhere, and build the dependencies, then move back:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">WORKDIR /app</div><div class="line">ADD package.json /tmp</div><div class="line">RUN <span class="built_in">cd</span> /tmp && npm install</div><div class="line">COPY . /app</div><div class="line">RUN mv /tmp/node_modules /app/node_modules</div></pre></td></tr></table></figure>
+
+<p>However, if there are a lot of depending packages with lots of files, the last step will take a long time.</p>
+<p>How about using symbolic link to shorten the time?</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">WORKDIR /app</div><div class="line">ADD package.json /tmp</div><div class="line">RUN <span class="built_in">cd</span> /tmp && npm install</div><div class="line">COPY . /app</div><div class="line">RUN ln <span class="operator">-s</span> /tmp/node_modules /app/node_modules</div></pre></td></tr></table></figure>
+
+<p>Well, it works, but not every NPM package is happy about it. Some will complain about the softlink, result in errors.</p>
+<p>So, how can we reuse caches as much as possible, and:</p>
+<ol>
+<li>Do not need to reinstall dependencies</li>
+<li>Do not use symbolic link</li>
+</ol>
+<p>Here is a solution, just move down the <code>COPY</code> statement:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># Set the working directory, which creates the directory.</span></div><div class="line">WORKDIR /app</div><div class="line"></div><div class="line"><span class="comment"># Install dependencies.</span></div><div class="line">ADD package.json /tmp</div><div class="line">RUN <span class="built_in">cd</span> /tmp && npm install</div><div class="line"></div><div class="line"><span class="comment"># Move the dependency directory back to the app.</span></div><div class="line">RUN mv /tmp/node_modules /app</div><div class="line"></div><div class="line"><span class="comment"># Copy the content into the app directory. The previously added "node_modules"</span></div><div class="line"><span class="comment"># directory will not be overridden.</span></div><div class="line">COPY . /app</div></pre></td></tr></table></figure>
+
+<p>With this configuration, if <code>package.json</code> stays the same, only the last cache layer will be rebuilt when source codes change.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-12-07T12:00:00.000Z"><a href="/2016/12/07/dockerizing-redmine/">Dec 7, 2016</a></time>
       
       
@@ -590,56 +643,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-05T12:00:00.000Z"><a href="/2015/09/05/install-docker-on-google-cloud-platform-with-ubuntu-vivid-15-04/">Sep 5, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/05/install-docker-on-google-cloud-platform-with-ubuntu-vivid-15-04/">Install Docker on Google Cloud Platform with Ubuntu Vivid 15.04</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="http://www.ubuntu.com/" target="_blank" rel="external">Ubuntu</a> 15.04 (Vivid Vervet) has switched the init manager from <a href="https://en.wikipedia.org/wiki/Upstart" target="_blank" rel="external">Upstart</a> to <a href="https://en.wikipedia.org/wiki/Systemd" target="_blank" rel="external">systemd</a>. Will the <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> installation change? Let’s give a try and install it on a Google Compute Engine instance.</p>
-<p>Install Docker:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div></pre></td></tr></table></figure>
-
-<p>Add user to Docker group for running commands without sudo:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span>G docker <span class="variable">${USER}</span></div></pre></td></tr></table></figure>
-
-<p>Log out, then log back in.</p>
-<p>Verify the installation:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">$ docker run hello-world</div><div class="line"></div><div class="line">Hello from Docker.</div><div class="line">This message shows that your installation appears to be working correctly.</div><div class="line"></div><div class="line">To generate this message, Docker took the following steps:</div><div class="line"><span class="number">1</span>. The Docker client contacted the Docker daemon.</div><div class="line"><span class="number">2</span>. The Docker daemon pulled the <span class="string">"hello-world"</span> image from the Docker Hub.</div><div class="line"><span class="number">3</span>. The Docker daemon created a new container from that image which runs the</div><div class="line">    executable that produces the output you are currently reading.</div><div class="line"><span class="number">4</span>. The Docker daemon streamed that output to the Docker client, which sent it</div><div class="line">    to your terminal.</div><div class="line"></div><div class="line">To try something more ambitious, you can run an Ubuntu container with:</div><div class="line">$ docker run -it ubuntu bash</div><div class="line"></div><div class="line">Share images, automate workflows, and more with a free Docker Hub account:</div><div class="line">https://hub.docker.com</div><div class="line"></div><div class="line">For more examples and ideas, visit:</div><div class="line">https://docs.docker.com/userguide/</div></pre></td></tr></table></figure>
-
-<p>For upgrading, the process is the same as installing:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.com/ | sh</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/09/05/install-docker-on-google-cloud-platform-with-ubuntu-vivid-15-04/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -674,7 +677,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>22</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>23</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -959,7 +962,7 @@
   
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
-    <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
+    <li><a href="/tags/dependency/">dependency</a><small>4</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -987,11 +990,11 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+    <li><a href="/tags/docker/">docker</a><small>16</small></li>
   
     <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
-    <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
+    <li><a href="/tags/dockerfile/">dockerfile</a><small>4</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>2</small></li>
   
@@ -1301,7 +1304,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
-    <li><a href="/tags/node/">node</a><small>28</small></li>
+    <li><a href="/tags/node/">node</a><small>29</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1343,7 +1346,7 @@
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
   
-    <li><a href="/tags/package-json/">package.json</a><small>2</small></li>
+    <li><a href="/tags/package-json/">package.json</a><small>3</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   

@@ -68,6 +68,58 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-08-06T12:00:00.000Z"><a href="/2016/08/06/creating-a-data-volume-container-in-dockerfile/">Aug 6, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/06/creating-a-data-volume-container-in-dockerfile/">Creating a Data Volume Container in Dockerfile</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Create a <a href="https://docker.com/" target="_blank" rel="external">Docker</a> data volume container in <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a> is unbelievably simple, just use the <a href="https://docs.docker.com/engine/reference/builder/#/volume" target="_blank" rel="external">VOLUME</a> instruction:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FROM debian:8.5</div><div class="line">VOLUME ["/data"]</div></pre></td></tr></table></figure>
+
+<p>The instruction creates a mount point and attach the volumes from native host or other containers.</p>
+<p>Build the data container:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ docker build -t data .</div><div class="line">Sending build context to Docker daemon 2.048 kB</div><div class="line">Step 1 : FROM debian:8.5</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">1</span>b088884749b</span></span></div><div class="line">Step 2 : VOLUME /data</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="constant">Running</span> in <span class="number">5511</span>f34a489c</span></span></div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">7</span>b723b2b3d13</span></span></div><div class="line">Removing intermediate container 5511f34a489c</div><div class="line">Successfully built 7b723b2b3d13</div></pre></td></tr></table></figure>
+
+<p>The built size is just about 125.1 MB.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="operator"><span class="keyword">create</span> <span class="comment">--name data data</span></span></div></pre></td></tr></table></figure>
+
+<p>The first <code>data</code> is the name of the container, the second <code>data</code> is the name of Docker image.</p>
+<p>To attach the data volume container to another, we use <code>--volumes-from</code> option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">$</span> <span class="comment">docker</span> <span class="comment">run</span> <span class="literal">-</span><span class="comment">it</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">rm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">name</span> <span class="comment">foo</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">volumes</span><span class="literal">-</span><span class="comment">from=data</span> <span class="comment">debian:8</span><span class="string">.</span><span class="comment">5</span> <span class="comment">/bin/bash</span></div></pre></td></tr></table></figure>
+
+<p>If there’re initial data to copy, then add the <code>COPY</code> instruction:</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">FROM debian:8.5</div><div class="line">VOLUME ["/data"]</div><div class="line">COPY . /data</div></pre></td></tr></table></figure>
+
+<p>Settings:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker --<span class="keyword">version</span></div><div class="line">Docker <span class="keyword">version</span> <span class="number">1.11</span>.<span class="number">2</span>, build b9f10c9</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Jul 5, 2016</a></time>
       
       
@@ -523,59 +575,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-06-25T12:00:00.000Z"><a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/">Jun 25, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/">Fail to Upload Large File to Google App Engine Managed VMs</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>After deploying a Node.js app with custom runtime to Google <a href="https://cloud.google.com/appengine/docs/managed-vms/" target="_blank" rel="external">App Engine</a>, when uploading file larger than 1MB, the server returns HTTP 413 status code, meaning the server is refusing to process the request because the uploading entity size is too large.</p>
-<p>I had the following setup:</p>
-<ul>
-<li>The App Engine application is Google managed</li>
-<li>The application is Node.js app with custom <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a></li>
-<li>The application Docker container runs <code>node</code> command directly on port 8080</li>
-</ul>
-<p>After accessing the server (which changed from Google managed to user managed), and checked the Docker containers:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> docker ps <span class="operator">-a</span></div><div class="line">gcr.io/google_appengine/nginx-proxy:latest      <span class="string">"/usr/sbin/nginx"</span></div></pre></td></tr></table></figure>
-
-<p>It looks like Nginx is running as the proxy to Node.js application. When uploading file that is larger than 1MB, the response is HTTP 413 error:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">html</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">head</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">title</span>&gt;</span>413 Request Entity Too Large<span class="tag">&lt;/<span class="title">title</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">head</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">body</span> <span class="attribute">bgcolor</span>=<span class="value">"white"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">center</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">h1</span>&gt;</span>413 Request Entity Too Large<span class="tag">&lt;/<span class="title">h1</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">center</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="title">hr</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="title">center</span>&gt;</span>nginx<span class="tag">&lt;/<span class="title">center</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="title">body</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="title">html</span>&gt;</span></div></pre></td></tr></table></figure>
-
-<p>And the Nginx access log from the server:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ tail /var/log/nginx/error.log </div><div class="line"><span class="number">2015</span>/<span class="number">06</span>/<span class="number">25</span> <span class="number">12</span>:<span class="number">00</span>:<span class="number">00</span> [error] <span class="number">7</span><span class="comment">#0: *101623 client intended to send too large body: 1696805 bytes</span></div></pre></td></tr></table></figure>
-
-<p>By default, Nginx limits uploading size or <code>client_max_body_size</code> to be 1MB. The default size is just too small. A short video upload could easily exceed the limit. So, how to accept file upload larger than 1MB via Google Managed VMs in App Engine? Is there a way to change the value through <code>app.yaml</code>custom runtime configuration file? Or a custom Nginx Docker container can be deployed along with the application Docker container?</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/06/25/fail-to-upload-large-file-to-google-app-engine-managed-vms/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -612,7 +611,7 @@
   
     <li><a href="/categories/data-science/">Data Science</a><small>2</small></li>
   
-    <li><a href="/categories/devops/">DevOps</a><small>22</small></li>
+    <li><a href="/categories/devops/">DevOps</a><small>23</small></li>
   
     <li><a href="/categories/javascript/">JavaScript</a><small>17</small></li>
   
@@ -897,7 +896,7 @@
   
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
-    <li><a href="/tags/dependency/">dependency</a><small>3</small></li>
+    <li><a href="/tags/dependency/">dependency</a><small>4</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -925,11 +924,11 @@
   
     <li><a href="/tags/docco/">docco</a><small>1</small></li>
   
-    <li><a href="/tags/docker/">docker</a><small>15</small></li>
+    <li><a href="/tags/docker/">docker</a><small>16</small></li>
   
     <li><a href="/tags/docker-compose/">docker-compose</a><small>1</small></li>
   
-    <li><a href="/tags/dockerfile/">dockerfile</a><small>3</small></li>
+    <li><a href="/tags/dockerfile/">dockerfile</a><small>4</small></li>
   
     <li><a href="/tags/domain/">domain</a><small>2</small></li>
   
@@ -1239,7 +1238,7 @@
   
     <li><a href="/tags/nginx/">nginx</a><small>3</small></li>
   
-    <li><a href="/tags/node/">node</a><small>28</small></li>
+    <li><a href="/tags/node/">node</a><small>29</small></li>
   
     <li><a href="/tags/node-version-manager/">node-version-manager</a><small>1</small></li>
   
@@ -1281,7 +1280,7 @@
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
   
-    <li><a href="/tags/package-json/">package.json</a><small>2</small></li>
+    <li><a href="/tags/package-json/">package.json</a><small>3</small></li>
   
     <li><a href="/tags/pageview/">pageview</a><small>4</small></li>
   
