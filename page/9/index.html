@@ -64,6 +64,59 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-12-10T12:00:00.000Z"><a href="/2014/12/10/use-ssh-directly-instead-of-vagrant-ssh-command/">Dec 10, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/12/10/use-ssh-directly-instead-of-vagrant-ssh-command/">Use SSH Directly Instead of Vagrant SSH Command</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a> command <code>vagrant ssh</code> connects to the running virtual machine via SSH. SSH arguments can also be added:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh -h</div><div class="line">Usage: vagrant ssh [options] [name] [-- extra ssh args]</div><div class="line"></div><div class="line">Options:</div><div class="line"></div><div class="line">    -c, --command COMMAND            Execute an SSH command directly</div><div class="line">    -p, --plain                      Plain mode, leaves authentication up to user</div><div class="line">    -h, --help                       Print this help</div></pre></td></tr></table></figure>
+
+<p>For example, execute a single command:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="tag">vagrant</span> <span class="tag">ssh</span> <span class="tag">-c</span> <span class="tag">date</span></div><div class="line"><span class="tag">Wed</span> <span class="tag">Dec</span> 10 12<span class="pseudo">:00</span><span class="pseudo">:00</span> <span class="tag">UTC</span> 2014</div><div class="line"><span class="tag">Connection</span> <span class="tag">to</span> 127<span class="class">.0</span><span class="class">.0</span><span class="class">.1</span> <span class="tag">closed</span>.</div></pre></td></tr></table></figure>
+
+<p>or:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="tag">vagrant</span> <span class="tag">ssh</span> <span class="tag">--</span> <span class="tag">date</span></div><div class="line"><span class="tag">Wed</span> <span class="tag">Dec</span> 10 12<span class="pseudo">:00</span><span class="pseudo">:00</span> <span class="tag">UTC</span> 2014</div></pre></td></tr></table></figure>
+
+<p>which prints no connection closed message.</p>
+<p>Another example:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh -- 'cat /etc/hosts'</div><div class="line">127.0.0.1 localhost</div><div class="line"></div><div class="line"># The following lines are desirable for IPv6 capable hosts</div><div class="line">::1 ip6-localhost ip6-loopback</div><div class="line">fe00::0 ip6-localnet</div><div class="line">ff00::0 ip6-mcastprefix</div><div class="line">ff02::1 ip6-allnodes</div><div class="line">ff02::2 ip6-allrouters</div><div class="line">ff02::3 ip6-allhosts</div></pre></td></tr></table></figure>
+
+<p>However, interactive applications cannot be used in this way:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ vagrant ssh -- top</div><div class="line">TERM environment variable not set.</div></pre></td></tr></table></figure>
+
+<p>Well, we already have a virtual machine running, we can just use SSH directly.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/12/10/use-ssh-directly-instead-of-vagrant-ssh-command/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-12-07T12:00:00.000Z"><a href="/2014/12/07/vagrant/">Dec 7, 2014</a></time>
       
       
@@ -467,43 +520,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-11-01T12:00:00.000Z"><a href="/2014/11/01/stumbled-upon-lean-coffee/">Nov 1, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/11/01/stumbled-upon-lean-coffee/">Stumbled Upon Lean Coffee</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Stumbled upon <a href="http://leancoffee.org/" target="_blank" rel="external">Lean Coffee</a>. <a href="http://theleanstartup.com/" target="_blank" rel="external">Lean</a> movement adventures into coffee brewing? No, it is about structured, but agenda-less meeting with participants generated topics, or <em>lean meeting</em>. It is not truly agenda-less, but the topics of the meeting agenda are participant-sourced and participant-judged or voted. So, instead of top-down, but more democratic and bottom-up approach.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2014/11/01/stumbled-upon-lean-coffee/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -529,7 +545,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>11</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>12</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -628,7 +644,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>5</small></li>
+    <li><a href="/tags/array/">array</a><small>6</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -904,6 +920,8 @@
   
     <li><a href="/tags/filename/">filename</a><small>1</small></li>
   
+    <li><a href="/tags/filter/">filter</a><small>1</small></li>
+  
     <li><a href="/tags/firewall/">firewall</a><small>1</small></li>
   
     <li><a href="/tags/folder/">folder</a><small>1</small></li>
@@ -1054,7 +1072,7 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>7</small></li>
+    <li><a href="/tags/jq/">jq</a><small>8</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1062,7 +1080,7 @@
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>6</small></li>
+    <li><a href="/tags/json/">json</a><small>7</small></li>
   
     <li><a href="/tags/kiss/">kiss</a><small>1</small></li>
   
@@ -1576,7 +1594,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2017 Chao Huang
+  &copy; 2018 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

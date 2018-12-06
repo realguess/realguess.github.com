@@ -64,6 +64,75 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-03-22T13:20:10.000Z"><a href="/2014/03/22/writing-custom-yeoman-generator/">Mar 22, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/22/writing-custom-yeoman-generator/">Writing Custom Yeoman Generator</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Writing a custom <a href="http://yeoman.io/" target="_blank" rel="external">Yeoman</a> generator, you need to install <a href="https://github.com/yeoman/generator-generator" target="_blank" rel="external">generator-generator</a> first.</p>
+<blockquote>
+<p>(generator-generator) Scaffolds out a new basic Yeoman generator with some sensible defaults.</p>
+</blockquote>
+<p>So it creates some basic structure for writing your own custom generators. It is a generator for writing Node generator application.</p>
+<p>First Install generator-generator:</p>
+<pre><code>$ <span class="built_in">sudo</span> npm install -g generator-generator
+</code></pre><p>Then generate some basic files for writing your own generator by issuing:</p>
+<pre><code><span class="variable">$ </span>yo generator
+</code></pre><p>You can use generator-generator to write both a custom generator and a custom sub-generator. What is sub-generator? For example, Angular directive or service is a sub-generator.</p>
+<p>Use naming convention <code>generator-[name]</code>.</p>
+<p>Create a directory for your new generator:</p>
+<pre><code><span class="variable">$ </span>mkdir -p ~<span class="regexp">/generators/generator</span>-hello &amp;&amp; cd <span class="variable">$_</span>
+</code></pre><p>Make sure entering the newly created directory (<code>cd $_</code>), otherwise all files generated will be placed under the current directory. Then, scaffold your generator:</p>
+<pre><code><span class="variable">$ </span>yo generator
+</code></pre><p>As versions yo@1.1.2 and generator-generator@0.4.3, the generator creates the following directories and files:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">.</div><div class="line">├── app</div><div class="line">│   ├── index.js</div><div class="line">│   └── templates</div><div class="line">├── <span class="string">.editorconfig</span></div><div class="line">├── <span class="string">.gitattributes</span></div><div class="line">├── <span class="string">.gitignore</span></div><div class="line">├── <span class="string">.jshintrc</span></div><div class="line">├── node_modules</div><div class="line">│   ├── <span class="string">.bin</span></div><div class="line">│   ├── chalk</div><div class="line">│   ├── mocha</div><div class="line">│   └── yeoman-generator</div><div class="line">├── package.json</div><div class="line">├── README.md</div><div class="line">├── <span class="keyword">test</span></div><div class="line">│   ├── <span class="keyword">test</span>-creation.js</div><div class="line">│   └── <span class="keyword">test</span>-load.js</div><div class="line">└── <span class="string">.travis</span>.yml</div><div class="line"></div><div class="line"><span class="number">8</span> directories, <span class="number">10</span> files</div></pre></td></tr></table></figure>
+
+<p>You might want to make your initial commit:</p>
+<pre><code>$ git init &amp;&amp; git <span class="built_in">add</span> <span class="string">'*'</span> &amp;&amp; git commit -<span class="keyword">m</span> <span class="string">'Initial commit'</span>
+</code></pre><p>While in development, make it accessible globally:</p>
+<pre><code>$ <span class="built_in">sudo</span> npm link
+</code></pre><p>This is similar to:</p>
+<pre><code>$ <span class="built_in">sudo</span> npm install -g [generator-name]
+</code></pre><p>They both will be discoverable from <code>/usr/local/lib/node_modules</code>.</p>
+<p>There isn’t much going on there, we need to customize our own generator. The main file is <code>./app/index.js</code>.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> HelloGenerator = yeoman.generators.Base.extend({</div><div class="line">});</div><div class="line"><span class="built_in">module</span>.exports = HelloGenerator;</div></pre></td></tr></table></figure>
+
+<p>The <code>HelloGenerator</code> extends <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> generator. There are four properties (functions) that it has extended: <code>init</code>, <code>askFor</code>, <code>app</code>, and <code>projectfiles</code>.</p>
+<p>All these functions will be invoked by Yeoman one by one in order (the order is important), meaning that <code>init</code> will be called first to perform initialization, and then <code>askFor</code> will be called to get user prompts, then <code>app</code> and <code>projectfiles</code> will be called afterward to build the application.</p>
+<p>However, it is not a must to have four properties, it just brings more structure and modularity. In fact, you can merge all four functions into a single one.</p>
+<p>The method name does not matter. Just don’t name it <code>prompt</code> because you will override the existing property inherited from <code>yeoman.generators.Base</code>. </p>
+<p>If we need to declare a “private” property, just appending it with an underscore as a hidden property, e.g. <code>_dontAskFor: function(){}</code>, or if you just use it in the same file, you can simply define a global <code>function myFunc()</code>.</p>
+<p>Personal, I don’t think it is necessary to break it into many functions, three are enough, initialization, prompting user for input, and generating files.</p>
+<p>When choosing property names, the <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> object contains many properties which is not a good idea to be overridden, such as <code>[&quot;append&quot;, &quot;help&quot;, &quot;log&quot;, &quot;prompt&quot;, &quot;remote&quot;]</code>. This design has limitation on choosing a right property name. For example, I was thinking about using <code>prompt</code> instead of <code>askFor</code>, but <code>prompt</code> is an inherited property. Therefore, it is a good idea to keep fewer properties in <code>HelloGenerator</code>. Three are enough. All these properties can be accessible from the context <code>this</code>. From <code>this</code> object you can access everything from <a href="https://github.com/yeoman/generator/blob/master/lib/base.js" target="_blank" rel="external">Base</a> object to newly defined <code>_dontAskFor</code> hidden property.</p>
+<p>Time to test the custom generator:</p>
+<pre><code>$ <span class="built_in">cd</span> /tmp &amp;&amp; mkdir hello &amp;&amp; yo <span class="variable">$_</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-03-14T23:12:50.000Z"><a href="/2014/03/14/traveling-from-the-big-easy-to-hollywood-via-amtrak-sunset-limited/">Mar 14, 2014</a></time>
       
       
@@ -601,45 +670,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-19T19:54:25.000Z"><a href="/2014/01/19/not-ready-for-xiaomi/">Jan 19, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/19/not-ready-for-xiaomi/">Not Ready for Xiaomi</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When I was in the United States, I have heard of many good news about <a href="http://www.xiaomi.com/en" target="_blank" rel="external">Xiaomi</a>, a Chinese smartphone company. And people are comparing the founder <a href="http://www.weibo.com/leijun" target="_blank" rel="external">Lei Jun</a> to Steve Jobs. I was very excited when I got to China and eager to get my hand on a <a href="http://www.xiaomi.com/en/mi3" target="_blank" rel="external">Mi3</a>.</p>
-<p><img src="/img/2014-01-19/mi3.jpg" alt="Mi3"></p>
-<p>Well, I didn’t get it, not saying that I did not try, maybe I didn’t try hard enough. But in some situations, this might be a good thing.</p>
-<p>The phones were quickly sold out within minutes. The official number of phones sold is remarkable according the manufacturer. But first do you trust these numbers? Maybe I just dislike the marketing technique more. I have read many reviews, people are saying that the marketing technique is awful. While they keep up the demand by limiting the supply from the company website. You can actually buy higher price ones from other retailers.</p>
-<p>Another problem is the quality of the phone. When I first asked my friend for the opinion of buying, he simply replied “trash”. When I asked another friend, she told me that she had two previous version Xiaomi phones, and they both broke down. I have used two iPhones and I have never had any problem with it.</p>
-<p>It boils down to quality vs. quantity. Selling by creating a tricky marketing technique and with <a href="http://en.miui.com/thread-12840-1-1.html" target="_blank" rel="external">misleading</a> information to boost the quantity without really focusing on the quality is sad. Without changing the DNA, the company is not going far, no matter how much money raises.</p>
-<p>I am just happy with my Nexus for now.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -665,7 +695,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>11</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>12</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -764,7 +794,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>5</small></li>
+    <li><a href="/tags/array/">array</a><small>6</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -1040,6 +1070,8 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/filename/">filename</a><small>1</small></li>
   
+    <li><a href="/tags/filter/">filter</a><small>1</small></li>
+  
     <li><a href="/tags/firewall/">firewall</a><small>1</small></li>
   
     <li><a href="/tags/folder/">folder</a><small>1</small></li>
@@ -1190,7 +1222,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>7</small></li>
+    <li><a href="/tags/jq/">jq</a><small>8</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1198,7 +1230,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>6</small></li>
+    <li><a href="/tags/json/">json</a><small>7</small></li>
   
     <li><a href="/tags/kiss/">kiss</a><small>1</small></li>
   
@@ -1712,7 +1744,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2017 Chao Huang
+  &copy; 2018 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

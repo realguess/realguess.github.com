@@ -68,6 +68,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2018-12-05T12:00:00.000Z"><a href="/2018/12/05/jq-filter-json-array-by-value/">Dec 5, 2018</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2018/12/05/jq-filter-json-array-by-value/">jq: Filter JSON Array by Value</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Print the JSON object in an array where the object key is equal to the specified value:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span> <span class="string">'[{"key":"foo"},{"key":"bar"}]'</span> | jq <span class="string">'.[] | select(.key == "foo")'</span></div><div class="line">{</div><div class="line">  <span class="string">"key"</span>: <span class="string">"foo"</span></div><div class="line">}</div></pre></td></tr></table></figure>
+
+<p>Reference:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ jq --version</div><div class="line">jq-<span class="number">1.5</span></div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2017-04-29T12:00:00.000Z"><a href="/2017/04/29/wrapping-line-by-line-json-to-an-array/">Apr 29, 2017</a></time>
       
       
@@ -292,7 +330,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>11</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>12</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -391,7 +429,7 @@
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>5</small></li>
+    <li><a href="/tags/array/">array</a><small>6</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -667,6 +705,8 @@
   
     <li><a href="/tags/filename/">filename</a><small>1</small></li>
   
+    <li><a href="/tags/filter/">filter</a><small>1</small></li>
+  
     <li><a href="/tags/firewall/">firewall</a><small>1</small></li>
   
     <li><a href="/tags/folder/">folder</a><small>1</small></li>
@@ -817,7 +857,7 @@
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>7</small></li>
+    <li><a href="/tags/jq/">jq</a><small>8</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -825,7 +865,7 @@
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>6</small></li>
+    <li><a href="/tags/json/">json</a><small>7</small></li>
   
     <li><a href="/tags/kiss/">kiss</a><small>1</small></li>
   
@@ -1339,7 +1379,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2017 Chao Huang
+  &copy; 2018 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

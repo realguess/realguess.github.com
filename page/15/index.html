@@ -64,6 +64,47 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-12-09T18:09:08.000Z"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Dec 9, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Insert Text to the Beginning of a File</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>It is easy to append some text to the end of another file:</p>
+<pre><code><span class="input"><span class="prompt">$ cat foo &gt;&gt;</span> bar</span>
+</code></pre><p>or even just portion of a file:</p>
+<pre><code><span class="input"><span class="prompt">$ head -n 2 foo &gt;&gt;</span> bar</span>
+</code></pre><p>but how about to the beginning of a file? Well, it is not that bad to do either:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">"<span class="variable">$(cat foo bar)</span>"</span> &gt; bar
+</code></pre><p>just a portion of a file:</p>
+<pre><code>$ <span class="built_in">echo</span> <span class="string">"<span class="variable">$(head -n 2 foo)</span>\n<span class="variable">$(cat bar)</span>"</span> &gt; bar
+</code></pre><p>Now you can easily add some text such as copyright information to the beginning of another file with one command.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-12-06T10:55:55.000Z"><a href="/2013/12/06/amazon-route-53-via-command-line/">Dec 6, 2013</a></time>
       
       
@@ -566,51 +607,6 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-11T12:00:00.000Z"><a href="/2013/11/11/keep-it-simple-and-small-(kiss)/">Nov 11, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/11/keep-it-simple-and-small-(kiss)/">Keep It Simple and Small (KISS)</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>We are all aware of the <a href="http://en.wikipedia.org/wiki/KISS_principle" target="_blank" rel="external">KISS</a> principle: Keep It Simple and Stupid. Let me introduce your a similar principle: <strong>Keep It Simple and Small</strong>.</p>
-<p>Maciej Cegłowski who created <a href="https://pinboard.in/" target="_blank" rel="external">Pinboard</a> deliberately wants to avoid rapid growth.</p>
-<blockquote>
-<p>“I have seen a lot of free services burn up all their development time scaling for users,” he said. He has no plan to cap the gate fee as more people sign on. “I am tempted to just let it go up and see what happens,” he says. <strong>- <a href="http://news.cnet.com/8301-19882_3-10310347-250.html" target="_blank" rel="external">http://news.cnet.com/8301-19882_3-10310347-250.html</a></strong></p>
-</blockquote>
-<p>It gives you time to try out different features without upsetting many of your user base.</p>
-<blockquote>
-<p>What if a little site you love doesn’t have a business model? Yell at the developers! Explain that you are tired of good projects folding and are willing to pay cash American dollar to prevent that from happening. It doesn’t take prohibitive per-user revenue to put a project in the black. It just requires a number greater than zero. <strong>- <a href="https://blog.pinboard.in/2011/12/don_t_be_a_free_user/" target="_blank" rel="external">Don’t Be A Free User</a></strong></p>
-</blockquote>
-<p>Why there has to be an exit strategy? If you love what you are doing, and you want to do it for the rest of your life. Why do you need an exit strategy? For some people, it might be better to <a href="http://content.time.com/time/specials/packages/article/0,28804,2094921_2094923_2094924-1,00.html" target="_blank" rel="external">strike it alone</a>, by keeping it small and having a business model.</p>
-<blockquote>
-<p>Make a living without being beholden to a boss or investors. <strong>- Maciej Cegłowski</strong></p>
-</blockquote>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -636,7 +632,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>11</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>12</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -735,7 +731,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/apt-get/">apt-get</a><small>2</small></li>
   
-    <li><a href="/tags/array/">array</a><small>5</small></li>
+    <li><a href="/tags/array/">array</a><small>6</small></li>
   
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
@@ -1011,6 +1007,8 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/filename/">filename</a><small>1</small></li>
   
+    <li><a href="/tags/filter/">filter</a><small>1</small></li>
+  
     <li><a href="/tags/firewall/">firewall</a><small>1</small></li>
   
     <li><a href="/tags/folder/">folder</a><small>1</small></li>
@@ -1161,7 +1159,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/join/">join</a><small>1</small></li>
   
-    <li><a href="/tags/jq/">jq</a><small>7</small></li>
+    <li><a href="/tags/jq/">jq</a><small>8</small></li>
   
     <li><a href="/tags/jq-1-5/">jq-1.5</a><small>1</small></li>
   
@@ -1169,7 +1167,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/jshint/">jshint</a><small>1</small></li>
   
-    <li><a href="/tags/json/">json</a><small>6</small></li>
+    <li><a href="/tags/json/">json</a><small>7</small></li>
   
     <li><a href="/tags/kiss/">kiss</a><small>1</small></li>
   
@@ -1683,7 +1681,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2017 Chao Huang
+  &copy; 2018 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>
