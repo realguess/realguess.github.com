@@ -68,6 +68,41 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Google Cloud Datastore Starter: Dataset</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> dataset starter, part of a starter collection:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Google Cloud Datastore Starter: Dataset</span></div><div class="line"><span class="comment">// =======================================</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="comment">// Define a dataset.</span></div><div class="line"><span class="keyword">var</span> params = {</div><div class="line">  projectId: <span class="string">'MY_PROJECT'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'MY_NAMESPACE'</span></div><div class="line">};</div><div class="line"><span class="keyword">var</span> dataset = <span class="built_in">require</span>(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line"></div><div class="line"><span class="comment">// Define an entity (including both key and data).</span></div><div class="line"><span class="keyword">var</span> kind = <span class="string">'MY_KIND'</span>;</div><div class="line"><span class="keyword">var</span> key = dataset.key(kind);</div><div class="line"><span class="keyword">var</span> data = [</div><div class="line">  {</div><div class="line">    name: <span class="string">'title'</span>,</div><div class="line">    value: <span class="string">'Google Cloud Datastore Starter'</span>,</div><div class="line">    excludeFromIndexes: <span class="literal">false</span></div><div class="line">  }</div><div class="line">];</div><div class="line"><span class="comment">// var data = { title: 'Google Cloud Datastore Starter' }; // Simple version</span></div><div class="line"><span class="keyword">var</span> entity = {</div><div class="line">  key: key,</div><div class="line">  data: data</div><div class="line">};</div><div class="line"></div><div class="line"><span class="comment">// Save a single entity.</span></div><div class="line">dataset.save(entity, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) {</div><div class="line">    <span class="keyword">throw</span> err;</div><div class="line">  }</div><div class="line">});</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/">Sep 14, 2015</a></time>
       
       
@@ -506,52 +541,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-08-03T12:00:00.000Z"><a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/">Aug 3, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/">Rules on Structuring the Test Directory Structure with Mocha</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>When writing tests, the framework I use for <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> is <a href="http://mochajs.org/" target="_blank" rel="external">Mocha</a> (reviewed version: v2.2.x). But how should I structure the <code>./test</code> directory? I first started by grouping related tests into directory, for example:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ tree ./test</div><div class="line">./test</div><div class="line">├── posts</div><div class="line">│   └── main.js</div><div class="line">└── users</div><div class="line">    └── main.js</div></pre></td></tr></table></figure>
-
-<p>You can use <code>mocha --recursive</code> to run all test suites.</p>
-<p>However, it’s unlikely that all files in the test directory are test suites. You might need to define some shared utilities, data generation scripts, or even setup files. You don’t want these files to be executed by Mocha. You can get away by using:</p>
-<ul>
-<li><code>mocha --grep</code> or <code>mocha --fgrep</code></li>
-<li>Use <code>find</code> and <code>xargs</code> to locate the files to be executed by Mocha</li>
-</ul>
-<p>But these are getting more and more complex. You want something simple and dumb frankly. Therefore, a better approach is to follow the two guidelines. One is the default behavior of Mocha:</p>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/08/03/rules-on-structuring-the-test-directory-structure-with-mocha/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -582,7 +571,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>4</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -671,6 +660,8 @@
   
     <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
   
+    <li><a href="/tags/apigateway/">apigateway</a><small>1</small></li>
+  
     <li><a href="/tags/app-engine/">app-engine</a><small>2</small></li>
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
@@ -691,7 +682,7 @@
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>10</small></li>
+    <li><a href="/tags/aws/">aws</a><small>11</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
@@ -1389,6 +1380,8 @@
   
     <li><a href="/tags/server/">server</a><small>3</small></li>
   
+    <li><a href="/tags/serverless/">serverless</a><small>1</small></li>
+  
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
     <li><a href="/tags/settings/">settings</a><small>1</small></li>
@@ -1414,6 +1407,8 @@
     <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
+  
+    <li><a href="/tags/sls/">sls</a><small>1</small></li>
   
     <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
   

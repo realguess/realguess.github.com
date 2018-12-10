@@ -68,6 +68,60 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-09-26T12:00:00.000Z"><a href="/2016/09/26/installing-let-s-encrypt-ssl-certificate-on-google-app-engine-using-certbot/">Sep 26, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/09/26/installing-let-s-encrypt-ssl-certificate-on-google-app-engine-using-certbot/">Installing Let&#39;s Encrypt SSL Certificate on Google App Engine Using Certbot</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://letsencrypt.org/" target="_blank" rel="external">Let’s Encrypt</a> is a free, open, and automated certificate authority. And its <a href="https://certbot.eff.org/" target="_blank" rel="external">Certbot</a> is a fully-featured, extensible client for Let’s Encrypt CA that can automate the tasks of getting, renewing and even installing SSL certificates.</p>
+<p>Sounds great! However, not yet to be simple and automated, especially working cloud providers such as <a href="https://cloud.google.com/" target="_blank" rel="external">Google Cloud Platform</a> and its <a href="https://appengine.google.com/" target="_blank" rel="external">Google App Engine</a> or GAE.</p>
+<p><em>But it’s free. Yes, it’s free. Free software works better. Free certificate authority works better than others.</em></p>
+<p>GAE is a managed service. The place to stored SSL certificate is in separate machines (load balancers). The current automated domain validation by Certbot mostly work with a single machine. Therefore, when the machine issues certificate request is not the same machine to be validated, we need find another way, hopefully an automated method to perform domain validation across machines.</p>
+<p>Before creating an automated method, let’s see if we can do it manually. Certbot supports a number of different plugins that can be used to obtain and/or install certificates. A plugin is like an extension that supports a particular web server. Let’s see if we can find a plugin that supports GAE.</p>
+<p>Here are some supported by Certbot:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">$ certbot --help plugins</div><div class="line"></div><div class="line">plugins:</div><div class="line">  Certbot client supports an extensible plugins architecture. See 'certbot</div><div class="line">  plugins' for a list of all installed plugins and their names. You can</div><div class="line">  force a particular plugin by setting options provided below. Running</div><div class="line">  --help <plugin_name> will list flags specific to that plugin.</plugin_name></div><div class="line"></div><div class="line">  --apache              Obtain and install certs using Apache (default: False)</div><div class="line">  --nginx               Obtain and install certs using Nginx (default: False)</div><div class="line">  --standalone          Obtain certs using a "standalone" webserver. (default:</div><div class="line">                        False)</div><div class="line">  --manual              Provide laborious manual instructions for obtaining a</div><div class="line">                        cert (default: False)</div><div class="line">  --webroot             Obtain certs by placing files in a webroot directory.</div><div class="line">                        (default: False)</div></pre></td></tr></table></figure>
+
+<p>And there are also a number of third-party plugins, see the User Guide in <a href="https://certbot.eff.org/docs" target="_blank" rel="external">Certbot Documentation</a>. But there is none for GAE. It looks like there are only three possible options to try: standalone, webroot and manual.</p>
+<p>Let’s start with the standalone method, and issue that from the local machine:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo certbot certonly --standalone -d example.com</div></pre></td></tr></table></figure>
+
+<p>If you’re the first time running the command, you will be prompted for email and agreement screens. Both email and agreement can be <em>automated</em> via <code>--email</code> and <code>--agree-tos</code> options. That’s the <em>automated</em> part.</p>
+<p>After freeing up the ports 80 and 443, run into some issues:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">Failed authorization procedure. example.com (tls-sni-01): urn:acme:error:connection </div><div class="line">:: The server could not connect to the client to verify the domain :: Failed to </div><div class="line">connect to 0.0.0.0:443 for TLS-SNI-01 challenge, example.com (tls-sni-01): </div><div class="line">urn:acme:error:connection :: The server could not connect to the client to verify the </div><div class="line">domain :: Failed to connect to 0.0.0.0:443 for TLS-SNI-01 challenge</div><div class="line"></div><div class="line">IMPORTANT NOTES:</div><div class="line"> - The following errors were reported by the server:</div><div class="line"></div><div class="line">   Domain: example.com</div><div class="line">   Type:   connection</div><div class="line">   Detail: Failed to connect to 0.0.0.0:443 for TLS-SNI-01</div><div class="line">   challenge</div><div class="line"></div><div class="line">   To fix these errors, please make sure that your domain name was</div><div class="line">   entered correctly and the DNS A record(s) for that domain</div><div class="line">   contain(s) the right IP address. Additionally, please check that</div><div class="line">   your computer has a publicly routable IP address and that no</div><div class="line">   firewalls are preventing the server from communicating with the</div><div class="line">   client. If you're using the webroot plugin, you should also verify</div><div class="line">   that you are serving files from the webroot path you provided.</div></pre></td></tr></table></figure>
+
+<p>The standalone plugin runs its own simple web server to prove that you control the domain. Ownership or domain validation is the key here. It needs the current computer that just issued the <code>certbot</code> command to have a publicly routable IP address. That’s not going to be happening in my local computer behind NAT. And webroot plugin needs a running web server. It can’t be run from the local machine as well. Domain validation are done automatically with both <code>standalone</code> and <code>webroot</code> plugins. Furthermore, domain validation requests are coming from Let’s Encrypt servers, therefore, you can’t have the machine issuing the certificate request behind a NAT or load balancing methods without properly routing the requests.</p>
+<p>Since automated methods mostly require the requester and domain owner to be residing on the same machine, we can try to move the request to the Google cloud. Otherwise, there is one more plugin to try, the manual plugin. The manual method (plugin) <em>helps you obtain a cert by giving you instructions to perform domain validation yourself</em>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/09/26/installing-let-s-encrypt-ssl-certificate-on-google-app-engine-using-certbot/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-09-25T12:00:00.000Z"><a href="/2016/09/25/installing-let-s-encrypt-certbot-0-8-x-on-debian-jessie/">Sep 25, 2016</a></time>
       
       
@@ -145,28 +199,21 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
+        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
       
       
   
-    <h1 class="title"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Listing Tags in Natural Sort of Version Numbers</a></h1>
+    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Using the Node.js repository as an example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git remote -<span class="keyword">v</span></div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (fetch)</div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (push)</div></pre></td></tr></table></figure>
+        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
 
-<p>If we would like to list all tags with <code>v0.12</code> versions, we could do:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git tag <span class="operator">-l</span> <span class="string">'v0.12.*'</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div></pre></td></tr></table></figure>
-
-<p>However, <code>v0.12.2</code> should come after <code>v0.12.1</code>.</p>
-<p>To fix it, we use the <code>sort</code> command with option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-V, <span class="comment">--version-sort</span></div><div class="line">    natural <span class="built_in">sort</span> <span class="operator">of</span> (<span class="built_in">version</span>) numbers <span class="operator">within</span> <span class="keyword">text</span></div></pre></td></tr></table></figure>
-
-<p>Thus:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git <span class="keyword">tag</span> -<span class="keyword">l</span> <span class="string">'v0.12.*'</span> | <span class="built_in">sort</span> --<span class="keyword">version</span>-<span class="built_in">sort</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div></pre></td></tr></table></figure>
+<p>For example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
 
 
       
@@ -190,21 +237,28 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
+        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
       
       
   
-    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
+    <h1 class="title"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Listing Tags in Natural Sort of Version Numbers</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
+        <p>Using the Node.js repository as an example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git remote -<span class="keyword">v</span></div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (fetch)</div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (push)</div></pre></td></tr></table></figure>
 
-<p>For example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
+<p>If we would like to list all tags with <code>v0.12</code> versions, we could do:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git tag <span class="operator">-l</span> <span class="string">'v0.12.*'</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div></pre></td></tr></table></figure>
+
+<p>However, <code>v0.12.2</code> should come after <code>v0.12.1</code>.</p>
+<p>To fix it, we use the <code>sort</code> command with option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-V, <span class="comment">--version-sort</span></div><div class="line">    natural <span class="built_in">sort</span> <span class="operator">of</span> (<span class="built_in">version</span>) numbers <span class="operator">within</span> <span class="keyword">text</span></div></pre></td></tr></table></figure>
+
+<p>Thus:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git <span class="keyword">tag</span> -<span class="keyword">l</span> <span class="string">'v0.12.*'</span> | <span class="built_in">sort</span> --<span class="keyword">version</span>-<span class="built_in">sort</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div></pre></td></tr></table></figure>
 
 
       
@@ -584,58 +638,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-08-06T12:00:00.000Z"><a href="/2016/08/06/creating-a-data-volume-container-in-dockerfile/">Aug 6, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/08/06/creating-a-data-volume-container-in-dockerfile/">Creating a Data Volume Container in Dockerfile</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Create a <a href="https://docker.com/" target="_blank" rel="external">Docker</a> data volume container in <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a> is unbelievably simple, just use the <a href="https://docs.docker.com/engine/reference/builder/#/volume" target="_blank" rel="external">VOLUME</a> instruction:</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">FROM debian:8.5</div><div class="line">VOLUME ["/data"]</div></pre></td></tr></table></figure>
-
-<p>The instruction creates a mount point and attach the volumes from native host or other containers.</p>
-<p>Build the data container:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ docker build -t data .</div><div class="line">Sending build context to Docker daemon 2.048 kB</div><div class="line">Step 1 : FROM debian:8.5</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">1</span>b088884749b</span></span></div><div class="line">Step 2 : VOLUME /data</div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="constant">Running</span> in <span class="number">5511</span>f34a489c</span></span></div><div class="line"> -<span class="ruby"><span class="input"><span class="prompt">--&gt;</span> <span class="number">7</span>b723b2b3d13</span></span></div><div class="line">Removing intermediate container 5511f34a489c</div><div class="line">Successfully built 7b723b2b3d13</div></pre></td></tr></table></figure>
-
-<p>The built size is just about 125.1 MB.</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker <span class="operator"><span class="keyword">create</span> <span class="comment">--name data data</span></span></div></pre></td></tr></table></figure>
-
-<p>The first <code>data</code> is the name of the container, the second <code>data</code> is the name of Docker image.</p>
-<p>To attach the data volume container to another, we use <code>--volumes-from</code> option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="comment">$</span> <span class="comment">docker</span> <span class="comment">run</span> <span class="literal">-</span><span class="comment">it</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">rm</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">name</span> <span class="comment">foo</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">volumes</span><span class="literal">-</span><span class="comment">from=data</span> <span class="comment">debian:8</span><span class="string">.</span><span class="comment">5</span> <span class="comment">/bin/bash</span></div></pre></td></tr></table></figure>
-
-<p>If there’re initial data to copy, then add the <code>COPY</code> instruction:</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">FROM debian:8.5</div><div class="line">VOLUME ["/data"]</div><div class="line">COPY . /data</div></pre></td></tr></table></figure>
-
-<p>Settings:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker --<span class="keyword">version</span></div><div class="line">Docker <span class="keyword">version</span> <span class="number">1.11</span>.<span class="number">2</span>, build b9f10c9</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -666,7 +668,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>4</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -755,6 +757,8 @@
   
     <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
   
+    <li><a href="/tags/apigateway/">apigateway</a><small>1</small></li>
+  
     <li><a href="/tags/app-engine/">app-engine</a><small>2</small></li>
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
@@ -775,7 +779,7 @@
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>10</small></li>
+    <li><a href="/tags/aws/">aws</a><small>11</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
@@ -1473,6 +1477,8 @@
   
     <li><a href="/tags/server/">server</a><small>3</small></li>
   
+    <li><a href="/tags/serverless/">serverless</a><small>1</small></li>
+  
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
     <li><a href="/tags/settings/">settings</a><small>1</small></li>
@@ -1498,6 +1504,8 @@
     <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
+  
+    <li><a href="/tags/sls/">sls</a><small>1</small></li>
   
     <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
   

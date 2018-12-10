@@ -549,28 +549,21 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
+        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
       
       
   
-    <h1 class="title"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Listing Tags in Natural Sort of Version Numbers</a></h1>
+    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Using the Node.js repository as an example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git remote -<span class="keyword">v</span></div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (fetch)</div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (push)</div></pre></td></tr></table></figure>
+        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
 
-<p>If we would like to list all tags with <code>v0.12</code> versions, we could do:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git tag <span class="operator">-l</span> <span class="string">'v0.12.*'</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div></pre></td></tr></table></figure>
-
-<p>However, <code>v0.12.2</code> should come after <code>v0.12.1</code>.</p>
-<p>To fix it, we use the <code>sort</code> command with option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-V, <span class="comment">--version-sort</span></div><div class="line">    natural <span class="built_in">sort</span> <span class="operator">of</span> (<span class="built_in">version</span>) numbers <span class="operator">within</span> <span class="keyword">text</span></div></pre></td></tr></table></figure>
-
-<p>Thus:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git <span class="keyword">tag</span> -<span class="keyword">l</span> <span class="string">'v0.12.*'</span> | <span class="built_in">sort</span> --<span class="keyword">version</span>-<span class="built_in">sort</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div></pre></td></tr></table></figure>
+<p>For example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
 
 
       
@@ -594,21 +587,28 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
+        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
       
       
   
-    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
+    <h1 class="title"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Listing Tags in Natural Sort of Version Numbers</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
+        <p>Using the Node.js repository as an example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git remote -<span class="keyword">v</span></div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (fetch)</div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (push)</div></pre></td></tr></table></figure>
 
-<p>For example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
+<p>If we would like to list all tags with <code>v0.12</code> versions, we could do:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git tag <span class="operator">-l</span> <span class="string">'v0.12.*'</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div></pre></td></tr></table></figure>
+
+<p>However, <code>v0.12.2</code> should come after <code>v0.12.1</code>.</p>
+<p>To fix it, we use the <code>sort</code> command with option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-V, <span class="comment">--version-sort</span></div><div class="line">    natural <span class="built_in">sort</span> <span class="operator">of</span> (<span class="built_in">version</span>) numbers <span class="operator">within</span> <span class="keyword">text</span></div></pre></td></tr></table></figure>
+
+<p>Thus:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git <span class="keyword">tag</span> -<span class="keyword">l</span> <span class="string">'v0.12.*'</span> | <span class="built_in">sort</span> --<span class="keyword">version</span>-<span class="built_in">sort</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div></pre></td></tr></table></figure>
 
 
       
@@ -712,7 +712,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>4</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -801,6 +801,8 @@
   
     <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
   
+    <li><a href="/tags/apigateway/">apigateway</a><small>1</small></li>
+  
     <li><a href="/tags/app-engine/">app-engine</a><small>2</small></li>
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
@@ -821,7 +823,7 @@
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>10</small></li>
+    <li><a href="/tags/aws/">aws</a><small>11</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
@@ -1519,6 +1521,8 @@
   
     <li><a href="/tags/server/">server</a><small>3</small></li>
   
+    <li><a href="/tags/serverless/">serverless</a><small>1</small></li>
+  
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
     <li><a href="/tags/settings/">settings</a><small>1</small></li>
@@ -1544,6 +1548,8 @@
     <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
+  
+    <li><a href="/tags/sls/">sls</a><small>1</small></li>
   
     <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
   

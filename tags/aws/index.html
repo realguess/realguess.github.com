@@ -68,6 +68,54 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2018-12-10T12:00:00.000Z"><a href="/2018/12/10/amazon-api-gateway-no-integration-defined-for-method/">Dec 10, 2018</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2018/12/10/amazon-api-gateway-no-integration-defined-for-method/">Amazon API Gateway No Integration Defined for Method</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Encountered the following problem when deploying with the <a href="https://serverless.com" target="_blank" rel="external">Serverless Framework</a> (<code>v1.27.3</code>) to <a href="https://aws.amazon.com/api-gateway/" target="_blank" rel="external">Amazon API Gateway</a>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="type">CloudFormation</span> - <span class="type">CREATE_IN_PROGRESS</span> - <span class="type">AWS</span>::<span class="type">ApiGateway</span>::<span class="type">Deployment</span> - <span class="type">ApiGatewayDeployment</span></div><div class="line"><span class="type">CloudFormation</span> - <span class="type">CREATE_FAILED</span> - <span class="type">AWS</span>::<span class="type">ApiGateway</span>::<span class="type">Deployment</span> - <span class="type">ApiGatewayDeployment</span></div><div class="line"></div><div class="line"><span class="type">An</span> error occurred: <span class="type">ApiGatewayDeployment</span> - <span class="type">No</span> integration defined <span class="keyword">for</span> <span class="keyword">method</span></div></pre></td></tr></table></figure>
+
+<p>The problem was not the bug from the Serverless side, but was originated with manually created resource without integration defined for the <code>POST</code> method:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ aws apigateway get-integration --rest-api-id xxxxxxxxxx --resource-id <span class="number">0</span>xxxxx --http-<span class="function"><span class="keyword">method</span> <span class="title">post</span></span></div><div class="line"></div><div class="line"><span class="title">An</span> <span class="title">error</span> <span class="title">occurred</span> <span class="params">(NotFoundException)</span> <span class="title">when</span> <span class="title">calling</span> <span class="title">the</span> <span class="title">GetIntegration</span> <span class="title">operation</span>: No integration defined <span class="keyword">for</span> <span class="function"><span class="keyword">method</span></span></div></pre></td></tr></table></figure>
+
+<p>After removing the resource. The deployment works again.</p>
+<p>In conclusion, if there is a resource and one of its method has no integration, the REST API cannot be deployed. Either removing the resource or creating an integration will resolve the problem.</p>
+<p>The following script will look for a REST API for no integration error:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/bin/sh</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># Search Amazon API Gateway for resources that have no integration defined for</span></div><div class="line"><span class="comment"># method.</span></div><div class="line"></div><div class="line">API_NAME=example.com</div><div class="line"></div><div class="line">REST_API_ID=$(aws apigateway get-rest-apis --query=<span class="string">'items[?name==`'</span><span class="variable">$API_NAME</span><span class="string">'`].id | [0]'</span> --output=text)</div><div class="line">RESOURCES=$(aws apigateway get-resources --rest-api-id=<span class="variable">$REST_API_ID</span> --query=<span class="string">'items[*].id'</span> --output=text)</div><div class="line"></div><div class="line"><span class="keyword">for</span> resource <span class="keyword">in</span> $(<span class="built_in">echo</span> <span class="string">"<span class="variable">$RESOURCES</span>"</span>)</div><div class="line"><span class="keyword">do</span></div><div class="line">    <span class="keyword">for</span> method <span class="keyword">in</span> $(aws apigateway get-resource \</div><div class="line">        --query=<span class="string">'resourceMethods && keys(resourceMethods)'</span>  \</div><div class="line">        --output=text                                       \</div><div class="line">        --rest-api-id=<span class="variable">$REST_API_ID</span>                          \</div><div class="line">        --resource-id=<span class="variable">$resource</span>)</div><div class="line">    <span class="keyword">do</span></div><div class="line">        <span class="keyword">if</span> [ <span class="string">"<span class="variable">$method</span>"</span> != <span class="string">"None"</span> ]</div><div class="line">        <span class="keyword">then</span></div><div class="line">            aws apigateway get-integration \</div><div class="line">                --rest-api-id=<span class="variable">$REST_API_ID</span>  \</div><div class="line">                --resource-id=<span class="variable">$resource</span>     \</div><div class="line">                --http-method=<span class="variable">$method</span> &gt; /dev/null</div><div class="line">            <span class="keyword">if</span> [ $? <span class="operator">-ne</span> <span class="number">0</span> ]</div><div class="line">            <span class="keyword">then</span></div><div class="line">                aws apigateway get-resource \</div><div class="line">                    --rest-api-id=<span class="variable">$REST_API_ID</span>  \</div><div class="line">                    --resource-id=<span class="variable">$resource</span></div><div class="line">            <span class="keyword">fi</span></div><div class="line">        <span class="keyword">fi</span></div><div class="line">    <span class="keyword">done</span></div><div class="line"><span class="keyword">done</span></div></pre></td></tr></table></figure>
+
+<p>References:</p>
+<ul>
+<li><a href="https://github.com/serverless/serverless/issues/5100" target="_blank" rel="external">https://github.com/serverless/serverless/issues/5100</a></li>
+<li><a href="https://stackoverflow.com/questions/46087890/no-integration-defined-for-method-choose-a-stage-where-your-api-will-be-deploy" target="_blank" rel="external">https://stackoverflow.com/questions/46087890/no-integration-defined-for-method-choose-a-stage-where-your-api-will-be-deploy</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-12-30T12:00:00.000Z"><a href="/2016/12/30/registering-a-domain-with-amazon-route-53-via-cli/">Dec 30, 2016</a></time>
       
       
@@ -649,63 +697,11 @@ $ <span class="built_in">source</span> ~/.bashrc
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-06T10:55:55.000Z"><a href="/2013/12/06/amazon-route-53-via-command-line/">Dec 6, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/06/amazon-route-53-via-command-line/">Amazon Route 53 via Command Line</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Retrieve a list of hosted zones:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53 list-hosted-zones          </div><div class="line">{</div><div class="line">  <span class="string">"HostedZones"</span><span class="symbol">:</span> [</div><div class="line">    {</div><div class="line">        <span class="string">"ResourceRecordSetCount"</span><span class="symbol">:</span> <span class="number">4</span>,</div><div class="line">        <span class="string">"CallerReference"</span><span class="symbol">:</span> <span class="string">"12345678-ABCD-EFGH-IJKL-ABCDEFGHIJKL"</span>,</div><div class="line">        <span class="string">"Config"</span><span class="symbol">:</span> {},</div><div class="line">        <span class="string">"Id"</span><span class="symbol">:</span> <span class="string">"/hostedzone/1234567890ABC"</span>,</div><div class="line">        <span class="string">"Name"</span><span class="symbol">:</span> <span class="string">"realguess.net."</span></div><div class="line">    }</div><div class="line">  ], </div><div class="line">  <span class="string">"IsTruncated"</span><span class="symbol">:</span> <span class="keyword">false</span>, </div><div class="line">  <span class="string">"MaxItems"</span><span class="symbol">:</span> <span class="string">"100"</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Get a single hosted zone with delegation set (four Route 53 name servers that were assigned to the hosted zone):</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="built_in">get</span>-hosted-zone <span class="comment">--id 1234567890ABC</span></div><div class="line">{</div><div class="line">  <span class="string">"HostedZone"</span>: {</div><div class="line">    <span class="string">"ResourceRecordSetCount"</span>: <span class="number">4</span>,</div><div class="line">    <span class="string">"CallerReference"</span>: <span class="string">"12345678-ABCD-EFGH-IJKL-ABCDEFGHIJKL"</span>,</div><div class="line">    <span class="string">"Config"</span>: {},</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"/hostedzone/1234567890ABC"</span>,</div><div class="line">    <span class="string">"Name"</span>: <span class="string">"realguess.net."</span></div><div class="line">  },</div><div class="line">  <span class="string">"DelegationSet"</span>: {</div><div class="line">    <span class="string">"NameServers"</span>: [</div><div class="line">      <span class="string">"ns-1727.awsdns-23.co.uk"</span>,</div><div class="line">      <span class="string">"ns-1312.awsdns-36.org"</span>,</div><div class="line">      <span class="string">"ns-402.awsdns-50.com"</span>,</div><div class="line">      <span class="string">"ns-587.awsdns-09.net"</span></div><div class="line">    ]</div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>List all resource record sets in a hosted zone:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="type">list</span>-resource-<span class="type">record</span>-sets <span class="comment">--hosted-zone-id 1234567890ABC</span></div><div class="line">{</div><div class="line">  <span class="string">"IsTruncated"</span>: <span class="constant">false</span>,</div><div class="line">  <span class="string">"ResourceRecordSets"</span>: [</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">172800</span></div><div class="line">    },</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1727.awsdns-23.co.uk."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1312.awsdns-36.org."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-402.awsdns-50.com."</span></div><div class="line">        },</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-587.awsdns-09.net."</span></div><div class="line">        }</div><div class="line">      ], </div><div class="line">      <span class="string">"Type"</span>: <span class="string">"NS"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">172800</span></div><div class="line">    }, </div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"ns-1727.awsdns-23.co.uk. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400"</span></div><div class="line">        }</div><div class="line">      ], </div><div class="line">      <span class="string">"Type"</span>: <span class="string">"SOA"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">900</span></div><div class="line">    },</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"www.realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">86400</span></div><div class="line">    }</div><div class="line">  ],</div><div class="line">  <span class="string">"MaxItems"</span>: <span class="string">"100"</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Retrieve a single record set:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ aws route53 <span class="type">list</span>-resource-<span class="type">record</span>-sets <span class="comment">--hosted-zone-id 1234567890ABC \</span></div><div class="line">  <span class="comment">--start-record-name www.realguess.net --start-record-type A --max-items 1</span></div><div class="line">{</div><div class="line">  <span class="string">"IsTruncated"</span>: <span class="constant">false</span>,</div><div class="line">  <span class="string">"ResourceRecordSets"</span>: [</div><div class="line">    {</div><div class="line">      <span class="string">"ResourceRecords"</span>: [</div><div class="line">        {</div><div class="line">          <span class="string">"Value"</span>: <span class="string">"192.168.153.123"</span></div><div class="line">        }</div><div class="line">      ],</div><div class="line">      <span class="string">"Type"</span>: <span class="string">"A"</span>,</div><div class="line">      <span class="string">"Name"</span>: <span class="string">"www.realguess.net."</span>,</div><div class="line">      <span class="string">"TTL"</span>: <span class="number">86400</span></div><div class="line">    }</div><div class="line">  ],</div><div class="line">  <span class="string">"MaxItems"</span>: <span class="string">"1"</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>In order to create a new record set, first create a JSON file to describe the new record:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">  "<span class="attribute">Comment</span>": <span class="value"><span class="string">"A new record set for the zone."</span></span>,</div><div class="line">  "<span class="attribute">Changes</span>": <span class="value">[</span></div><div class="line">    {</div><div class="line">      "<span class="attribute">Action</span>": <span class="value"><span class="string">"CREATE"</span></span>,</div><div class="line">      "<span class="attribute">ResourceRecordSet</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">Name</span>": <span class="value"><span class="string">"api.realguess.net."</span></span>,</div><div class="line">        "<span class="attribute">Type</span>": <span class="value"><span class="string">"CNAME"</span></span>,</div><div class="line">        "<span class="attribute">TTL</span>": <span class="value"><span class="number">60</span></span>,</div><div class="line">        "<span class="attribute">ResourceRecords</span>": <span class="value">[</span></div><div class="line">          {</div><div class="line">            "<span class="attribute">Value</span>": <span class="value"><span class="string">"www.realguess.net"</span></span></div><div class="line">          }</div><div class="line">        ]</div><div class="line">      }</div><div class="line">    }</div><div class="line">  ]</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Add a new record set (note that the JSON file must use <code>file://</code> starting path):</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53 change-resource-record-sets --hosted-zone-id <span class="number">1234567890</span>ABC \</div><div class="line">  --change-batch <span class="symbol">file:</span>/<span class="regexp">//path</span><span class="regexp">/to/record</span>.json</div><div class="line">{</div><div class="line">  <span class="string">"ChangeInfo"</span><span class="symbol">:</span> {</div><div class="line">    <span class="string">"Status"</span><span class="symbol">:</span> <span class="string">"PENDING"</span>,</div><div class="line">    <span class="string">"Comment"</span><span class="symbol">:</span> <span class="string">"A new record set for the zone."</span>,</div><div class="line">    <span class="string">"SubmittedAt"</span><span class="symbol">:</span> <span class="string">"2013-12-06T00:00:00.000Z"</span>,</div><div class="line">    <span class="string">"Id"</span><span class="symbol">:</span> <span class="string">"/change/CHANGEID123"</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>The status of adding the new record is currently <em>pending</em>. Poll the server to get the updated status:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ aws route53 get-<span class="operator"><span class="keyword">change</span> <span class="comment">--id CHANGEID123</span></span></div><div class="line">{</div><div class="line">  <span class="string">"ChangeInfo"</span>: {</div><div class="line">    <span class="string">"Status"</span>: <span class="string">"INSYNC"</span>,</div><div class="line">    <span class="string">"Comment"</span>: <span class="string">"A new record set for the zone."</span>,</div><div class="line">    <span class="string">"SubmittedAt"</span>: <span class="string">"2013-12-06T00:00:00.000Z"</span>,</div><div class="line">    <span class="string">"Id"</span>: <span class="string">"/change/CHANGEID123"</span></div><div class="line">  }</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>A new record has been created and has been propagated to all hosts.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
+  
+    <a href="/tags/aws/page/2/" class="alignright next">Next</a>
   
   <div class="clearfix"></div>
 </nav>
@@ -729,7 +725,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>4</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -818,6 +814,8 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
   
+    <li><a href="/tags/apigateway/">apigateway</a><small>1</small></li>
+  
     <li><a href="/tags/app-engine/">app-engine</a><small>2</small></li>
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
@@ -838,7 +836,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>10</small></li>
+    <li><a href="/tags/aws/">aws</a><small>11</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
@@ -1536,6 +1534,8 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/server/">server</a><small>3</small></li>
   
+    <li><a href="/tags/serverless/">serverless</a><small>1</small></li>
+  
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
     <li><a href="/tags/settings/">settings</a><small>1</small></li>
@@ -1561,6 +1561,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
+  
+    <li><a href="/tags/sls/">sls</a><small>1</small></li>
   
     <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
   

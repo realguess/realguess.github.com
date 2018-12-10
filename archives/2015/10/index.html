@@ -68,47 +68,6 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Oct 11, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Passing Information Through Koa Middleware Via &quot;this.state&quot;</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="http://koajs.com/" target="_blank" rel="external">Koa</a> has a <a href="http://koajs.com/#context" target="_blank" rel="external">context</a> object created during every request/response cycle. The context is referenced via <code>this</code> in the middleware. Much information are captured in the context, such as <code>req</code> and <code>res</code>. In order to avoid polluting the context and colliding with other middleware, the information from your application should be encapsulated into <code>this.state</code> property, a namespace for passing information through middleware during request/response cycle:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">var</span> state = <span class="keyword">this</span>.state;</div><div class="line"></div><div class="line">  state.user = <span class="keyword">yield</span> users.create(<span class="keyword">this</span>.request.body);</div><div class="line">  state.code = <span class="number">201</span>;</div><div class="line">  state.body = {</div><div class="line">    name: user.name,</div><div class="line">    mail: user.mail</div><div class="line">  };</div><div class="line"></div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>The <code>this.state</code> has been initialized into an empty object:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="keyword">this</span>.state;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
-
-<p>Therefore, we can start using it right away without doing our own initialization:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">3000</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">2</span></div><div class="line">Content-Type: application/json; charset=utf-<span class="number">8</span></div><div class="line"></div><div class="line">{}</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
         <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/keeping-routing-simple-and-separated-with-koa-router/">Oct 11, 2015</a></time>
       
       
@@ -132,6 +91,47 @@
 <li><code>GET /users/:id</code>: Retrieve a single user object.</li>
 </ul>
 <p>The question mark should not be appended to the end of <code>id</code> parameter, which effectively marking the route to perform both duties. It’s better to <strong>keep them simple and keep them separated</strong>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-10-11T12:00:00.000Z"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Oct 11, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/10/11/passing-information-through-koa-middleware-via-this-state/">Passing Information Through Koa Middleware Via &quot;this.state&quot;</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://koajs.com/" target="_blank" rel="external">Koa</a> has a <a href="http://koajs.com/#context" target="_blank" rel="external">context</a> object created during every request/response cycle. The context is referenced via <code>this</code> in the middleware. Much information are captured in the context, such as <code>req</code> and <code>res</code>. In order to avoid polluting the context and colliding with other middleware, the information from your application should be encapsulated into <code>this.state</code> property, a namespace for passing information through middleware during request/response cycle:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">var</span> state = <span class="keyword">this</span>.state;</div><div class="line"></div><div class="line">  state.user = <span class="keyword">yield</span> users.create(<span class="keyword">this</span>.request.body);</div><div class="line">  state.code = <span class="number">201</span>;</div><div class="line">  state.body = {</div><div class="line">    name: user.name,</div><div class="line">    mail: user.mail</div><div class="line">  };</div><div class="line"></div><div class="line">  <span class="keyword">yield</span> next;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>The <code>this.state</code> has been initialized into an empty object:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'koa'</span>)().use(<span class="function"><span class="keyword">function</span> *<span class="params">(next)</span> </span>{</div><div class="line">  <span class="keyword">this</span>.body = <span class="keyword">this</span>.state;</div><div class="line">}).listen(<span class="number">3000</span>);</div></pre></td></tr></table></figure>
+
+<p>Therefore, we can start using it right away without doing our own initialization:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">3000</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">2</span></div><div class="line">Content-Type: application/json; charset=utf-<span class="number">8</span></div><div class="line"></div><div class="line">{}</div></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -282,7 +282,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>4</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -371,6 +371,8 @@
   
     <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
   
+    <li><a href="/tags/apigateway/">apigateway</a><small>1</small></li>
+  
     <li><a href="/tags/app-engine/">app-engine</a><small>2</small></li>
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
@@ -391,7 +393,7 @@
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>10</small></li>
+    <li><a href="/tags/aws/">aws</a><small>11</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
@@ -1089,6 +1091,8 @@
   
     <li><a href="/tags/server/">server</a><small>3</small></li>
   
+    <li><a href="/tags/serverless/">serverless</a><small>1</small></li>
+  
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
     <li><a href="/tags/settings/">settings</a><small>1</small></li>
@@ -1114,6 +1118,8 @@
     <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
+  
+    <li><a href="/tags/sls/">sls</a><small>1</small></li>
   
     <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
   

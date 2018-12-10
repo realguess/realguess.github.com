@@ -68,6 +68,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-12-12T12:00:00.000Z"><a href="/2013/12/12/http-methods-truth-table/">Dec 12, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/12/12/http-methods-truth-table/">HTTP Methods Truth Table</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>My take on on HTTP methods and resources:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="code">+-----------------------------------------------------------+</span></div><div class="line"><span class="header">| # | Request-URI              | Method         | RE  | RNE |</span></div><div class="line">+-----------------------------------------------------------+</div><div class="line">| 0 | GET    /resources        | list           | 200 | 200 |</div><div class="line">| 1 | GET    /resources/entity | load/insert    | 200 | 404 |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 2 | POST   /resources        | create         | 201 | 409 |</div><div class="line">| 3 | POST   /resources/entity | N/A            | N/A | N/A |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 4 | PUT    /resources        | (batch)        | 200 | 200 |</div><div class="line">| 5 | PUT    /resources/entity | replace/save   | 204 | 201 |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 6 | PATCH  /resources        | (batch)        | 200 | 200 |</div><div class="line">| 7 | PATCH  /resources/entity | update         | 204 | 404 |</div><div class="line">|-----------------------------------------------------------|</div><div class="line">| 8 | DELETE /resources        | (batch)        | 200 | 200 |</div><div class="line"><span class="header">| 9 | DELETE /resources/entity | remove/delete  | 204 | 404 |</span></div><div class="line">+-----------------------------------------------------------+</div></pre></td></tr></table></figure>
+
+<p>Notes:</p>
+<ol>
+<li>RE: resource exists</li>
+<li>RNE: resource not exists</li>
+<li>For batch request, whether resource/entity exists or not, the resulting HTTP<br>status code is always <code>200</code>, because the code is used to indicate the status<br>of the operation. The actual status code of each entity is enclosed in the<br>response array. When there are no matching entities, the response is an empty<br>array, therefore, status code <code>204</code> is not used.</li>
+<li>There are two situation, a new resource is being created, then the <code>Location</code><br>header must indicate the fully qualified resource URI.</li>
+</ol>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-12-09T18:09:08.000Z"><a href="/2013/12/09/insert-text-to-the-beginning-of-a-file/">Dec 9, 2013</a></time>
       
       
@@ -547,70 +589,6 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-11-12T12:32:34.000Z"><a href="/2013/11/12/live-browser-reload-and-command-execution-on-file-change/">Nov 12, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/11/12/live-browser-reload-and-command-execution-on-file-change/">Live Browser Reload and Command Execution on File Change</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <h2 id="Execute_Command">Execute Command</h2>
-<p>When I am editting comments in my code, I would like to use <a href="http://jashkenas.github.io/docco/" target="_blank" rel="external">Docco</a> to generate a pretty print source code documentation and review it in web browser. However, every time I made a change, I had to issue <code>docco</code> command again, even I could use the up arrow key, but still a pain. Lucky, there is a way to eliminate this step. One way is to use <a href="https://github.com/gruntjs/grunt-contrib-watch" target="_blank" rel="external">grunt-contrib-watch</a>, but the limitation is that this is not for an individual file on the command line, it is more for a build process. A better alternative is to use <a href="https://github.com/remy/nodemon" target="_blank" rel="external">nodemon</a>:</p>
-<blockquote>
-<p>For use during development of a node.js based application. nodemon will watch the files in the directory that nodemon was started, and if they change, it will automatically restart your node application.</p>
-</blockquote>
-<p>It does not have to be limited to Node and JavaScript files. We can use it with any command:</p>
-<pre><code>nodemon -<span class="keyword">x</span> docco /path/<span class="keyword">to</span>/app.coffee
-</code></pre><p>With this command, <code>docco</code> will be executed upon any change to the file.</p>
-<h2 id="Reload_Browser">Reload Browser</h2>
-<p>Making live reload in browser is a little bit trickier, it involves using some <a href="http://rubygems.org/" target="_blank" rel="external">Ruby gems</a>.</p>
-<p><em>TODO: Need to find a way to avoid using Ruby and its gems.</em></p>
-<p>I have followed some of the steps from the post: <a href="https://vickev.com/#!/article/auto-refresh-your-browser-when-saving-files-or-restarting-node-js" target="_blank" rel="external">Auto-refresh your browser when saving files or restarting node.js</a>.</p>
-<p>First install <a href="https://chrome.google.com/webstore/detail/livereload/jnihajbhpnppcggbcgedagnkighmdlei" target="_blank" rel="external">LiveReload</a> Chrome extension, and then install <a href="https://github.com/guard/guard" target="_blank" rel="external">Guard</a> and <a href="https://github.com/guard/guard-livereload" target="_blank" rel="external">Guard::LiveReload</a> gems:</p>
-<pre><code><span class="built_in">sudo</span> gem install guard guard-livereload
-</code></pre><p>You need to have a web server to make the livereload work, live reload does not work on files directly served from the file system:</p>
-<pre><code><span class="symbol">file:</span>/<span class="regexp">//home</span><span class="regexp">/chao/docs</span><span class="regexp">/app.html</span>
-</code></pre><p>Therefore, an easy way is to set up a web server, such as Nginx, and configure a directory for this usage, such as:</p>
-<pre><code><span class="regexp">/usr/</span>share<span class="regexp">/nginx/</span>www<span class="regexp">/livereload</span>
-</code></pre><p>Add the following <code>Guardfile</code> into the directory:</p>
-<pre><code>guard <span class="string">'livereload'</span> <span class="keyword">do</span>
-  watch(<span class="regexp">%r{.+\.(css|js|ejs|html)}</span>)
-<span class="keyword">end</span>
-</code></pre><p>Launch <a href="https://github.com/guard/guard" target="_blank" rel="external">Guard</a>:</p>
-<pre><code>cd <span class="regexp">/usr/</span>share<span class="regexp">/nginx/</span>www<span class="regexp">/livereload &amp;&amp; guard</span>
-</code></pre><p>Enable the live reload by clicking the menu icon. You should see the dot in the middle becomes solid.</p>
-<p>Now you need to make sure set the generated files into the correct directory:</p>
-<pre><code>nodemon -<span class="keyword">x</span> <span class="string">'docco -o /usr/share/nginx/www/livereload'</span> /path/<span class="keyword">to</span>/app.coffee
-</code></pre><p>Another way is to create a soft link to the directory, since the <code>docs</code> in the current execution directory is the default output directory:</p>
-<pre><code>ln -s <span class="regexp">/usr/</span>share<span class="regexp">/nginx/</span>www<span class="regexp">/livereload docs</span>
-</code></pre><p>Then, you can use <a href="https://github.com/remy/nodemon" target="_blank" rel="external">nodemon</a> as you normally do:</p>
-<pre><code>nodemon -<span class="keyword">x</span> docco /path/<span class="keyword">to</span>/app.coffee
-</code></pre><p>Having live browser reload is a bit complicated. I wish there is a method as easy as using <a href="https://github.com/remy/nodemon" target="_blank" rel="external">nodemon</a> via a single command. But in the meantime, I just need to have two panes open and have both monitoring tools running independently. No more browser fresh and command re-issuing.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -641,7 +619,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>4</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -730,6 +708,8 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/ansible/">ansible</a><small>1</small></li>
   
+    <li><a href="/tags/apigateway/">apigateway</a><small>1</small></li>
+  
     <li><a href="/tags/app-engine/">app-engine</a><small>2</small></li>
   
     <li><a href="/tags/apple/">apple</a><small>1</small></li>
@@ -750,7 +730,7 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/awk/">awk</a><small>1</small></li>
   
-    <li><a href="/tags/aws/">aws</a><small>10</small></li>
+    <li><a href="/tags/aws/">aws</a><small>11</small></li>
   
     <li><a href="/tags/aws-cli/">aws-cli</a><small>5</small></li>
   
@@ -1448,6 +1428,8 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
   
     <li><a href="/tags/server/">server</a><small>3</small></li>
   
+    <li><a href="/tags/serverless/">serverless</a><small>1</small></li>
+  
     <li><a href="/tags/setter/">setter</a><small>2</small></li>
   
     <li><a href="/tags/settings/">settings</a><small>1</small></li>
@@ -1473,6 +1455,8 @@ rtt <span class="built_in">min</span>/<span class="built_in">avg</span>/<span cl
     <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
+  
+    <li><a href="/tags/sls/">sls</a><small>1</small></li>
   
     <li><a href="/tags/slurp/">slurp</a><small>1</small></li>
   
