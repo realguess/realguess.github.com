@@ -68,6 +68,67 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-11-03T22:00:00.000Z"><a href="/2014/11/03/create-a-jq-docker-image-with-automated-build/">Nov 3, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/03/create-a-jq-docker-image-with-automated-build/">Create a jq Docker Image with Automated Build</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>I have created a <a href="http://stedolan.github.io/jq/" target="_blank" rel="external">jq</a> Docker image based on <a href="https://registry.hub.docker.com/_/busybox/" target="_blank" rel="external">BusyBox</a> with <a href="https://docs.docker.com/docker-hub/builds/" target="_blank" rel="external">automated builds</a>. BusyBox is really really small in size, so the jq image I have created is also very small, just a little over 6 MB.</p>
+<p>Here is the source code and image repositories:</p>
+<ul>
+<li><a href="https://github.com/realguess/docker-jq" target="_blank" rel="external">https://github.com/realguess/docker-jq</a></li>
+<li><a href="https://registry.hub.docker.com/u/realguess/jq/" target="_blank" rel="external">https://registry.hub.docker.com/u/realguess/jq/</a></li>
+</ul>
+<p>Building Docker image is pretty straight-forward, just follow the instruction:</p>
+<p><a href="https://docs.docker.com/userguide/dockerrepos/#automated-builds" target="_blank" rel="external">https://docs.docker.com/userguide/dockerrepos/#automated-builds</a></p>
+<p>I have also created a tag <code>v1.4</code> in my GitHub repository to match the release of jq binary. This should also be reflected in Docker registry. After couple tries, here is the build details for adding both <code>latest</code> and <code>1.4</code> tags:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="header">Type     Name     Dockerfile Location   Tag Name</span></div><div class="line">------------------------------------------------</div><div class="line">Tag      v1.4     /                     1.4</div><div class="line">Branch   master   /                     latest</div></pre></td></tr></table></figure>
+
+<p>The first two columns match git branch and tag, and the last column reflects Docker tags. See <a href="https://github.com/realguess/docker-jq/tags" target="_blank" rel="external">https://github.com/realguess/docker-jq/tags</a> and <a href="https://registry.hub.docker.com/u/realguess/jq/tags/manage/" target="_blank" rel="external">https://registry.hub.docker.com/u/realguess/jq/tags/manage/</a>.</p>
+<p>This is done by starting an automated build with type of <code>tag</code> instead of <code>branch</code>. Everything is done via the Docker Hub website.</p>
+<p>If I pull down this repository:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>docker pull realguess/jq</div></pre></td></tr></table></figure>
+
+<p>It should give me two image layers with the two different image IDs, which makes sense, as latest commit usually is not the same as the tagged one.</p>
+<p>After a while, the index should be built, and I can search it via:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ docker search jq</div><div class="line">NAME             DESCRIPTION              STARS    OFFICIAL   AUTOMATED</div><div class="line">realguess/jq                              <span class="number">1</span>                   [OK]</div></pre></td></tr></table></figure>
+
+<p>The image is listed as <code>AUTOMATED</code>, but the description is missing here in the search command.</p>
+<p>There are two types of descriptions:</p>
+<ul>
+<li>Short description</li>
+<li>Full description</li>
+</ul>
+<p>Full description will be generated automatically via <code>README.md</code> file. I thought the short description can also be generated via <code>README-short.txt</code>, however, this is not the case. You can add it in the settings page for example:</p>
+<p><a href="https://registry.hub.docker.com/u/realguess/jq/settings/" target="_blank" rel="external">https://registry.hub.docker.com/u/realguess/jq/settings/</a></p>
+<p>Automated builds are triggered automatically with GitHub and BitBucket repository. Once any commit is pushed to either repository, a trigger will be sent to Docker Hub, and automated build will start.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-11-02T12:00:00.000Z"><a href="/2014/11/02/synchronous-console-methods/">Nov 2, 2014</a></time>
       
       
@@ -520,68 +581,6 @@ app.js  lib/util.js
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-29T21:07:07.000Z"><a href="/2014/06/29/inherited-accessor-property-can-only-be-overridden-by-accessor-property/">Jun 29, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/29/inherited-accessor-property-can-only-be-overridden-by-accessor-property/">Inherited Accessor Property Can Only Be Overridden by Accessor Property</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>In Javascript, define a property <code>prop</code> as an accessor property via getter/setter:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> obj = {</div><div class="line">  get prop() {},</div><div class="line">  set prop() {}</div><div class="line">};</div></pre></td></tr></table></figure>
-
-<p>And the property will have the following attributes:</p>
-<pre><code>&gt; <span class="built_in">Object</span>.keys(obj)
-[ <span class="string">'prop'</span> ]
-&gt; <span class="built_in">Object</span>.getOwnPropertyDescriptor(obj, <span class="string">'prop'</span>)
-{ <span class="keyword">get</span>: [<span class="built_in">Function</span>: prop],
-  <span class="keyword">set</span>: [<span class="built_in">Function</span>: prop],
-  enumerable: <span class="literal">true</span>,
-  configurable: <span class="literal">true</span> }
-</code></pre><p>Now, create a new object that inherits <code>obj</code>, and attempt to overwrite the accessor property by a data property:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> foo = <span class="built_in">Object</span>.create(obj);</div><div class="line">foo.prop = <span class="string">'data'</span>;</div></pre></td></tr></table></figure>
-
-<p>But, the same property of the new object cannot be created:</p>
-<pre><code><span class="input"><span class="prompt">&gt; Object.keys(foo)
-[]
-&gt;</span> <span class="constant">Object</span>.getOwnPropertyDescriptor(foo, <span class="string">'prop'</span>)</span>
-undefined
-</code></pre><p>That is because that the property is an accessor property and it cannot be overridden by a data property. It can only be overridden by an accessor property:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">Object</span>.defineProperty(foo, <span class="string">'prop'</span>, {</div><div class="line">  get: <span class="function"><span class="keyword">function</span> <span class="title">prop</span><span class="params">()</span> </span>{},</div><div class="line">  set: <span class="function"><span class="keyword">function</span> <span class="title">prop</span><span class="params">()</span> </span>{},</div><div class="line">  enumerable: <span class="literal">true</span>,</div><div class="line">  configurable: <span class="literal">true</span>,</div><div class="line">});</div></pre></td></tr></table></figure>
-
-<p>Then, the <code>foo</code> object will have its own property named <code>prop</code>:</p>
-<pre><code>&gt; <span class="built_in">Object</span>.keys(foo)
-[ <span class="string">'prop'</span> ]
-&gt; <span class="built_in">Object</span>.getOwnPropertyDescriptor(foo, <span class="string">'prop'</span>)
-{ <span class="keyword">get</span>: [<span class="built_in">Function</span>: prop],
-  <span class="keyword">set</span>: [<span class="built_in">Function</span>: prop],
-  enumerable: <span class="literal">true</span>,
-  configurable: <span class="literal">true</span> }
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -612,7 +611,7 @@ undefined
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>6</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -1497,7 +1496,7 @@ undefined
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
   
-    <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
+    <li><a href="/tags/sudo/">sudo</a><small>2</small></li>
   
     <li><a href="/tags/sunset-limited/">sunset-limited</a><small>1</small></li>
   
@@ -1663,7 +1662,7 @@ undefined
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2018 Chao Huang
+  &copy; 2019 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

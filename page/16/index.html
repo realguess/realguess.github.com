@@ -64,6 +64,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-11-14T15:27:59.000Z"><a href="/2013/11/14/get-yesterdays-date-by-date-command/">Nov 14, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/11/14/get-yesterdays-date-by-date-command/">Get Yesterday&#39;s Date by date Command</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>By using Linux <code>date</code> command, we can get today’s date in the following format:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">date</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">14</span></div></pre></td></tr></table></figure>
+
+<p>To get yesterday’s date, we can use the <code>--date</code> or <code>-d</code> option:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">% <span class="keyword">date</span> -d <span class="string">'yesterday'</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">13</span></div><div class="line">% <span class="keyword">date</span> -d <span class="string">'-1 day'</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">13</span></div><div class="line">% <span class="keyword">date</span> -d <span class="string">'1 day ago'</span> +<span class="variable">%Y</span>-<span class="variable">%m</span>-<span class="variable">%d</span></div><div class="line"><span class="number">2013</span>-<span class="number">11</span>-<span class="number">13</span></div></pre></td></tr></table></figure>
+
+<p>As the manual explains:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">DATE STRING</div><div class="line">       The --date=STRING is a mostly free format human  readable  date  string</div><div class="line">       such  as  "Sun, 29 Feb 2004 16:21:42 -0800" or "2004-02-29 16:21:42" or</div><div class="line">       even "next Thursday".  A date string may contain items indicating  cal‐</div><div class="line">       endar  date,  time of day, time zone, day of week, relative time, rela‐</div><div class="line">       tive date, and numbers.  An empty string indicates the beginning of the</div><div class="line">       day.   The date string format is more complex than is easily documented</div><div class="line">       here but is fully described in the info documentation.</div></pre></td></tr></table></figure>
+
+<p>Just be careful when you are trying to get the date from last month.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-11-12T12:32:34.000Z"><a href="/2013/11/12/live-browser-reload-and-command-execution-on-file-change/">Nov 12, 2013</a></time>
       
       
@@ -469,63 +511,6 @@ coffee&gt; .help
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-06-29T09:11:46.000Z"><a href="/2013/06/29/share-javascript-code-between-browser-(front-end)-and-node-(back-end)/">Jun 29, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/06/29/share-javascript-code-between-browser-(front-end)-and-node-(back-end)/">Share JavaScript Code between Browser (front-end) and Node (back-end)</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>One of the benefits coding in JavaScript is the ability to share code between<br>browser (front-end) and <a href="http://nodejs.org/" target="_blank" rel="external">Node</a> (back-end) environments.</p>
-<p>To share code between two different environment, first need to understand what<br>are specific to browser and what are specific to Node. Shared code should be<br>agnostic to both environments.</p>
-<p>In browser environment, there is an obvious one: <code>window</code> object. In Node<br>environment, there are a few objects that are not globally defined in browser:<br><code>global</code>, <code>process</code>, <code>module</code>, <code>exports</code> and more, see <a href="http://nodejs.org/api/globals.html" target="_blank" rel="external">global objects</a>. All<br>these variables work, but <code>exports</code> is preferred.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">console</span>.log(<span class="string">'Hi '</span> + (<span class="keyword">typeof</span> <span class="built_in">window</span> !== <span class="string">'undefined'</span> ? <span class="string">'browser!'</span> : <span class="string">'Node!'</span>));</div></pre></td></tr></table></figure>
-
-<p>Once environment is identified, then it is just the matter of writing style,<br>either browser style or Node style.</p>
-<p>For example, writing in Node style by passing the <code>exports</code> as the parameter:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">(exports)</span> </span>{</div><div class="line">  <span class="keyword">var</span> foo = exports.foo = {};</div><div class="line"></div><div class="line">  <span class="comment">// Node style code goes here.</span></div><div class="line">}(<span class="keyword">typeof</span> exports === <span class="string">'undefined'</span> ? <span class="keyword">this</span> : exports));</div></pre></td></tr></table></figure>
-
-<p>By using browser style, here is an example from the <a href="http://underscorejs.org/docs/underscore.html" target="_blank" rel="external">annotated source code</a> of<br><a href="http://underscorejs.org/" target="_blank" rel="external">Underscore</a>:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Export the Underscore object for Node.js, with backwards-compatibility</span></div><div class="line"><span class="comment">// for the old require() API. If we're in the browser, add _ as a global</span></div><div class="line"><span class="comment">// object via a string identifier, for Closure Compiler "advanced" mode.</span></div><div class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">'undefined'</span>) {</div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> <span class="built_in">module</span> !== <span class="string">'undefined'</span> && <span class="built_in">module</span>.exports) {</div><div class="line">    exports = <span class="built_in">module</span>.exports = _;</div><div class="line">  }</div><div class="line">  exports._ = _;</div><div class="line">} <span class="keyword">else</span> {</div><div class="line">  root._ = _;</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>To make it easier without concerning the backward compatibility:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> foo = {};</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (<span class="keyword">typeof</span> exports !== <span class="string">'undefined'</span>) {</div><div class="line">    exports.foo = foo;</div><div class="line">  } <span class="keyword">else</span> {</div><div class="line">    <span class="keyword">this</span>.foo = foo;</div><div class="line">  }</div><div class="line"></div><div class="line">  <span class="comment">// Browser style code goes here.</span></div><div class="line">}).call(<span class="keyword">this</span>);</div></pre></td></tr></table></figure>
-
-<p><code>this</code> is the same as <code>window</code> object in the browser environment.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span> <span class="params">(window)</span> </span>{</div><div class="line">  <span class="comment">// Browser style code goes here.</span></div><div class="line">}(<span class="keyword">this</span>));</div></pre></td></tr></table></figure>
-
-<p>One more thing, writing in <a href="coffeescript.org">CoffeeScript</a> is even better, because the compiled<br>code is already wrapped in closure, fewer indentation is needed.</p>
-<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">foo = {}</div><div class="line"><span class="keyword">if</span> exports <span class="keyword">isnt</span> <span class="string">'undefined'</span></div><div class="line">  exports.foo = foo</div><div class="line"><span class="keyword">else</span></div><div class="line">  <span class="keyword">this</span>.foo = foo</div><div class="line"></div><div class="line"><span class="comment"># Browser style code goes here.</span></div></pre></td></tr></table></figure>
-
-<p>Compile to JavaScript by <a href="coffeescript.org">CoffeeScript</a> 1.6.3:</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">(<span class="function"><span class="keyword">function</span><span class="params">()</span> </span>{</div><div class="line">  <span class="keyword">var</span> foo;</div><div class="line"></div><div class="line">  foo = {};</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (exports !== <span class="string">'undefined'</span>) {</div><div class="line">    exports.foo = foo;</div><div class="line">  } <span class="keyword">else</span> {</div><div class="line">    <span class="keyword">this</span>.foo = foo;</div><div class="line">  }</div><div class="line"></div><div class="line">}).call(<span class="keyword">this</span>);</div></pre></td></tr></table></figure>
-
-<p>Everything will be encapsulated inside the <code>foo</code> object.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -555,7 +540,7 @@ coffee&gt; .help
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>6</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -1440,7 +1425,7 @@ coffee&gt; .help
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
   
-    <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
+    <li><a href="/tags/sudo/">sudo</a><small>2</small></li>
   
     <li><a href="/tags/sunset-limited/">sunset-limited</a><small>1</small></li>
   
@@ -1606,7 +1591,7 @@ coffee&gt; .help
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2018 Chao Huang
+  &copy; 2019 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

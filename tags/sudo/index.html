@@ -68,6 +68,59 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2019-01-07T12:00:00.000Z"><a href="/2019/01/07/sudo-s-or-sudo-i/">Jan 7, 2019</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2019/01/07/sudo-s-or-sudo-i/">sudo -s or sudo -i</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>sudo allows users to run programs with the security privileges of another user (superuser or other users). Of the supported options, what’s difference between <code>-s</code> and <code>-i</code>?</p>
+<p>Both options run an interactive shell if no command is specified:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> <span class="operator">-s</span></div><div class="line">$ <span class="built_in">sudo</span> -i</div></pre></td></tr></table></figure>
+
+<p>The difference is that when using <code>-i</code>:</p>
+<blockquote>
+<p>sudo attempts to change to that user’s home directory before running the shell. The command is run with an environment similar to the one a user would receive at log in. - <code>man sudo</code></p>
+</blockquote>
+<p>Let’s assume the current directory is at <code>/</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> <span class="operator">-s</span> <span class="built_in">pwd</span></div><div class="line">/</div><div class="line"></div><div class="line">$ <span class="built_in">sudo</span> -i <span class="built_in">pwd</span></div><div class="line">/root</div></pre></td></tr></table></figure>
+
+<p>Changing directory is not attempted when using <code>-s</code> option.</p>
+<p>sudo is commonly used to elevate the privilege to execute as the superuser, and usually done in place rather than in the superuser’s home directory, such as:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> <span class="operator">-s</span> chown <span class="variable">$USER</span>:<span class="variable">$GROUP</span> file</div></pre></td></tr></table></figure>
+
+<p>Therefore, when running as superuser, use <code>-s</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> <span class="operator">-s</span></div></pre></td></tr></table></figure>
+
+<p>When running as another user, use <code>-i</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> -u foo -i</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-02-11T12:00:00.000Z"><a href="/2015/02/11/install-docker-and-then-run-docker-commands-without-sudo/">Feb 11, 2015</a></time>
       
       
@@ -130,7 +183,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>6</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -1015,7 +1068,7 @@
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
   
-    <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
+    <li><a href="/tags/sudo/">sudo</a><small>2</small></li>
   
     <li><a href="/tags/sunset-limited/">sunset-limited</a><small>1</small></li>
   
@@ -1181,7 +1234,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2018 Chao Huang
+  &copy; 2019 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

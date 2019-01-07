@@ -68,6 +68,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-03-29T22:58:55.000Z"><a href="/2014/03/29/passing-environment-variables-from-cron-to-shell-script/">Mar 29, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/03/29/passing-environment-variables-from-cron-to-shell-script/">Passing Environment Variables from Cron to Shell Script</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In Debian system with Vixie cron, <a href="/2014/02/11/defining-correct-environment-for-coffeescript-in-cron/">environment variables can be defined</a> in the crontab:</p>
+<pre><code>MESSAGE=Hello World
+<span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> <span class="keyword">*</span> /bin/sh ~/script.sh &gt;&gt; /tmp/script.log
+</code></pre><p>Now, can the same environment variable <code>MESSAGE</code> be passed to the shell script <code>~/script.sh</code> that being scheduled to run every minute? Let’s just give a try by adding the following line to <code>script.sh</code>:</p>
+<pre><code><span class="built_in">echo</span> <span class="string">"ECHO: <span class="variable">${MESSAGE}</span>"</span>
+</code></pre><p><code>tail -f /tmp/script.log</code>:</p>
+<pre><code><span class="attribute">ECHO</span>: <span class="string">Hello World</span>
+<span class="attribute">ECHO</span>: <span class="string">Hello World</span>
+<span class="attribute">ECHO</span>: <span class="string">Hello World</span>
+</code></pre><p>Therefore, the shell script will pick up the environment variables defined in crontab. This really is a convenience.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-03-29T10:44:53.000Z"><a href="/2014/03/29/amazon-aws-command-line-interface-cli/">Mar 29, 2014</a></time>
       
       
@@ -684,50 +726,6 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-01-22T11:59:01.000Z"><a href="/2014/01/22/hipchat/">Jan 22, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/01/22/hipchat/">HipChat</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>While I was learning more on distributed team and remote working. I saw many startups are using <a href="https://www.hipchat.com/" target="_blank" rel="external">HipChat</a>, a group chatting service. If you have been using IRC, you will feel right at home. But it is not just a group chat, you can also share files and source code. Here are a few things I like so far.</p>
-<p><strong>Virtual office</strong></p>
-<p>The most appealing is the concept of “virtual office”. This certainly will help a distributed team. It gives you a sense of being in the office at the same time but without constant disruption.</p>
-<p><strong>Reduce emails</strong></p>
-<p>The advantage it has over email is that all messages are within team only. Team messages should take priority over others. And you know that you cannot control your inbox. Hopefully this will cut down the unnecessary emails and facilitate quicker response.</p>
-<p><strong>Search past chat history</strong></p>
-<p>All chats are saved and indexed, so if you say that you are going to do something, you’d better do it, because it will be recorded and searcheable in the future. Meetings could be conducted in the chat room as well, as all details are saved, without pulling all people out of their seats at the same time.</p>
-<p><strong>Integration and API</strong></p>
-<p>I have integrated with <a href="https://bitbucket.org/" target="_blank" rel="external">BitBucket</a>, so all commits will show up in one of our chat rooms. This chat room becomes our notification center. There are many other integration such as Basecamp, Evernote. And There is also an API that can be used to create custom integration.</p>
-<p><strong>Slash commands and emoticons</strong></p>
-<p>I also like the <a href="http://help.hipchat.com/knowledgebase/articles/64451-work-faster-with-slash-commands" target="_blank" rel="external">slash commands</a> and <a href="http://hipchat-emoticons.nyh.name/" target="_blank" rel="external">emoticons</a>.</p>
-<p>So, I just got it started with my team, let me see how it goes.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -758,7 +756,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>6</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -1643,7 +1641,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
   
-    <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
+    <li><a href="/tags/sudo/">sudo</a><small>2</small></li>
   
     <li><a href="/tags/sunset-limited/">sunset-limited</a><small>1</small></li>
   
@@ -1809,7 +1807,7 @@ bar(); <span class="comment">// ReferenceError: bar is not defined</span>
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2018 Chao Huang
+  &copy; 2019 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>

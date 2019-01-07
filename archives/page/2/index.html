@@ -68,6 +68,76 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-10-09T12:00:00.000Z"><a href="/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/">Oct 9, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/">Getting Let&#39;s Encrypt SSL Certificate with Docker</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://letsencrypt.org/" target="_blank" rel="external">Let’s Encrypt</a> is a free, open, and automated certificate authority (CA). And its <a href="https://certbot.eff.org/" target="_blank" rel="external">Certbot</a> is a fully-featured, extensible client for Let’s Encrypt CA that can automate the tasks of getting, renewing and even installing SSL certificates.</p>
+<p>First, you need to get Certbot. There are a few ways to <a href="https://certbot.eff.org/docs/using.html" target="_blank" rel="external">install Certbot</a>. But with <a href="https://docker.com/" target="_blank" rel="external">Docker</a>, you don’t need to install, you just need to download the <a href="https://quay.io/repository/letsencrypt/letsencrypt" target="_blank" rel="external">Docker image</a> and run the container. However, the caveat is that this method does not <em>install</em> the certificate automatically respecting to your web server. But if you’re like me, running your server in another Docker container, this might be the way to go.</p>
+<p>Let’s start.</p>
+<p>First, download the image. You can download the <code>latest</code> version (tag):</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker pull quay.io/letsencrypt/letsencrypt:latest</div></pre></td></tr></table></figure>
+
+<p>But the latest usually is not a stable release:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm quay.io/letsencrypt/letsencrypt:latest --version</div><div class="line">certbot 0.10.0.dev0</div></pre></td></tr></table></figure>
+
+<p>Therefore, it’s better to use a specific release, which can be found in Certbot’s GitHub page: <a href="https://github.com/certbot/certbot/releases" target="_blank" rel="external">https://github.com/certbot/certbot/releases</a>.</p>
+<p>The latest one now is <code>v0.9.1</code>. We can pull that from Quay.io:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker pull quay.io/letsencrypt/letsencrypt:v0.<span class="number">9.1</span></div></pre></td></tr></table></figure>
+
+<p>Confirm the release version:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm quay.io/letsencrypt/letsencrypt:v0.9.1 --version</div><div class="line">certbot 0.9.1</div></pre></td></tr></table></figure>
+
+<p>Let’s take a look at the Docker image:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker inspect quay.io/letsencrypt/letsencrypt:v0.<span class="number">9.1</span></div></pre></td></tr></table></figure>
+
+<p>Dropping things don’t care, the output is:</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">[</div><div class="line">    {</div><div class="line">        "<span class="attribute">RepoTags</span>": <span class="value">[</span></div><div class="line">            <span class="string">"quay.io/letsencrypt/letsencrypt:v0.9.1"</span></div><div class="line">        ],</div><div class="line">        "<span class="attribute">ContainerConfig</span>": <span class="value">{</span></div><div class="line">            "<span class="attribute">ExposedPorts</span>": <span class="value">{</span></div><div class="line">                "<span class="attribute">443/tcp</span>": <span class="value">{}</span></div><div class="line">            },</div><div class="line">            "<span class="attribute">Cmd</span>": <span class="value">[</span></div><div class="line">                <span class="string">"/bin/sh"</span>,</div><div class="line">                <span class="string">"-c"</span>,</div><div class="line">                <span class="string">"#(nop) ENTRYPOINT \u0026{[\"certbot\"]}"</span></div><div class="line">            ],</div><div class="line">            "<span class="attribute">Volumes</span>": <span class="value">{</span></div><div class="line">                "<span class="attribute">/etc/letsencrypt</span>": <span class="value">{}</span>,</div><div class="line">                "<span class="attribute">/var/lib/letsencrypt</span>": <span class="value">{}</span></div><div class="line">            },</div><div class="line">            "<span class="attribute">Entrypoint</span>": <span class="value">[</span></div><div class="line">                <span class="string">"certbot"</span></div><div class="line">            ]</div><div class="line">        }</div><div class="line">    }</div><div class="line">]</div></pre></td></tr></table></figure>
+
+<p>The <code>ENTRYPOINT</code> is <code>certbot</code> binary:</p>
+<blockquote>
+<p>An <code>ENTRYPOINT</code> allows you to configure a container that will run as an executable.[^1]</p>
+</blockquote>
+<p>And the command line arguments to <code>docker run</code> becomes the arguments to <code>certbot</code> command. As we saw earlier to obtain the release version by using <code>--version</code>.</p>
+<blockquote>
+<p>You can override the <code>ENTRYPOINT</code> instruction using the <code>docker run --entrypoint</code> flag.[^1]</p>
+</blockquote>
+<p>For example, to override and run the container without executing the <code>certbot</code> command:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm --name certbot --entrypoint /bin/bash \</div><div class="line">  quay.io/letsencrypt/letsencrypt:v0.<span class="number">9.1</span></div></pre></td></tr></table></figure>
+
+<p>But we are more concerning about others, such as exposed port and mapped volumes. The exposed port is 443, HTTPS port. The most important volume (directory) is <code>/etc/letsencrypt</code>. All generated keys and issued certificates can be found in there. Directory <code>/var/lib/letsencrypt</code> is the default working directory, some backup stuff are stored. I have yet to find it useful. However, the logs directory <code>/var/log/letsencrypt</code> is not being used. This could be useful if things went haywire.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-09-26T12:00:00.000Z"><a href="/2016/09/26/installing-let-s-encrypt-ssl-certificate-on-google-app-engine-using-certbot/">Sep 26, 2016</a></time>
       
       
@@ -199,21 +269,28 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
+        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
       
       
   
-    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
+    <h1 class="title"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Listing Tags in Natural Sort of Version Numbers</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
+        <p>Using the Node.js repository as an example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git remote -<span class="keyword">v</span></div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (fetch)</div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (push)</div></pre></td></tr></table></figure>
 
-<p>For example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
+<p>If we would like to list all tags with <code>v0.12</code> versions, we could do:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git tag <span class="operator">-l</span> <span class="string">'v0.12.*'</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div></pre></td></tr></table></figure>
+
+<p>However, <code>v0.12.2</code> should come after <code>v0.12.1</code>.</p>
+<p>To fix it, we use the <code>sort</code> command with option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-V, <span class="comment">--version-sort</span></div><div class="line">    natural <span class="built_in">sort</span> <span class="operator">of</span> (<span class="built_in">version</span>) numbers <span class="operator">within</span> <span class="keyword">text</span></div></pre></td></tr></table></figure>
+
+<p>Thus:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git <span class="keyword">tag</span> -<span class="keyword">l</span> <span class="string">'v0.12.*'</span> | <span class="built_in">sort</span> --<span class="keyword">version</span>-<span class="built_in">sort</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div></pre></td></tr></table></figure>
 
 
       
@@ -237,28 +314,21 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
+        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
       
       
   
-    <h1 class="title"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Listing Tags in Natural Sort of Version Numbers</a></h1>
+    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Using the Node.js repository as an example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git remote -<span class="keyword">v</span></div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (fetch)</div><div class="line">origin  http<span class="variable">s:</span>//github.<span class="keyword">com</span>/nodejs/node.git (push)</div></pre></td></tr></table></figure>
+        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
 
-<p>If we would like to list all tags with <code>v0.12</code> versions, we could do:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git tag <span class="operator">-l</span> <span class="string">'v0.12.*'</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div></pre></td></tr></table></figure>
-
-<p>However, <code>v0.12.2</code> should come after <code>v0.12.1</code>.</p>
-<p>To fix it, we use the <code>sort</code> command with option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-V, <span class="comment">--version-sort</span></div><div class="line">    natural <span class="built_in">sort</span> <span class="operator">of</span> (<span class="built_in">version</span>) numbers <span class="operator">within</span> <span class="keyword">text</span></div></pre></td></tr></table></figure>
-
-<p>Thus:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">$ git <span class="keyword">tag</span> -<span class="keyword">l</span> <span class="string">'v0.12.*'</span> | <span class="built_in">sort</span> --<span class="keyword">version</span>-<span class="built_in">sort</span></div><div class="line">v0.<span class="number">12.0</span></div><div class="line">v0.<span class="number">12.1</span></div><div class="line">v0.<span class="number">12.2</span></div><div class="line">v0.<span class="number">12.3</span></div><div class="line">v0.<span class="number">12.4</span></div><div class="line">v0.<span class="number">12.5</span></div><div class="line">v0.<span class="number">12.6</span></div><div class="line">v0.<span class="number">12.7</span></div><div class="line">v0.<span class="number">12.8</span></div><div class="line">v0.<span class="number">12.8</span>-rc.<span class="number">1</span></div><div class="line">v0.<span class="number">12.9</span></div><div class="line">v0.<span class="number">12.10</span></div><div class="line">v0.<span class="number">12.11</span></div><div class="line">v0.<span class="number">12.12</span></div><div class="line">v0.<span class="number">12.13</span></div><div class="line">v0.<span class="number">12.14</span></div><div class="line">v0.<span class="number">12.15</span></div></pre></td></tr></table></figure>
+<p>For example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
 
 
       
@@ -584,60 +654,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-08-09T12:00:00.000Z"><a href="/2016/08/09/fixing-authorization-failure-in-aws-cli-by-synchronizing-the-clock/">Aug 9, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/08/09/fixing-authorization-failure-in-aws-cli-by-synchronizing-the-clock/">Fixing Authorization Failure in AWS CLI by Synchronizing the Clock</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Running into an error when executing an <a href="https://aws.amazon.com/" target="_blank" rel="external">AWS</a> command:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ aws ec2 <span class="operator"><span class="keyword">describe</span>-instances</span></div><div class="line"></div><div class="line">An error occurred (AuthFailure) <span class="keyword">when</span> calling the DescribeInstances operation: AWS</div><div class="line">was <span class="keyword">not</span> able <span class="keyword">to</span> validate the provided access credentials</div></pre></td></tr></table></figure>
-
-<p>From the error message, it appears to be an error with access credentials. But after updating to a new credential, and even updated the AWS package, the error still persisted. After trying out other commands, there was an error message containing “signature not yet current” with timestamps. So, the actual problem was due to inaccurate local clock. Hence, the solution is to sync the local date and time by polling the Network Time Protocol (NTP) server:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> ntpdate pool.ntp.org</div></pre></td></tr></table></figure>
-
-<blockquote>
-<p>ntpdate can be run manually as necessary to set the host clock, or it can be run from the host startup script to set the clock at boot time.  This is useful  in some cases to set the clock initially before starting the NTP daemon ntpd. It is also possible to run ntpdate from a cron script. However, it is important to note that ntpdate with contrived cron scripts is no substitute for the NTP daemon, which uses sophisticated algorithms to maximize accuracy  and  reliability while minimizing resource use. Finally, since ntpdate does not discipline the host clock frequency as does ntpd, the accuracy using ntpdate is limited.[^1]</p>
-</blockquote>
-<p>From the description, we can learn that we can make things even easier by installing NTP package:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> apt-get install -y ntp</div></pre></td></tr></table></figure>
-
-<blockquote>
-<p>Network Time Protocol daemon and utility programs NTP, the Network Time Protocol, is used to keep computer clocks accurate by synchronizing them over the Internet or a local network, or by following an accurate hardware receiver that interprets GPS, DCF-77, NIST or similar time signals.[^2]</p>
-</blockquote>
-<p>Verify the installation and execution:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ ps <span class="operator">-e</span> | grep ntpd</div><div class="line"> <span class="number">4964</span> ?        <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> ntpd</div></pre></td></tr></table></figure>
-
-<p>with the environment:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ aws --version</div><div class="line">aws-cli<span class="regexp">/1.10.53 Python/</span><span class="number">2.7</span>.<span class="number">6</span> Linux<span class="regexp">/3.13.0-92-generic botocore/</span><span class="number">1.4</span>.<span class="number">43</span></div></pre></td></tr></table></figure>
-
-<p>[^1]: <code>$ man nptdate</code><br>[^2]: <code>$ apt-cache show ntp</code></p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -668,7 +684,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>5</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>6</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -1553,7 +1569,7 @@
   
     <li><a href="/tags/success/">success</a><small>1</small></li>
   
-    <li><a href="/tags/sudo/">sudo</a><small>1</small></li>
+    <li><a href="/tags/sudo/">sudo</a><small>2</small></li>
   
     <li><a href="/tags/sunset-limited/">sunset-limited</a><small>1</small></li>
   
@@ -1719,7 +1735,7 @@
   </div>
   <footer id="footer" class="inner"><div class="alignleft">
   
-  &copy; 2018 Chao Huang
+  &copy; 2019 Chao Huang
   
 </div>
 <div class="clearfix"></div></footer>
