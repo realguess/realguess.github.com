@@ -68,6 +68,45 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-11-22T12:00:00.000Z"><a href="/2014/11/22/run-gnome-terminal-with-named-multi-tabs/">Nov 22, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/11/22/run-gnome-terminal-with-named-multi-tabs/">Run GNOME Terminal with Named Multi-Tabs</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="http://en.wikipedia.org/wiki/GNOME_Terminal" target="_blank" rel="external">GNOME Terminal</a> is a terminal emulation application, installed by default in Ubuntu. GNOME Terminal supports multiple profiles. So, create a few <a href="https://help.gnome.org/users/gnome-terminal/stable/pref-profiles.html.en" target="_blank" rel="external">profiles</a>, then execute them one for each tab:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ gnome-terminal --tab-with-profile=work --tab-with-profile=life</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2014/11/22/run-gnome-terminal-with-named-multi-tabs/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-11-03T22:00:00.000Z"><a href="/2014/11/03/create-a-jq-docker-image-with-automated-build/">Nov 3, 2014</a></time>
       
       
@@ -499,88 +538,6 @@ Finished <span class="string">'alias'</span> after <span class="number">45</span
 
 
   
-    <article class="blog">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-07-05T14:51:30.000Z"><a href="/2014/07/05/extended-pattern-matching/">Jul 5, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/07/05/extended-pattern-matching/">Extended Pattern Matching</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Bash supports <a href="https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html" target="_blank" rel="external">extended pattern matching</a>. By using the built-in utility we can check if it is enabled or not:</p>
-<pre><code>$ <span class="built_in">shopt</span> extglob
-</code></pre><p>If not, to enable it:</p>
-<pre><code>$ <span class="built_in">shopt</span> <span class="operator">-s</span> extglob
-</code></pre><p>By default <code>extglob</code> is on in interactive shells, but <strong>off in non-interactive shells</strong>.</p>
-<p>The key about extended pattern matching is pattern list via <code>|</code> (what we usually see as a <code>OR</code> operator). But do not think about it as that, think about it as a list of array pattern that are separated by <code>|</code> instead of <code>,</code>. And actually one of them is the same as <code>{}</code> or brace expansion, but it can do more than expanding.</p>
-<p>Here are the pattern operators:</p>
-<pre><code>? <span class="keyword">*</span> + @ !
-</code></pre><p>Create some example files:</p>
-<pre><code>$ touch <span class="operator">a</span>{,<span class="number">1</span>,<span class="number">2</span>,<span class="number">11</span>,<span class="number">12</span>}.js &amp;&amp; ls
-a11.js  a12.js  a1.js  a2.js  <span class="operator">a</span>.js
-</code></pre><p><strong><code>?(pattern-list)</code></strong></p>
-<p>Zero or one (any one) occurrence of the giving pattern:</p>
-<pre><code>$ ls <span class="operator">a</span>?(<span class="number">2</span>|<span class="number">1</span>).js
-a1.js  a2.js  <span class="operator">a</span>.js
-</code></pre><p><strong><code>*(pattern-list)</code></strong></p>
-<p>Zero or more occurrences of the giving pattern (essentially everything):</p>
-<pre><code>$ ls <span class="operator">a</span>*(<span class="number">2</span>|<span class="number">1</span>).js
-a11.js  a12.js  a1.js  a2.js  <span class="operator">a</span>.js
-</code></pre><p><strong><code>+(pattern-list)</code></strong></p>
-<p>One or more of the giving pattern (notice <code>a.js</code> is missing):</p>
-<pre><code>$ <span class="keyword">ls</span> <span class="keyword">a</span>+(<span class="number">2</span>|<span class="number">1</span>).js
-a11.js  a12.js  a1.js  a2.js
-</code></pre><p><strong><code>@(pattern-list)</code></strong></p>
-<p>Any one of giving pattern:</p>
-<pre><code>$ <span class="keyword">ls</span> a<span class="variable">@(</span><span class="number">2</span>|<span class="number">1</span>).js
-a1.js  a2.js
-</code></pre><p><strong><code>!(pattern-list)</code></strong></p>
-<p>None of the giving pattern:</p>
-<pre><code>$ ls <span class="operator">a</span>!(<span class="number">2</span>|<span class="number">1</span>).js
-a11.js  a12.js  <span class="operator">a</span>.js
-</code></pre><p>One mistake I had was getting confused between extended pattern matching and brace expansion, for example:</p>
-<pre><code><span class="variable">$ </span>ls test/@{src|spec}/*.js
-<span class="symbol">ls:</span> cannot access test/<span class="variable">@src</span>/*.<span class="symbol">js:</span> <span class="constant">No</span> such file <span class="keyword">or</span> directory
-<span class="symbol">ls:</span> cannot access test/<span class="variable">@spec</span>/*.<span class="symbol">js:</span> <span class="constant">No</span> such file <span class="keyword">or</span> directory
-</code></pre><p>Extended pattern uses parentheses <code>()</code> not braces <code>{}</code> as in brace expansion.</p>
-<p>Also, these two patterns are the same:</p>
-<pre><code>test/<span class="comment">@(src|spec)/*.js</span>
-test/{src,spec}/<span class="keyword">*</span>.js
-</code></pre><p>In some situations, extended pattern matching does not work, for example, matching files from the current directory and from one of the subdirectories with the following directory structure:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ tree</div><div class="line">.</div><div class="line">├── app.js</div><div class="line">├── lib</div><div class="line">│   └── util.js</div><div class="line">└── test</div><div class="line">    └── main.js</div><div class="line"></div><div class="line"><span class="number">2</span> <span class="built_in">directories</span>, <span class="number">3</span> <span class="built_in">files</span></div></pre></td></tr></table></figure>
-
-<p>I would like to match js files from the current directory and <code>lib/</code> directory, sort of like:</p>
-<pre><code>$ ls <span class="keyword">*</span>.js lib/<span class="keyword">*</span>.js
-app.js  lib/util.js
-</code></pre><p>But this does not do it:</p>
-<pre><code>$ <span class="keyword">ls</span> <span class="variable">@(</span>.|lib)<span class="comment">/*.js</span>
-</code></pre><p>Instead, use brace expansion:</p>
-<pre><code><span class="variable">$ </span>ls {.,lib}/*.js
-</code></pre><p>Finally, Node’s <a href="https://github.com/isaacs/minimatch" target="_blank" rel="external">Minimatch</a> supports brace expansion, <em>extended globbing</em> and globstar.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -633,7 +590,7 @@ app.js  lib/util.js
   
     <li><a href="/categories/programming/">Programming</a><small>0</small></li>
   
-    <li><a href="/categories/security/">Security</a><small>1</small></li>
+    <li><a href="/categories/security/">Security</a><small>2</small></li>
   
     <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
@@ -659,6 +616,8 @@ app.js  lib/util.js
     <li><a href="/tags/2014/">2014</a><small>3</small></li>
   
     <li><a href="/tags/2015/">2015</a><small>1</small></li>
+  
+    <li><a href="/tags/2fa/">2fa</a><small>1</small></li>
   
     <li><a href="/tags/abraham-lincoln/">abraham-lincoln</a><small>1</small></li>
   
@@ -713,6 +672,8 @@ app.js  lib/util.js
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
     <li><a href="/tags/asynchronous/">asynchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/authentication/">authentication</a><small>1</small></li>
   
     <li><a href="/tags/automated-build/">automated-build</a><small>1</small></li>
   
@@ -1286,6 +1247,8 @@ app.js  lib/util.js
   
     <li><a href="/tags/order/">order</a><small>1</small></li>
   
+    <li><a href="/tags/otp/">otp</a><small>1</small></li>
+  
     <li><a href="/tags/outdated/">outdated</a><small>1</small></li>
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
@@ -1298,7 +1261,7 @@ app.js  lib/util.js
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
   
-    <li><a href="/tags/password/">password</a><small>1</small></li>
+    <li><a href="/tags/password/">password</a><small>2</small></li>
   
     <li><a href="/tags/patch/">patch</a><small>1</small></li>
   
@@ -1543,6 +1506,8 @@ app.js  lib/util.js
     <li><a href="/tags/todo/">todo</a><small>1</small></li>
   
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
+  
+    <li><a href="/tags/totp/">totp</a><small>1</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
   

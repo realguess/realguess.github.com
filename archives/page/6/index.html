@@ -68,6 +68,47 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-08-23T12:00:00.000Z"><a href="/2015/08/23/curl-read-from-file-or-stdin/">Aug 23, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/08/23/curl-read-from-file-or-stdin/">cURL: Read from File or Stdin</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Redirect or pipe the content of a file or the output of another command as the input of <a href="http://curl.haxx.se/" target="_blank" rel="external">cURL</a>, for example, making a <code>POST</code> request with cURL.</p>
+<p>This is done by prefixing the data parameter with <code>@</code>, the rest is the filename to read data from. With <code>-</code>, the data is coming from <code>stdin</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">17000</span> <span class="number">1</span> <span class="number">17001</span> | \</div><div class="line">  curl \</div><div class="line">    --request POST \</div><div class="line">    --include \</div><div class="line">    --header <span class="string">'Content-Type: application/json'</span> \</div><div class="line">    --data-binary @- \</div><div class="line">    --no-buffer \</div><div class="line">    https://example.com/data</div></pre></td></tr></table></figure>
+
+<p>Command <code>seq 17000 1 17001</code> returns:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">17000</span></div><div class="line"><span class="number">17001</span></div></pre></td></tr></table></figure>
+
+<p>The size of the above two numbers is 12 bytes (including two newlines). But when reading data via <code>@</code> with <code>--data</code> option, “carriage returns and newlines will be stripped out” [<a href="http://curl.haxx.se/docs/manpage.html" target="_blank" rel="external">1</a>]. If you check your server, you will see the content length is only 10 bytes.</p>
+<p>To correct this problem, we will send the raw data using <code>--data-binary</code> option instead. This preserves <code>\n</code> and <code>\r</code> characters.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-08-11T12:00:00.000Z"><a href="/2015/08/11/changelog-starter/">Aug 11, 2015</a></time>
       
       
@@ -447,47 +488,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-04-02T12:00:00.000Z"><a href="/2015/04/02/require-modules-from-the-command-line/">Apr 2, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/04/02/require-modules-from-the-command-line/">Require Modules from the Command Line</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://iojs.org/" target="_blank" rel="external">io.js</a> v1.6.0 introduces a new command line option: <code>-r</code> or <code>--require</code>, which can be used to pre-load modules at startup, see:</p>
-<p><a href="https://github.com/iojs/io.js/blob/v1.x/CHANGELOG.md#2015-03-19-version-160-chrisdickinson" target="_blank" rel="external">https://github.com/iojs/io.js/blob/v1.x/CHANGELOG.md#2015-03-19-version-160-chrisdickinson</a></p>
-<p>I can think of one interesting use case: overriding the default behavior or <code>console.log</code> to perform deep inspection:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// console.js</span></div><div class="line"><span class="keyword">var</span> util = <span class="built_in">require</span>(<span class="string">'util'</span>);</div><div class="line"><span class="keyword">var</span> log = <span class="built_in">console</span>.log;</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log = <span class="function"><span class="keyword">function</span> <span class="params">(obj)</span> </span>{</div><div class="line">  log(util.inspect(obj, { colors: <span class="literal">true</span>, depth: <span class="literal">null</span> }));</div><div class="line">};</div></pre></td></tr></table></figure>
-
-<p>Now I can pre-load this script to have all console log show in better format:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ iojs -r /path/to/console.js app.js</div></pre></td></tr></table></figure>
-
-<p>Time to find out more use cases.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -540,7 +540,7 @@
   
     <li><a href="/categories/programming/">Programming</a><small>0</small></li>
   
-    <li><a href="/categories/security/">Security</a><small>1</small></li>
+    <li><a href="/categories/security/">Security</a><small>2</small></li>
   
     <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
@@ -566,6 +566,8 @@
     <li><a href="/tags/2014/">2014</a><small>3</small></li>
   
     <li><a href="/tags/2015/">2015</a><small>1</small></li>
+  
+    <li><a href="/tags/2fa/">2fa</a><small>1</small></li>
   
     <li><a href="/tags/abraham-lincoln/">abraham-lincoln</a><small>1</small></li>
   
@@ -620,6 +622,8 @@
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
     <li><a href="/tags/asynchronous/">asynchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/authentication/">authentication</a><small>1</small></li>
   
     <li><a href="/tags/automated-build/">automated-build</a><small>1</small></li>
   
@@ -1193,6 +1197,8 @@
   
     <li><a href="/tags/order/">order</a><small>1</small></li>
   
+    <li><a href="/tags/otp/">otp</a><small>1</small></li>
+  
     <li><a href="/tags/outdated/">outdated</a><small>1</small></li>
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
@@ -1205,7 +1211,7 @@
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
   
-    <li><a href="/tags/password/">password</a><small>1</small></li>
+    <li><a href="/tags/password/">password</a><small>2</small></li>
   
     <li><a href="/tags/patch/">patch</a><small>1</small></li>
   
@@ -1450,6 +1456,8 @@
     <li><a href="/tags/todo/">todo</a><small>1</small></li>
   
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
+  
+    <li><a href="/tags/totp/">totp</a><small>1</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
   

@@ -64,6 +64,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
+
+<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-15T12:00:00.000Z"><a href="/2015/09/15/scaffold-an-explicit-document-to-avoid-error-when-creating-indexes-in-google-cloud-datastore/">Sep 15, 2015</a></time>
       
       
@@ -501,47 +539,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-08-23T12:00:00.000Z"><a href="/2015/08/23/curl-read-from-file-or-stdin/">Aug 23, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/08/23/curl-read-from-file-or-stdin/">cURL: Read from File or Stdin</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Redirect or pipe the content of a file or the output of another command as the input of <a href="http://curl.haxx.se/" target="_blank" rel="external">cURL</a>, for example, making a <code>POST</code> request with cURL.</p>
-<p>This is done by prefixing the data parameter with <code>@</code>, the rest is the filename to read data from. With <code>-</code>, the data is coming from <code>stdin</code>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">17000</span> <span class="number">1</span> <span class="number">17001</span> | \</div><div class="line">  curl \</div><div class="line">    --request POST \</div><div class="line">    --include \</div><div class="line">    --header <span class="string">'Content-Type: application/json'</span> \</div><div class="line">    --data-binary @- \</div><div class="line">    --no-buffer \</div><div class="line">    https://example.com/data</div></pre></td></tr></table></figure>
-
-<p>Command <code>seq 17000 1 17001</code> returns:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="number">17000</span></div><div class="line"><span class="number">17001</span></div></pre></td></tr></table></figure>
-
-<p>The size of the above two numbers is 12 bytes (including two newlines). But when reading data via <code>@</code> with <code>--data</code> option, “carriage returns and newlines will be stripped out” [<a href="http://curl.haxx.se/docs/manpage.html" target="_blank" rel="external">1</a>]. If you check your server, you will see the content length is only 10 bytes.</p>
-<p>To correct this problem, we will send the raw data using <code>--data-binary</code> option instead. This preserves <code>\n</code> and <code>\r</code> characters.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -593,7 +590,7 @@
   
     <li><a href="/categories/programming/">Programming</a><small>0</small></li>
   
-    <li><a href="/categories/security/">Security</a><small>1</small></li>
+    <li><a href="/categories/security/">Security</a><small>2</small></li>
   
     <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
@@ -619,6 +616,8 @@
     <li><a href="/tags/2014/">2014</a><small>3</small></li>
   
     <li><a href="/tags/2015/">2015</a><small>1</small></li>
+  
+    <li><a href="/tags/2fa/">2fa</a><small>1</small></li>
   
     <li><a href="/tags/abraham-lincoln/">abraham-lincoln</a><small>1</small></li>
   
@@ -673,6 +672,8 @@
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
     <li><a href="/tags/asynchronous/">asynchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/authentication/">authentication</a><small>1</small></li>
   
     <li><a href="/tags/automated-build/">automated-build</a><small>1</small></li>
   
@@ -1246,6 +1247,8 @@
   
     <li><a href="/tags/order/">order</a><small>1</small></li>
   
+    <li><a href="/tags/otp/">otp</a><small>1</small></li>
+  
     <li><a href="/tags/outdated/">outdated</a><small>1</small></li>
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
@@ -1258,7 +1261,7 @@
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
   
-    <li><a href="/tags/password/">password</a><small>1</small></li>
+    <li><a href="/tags/password/">password</a><small>2</small></li>
   
     <li><a href="/tags/patch/">patch</a><small>1</small></li>
   
@@ -1503,6 +1506,8 @@
     <li><a href="/tags/todo/">todo</a><small>1</small></li>
   
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
+  
+    <li><a href="/tags/totp/">totp</a><small>1</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
   

@@ -68,6 +68,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2019-01-12T12:00:00.000Z"><a href="/2019/01/12/using-two-different-phones-for-2fa/">Jan 12, 2019</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2019/01/12/using-two-different-phones-for-2fa/">Using Two Different Phones for 2FA</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>When setting up two-factor authentication (2FA), there is always an option to print backup codes in case you lose your phone. But if you have a spare phone, you can use it as the backup authenticator device.</p>
+<p>During the 2FA setup process, scan the QR code on two different phones. Both phones will show the identical codes. This is because of time-based OTP (One-Time Password) implementation. Time-based OTP establishes authentication by an Unix time to start counting and an interval for computing the next set of codes (usually 30 seconds).</p>
+<p>In fact, you can use three, four, or as many devices you want. When done, set a strong password for the phone, turn it off, store somewhere safe. It’s better than a piece of paper, because when your safe was broken into, there’s another layer of protection.</p>
+<p>BTW, when Google asks you “What kind of phone do you have?”, you can pick Android and still use the authenticator app from the iPhone.</p>
+<p><img src="/2019/01/12/using-two-different-phones-for-2fa/google-2fa-authenticator-selection.png" alt="Get codes from the Authenticator app"></p>
+<p>Therefore, 2FA, two different phones, two locations, no LastPass, no Authy, no cloud based backup.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-02T12:00:00.000Z"><a href="/2016/07/02/resetting-gitlab-user-password-with-a-simple-shell-script/">Jul 2, 2016</a></time>
       
       
@@ -161,7 +199,7 @@
   
     <li><a href="/categories/programming/">Programming</a><small>0</small></li>
   
-    <li><a href="/categories/security/">Security</a><small>1</small></li>
+    <li><a href="/categories/security/">Security</a><small>2</small></li>
   
     <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
@@ -187,6 +225,8 @@
     <li><a href="/tags/2014/">2014</a><small>3</small></li>
   
     <li><a href="/tags/2015/">2015</a><small>1</small></li>
+  
+    <li><a href="/tags/2fa/">2fa</a><small>1</small></li>
   
     <li><a href="/tags/abraham-lincoln/">abraham-lincoln</a><small>1</small></li>
   
@@ -241,6 +281,8 @@
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
     <li><a href="/tags/asynchronous/">asynchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/authentication/">authentication</a><small>1</small></li>
   
     <li><a href="/tags/automated-build/">automated-build</a><small>1</small></li>
   
@@ -814,6 +856,8 @@
   
     <li><a href="/tags/order/">order</a><small>1</small></li>
   
+    <li><a href="/tags/otp/">otp</a><small>1</small></li>
+  
     <li><a href="/tags/outdated/">outdated</a><small>1</small></li>
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
@@ -826,7 +870,7 @@
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
   
-    <li><a href="/tags/password/">password</a><small>1</small></li>
+    <li><a href="/tags/password/">password</a><small>2</small></li>
   
     <li><a href="/tags/patch/">patch</a><small>1</small></li>
   
@@ -1071,6 +1115,8 @@
     <li><a href="/tags/todo/">todo</a><small>1</small></li>
   
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
+  
+    <li><a href="/tags/totp/">totp</a><small>1</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
   

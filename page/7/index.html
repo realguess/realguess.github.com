@@ -64,6 +64,47 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-04-02T12:00:00.000Z"><a href="/2015/04/02/require-modules-from-the-command-line/">Apr 2, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/04/02/require-modules-from-the-command-line/">Require Modules from the Command Line</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://iojs.org/" target="_blank" rel="external">io.js</a> v1.6.0 introduces a new command line option: <code>-r</code> or <code>--require</code>, which can be used to pre-load modules at startup, see:</p>
+<p><a href="https://github.com/iojs/io.js/blob/v1.x/CHANGELOG.md#2015-03-19-version-160-chrisdickinson" target="_blank" rel="external">https://github.com/iojs/io.js/blob/v1.x/CHANGELOG.md#2015-03-19-version-160-chrisdickinson</a></p>
+<p>I can think of one interesting use case: overriding the default behavior or <code>console.log</code> to perform deep inspection:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// console.js</span></div><div class="line"><span class="keyword">var</span> util = <span class="built_in">require</span>(<span class="string">'util'</span>);</div><div class="line"><span class="keyword">var</span> log = <span class="built_in">console</span>.log;</div><div class="line"></div><div class="line"><span class="built_in">console</span>.log = <span class="function"><span class="keyword">function</span> <span class="params">(obj)</span> </span>{</div><div class="line">  log(util.inspect(obj, { colors: <span class="literal">true</span>, depth: <span class="literal">null</span> }));</div><div class="line">};</div></pre></td></tr></table></figure>
+
+<p>Now I can pre-load this script to have all console log show in better format:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ iojs -r /path/to/console.js app.js</div></pre></td></tr></table></figure>
+
+<p>Time to find out more use cases.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-04-01T12:00:00.000Z"><a href="/2015/04/01/test-execution-order-in-mocha/">Apr 1, 2015</a></time>
       
       
@@ -462,48 +503,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-02-11T12:00:00.000Z"><a href="/2015/02/11/install-docker-and-then-run-docker-commands-without-sudo/">Feb 11, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/02/11/install-docker-and-then-run-docker-commands-without-sudo/">Install Docker and then Run Docker Commands without Sudo</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Commands:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="operator">-s</span>SL https://get.docker.io/ubuntu/ | <span class="built_in">sudo</span> sh</div><div class="line">$ <span class="built_in">sudo</span> usermod <span class="operator">-a</span> -G docker <span class="variable">$USER</span></div><div class="line">$ <span class="built_in">sudo</span> service docker restart</div><div class="line">$ logout</div></pre></td></tr></table></figure>
-
-<p>Explanation:</p>
-<ol>
-<li>One line command installation</li>
-<li>Add the user to the group <code>docker</code></li>
-<li>Restart the daemon</li>
-<li>Make sure to logout and log back in, in order to sudoless Docker taking effect.</li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -555,7 +554,7 @@
   
     <li><a href="/categories/programming/">Programming</a><small>0</small></li>
   
-    <li><a href="/categories/security/">Security</a><small>1</small></li>
+    <li><a href="/categories/security/">Security</a><small>2</small></li>
   
     <li><a href="/categories/starters/">Starters</a><small>0</small></li>
   
@@ -581,6 +580,8 @@
     <li><a href="/tags/2014/">2014</a><small>3</small></li>
   
     <li><a href="/tags/2015/">2015</a><small>1</small></li>
+  
+    <li><a href="/tags/2fa/">2fa</a><small>1</small></li>
   
     <li><a href="/tags/abraham-lincoln/">abraham-lincoln</a><small>1</small></li>
   
@@ -635,6 +636,8 @@
     <li><a href="/tags/async/">async</a><small>1</small></li>
   
     <li><a href="/tags/asynchronous/">asynchronous</a><small>2</small></li>
+  
+    <li><a href="/tags/authentication/">authentication</a><small>1</small></li>
   
     <li><a href="/tags/automated-build/">automated-build</a><small>1</small></li>
   
@@ -1208,6 +1211,8 @@
   
     <li><a href="/tags/order/">order</a><small>1</small></li>
   
+    <li><a href="/tags/otp/">otp</a><small>1</small></li>
+  
     <li><a href="/tags/outdated/">outdated</a><small>1</small></li>
   
     <li><a href="/tags/package/">package</a><small>1</small></li>
@@ -1220,7 +1225,7 @@
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
   
-    <li><a href="/tags/password/">password</a><small>1</small></li>
+    <li><a href="/tags/password/">password</a><small>2</small></li>
   
     <li><a href="/tags/patch/">patch</a><small>1</small></li>
   
@@ -1465,6 +1470,8 @@
     <li><a href="/tags/todo/">todo</a><small>1</small></li>
   
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
+  
+    <li><a href="/tags/totp/">totp</a><small>1</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
   
