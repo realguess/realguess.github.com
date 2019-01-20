@@ -68,6 +68,62 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2019-01-20T12:00:00.000Z"><a href="/2019/01/20/identifying-duplicate-files-in-the-current-directory/">Jan 20, 2019</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2019/01/20/identifying-duplicate-files-in-the-current-directory/">Identifying Duplicate Files in the Current Directory</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Here are some tools to find duplicates files:</p>
+<ul>
+<li><strong>duff</strong>: Quickly find duplicate files</li>
+<li><strong>fdupes</strong>: Finds duplicate files in a given set of directories</li>
+</ul>
+<p>But we can also just cobble together with a few commonly used CLI tools:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ find -type f | xargs -n <span class="number">1</span> -I {} md5sum <span class="string">'{}'</span> | sort | \</div><div class="line">trueawk <span class="string">'{if(k==$1){printf("%s\n%s\n",v,$2)}else{print("")};k=$1;v=$2}'</span> | uniq</div></pre></td></tr></table></figure>
+
+<p>The command finds all files in the current directory, computes the MD5 checksum of each file, sorts them by the checksum first (<code>k</code>), then the file name (<code>v</code>). Finally, prints the duplicates ones and runs through a unique filter to obtain the final result.</p>
+<p>Put into a shell script (<code>find-duplicates.sh</code>) with some dummy files to test the command and the above mentioned tools:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/bin/sh</span></div><div class="line"></div><div class="line">apt-get update && apt-get install -y duff fdupes</div><div class="line"><span class="built_in">cd</span> /tmp && seq <span class="number">3</span> | xargs -I {} bash -c <span class="string">'touch file{}; date &gt; date{}; echo $RANDOM &gt; rand{}'</span></div><div class="line"></div><div class="line">find -type f | xargs -n <span class="number">1</span> -I {} md5sum <span class="string">'{}'</span> | sort | \</div><div class="line">trueawk <span class="string">'{if(k==$1){printf("%s\n%s\n",v,$2)}else{print("")};k=$1;v=$2}'</span> | uniq</div><div class="line"></div><div class="line">duff -r .</div><div class="line">fdupes -r .</div></pre></td></tr></table></figure>
+
+<p>Execute the script in a disposable environment:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ cat find-duplicates.sh | docker run -i --rm debian:<span class="number">9.6</span></div></pre></td></tr></table></figure>
+
+<p>Output:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">Ign:<span class="number">1</span> http://cdn-fastly.deb.debian.org/debian stretch InRelease</div><div class="line">Get:<span class="number">2</span> http://security-cdn.debian.org/debian-security stretch/updates InRelease [<span class="number">94.3</span> kB]</div><div class="line">Get:<span class="number">3</span> http://cdn-fastly.deb.debian.org/debian stretch-updates InRelease [<span class="number">91.0</span> kB]</div><div class="line">Get:<span class="number">4</span> http://cdn-fastly.deb.debian.org/debian stretch Release [<span class="number">118</span> kB]</div><div class="line">Get:<span class="number">5</span> http://security-cdn.debian.org/debian-security stretch/updates/main amd64 Packages [<span class="number">467</span> kB]</div><div class="line">Get:<span class="number">6</span> http://cdn-fastly.deb.debian.org/debian stretch Release.gpg [<span class="number">2434</span> B]</div><div class="line">Get:<span class="number">7</span> http://cdn-fastly.deb.debian.org/debian stretch-updates/main amd64 Packages [<span class="number">5152</span> B]</div><div class="line">Get:<span class="number">8</span> http://cdn-fastly.deb.debian.org/debian stretch/main amd64 Packages [<span class="number">7089</span> kB]</div><div class="line">Fetched <span class="number">7868</span> kB <span class="keyword">in</span> 1s (<span class="number">4119</span> kB/s)</div><div class="line">Reading package lists...</div><div class="line">Reading package lists...</div><div class="line">Building dependency tree...</div><div class="line">Reading state information...</div><div class="line">The following NEW packages will be installed:</div><div class="line">  duff fdupes</div><div class="line"><span class="number">0</span> upgraded, <span class="number">2</span> newly installed, <span class="number">0</span> to remove and <span class="number">3</span> not upgraded.</div><div class="line">Need to get <span class="number">52.4</span> kB of archives.</div><div class="line">After this operation, <span class="number">146</span> kB of additional disk space will be used.</div><div class="line">Get:<span class="number">1</span> http://cdn-fastly.deb.debian.org/debian stretch/main amd64 fdupes amd64 <span class="number">1</span>:<span class="number">1.6</span><span class="number">.1</span>-<span class="number">1</span>+b1 [<span class="number">21.2</span> kB]</div><div class="line">Get:<span class="number">2</span> http://cdn-fastly.deb.debian.org/debian stretch/main amd64 duff amd64 <span class="number">0.5</span><span class="number">.2</span>-<span class="number">1.1</span>+b2 [<span class="number">31.2</span> kB]</div><div class="line">debconf: delaying package configuration, since apt-utils is not installed</div><div class="line">Fetched <span class="number">52.4</span> kB <span class="keyword">in</span> 0s (<span class="number">110</span> kB/s)</div><div class="line">Selecting previously unselected package fdupes.</div><div class="line">(Reading database <span class="keyword">...</span> <span class="number">6498</span> files and directories currently installed.)</div><div class="line">Preparing to unpack <span class="keyword">...</span>/fdupes_1%3a1.6.1-<span class="number">1</span>+b1_amd64.deb <span class="keyword">...</span></div><div class="line">Unpacking fdupes (<span class="number">1</span>:<span class="number">1.6</span><span class="number">.1</span>-<span class="number">1</span>+b1) <span class="keyword">...</span></div><div class="line">Selecting previously unselected package duff.</div><div class="line">Preparing to unpack <span class="keyword">...</span>/duff_0.5.2-<span class="number">1.1</span>+b2_amd64.deb <span class="keyword">...</span></div><div class="line">Unpacking duff (<span class="number">0.5</span><span class="number">.2</span>-<span class="number">1.1</span>+b2) <span class="keyword">...</span></div><div class="line">Setting up duff (<span class="number">0.5</span><span class="number">.2</span>-<span class="number">1.1</span>+b2) <span class="keyword">...</span></div><div class="line">Setting up fdupes (<span class="number">1</span>:<span class="number">1.6</span><span class="number">.1</span>-<span class="number">1</span>+b1) <span class="keyword">...</span></div><div class="line">+ xargs -n <span class="number">1</span> -I <span class="string">'{}'</span> md5sum <span class="string">'{}'</span></div><div class="line">+ sort</div><div class="line">+ find -type f</div><div class="line">+ awk <span class="string">'{if(k==$1){printf("%s\n%s\n",v,$2)}else{print("")};k=$1;v=$2}'</span></div><div class="line">+ uniq</div><div class="line"></div><div class="line">./file1</div><div class="line">./file2</div><div class="line">./file3</div><div class="line"></div><div class="line">./date1</div><div class="line">./date2</div><div class="line">./date3</div><div class="line">+ duff -r .</div><div class="line"><span class="number">3</span> files <span class="keyword">in</span> cluster <span class="number">1</span> (<span class="number">0</span> bytes, digest da39a3ee5e6b4b0d3255bfef95601890afd80709)</div><div class="line">./file3</div><div class="line">./file1</div><div class="line">./file2</div><div class="line"><span class="number">3</span> files <span class="keyword">in</span> cluster <span class="number">2</span> (<span class="number">29</span> bytes, digest c20aeceea6a6b4bb1903d9124ea69223da08c69c)</div><div class="line">./date2</div><div class="line">./date1</div><div class="line">./date3</div><div class="line">+ fdupes -r .</div><div class="line">./date2</div><div class="line">./date1</div><div class="line">./date3</div><div class="line"></div><div class="line">./file3</div><div class="line">./file1</div><div class="line">./file2</div></pre></td></tr></table></figure>
+
+<p>Looks similar, same result.</p>
+<p>However, those tools provide additional configurations such as following symlink files. Worth to install.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2019/01/20/identifying-duplicate-files-in-the-current-directory/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2019-01-12T12:00:00.000Z"><a href="/2019/01/12/using-two-different-phones-for-2fa/">Jan 12, 2019</a></time>
       
       
@@ -179,7 +235,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>6</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>7</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -292,7 +348,7 @@
   
     <li><a href="/tags/automation/">automation</a><small>2</small></li>
   
-    <li><a href="/tags/awk/">awk</a><small>1</small></li>
+    <li><a href="/tags/awk/">awk</a><small>2</small></li>
   
     <li><a href="/tags/aws/">aws</a><small>11</small></li>
   
@@ -514,6 +570,10 @@
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
+    <li><a href="/tags/duff/">duff</a><small>1</small></li>
+  
+    <li><a href="/tags/duplicate/">duplicate</a><small>1</small></li>
+  
     <li><a href="/tags/duplicate-keys/">duplicate-keys</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
@@ -549,6 +609,8 @@
     <li><a href="/tags/extglob/">extglob</a><small>1</small></li>
   
     <li><a href="/tags/facebook/">facebook</a><small>1</small></li>
+  
+    <li><a href="/tags/fdupes/">fdupes</a><small>1</small></li>
   
     <li><a href="/tags/field/">field</a><small>1</small></li>
   

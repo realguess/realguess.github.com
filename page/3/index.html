@@ -58,6 +58,61 @@
 <div class="clearfix"></div></header>
   <div id="content" class="inner">
     <div id="main-col" class="alignleft"><div id="wrapper">
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-08-17T12:00:00.000Z"><a href="/2016/08/17/installing-jq-from-source/">Aug 17, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/08/17/installing-jq-from-source/">Installing jq from Source</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Packages built in both Ubuntu and Debian packages lack behind, therefore, to get the latest version of <a href="https://stedolan.github.io/jq/" target="_blank" rel="external">jq</a>, build from source.</p>
+<p>There are a few prerequisites to install:</p>
+<ul>
+<li>GCC</li>
+<li>Make</li>
+<li>Autotools</li>
+</ul>
+<p>Both GCC and Make are usually installed if you do development, but not <a href="https://www.gnu.org/software/automake/" target="_blank" rel="external">Autotools</a>. Luckily, this is easy to fulfill:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> apt-get install automake</div></pre></td></tr></table></figure>
+
+<p>Install from source:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">sudo</span> git clone https://github.com/stedolan/jq.git</div><div class="line">$ <span class="built_in">cd</span> jq</div><div class="line">$ <span class="built_in">sudo</span> git checkout jq-<span class="number">1.5</span></div><div class="line">$ <span class="built_in">sudo</span> ./configure && <span class="built_in">sudo</span> make && <span class="built_in">sudo</span> make install</div></pre></td></tr></table></figure>
+
+<p>The installed path is at:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ which jq</div><div class="line">jq is <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>jq</div></pre></td></tr></table></figure>
+
+<p>However, this gives me an unexpected tag:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ jq --<span class="keyword">version</span></div><div class="line">jq-<span class="number">1.5</span>-dirty</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2016/08/17/installing-jq-from-source/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
   <article class="image">
   
   <div class="post-content">
@@ -376,42 +431,6 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-v4-x-http-server-one-liner/">Jul 5, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/07/05/node-js-v4-x-http-server-one-liner/">Node.js v4.x HTTP Server One Liner</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>One liner to create a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> HTTP server:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span><span class="function"><span class="params">(<span class="string">'http'</span>)</span>.<span class="title">createServer</span><span class="params">((req, res) =&gt; res.end(<span class="string">'OK'</span>))</span>.<span class="title">listen</span><span class="params">(<span class="number">3000</span>)</span>;</span></div></pre></td></tr></table></figure>
-
-<p>Also see the <a href="https://realguess.net/2015/09/04/node-js-http-server-one-liner/" target="_blank" rel="external">previous one liners</a> for older Node.js versions.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
         <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Jul 5, 2016</a></time>
       
       
@@ -445,6 +464,42 @@
 <li>From the source</li>
 </ul>
 <p>[^1]: NodeSource provides <a href="https://github.com/nodesource/distributions" target="_blank" rel="external">binary distribution setup and support scripts</a>.<br>[^2]: See <code>man sudo</code>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-v4-x-http-server-one-liner/">Jul 5, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/07/05/node-js-v4-x-http-server-one-liner/">Node.js v4.x HTTP Server One Liner</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>One liner to create a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> HTTP server:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span><span class="function"><span class="params">(<span class="string">'http'</span>)</span>.<span class="title">createServer</span><span class="params">((req, res) =&gt; res.end(<span class="string">'OK'</span>))</span>.<span class="title">listen</span><span class="params">(<span class="number">3000</span>)</span>;</span></div></pre></td></tr></table></figure>
+
+<p>Also see the <a href="https://realguess.net/2015/09/04/node-js-http-server-one-liner/" target="_blank" rel="external">previous one liners</a> for older Node.js versions.</p>
 
       
     </div>
@@ -558,60 +613,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-11-26T12:00:00.000Z"><a href="/2015/11/26/setting-up-local-dns-server-for-multi-devices/">Nov 26, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/11/26/setting-up-local-dns-server-for-multi-devices/">Setting Up Local DNS Server for Multi-Devices</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>As always, the first thing you have to ask yourself is that <em>why do you want to set up a DNS server?</em> Here are a few of mine:</p>
-<ul>
-<li>Access web services via custom domains instead of IP addresses</li>
-<li>Update multiple devices (including mobile devices) is <em>time consuming</em> and <em>inconvenient</em></li>
-<li>Router does not provide a DNS server</li>
-</ul>
-<p>I run many web services in the local network, for example, <a href="https://about.gitlab.com/" target="_blank" rel="external">GitLab</a> for code repository and <a href="https://ghost.org/" target="_blank" rel="external">Ghost</a> for blogging. Instead of typing IP address for each service, it will be much easier to use custom domain names, for example, accessing my blog via <a href="http://ghost/" target="_blank" rel="external">http://ghost/</a>, not dot com nor <em>localhost</em>.</p>
-<p>This can be easily done if there is just one machine. You can update the <em>host configuration file</em> in the local machine such as <code>/etc/hosts</code> in Linux or <code>C:\Windows\System32\drivers\etc\hosts</code> in Windows. But I have multiple devices: a laptop, a tablet, and of course a smartphone. Updating multiple devices is a pain. And for many mobile devices running systems such as iOS or Android, it is not easy to edit the host configuration file without rooting the devices. Therefore, we will opt to update a single DNS configuration file.</p>
-<p>DNS configuration can be inherited from the DHCP server from the local network router. Unfortunately, the router I have does not provide a built-in DNS server. I have to setup my own DNS server. Once the DNS server has been setup, the router will use the server as the primary DNS server, and falls back to default gateway IP as the secondary DNS server, or we can use either Google’s public DNS server with IP address <code>8.8.8.8</code> or any other alternatives.</p>
-<ul>
-<li>Primary DNS server: <code>192.168.0.100</code></li>
-<li>Secondary DNS server: <code>192.168.0.1</code>, <code>8.8.8.8</code> or others</li>
-</ul>
-<p>I am going to setup a DNS server in a <a href="https://www.debian.org/releases/jessie/" target="_blank" rel="external">Debian Jessie</a> machine. Here is a summary of steps:</p>
-<ol>
-<li>Install BIND</li>
-<li>Add custom zone</li>
-</ol>
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2015/11/26/setting-up-local-dns-server-for-multi-devices/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -641,7 +642,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>6</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>7</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -754,7 +755,7 @@
   
     <li><a href="/tags/automation/">automation</a><small>2</small></li>
   
-    <li><a href="/tags/awk/">awk</a><small>1</small></li>
+    <li><a href="/tags/awk/">awk</a><small>2</small></li>
   
     <li><a href="/tags/aws/">aws</a><small>11</small></li>
   
@@ -976,6 +977,10 @@
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
+    <li><a href="/tags/duff/">duff</a><small>1</small></li>
+  
+    <li><a href="/tags/duplicate/">duplicate</a><small>1</small></li>
+  
     <li><a href="/tags/duplicate-keys/">duplicate-keys</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
@@ -1011,6 +1016,8 @@
     <li><a href="/tags/extglob/">extglob</a><small>1</small></li>
   
     <li><a href="/tags/facebook/">facebook</a><small>1</small></li>
+  
+    <li><a href="/tags/fdupes/">fdupes</a><small>1</small></li>
   
     <li><a href="/tags/field/">field</a><small>1</small></li>
   

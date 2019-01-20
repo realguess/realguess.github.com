@@ -68,50 +68,6 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-27T12:00:00.000Z"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Sep 27, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Calculate Hashes for All OpenSSL Digest Algorithms</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Based on the following <a href="https://nodejs.org/api/crypto.html" target="_blank" rel="external">Node.js</a> statement:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(algorithm).update(<span class="string">'secret'</span>, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div></pre></td></tr></table></figure>
-
-<p>On a Ubuntu 14.04 system with <a href="http://www.openssl.org/" target="_blank" rel="external">OpenSSL</a>:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ openssl version</div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span>f <span class="number">6</span> Jan <span class="number">2014</span></div></pre></td></tr></table></figure>
-
-<p>List available digest algorithms:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">$ openssl list-message-digest-algorithms</div><div class="line">DSA</div><div class="line">DSA-SHA</div><div class="line">DSA-SHA1 =&gt; DSA</div><div class="line">DSA-SHA1-old =&gt; DSA-SHA1</div><div class="line">DSS1 =&gt; DSA-SHA1</div><div class="line">MD4</div><div class="line">MD5</div><div class="line">RIPEMD160</div><div class="line">RSA-MD4 =&gt; MD4</div><div class="line">RSA-MD5 =&gt; MD5</div><div class="line">RSA-RIPEMD160 =&gt; RIPEMD160</div><div class="line">RSA-SHA =&gt; SHA</div><div class="line">RSA-SHA1 =&gt; SHA1</div><div class="line">RSA-SHA1-<span class="number">2</span> =&gt; RSA-SHA1</div><div class="line">RSA-SHA224 =&gt; SHA224</div><div class="line">RSA-SHA256 =&gt; SHA256</div><div class="line">RSA-SHA384 =&gt; SHA384</div><div class="line">RSA-SHA512 =&gt; SHA512</div><div class="line">SHA</div><div class="line">SHA1</div><div class="line">SHA224</div><div class="line">SHA256</div><div class="line">SHA384</div><div class="line">SHA512</div><div class="line">DSA</div><div class="line">DSA-SHA</div><div class="line">dsaWithSHA1 =&gt; DSA</div><div class="line">dss1 =&gt; DSA-SHA1</div><div class="line">ecdsa-with-SHA1</div><div class="line">MD4</div><div class="line">md4WithRSAEncryption =&gt; MD4</div><div class="line">MD5</div><div class="line">md5WithRSAEncryption =&gt; MD5</div><div class="line">ripemd =&gt; RIPEMD160</div><div class="line">RIPEMD160</div><div class="line">ripemd160WithRSA =&gt; RIPEMD160</div><div class="line">rmd160 =&gt; RIPEMD160</div><div class="line">SHA</div><div class="line">SHA1</div><div class="line">sha1WithRSAEncryption =&gt; SHA1</div><div class="line">SHA224</div><div class="line">sha224WithRSAEncryption =&gt; SHA224</div><div class="line">SHA256</div><div class="line">sha256WithRSAEncryption =&gt; SHA256</div><div class="line">SHA384</div><div class="line">sha384WithRSAEncryption =&gt; SHA384</div><div class="line">SHA512</div><div class="line">sha512WithRSAEncryption =&gt; SHA512</div><div class="line">shaWithRSAEncryption =&gt; SHA</div><div class="line">ssl2-md5 =&gt; MD5</div><div class="line">ssl3-md5 =&gt; MD5</div><div class="line">ssl3-sha1 =&gt; SHA1</div><div class="line">whirlpool</div></pre></td></tr></table></figure>
-
-<p>Calculate hashes for each and every uniquely listed algorithm:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">$ openssl list-message-digest-algorithms | \</div><div class="line">  cut <span class="operator">-d</span> <span class="string">' '</span> <span class="operator">-f</span> <span class="number">1</span> | \</div><div class="line">  xargs -n <span class="number">1</span> -I {} node <span class="operator">-e</span> <span class="string">"algorithm = '{}'; \</span></div><div class="line">  digest = require('crypto').createHash('{}').update('secret', 'utf8').digest('base64'); \</div><div class="line">  console.log(algorithm, digest)" | \</div><div class="line">  sort -u</div><div class="line">DSA <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA1-old <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">dsaWithSHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">dss1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSS1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">ecdsa-with-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">md4WithRSAEncryption Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">MD4 Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">md5WithRSAEncryption Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">MD5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ripemd160WithRSA zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RIPEMD160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">ripemd zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">rmd160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RSA-MD4 Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">RSA-MD5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">RSA-RIPEMD160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RSA-SHA1-<span class="number">2</span> <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">RSA-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">RSA-SHA224 lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">RSA-SHA256 K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">RSA-SHA384 WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">RSA-SHA512 vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">RSA-SHA f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">sha1WithRSAEncryption <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">SHA224 lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">sha224WithRSAEncryption lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">SHA256 K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">sha256WithRSAEncryption K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">sha384WithRSAEncryption WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">SHA384 WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">SHA512 vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">sha512WithRSAEncryption vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">SHA f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">shaWithRSAEncryption f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">ssl2-md5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ssl3-md5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ssl3-sha1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">whirlpool <span class="number">4</span>GG4emdK44gOFZq1XtNdbF6Kau+sarCDBKUFiAGNN3soY5uxX97t8AbVfkX3tCmObf786vfJLIJqcI/m0RVusw==</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
         <time datetime="2015-09-27T12:00:00.000Z"><a href="/2015/09/27/get-started-with-the-cut-command-of-gnu-coreutils/">Sep 27, 2015</a></time>
       
       
@@ -189,6 +145,50 @@
 
 <p>When cut multiple fields, the fields are separated by the same delimiter used (indicated by <code>-d</code> field or TAB as the default). If change the output delimiter, it’s not the job of <code>cut</code>, pipe to another program:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">$ cut <span class="operator">-f</span> <span class="number">3</span>-<span class="number">5</span> tab.txt | sed <span class="string">'s/\t/ /g'</span></div><div class="line"><span class="number">13</span> <span class="number">14</span> <span class="number">15</span></div><div class="line"><span class="number">23</span> <span class="number">24</span> <span class="number">25</span></div><div class="line"><span class="number">33</span> <span class="number">34</span> <span class="number">35</span></div><div class="line"><span class="number">43</span> <span class="number">44</span> <span class="number">45</span></div><div class="line"><span class="number">53</span> <span class="number">54</span> <span class="number">55</span></div><div class="line"><span class="number">63</span> <span class="number">64</span> <span class="number">65</span></div><div class="line"><span class="number">73</span> <span class="number">74</span> <span class="number">75</span></div><div class="line"><span class="number">83</span> <span class="number">84</span> <span class="number">85</span></div><div class="line"><span class="number">93</span> <span class="number">94</span> <span class="number">95</span></div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2015-09-27T12:00:00.000Z"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Sep 27, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/27/calculate-hashes-for-all-openssl-digest-algorithms/">Calculate Hashes for All OpenSSL Digest Algorithms</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Based on the following <a href="https://nodejs.org/api/crypto.html" target="_blank" rel="external">Node.js</a> statement:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span>(<span class="string">'crypto'</span>).createHash(algorithm).update(<span class="string">'secret'</span>, <span class="string">'utf8'</span>).digest(<span class="string">'base64'</span>);</div></pre></td></tr></table></figure>
+
+<p>On a Ubuntu 14.04 system with <a href="http://www.openssl.org/" target="_blank" rel="external">OpenSSL</a>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ openssl version</div><div class="line">OpenSSL <span class="number">1.0</span>.<span class="number">1</span>f <span class="number">6</span> Jan <span class="number">2014</span></div></pre></td></tr></table></figure>
+
+<p>List available digest algorithms:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div></pre></td><td class="code"><pre><div class="line">$ openssl list-message-digest-algorithms</div><div class="line">DSA</div><div class="line">DSA-SHA</div><div class="line">DSA-SHA1 =&gt; DSA</div><div class="line">DSA-SHA1-old =&gt; DSA-SHA1</div><div class="line">DSS1 =&gt; DSA-SHA1</div><div class="line">MD4</div><div class="line">MD5</div><div class="line">RIPEMD160</div><div class="line">RSA-MD4 =&gt; MD4</div><div class="line">RSA-MD5 =&gt; MD5</div><div class="line">RSA-RIPEMD160 =&gt; RIPEMD160</div><div class="line">RSA-SHA =&gt; SHA</div><div class="line">RSA-SHA1 =&gt; SHA1</div><div class="line">RSA-SHA1-<span class="number">2</span> =&gt; RSA-SHA1</div><div class="line">RSA-SHA224 =&gt; SHA224</div><div class="line">RSA-SHA256 =&gt; SHA256</div><div class="line">RSA-SHA384 =&gt; SHA384</div><div class="line">RSA-SHA512 =&gt; SHA512</div><div class="line">SHA</div><div class="line">SHA1</div><div class="line">SHA224</div><div class="line">SHA256</div><div class="line">SHA384</div><div class="line">SHA512</div><div class="line">DSA</div><div class="line">DSA-SHA</div><div class="line">dsaWithSHA1 =&gt; DSA</div><div class="line">dss1 =&gt; DSA-SHA1</div><div class="line">ecdsa-with-SHA1</div><div class="line">MD4</div><div class="line">md4WithRSAEncryption =&gt; MD4</div><div class="line">MD5</div><div class="line">md5WithRSAEncryption =&gt; MD5</div><div class="line">ripemd =&gt; RIPEMD160</div><div class="line">RIPEMD160</div><div class="line">ripemd160WithRSA =&gt; RIPEMD160</div><div class="line">rmd160 =&gt; RIPEMD160</div><div class="line">SHA</div><div class="line">SHA1</div><div class="line">sha1WithRSAEncryption =&gt; SHA1</div><div class="line">SHA224</div><div class="line">sha224WithRSAEncryption =&gt; SHA224</div><div class="line">SHA256</div><div class="line">sha256WithRSAEncryption =&gt; SHA256</div><div class="line">SHA384</div><div class="line">sha384WithRSAEncryption =&gt; SHA384</div><div class="line">SHA512</div><div class="line">sha512WithRSAEncryption =&gt; SHA512</div><div class="line">shaWithRSAEncryption =&gt; SHA</div><div class="line">ssl2-md5 =&gt; MD5</div><div class="line">ssl3-md5 =&gt; MD5</div><div class="line">ssl3-sha1 =&gt; SHA1</div><div class="line">whirlpool</div></pre></td></tr></table></figure>
+
+<p>Calculate hashes for each and every uniquely listed algorithm:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">$ openssl list-message-digest-algorithms | \</div><div class="line">  cut <span class="operator">-d</span> <span class="string">' '</span> <span class="operator">-f</span> <span class="number">1</span> | \</div><div class="line">  xargs -n <span class="number">1</span> -I {} node <span class="operator">-e</span> <span class="string">"algorithm = '{}'; \</span></div><div class="line">  digest = require('crypto').createHash('{}').update('secret', 'utf8').digest('base64'); \</div><div class="line">  console.log(algorithm, digest)" | \</div><div class="line">  sort -u</div><div class="line">DSA <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA1-old <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSA-SHA <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">dsaWithSHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">dss1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">DSS1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">ecdsa-with-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">md4WithRSAEncryption Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">MD4 Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">md5WithRSAEncryption Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">MD5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ripemd160WithRSA zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RIPEMD160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">ripemd zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">rmd160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RSA-MD4 Z9Pa/vY/<span class="number">8</span>AYDru83ac+/DQ==</div><div class="line">RSA-MD5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">RSA-RIPEMD160 zZi/AgLvB+OOh/a9lEXl5zMeLHg=</div><div class="line">RSA-SHA1-<span class="number">2</span> <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">RSA-SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">RSA-SHA224 lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">RSA-SHA256 K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">RSA-SHA384 WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">RSA-SHA512 vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">RSA-SHA f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">SHA1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">sha1WithRSAEncryption <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">SHA224 lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">sha224WithRSAEncryption lcf7ypKsUIOv2mKlZKPQFPw7cskUDjy5nqa/Eg==</div><div class="line">SHA256 K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">sha256WithRSAEncryption K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=</div><div class="line">sha384WithRSAEncryption WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">SHA384 WKd1ukESvjAFrkQHznV9iP2nHUBJe7gCbsrFTU4//HIyzo3jq1rLMK45dg/ufFPt</div><div class="line">SHA512 vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">sha512WithRSAEncryption vSsar3708Jvp9Szi2NWZZ02Bqp1qRCFpbcTZPdBhnWgs5WtNZKnvCXdhztmeD2cmW192CF5bDufKRpayrW/isg==</div><div class="line">SHA f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">shaWithRSAEncryption f72qWouzjoc6vqk8vf5NBIVHFXs=</div><div class="line">ssl2-md5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ssl3-md5 Xr4ilOzQ4PCOq3aQ0qbuaQ==</div><div class="line">ssl3-sha1 <span class="number">5</span>en6G6MezRroT3XKqkdPOmY/BfQ=</div><div class="line">whirlpool <span class="number">4</span>GG4emdK44gOFZq1XtNdbF6Kau+sarCDBKUFiAGNN3soY5uxX97t8AbVfkX3tCmObf786vfJLIJqcI/m0RVusw==</div></pre></td></tr></table></figure>
 
 
       
@@ -363,23 +363,22 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
+    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
-<ol>
-<li>Having multiple images means more configuration files to manage and update.</li>
-<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
-<li>Steeper learning curve for new developers.</li>
-</ol>
-<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
+        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
+
+<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -402,22 +401,23 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Sep 16, 2015</a></time>
+        <time datetime="2015-09-16T12:00:00.000Z"><a href="/2015/09/16/use-a-single-dockerfile/">Sep 16, 2015</a></time>
       
       
   
-    <h1 class="title"><a href="/2015/09/16/wait-and-then-grab-the-lock-and-update/">Wait and then Grab the Lock and Update</a></h1>
+    <h1 class="title"><a href="/2015/09/16/use-a-single-dockerfile/">Use a Single Dockerfile</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>When provisioning a new machine in <a href="https://cloud.google.com/compute/" target="_blank" rel="external">Google Compute Engine</a> with <a href="https://www.vagrantup.com/" target="_blank" rel="external">Vagrant</a>, I spotted the following error messages when updating the system:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Could not get lock /var/lib/apt/lists/lock - open (<span class="number">11</span>: Resource temporarily unavailable)</div><div class="line">E: Unable to lock directory /var/lib/apt/lists/</div></pre></td></tr></table></figure>
-
-<p>It appears to be that I was just behind on the race to grab the lock on the APT update. Without getting the latest index, I am not able to upgrade the packages. An simple solution is to wait it out:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="shebang">#!/usr/bin/env bash</span></div><div class="line"><span class="comment">#</span></div><div class="line"><span class="comment"># System Update</span></div><div class="line"><span class="comment"># =============</span></div><div class="line"></div><div class="line">apt-get update</div><div class="line"><span class="keyword">while</span> [ <span class="string">"$?"</span> != <span class="string">"0"</span> ]; <span class="keyword">do</span></div><div class="line">  sleep <span class="number">5</span></div><div class="line">  apt-get update</div><div class="line"><span class="keyword">done</span></div><div class="line">apt-get -y dist-upgrade</div></pre></td></tr></table></figure>
-
+        <p>I was planning to build two different <a href="https://docs.docker.com/" target="_blank" rel="external">Docker</a> images: one for production and one for test. However, the more I had coded, the more frustrated I had become. I want something simple, and more means complexity:</p>
+<ol>
+<li>Having multiple images means more configuration files to manage and update.</li>
+<li>More things to do when working with third-party tools, for example, Google App Engine Managed VMs deployment will only recognize the application root level <a href="https://docs.docker.com/reference/builder/" target="_blank" rel="external">Dockerfile</a> out of the box.</li>
+<li>Steeper learning curve for new developers.</li>
+</ol>
+<p>Keep our application structure simple is important. If you need multiple dockerfiles, then your application is too complex. The difference between <code>npm install --production</code> and <code>npm install</code> isn’t a lot. But it will save you time and effort from managing multiple dockerfiles. There is no reason to have more than one Dockerfile. Just use a different command such as <code>npm test</code> when running tests.</p>
 
       
     </div>
@@ -486,6 +486,41 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Google Cloud Datastore Starter: Dataset</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> dataset starter, part of a starter collection:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Google Cloud Datastore Starter: Dataset</span></div><div class="line"><span class="comment">// =======================================</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="comment">// Define a dataset.</span></div><div class="line"><span class="keyword">var</span> params = {</div><div class="line">  projectId: <span class="string">'MY_PROJECT'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'MY_NAMESPACE'</span></div><div class="line">};</div><div class="line"><span class="keyword">var</span> dataset = <span class="built_in">require</span>(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line"></div><div class="line"><span class="comment">// Define an entity (including both key and data).</span></div><div class="line"><span class="keyword">var</span> kind = <span class="string">'MY_KIND'</span>;</div><div class="line"><span class="keyword">var</span> key = dataset.key(kind);</div><div class="line"><span class="keyword">var</span> data = [</div><div class="line">  {</div><div class="line">    name: <span class="string">'title'</span>,</div><div class="line">    value: <span class="string">'Google Cloud Datastore Starter'</span>,</div><div class="line">    excludeFromIndexes: <span class="literal">false</span></div><div class="line">  }</div><div class="line">];</div><div class="line"><span class="comment">// var data = { title: 'Google Cloud Datastore Starter' }; // Simple version</span></div><div class="line"><span class="keyword">var</span> entity = {</div><div class="line">  key: key,</div><div class="line">  data: data</div><div class="line">};</div><div class="line"></div><div class="line"><span class="comment">// Save a single entity.</span></div><div class="line">dataset.save(entity, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) {</div><div class="line">    <span class="keyword">throw</span> err;</div><div class="line">  }</div><div class="line">});</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/understand-the-limitation-of-the-string-property-type-of-google-cloud-datastore/">Sep 14, 2015</a></time>
       
       
@@ -532,41 +567,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2015-09-14T12:00:00.000Z"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Sep 14, 2015</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2015/09/14/google-cloud-datastore-starter-dataset/">Google Cloud Datastore Starter: Dataset</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://cloud.google.com/datastore/" target="_blank" rel="external">Google Cloud Datastore</a> dataset starter, part of a starter collection:</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Google Cloud Datastore Starter: Dataset</span></div><div class="line"><span class="comment">// =======================================</span></div><div class="line"><span class="pi"></span></div><div class="line">'use strict';</div><div class="line"></div><div class="line"><span class="comment">// Define a dataset.</span></div><div class="line"><span class="keyword">var</span> params = {</div><div class="line">  projectId: <span class="string">'MY_PROJECT'</span>,</div><div class="line">  keyFilename: <span class="string">'/path/to/key/file.json'</span>,</div><div class="line">  namespace: <span class="string">'MY_NAMESPACE'</span></div><div class="line">};</div><div class="line"><span class="keyword">var</span> dataset = <span class="built_in">require</span>(<span class="string">'gcloud'</span>).datastore.dataset(params);</div><div class="line"></div><div class="line"><span class="comment">// Define an entity (including both key and data).</span></div><div class="line"><span class="keyword">var</span> kind = <span class="string">'MY_KIND'</span>;</div><div class="line"><span class="keyword">var</span> key = dataset.key(kind);</div><div class="line"><span class="keyword">var</span> data = [</div><div class="line">  {</div><div class="line">    name: <span class="string">'title'</span>,</div><div class="line">    value: <span class="string">'Google Cloud Datastore Starter'</span>,</div><div class="line">    excludeFromIndexes: <span class="literal">false</span></div><div class="line">  }</div><div class="line">];</div><div class="line"><span class="comment">// var data = { title: 'Google Cloud Datastore Starter' }; // Simple version</span></div><div class="line"><span class="keyword">var</span> entity = {</div><div class="line">  key: key,</div><div class="line">  data: data</div><div class="line">};</div><div class="line"></div><div class="line"><span class="comment">// Save a single entity.</span></div><div class="line">dataset.save(entity, <span class="function"><span class="keyword">function</span> <span class="params">(err)</span> </span>{</div><div class="line">  <span class="keyword">if</span> (err) {</div><div class="line">    <span class="keyword">throw</span> err;</div><div class="line">  }</div><div class="line">});</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -595,7 +595,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>6</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>7</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -708,7 +708,7 @@
   
     <li><a href="/tags/automation/">automation</a><small>2</small></li>
   
-    <li><a href="/tags/awk/">awk</a><small>1</small></li>
+    <li><a href="/tags/awk/">awk</a><small>2</small></li>
   
     <li><a href="/tags/aws/">aws</a><small>11</small></li>
   
@@ -930,6 +930,10 @@
   
     <li><a href="/tags/dsn-server/">dsn-server</a><small>1</small></li>
   
+    <li><a href="/tags/duff/">duff</a><small>1</small></li>
+  
+    <li><a href="/tags/duplicate/">duplicate</a><small>1</small></li>
+  
     <li><a href="/tags/duplicate-keys/">duplicate-keys</a><small>1</small></li>
   
     <li><a href="/tags/duplication/">duplication</a><small>1</small></li>
@@ -965,6 +969,8 @@
     <li><a href="/tags/extglob/">extglob</a><small>1</small></li>
   
     <li><a href="/tags/facebook/">facebook</a><small>1</small></li>
+  
+    <li><a href="/tags/fdupes/">fdupes</a><small>1</small></li>
   
     <li><a href="/tags/field/">field</a><small>1</small></li>
   
