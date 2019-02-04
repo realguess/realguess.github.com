@@ -293,61 +293,6 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-10-09T12:00:00.000Z"><a href="/2016/10/09/renewing-let-s-encrypt-ssl-certificate-with-docker/">Oct 9, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/10/09/renewing-let-s-encrypt-ssl-certificate-with-docker/">Renewing Let&#39;s Encrypt SSL Certificate with Docker</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p><a href="https://letsencrypt.org/" target="_blank" rel="external">Let’s Encrypt CA</a> issues short-lived certificates (90 days). Automated renewal process is preferred, recommended, and encouraged. But in a few situations, automated process is not available, here is how to do it manually when <a href="https://realguess.net/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/" target="_blank" rel="external">SSL certificate was installed with Docker</a>:</p>
-<p>First, update the container to the latest version. The latest version can be found from the <a href="https://github.com/certbot/certbot/releases" target="_blank" rel="external">release page</a> in GitHub.</p>
-<p>The latest is <code>v0.9.1</code>:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker pull quay.io/letsencrypt/letsencrypt:v0.9.1</div></pre></td></tr></table></figure>
-
-<p>Turn off application (if running as a Docker container) to free up the HTTPS port 443:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker stop app</div></pre></td></tr></table></figure>
-
-<p>Renew the certificate by issuing <code>renew</code> command:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm -p 443:443 --name certbot \</div><div class="line">  -v /etc/letsencrypt:/etc/letsencrypt          \</div><div class="line">  -v /var/log/letsencrypt:/var/log/letsencrypt  \</div><div class="line">  quay.io/letsencrypt/letsencrypt:v0.9.1 renew</div><div class="line">Saving debug log to /var/log/letsencrypt/letsencrypt.log</div><div class="line"></div><div class="line">-------------------------------------------------------------------------------</div><div class="line">Processing /etc/letsencrypt/renewal/example.com.conf</div><div class="line">-------------------------------------------------------------------------------</div><div class="line">Cert is due for renewal, auto-renewing...</div><div class="line">Starting new HTTPS connection (1): acme-v01.api.letsencrypt.org</div><div class="line">Renewing an existing certificate</div><div class="line">Performing the following challenges:</div><div class="line">tls-sni-01 challenge for example.com</div><div class="line">Waiting for verification...</div><div class="line">Cleaning up challenges</div><div class="line">Generating key (2048 bits): /etc/letsencrypt/keys/0001_key-certbot.pem</div><div class="line">Creating CSR: /etc/letsencrypt/csr/0001_csr-certbot.pem</div><div class="line"></div><div class="line">-------------------------------------------------------------------------------</div><div class="line">new certificate deployed without reload, fullchain is</div><div class="line">/etc/letsencrypt/live/example.com/fullchain.pem</div><div class="line">-------------------------------------------------------------------------------</div><div class="line"></div><div class="line">Congratulations, all renewals succeeded. The following certs have been renewed:</div><div class="line">  /etc/letsencrypt/live/example.com/fullchain.pem (success)</div></pre></td></tr></table></figure>
-
-<p>Restart app (it’s <code>start</code> not <code>restart</code>):</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker start app</div></pre></td></tr></table></figure>
-
-<p>Check the expiration date:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ echo | openssl s_client -connect example.com:443 2> /dev/null | \</div><div class="line">  openssl x509 -noout -dates</div><div class="line">notBefore=Oct  9 12:00:00 2016 GMT</div><div class="line">notAfter=Jan  7 12:00:00 2017 GMT</div></pre></td></tr></table></figure>
-
-<p>For more information on renewing, see the <a href="https://certbot.eff.org/docs/using.html#renewing-certificates" target="_blank" rel="external">Renewing Certificates</a> section from the Certbot documentation.</p>
-<p>Settings:</p>
-<ul>
-<li>Certbot v0.9.1</li>
-<li>Docker v1.12.1</li>
-</ul>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
         <time datetime="2016-10-09T12:00:00.000Z"><a href="/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/">Oct 9, 2016</a></time>
       
       
@@ -401,6 +346,61 @@
           <div class="alignleft">
             <a href="/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/#more" class="more-link">Read More</a>
           </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
+        <time datetime="2016-10-09T12:00:00.000Z"><a href="/2016/10/09/renewing-let-s-encrypt-ssl-certificate-with-docker/">Oct 9, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/10/09/renewing-let-s-encrypt-ssl-certificate-with-docker/">Renewing Let&#39;s Encrypt SSL Certificate with Docker</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p><a href="https://letsencrypt.org/" target="_blank" rel="external">Let’s Encrypt CA</a> issues short-lived certificates (90 days). Automated renewal process is preferred, recommended, and encouraged. But in a few situations, automated process is not available, here is how to do it manually when <a href="https://realguess.net/2016/10/09/getting-let-s-encrypt-ssl-certificate-with-docker/" target="_blank" rel="external">SSL certificate was installed with Docker</a>:</p>
+<p>First, update the container to the latest version. The latest version can be found from the <a href="https://github.com/certbot/certbot/releases" target="_blank" rel="external">release page</a> in GitHub.</p>
+<p>The latest is <code>v0.9.1</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker pull quay.io/letsencrypt/letsencrypt:v0.9.1</div></pre></td></tr></table></figure>
+
+<p>Turn off application (if running as a Docker container) to free up the HTTPS port 443:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker stop app</div></pre></td></tr></table></figure>
+
+<p>Renew the certificate by issuing <code>renew</code> command:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">$ docker run -it --rm -p 443:443 --name certbot \</div><div class="line">  -v /etc/letsencrypt:/etc/letsencrypt          \</div><div class="line">  -v /var/log/letsencrypt:/var/log/letsencrypt  \</div><div class="line">  quay.io/letsencrypt/letsencrypt:v0.9.1 renew</div><div class="line">Saving debug log to /var/log/letsencrypt/letsencrypt.log</div><div class="line"></div><div class="line">-------------------------------------------------------------------------------</div><div class="line">Processing /etc/letsencrypt/renewal/example.com.conf</div><div class="line">-------------------------------------------------------------------------------</div><div class="line">Cert is due for renewal, auto-renewing...</div><div class="line">Starting new HTTPS connection (1): acme-v01.api.letsencrypt.org</div><div class="line">Renewing an existing certificate</div><div class="line">Performing the following challenges:</div><div class="line">tls-sni-01 challenge for example.com</div><div class="line">Waiting for verification...</div><div class="line">Cleaning up challenges</div><div class="line">Generating key (2048 bits): /etc/letsencrypt/keys/0001_key-certbot.pem</div><div class="line">Creating CSR: /etc/letsencrypt/csr/0001_csr-certbot.pem</div><div class="line"></div><div class="line">-------------------------------------------------------------------------------</div><div class="line">new certificate deployed without reload, fullchain is</div><div class="line">/etc/letsencrypt/live/example.com/fullchain.pem</div><div class="line">-------------------------------------------------------------------------------</div><div class="line"></div><div class="line">Congratulations, all renewals succeeded. The following certs have been renewed:</div><div class="line">  /etc/letsencrypt/live/example.com/fullchain.pem (success)</div></pre></td></tr></table></figure>
+
+<p>Restart app (it’s <code>start</code> not <code>restart</code>):</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker start app</div></pre></td></tr></table></figure>
+
+<p>Check the expiration date:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ echo | openssl s_client -connect example.com:443 2> /dev/null | \</div><div class="line">  openssl x509 -noout -dates</div><div class="line">notBefore=Oct  9 12:00:00 2016 GMT</div><div class="line">notAfter=Jan  7 12:00:00 2017 GMT</div></pre></td></tr></table></figure>
+
+<p>For more information on renewing, see the <a href="https://certbot.eff.org/docs/using.html#renewing-certificates" target="_blank" rel="external">Renewing Certificates</a> section from the Certbot documentation.</p>
+<p>Settings:</p>
+<ul>
+<li>Certbot v0.9.1</li>
+<li>Docker v1.12.1</li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
         
         
       
@@ -549,6 +549,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
+
+<p>For example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/listing-tags-in-natural-sort-of-version-numbers/">Sep 12, 2016</a></time>
       
       
@@ -594,87 +632,47 @@
     <header>
       
         <div class="icon"></div>
-        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
+        <time datetime="2016-08-25T12:00:00.000Z"><a href="/2016/08/25/streaming-http-request-directly-to-response-in-node-js/">Aug 25, 2016</a></time>
       
       
   
-    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
-
-<p>For example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-08-25T12:00:00.000Z"><a href="/2016/08/25/installing-caddy-0-9-x-on-ubuntu-debian-system/">Aug 25, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/08/25/installing-caddy-0-9-x-on-ubuntu-debian-system/">Installing Caddy 0.9.x on Ubuntu/Debian System</a></h1>
+    <h1 class="title"><a href="/2016/08/25/streaming-http-request-directly-to-response-in-node-js/">Streaming HTTP Request Directly to Response in Node.js</a></h1>
   
 
     </header>
     <div class="entry">
       
-        <p>Install <a href="https://caddyserver.com/" target="_blank" rel="external">Caddy</a> via its <a href="https://getcaddy.com/" target="_blank" rel="external">installer script</a> on Ubuntu/Debian system:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ curl <span class="attribute">-s</span> https:<span class="comment">//getcaddy.com/ | sudo bash</span></div><div class="line">Downloading Caddy for linux/amd64<span class="attribute">...</span></div><div class="line">https:<span class="comment">//caddyserver.com/download/build?os=linux&arch=amd64&arm=&features=</span></div><div class="line">Extracting<span class="attribute">...</span></div><div class="line">Putting caddy <span class="keyword">in</span> /usr/<span class="built_in">local</span>/bin (may <span class="keyword">require</span> password)</div><div class="line">Caddy <span class="number">0.9</span><span class="number">.1</span> (<span class="subst">+</span>e8e5595)</div><div class="line">Successfully installed</div></pre></td></tr></table></figure>
+        <p>This is a <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a> starting script to stream HTTP request directly into response:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span><span class="function"><span class="params">(<span class="string">'http'</span>)</span>.<span class="title">createServer</span><span class="params">((req, res) =&gt; {</span></span></div><div class="line">  req.pipe(res); <span class="regexp">//</span> Pipe request directly to response</div><div class="line">}).<span class="title">listen</span><span class="params">(<span class="number">3000</span>)</span>;</div></pre></td></tr></table></figure>
 
-<p>This is different from the <a href="https://caddyserver.com/download" target="_blank" rel="external">Download</a> page, where you get to select additional features (see the <code>&amp;features=</code> URL query parameter).</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ which caddy</div><div class="line">caddy is <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>caddy</div></pre></td></tr></table></figure>
+<p>It behaves almost like an echo, you get back whatever you sent. For example, use <a href="https://github.com/jkbrzt/httpie" target="_blank" rel="external">HTTPie</a> to make a request to the above server:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">$ echo foo | http <span class="comment">--verbose --stream :3000 Content-Type:text/plain</span></div><div class="line">POST / HTTP/<span class="number">1.1</span></div><div class="line">Accept: <span class="type">application</span>/json, */*</div><div class="line">Accept-Encoding: gzip, deflate</div><div class="line">Connection: keep-alive</div><div class="line">Content-Length: <span class="number">4</span></div><div class="line">Host: localhost:<span class="number">3000</span></div><div class="line">User-Agent: HTTPie/<span class="number">0.9</span><span class="number">.6</span></div><div class="line">Content-Type: <span class="type">text</span>/plain</div><div class="line"></div><div class="line">foo</div><div class="line"></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Connection: keep-alive</div><div class="line">Transfer-Encoding: chunked</div><div class="line"></div><div class="line">foo</div></pre></td></tr></table></figure>
 
-<p>Get the installed version:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ caddy --<span class="keyword">version</span></div><div class="line">Caddy <span class="number">0.9</span>.<span class="number">1</span> (+e8e5595)</div></pre></td></tr></table></figure>
+<p>We can also add the <code>Content-Type</code> response header to echo back what the entire media type is after assembling all chunks.</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">require</span><span class="function"><span class="params">(<span class="string">'http'</span>)</span>.<span class="title">createServer</span><span class="params">((req, res) =&gt; {</span></span></div><div class="line">  req.pipe(res); <span class="regexp">//</span> Pipe request directly to response</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (req.headers[<span class="string">'content-type'</span>]) {</div><div class="line">    res.setHeader(<span class="string">'Content-Type'</span>, req.headers[<span class="string">'content-type'</span>]);</div><div class="line">  }</div><div class="line">}).<span class="title">listen</span><span class="params">(<span class="number">3000</span>)</span>;</div></pre></td></tr></table></figure>
 
-<p>Get help:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line">$ caddy -h</div><div class="line">Usage <span class="keyword">of</span> caddy:</div><div class="line">  -agree</div><div class="line">        Agree <span class="keyword">to</span> the CA<span class="attribute">'s</span> Subscriber Agreement</div><div class="line">  -ca <span class="typename">string</span></div><div class="line">        URL <span class="keyword">to</span> certificate authority<span class="attribute">'s</span> ACME server directory (<span class="keyword">default</span> <span class="string">"https://acme-v01.api.letsencrypt.org/directory"</span>)</div><div class="line">  -conf <span class="typename">string</span></div><div class="line">        Caddyfile <span class="keyword">to</span> load (<span class="keyword">default</span> <span class="string">"Caddyfile"</span>)</div><div class="line">  -cpu <span class="typename">string</span></div><div class="line">        CPU cap (<span class="keyword">default</span> <span class="string">"100%"</span>)</div><div class="line">  -email <span class="typename">string</span></div><div class="line">        <span class="keyword">Default</span> ACME CA account email address</div><div class="line">  -grace duration</div><div class="line">        Maximum duration <span class="keyword">of</span> graceful shutdown (<span class="keyword">default</span> <span class="number">5</span>s)</div><div class="line">  -host <span class="typename">string</span></div><div class="line">        <span class="keyword">Default</span> host</div><div class="line">  -http2</div><div class="line">        <span class="keyword">Use</span> HTTP/<span class="number">2</span> (<span class="keyword">default</span> true)</div><div class="line">  -log <span class="typename">string</span></div><div class="line">        <span class="keyword">Process</span> log <span class="keyword">file</span></div><div class="line">  -pidfile <span class="typename">string</span></div><div class="line">        Path <span class="keyword">to</span> write pid <span class="keyword">file</span></div><div class="line">  -plugins</div><div class="line">        List installed plugins</div><div class="line">  -<span class="keyword">port</span> <span class="typename">string</span></div><div class="line">        <span class="keyword">Default</span> <span class="keyword">port</span> (<span class="keyword">default</span> <span class="string">"2015"</span>)</div><div class="line">  -quic</div><div class="line">        <span class="keyword">Use</span> experimental QUIC</div><div class="line">  -quiet</div><div class="line">        Quiet mode (no initialization output)</div><div class="line">  -revoke <span class="typename">string</span></div><div class="line">        Hostname <span class="keyword">for</span> which <span class="keyword">to</span> revoke the certificate</div><div class="line">  -root <span class="typename">string</span></div><div class="line">        Root path <span class="keyword">of</span> <span class="keyword">default</span> site (<span class="keyword">default</span> <span class="string">"."</span>)</div><div class="line">  -<span class="keyword">type</span> <span class="typename">string</span></div><div class="line">        <span class="keyword">Type</span> <span class="keyword">of</span> server <span class="keyword">to</span> run (<span class="keyword">default</span> <span class="string">"http"</span>)</div><div class="line">  -version</div><div class="line">        Show version</div></pre></td></tr></table></figure>
+<p>The response should have the <code>Content-Type</code> field as below:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="status">HTTP/1.1 <span class="number">200</span> OK</span></div><div class="line"><span class="attribute">Connection</span>: <span class="string">keep-alive</span></div><div class="line"><span class="attribute">Content-Type</span>: <span class="string">text/plain</span></div><div class="line"><span class="attribute">Transfer-Encoding</span>: <span class="string">chunked</span></div><div class="line"></div><div class="line"><span class="undefined">foo</span></div></pre></td></tr></table></figure>
 
-<p>Run Caddy locally:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ caddy</div><div class="line">Activating privacy features... done.</div><div class="line">http://:2015</div><div class="line"><span class="label">WARNING: </span>File descriptor limit 1024 is too low for production servers. At least 8192 is recommended. Fix with "ulimit -n 8192".</div></pre></td></tr></table></figure>
+<p>Notice that instead of usual <code>Content-Length</code> in the response header, we’ve got <code>Transfer-Encoding: chunked</code>. The default transfer encoding for Node.js HTTP is <code>chunked</code>:</p>
+<blockquote>
+<p>Sending a ‘Content-length’ header will disable the default chunked encoding.[^1]</p>
+</blockquote>
+<p>About transfer encoding:</p>
+<blockquote>
+<p>Chunked transfer encoding is a data transfer mechanism in version 1.1 of the Hypertext Transfer Protocol (HTTP) in which data is sent in a series of “chunks”. It uses the Transfer-Encoding HTTP header in place of the Content-Length header, which the earlier version of the protocol would otherwise require. Because the Content-Length header is not used, the sender does not need to know the length of the content before it starts transmitting a response to the receiver. Senders can begin transmitting dynamically-generated content before knowing the total size of that content. … The size of each chunk is sent right before the chunk itself so that the receiver can tell when it has finished receiving data for that chunk. The data transfer is terminated by a final chunk of length zero.[^2]</p>
+</blockquote>
+<p>With the above starting script, now you can attach some <a href="https://nodejs.org/api/stream.html#stream_class_stream_transform" target="_blank" rel="external">transform streams</a> to manipulate the request and stream back in chunked response.</p>
+<p>Settings:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ node <span class="comment">--version</span></div><div class="line">v6<span class="number">.3</span><span class="number">.1</span></div><div class="line">$ <span class="keyword">http</span> <span class="comment">--version</span></div><div class="line"><span class="number">0.9</span><span class="number">.6</span></div></pre></td></tr></table></figure>
 
-<p>A file descriptor is simply a number that the operating system assigns to an open file to keep track of it. Caddy’s primary goal is to be an easy-to-use static file web server. Having high file descriptor limit means it can open more files to serve users at the same time.</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>ulimit -<span class="constant">Sn</span> && ulimit -<span class="constant">Hn</span></div><div class="line"><span class="number">1024</span></div><div class="line"><span class="number">4096</span></div></pre></td></tr></table></figure>
-
-<p>The current system is too low in both soft and hard limits. But since it’s not in production, warning can be ignored.</p>
-<p>Make sure the server working:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ http :<span class="number">2015</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">404</span> <span class="keyword">Not</span> Found</div><div class="line">Content-<span class="keyword">Length</span>: <span class="number">14</span></div><div class="line">Content-Type: text/plain; charset=utf-<span class="number">8</span></div><div class="line">Server: Caddy</div><div class="line">X-Content-Type-<span class="keyword">Options</span>: nosniff</div><div class="line"></div><div class="line"><span class="number">404</span> <span class="keyword">Not</span> Found</div></pre></td></tr></table></figure>
-
-<p>Response header <code>X-Content-Type-Options: nosniff</code> prevents MIME based attacks, it tells the browser to respect the response content type, not to override.</p>
-<p>Status code <code>404</code> means working, but just lacks an index file. Let’s create one:</p>
+<p>[^1]: <a href="https://nodejs.org/api/http.html" target="_blank" rel="external">HTTP</a>, Node.js API Docs</p>
+<p>[^2]: <a href="https://en.wikipedia.org/wiki/Chunked_transfer_encoding" target="_blank" rel="external">Chunked transfer encoding</a>, Wikipedia</p>
 
       
     </div>
     <footer>
       
-        
-          <div class="alignleft">
-            <a href="/2016/08/25/installing-caddy-0-9-x-on-ubuntu-debian-system/#more" class="more-link">Read More</a>
-          </div>
         
         
       
@@ -714,7 +712,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>7</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>8</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -1012,6 +1010,8 @@
     <li><a href="/tags/delimiter/">delimiter</a><small>1</small></li>
   
     <li><a href="/tags/dependency/">dependency</a><small>4</small></li>
+  
+    <li><a href="/tags/descrypt/">descrypt</a><small>1</small></li>
   
     <li><a href="/tags/development/">development</a><small>1</small></li>
   
@@ -1413,13 +1413,15 @@
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
   
-    <li><a href="/tags/password/">password</a><small>2</small></li>
+    <li><a href="/tags/password/">password</a><small>3</small></li>
   
     <li><a href="/tags/patch/">patch</a><small>1</small></li>
   
     <li><a href="/tags/path/">path</a><small>4</small></li>
   
     <li><a href="/tags/pattern-matching/">pattern-matching</a><small>1</small></li>
+  
+    <li><a href="/tags/pdf/">pdf</a><small>1</small></li>
   
     <li><a href="/tags/pinboard/">pinboard</a><small>1</small></li>
   
@@ -1456,6 +1458,8 @@
     <li><a href="/tags/put/">put</a><small>1</small></li>
   
     <li><a href="/tags/python/">python</a><small>1</small></li>
+  
+    <li><a href="/tags/qpdf/">qpdf</a><small>1</small></li>
   
     <li><a href="/tags/query-parameter/">query-parameter</a><small>1</small></li>
   
