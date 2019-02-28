@@ -68,6 +68,77 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2019-02-28T12:00:00.000Z"><a href="/2019/02/28/squeeze-repeats/">Feb 28, 2019</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2019/02/28/squeeze-repeats/">Squeeze Repeats</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>One option that I have seldom used in <code>tr</code> command is <code>-s</code> or <code>--squeeze-repeats</code>:</p>
+<blockquote>
+<p>replace each sequence of a repeated character that is listed in the last specified SET, with a single occurrence of that character - TR(1)</p>
+</blockquote>
+<p>The best way to explain it is to demonstrate by example:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span> hello hello | tr l <span class="number">1</span></div><div class="line">he11o he11o</div></pre></td></tr></table></figure>
+
+<p>Apply the <code>-s</code> option:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span> hello hello | tr <span class="operator">-s</span> l <span class="number">1</span></div><div class="line">he1o he1o</div></pre></td></tr></table></figure>
+
+<p>The number of repeated character <code>1</code> has been <em>squeezed</em> into a single occurrence.</p>
+<p>Therefore, the tr command has the following three operations:</p>
+<ul>
+<li>Translate (default, no options)</li>
+<li>Delete (<code>-d</code>)</li>
+<li>Squeeze (<code>-s</code>)</li>
+</ul>
+<p>To drop repeated characters, the second set is not necessary. This is very useful to remove extra spaces:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="built_in">echo</span> <span class="string">'hello,     world!'</span> | tr <span class="operator">-s</span> <span class="string">'[:blank]'</span></div><div class="line">hello, world!</div></pre></td></tr></table></figure>
+
+<p>In Vim, to squeeze the extra blank in a line:</p>
+<figure class="highlight vim"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">:.! tr -s [:blank:]</div></pre></td></tr></table></figure>
+
+<p>Additional examples from <a href="https://www.gnu.org/software/coreutils/manual/coreutils.html#Squeezing-and-deleting" target="_blank" rel="external">GNU Coreutils Manual</a>.</p>
+<p>Delete blank lines:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tr <span class="operator">-s</span> <span class="string">'\n'</span></div></pre></td></tr></table></figure>
+
+<p>Put all words on lines by themselves:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ tr -cs <span class="string">'[:alnum:]'</span> <span class="string">'\n'</span></div></pre></td></tr></table></figure>
+
+<p>Quick summary for above mentioned use cases:</p>
+<ul>
+<li>Remove extra spaces</li>
+<li>Delete blank lines</li>
+<li>Put all words on lines by themselves</li>
+</ul>
+<p>Notes:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">tr (GNU coreutils) 8.29</div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2019-02-04T12:00:00.000Z"><a href="/2019/02/04/decrypting-password-protected-pdf-files/">Feb 4, 2019</a></time>
       
       
@@ -488,62 +559,6 @@
 
 
   
-    <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-12-30T12:00:00.000Z"><a href="/2016/12/30/registering-a-domain-with-amazon-route-53-via-cli/">Dec 30, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/12/30/registering-a-domain-with-amazon-route-53-via-cli/">Registering a Domain with Amazon Route 53 via CLI</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Register a domain with <a href="https://aws.amazon.com/route53/" target="_blank" rel="external">Amazon Route 53</a> via CLI is very straightforward, the only complicate thing is to generate the acceptable JSON structure, then somehow enter the JSON string in the command line without meddling from the shell.</p>
-<p>The command is:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>aws route53domains register-domain</div></pre></td></tr></table></figure>
-
-<p>The documentation can be found from the <a href="https://docs.aws.amazon.com/cli/latest/reference/route53domains/register-domain.html" target="_blank" rel="external">AWS CLI Command Reference</a> or issuing:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws route53domains register-domain <span class="built_in">help</span></div></pre></td></tr></table></figure>
-
-<p>Most the command line options require simple string values, but some options like <code>--admin-contact</code> requires a structure data, which is complex to enter in the command line. The easiest way is to forget all other options and use <code>--cli-input-json</code> to get everything in JSON.</p>
-<p>First let’s generate the skeleton or template to use:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws route53domains register-domain --generate-cli-skeleton</div></pre></td></tr></table></figure>
-
-<p>That should output something like:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">    "<span class="attribute">DomainName</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">    "<span class="attribute">IdnLangCode</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">    "<span class="attribute">DurationInYears</span>": <span class="value"><span class="number">0</span></span>,</div><div class="line">    "<span class="attribute">AutoRenew</span>": <span class="value"><span class="literal">true</span></span>,</div><div class="line">    "<span class="attribute">AdminContact</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">FirstName</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">LastName</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">ContactType</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">OrganizationName</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">AddressLine1</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">AddressLine2</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">City</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">State</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">CountryCode</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">ZipCode</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">PhoneNumber</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">Email</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">Fax</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">ExtraParams</span>": <span class="value">[</span></div><div class="line">            {</div><div class="line">                "<span class="attribute">Name</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">                "<span class="attribute">Value</span>": <span class="value"><span class="string">""</span></span></div><div class="line">            }</div><div class="line">        ]</div><div class="line">    },</div><div class="line">    "<span class="attribute">RegistrantContact</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">FirstName</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">LastName</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">ContactType</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">OrganizationName</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">AddressLine1</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">AddressLine2</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">City</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">State</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">CountryCode</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">ZipCode</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">PhoneNumber</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">Email</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">Fax</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">ExtraParams</span>": <span class="value">[</span></div><div class="line">            {</div><div class="line">                "<span class="attribute">Name</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">                "<span class="attribute">Value</span>": <span class="value"><span class="string">""</span></span></div><div class="line">            }</div><div class="line">        ]</div><div class="line">    },</div><div class="line">    "<span class="attribute">TechContact</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">FirstName</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">LastName</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">ContactType</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">OrganizationName</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">AddressLine1</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">AddressLine2</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">City</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">State</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">CountryCode</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">ZipCode</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">PhoneNumber</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">Email</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">Fax</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">        "<span class="attribute">ExtraParams</span>": <span class="value">[</span></div><div class="line">            {</div><div class="line">                "<span class="attribute">Name</span>": <span class="value"><span class="string">""</span></span>,</div><div class="line">                "<span class="attribute">Value</span>": <span class="value"><span class="string">""</span></span></div><div class="line">            }</div><div class="line">        ]</div><div class="line">    },</div><div class="line">    "<span class="attribute">PrivacyProtectAdminContact</span>": <span class="value"><span class="literal">true</span></span>,</div><div class="line">    "<span class="attribute">PrivacyProtectRegistrantContact</span>": <span class="value"><span class="literal">true</span></span>,</div><div class="line">    "<span class="attribute">PrivacyProtectTechContact</span>": <span class="value"><span class="literal">true</span></span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Fill in the fields, leave out the ones not needed:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">{</div><div class="line">    "<span class="attribute">DomainName</span>": <span class="value"><span class="string">"example.com"</span></span>,</div><div class="line">    "<span class="attribute">DurationInYears</span>": <span class="value"><span class="number">1</span></span>,</div><div class="line">    "<span class="attribute">AutoRenew</span>": <span class="value"><span class="literal">true</span></span>,</div><div class="line">    "<span class="attribute">AdminContact</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">FirstName</span>": <span class="value"><span class="string">"Joe"</span></span>,</div><div class="line">        "<span class="attribute">LastName</span>": <span class="value"><span class="string">"Doe"</span></span>,</div><div class="line">        "<span class="attribute">ContactType</span>": <span class="value"><span class="string">"PERSON"</span></span>,</div><div class="line">        "<span class="attribute">AddressLine1</span>": <span class="value"><span class="string">"101 Main St"</span></span>,</div><div class="line">        "<span class="attribute">City</span>": <span class="value"><span class="string">"New York"</span></span>,</div><div class="line">        "<span class="attribute">State</span>": <span class="value"><span class="string">"NY"</span></span>,</div><div class="line">        "<span class="attribute">CountryCode</span>": <span class="value"><span class="string">"US"</span></span>,</div><div class="line">        "<span class="attribute">ZipCode</span>": <span class="value"><span class="string">"10001"</span></span>,</div><div class="line">        "<span class="attribute">PhoneNumber</span>": <span class="value"><span class="string">"+1.8888888888"</span></span>,</div><div class="line">        "<span class="attribute">Email</span>": <span class="value"><span class="string">"joe.doe@example.com"</span></span></div><div class="line">    },</div><div class="line">    "<span class="attribute">RegistrantContact</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">FirstName</span>": <span class="value"><span class="string">"Joe"</span></span>,</div><div class="line">        "<span class="attribute">LastName</span>": <span class="value"><span class="string">"Doe"</span></span>,</div><div class="line">        "<span class="attribute">ContactType</span>": <span class="value"><span class="string">"PERSON"</span></span>,</div><div class="line">        "<span class="attribute">AddressLine1</span>": <span class="value"><span class="string">"101 Main St"</span></span>,</div><div class="line">        "<span class="attribute">City</span>": <span class="value"><span class="string">"New York"</span></span>,</div><div class="line">        "<span class="attribute">State</span>": <span class="value"><span class="string">"NY"</span></span>,</div><div class="line">        "<span class="attribute">CountryCode</span>": <span class="value"><span class="string">"US"</span></span>,</div><div class="line">        "<span class="attribute">ZipCode</span>": <span class="value"><span class="string">"10001"</span></span>,</div><div class="line">        "<span class="attribute">PhoneNumber</span>": <span class="value"><span class="string">"+1.8888888888"</span></span>,</div><div class="line">        "<span class="attribute">Email</span>": <span class="value"><span class="string">"joe.doe@example.com"</span></span></div><div class="line">    },</div><div class="line">    "<span class="attribute">TechContact</span>": <span class="value">{</span></div><div class="line">        "<span class="attribute">FirstName</span>": <span class="value"><span class="string">"Joe"</span></span>,</div><div class="line">        "<span class="attribute">LastName</span>": <span class="value"><span class="string">"Doe"</span></span>,</div><div class="line">        "<span class="attribute">ContactType</span>": <span class="value"><span class="string">"PERSON"</span></span>,</div><div class="line">        "<span class="attribute">AddressLine1</span>": <span class="value"><span class="string">"101 Main St"</span></span>,</div><div class="line">        "<span class="attribute">City</span>": <span class="value"><span class="string">"New York"</span></span>,</div><div class="line">        "<span class="attribute">State</span>": <span class="value"><span class="string">"NY"</span></span>,</div><div class="line">        "<span class="attribute">CountryCode</span>": <span class="value"><span class="string">"US"</span></span>,</div><div class="line">        "<span class="attribute">ZipCode</span>": <span class="value"><span class="string">"10001"</span></span>,</div><div class="line">        "<span class="attribute">PhoneNumber</span>": <span class="value"><span class="string">"+1.8888888888"</span></span>,</div><div class="line">        "<span class="attribute">Email</span>": <span class="value"><span class="string">"joe.doe@example.com"</span></span></div><div class="line">    },</div><div class="line">    "<span class="attribute">PrivacyProtectAdminContact</span>": <span class="value"><span class="literal">true</span></span>,</div><div class="line">    "<span class="attribute">PrivacyProtectRegistrantContact</span>": <span class="value"><span class="literal">true</span></span>,</div><div class="line">    "<span class="attribute">PrivacyProtectTechContact</span>": <span class="value"><span class="literal">true</span></span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>Now let’s register by running through <a href="https://stedolan.github.io/jq/" target="_blank" rel="external">jq</a> to clean up extra blanks and end of line characters, and then pipe to <code>xargs</code> command by using new line character as the delimiter instead of a blank by default:</p>
-<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cat input.json | jq -cM . | \</div><div class="line">  xargs <span class="operator">-d</span> <span class="string">'\n'</span> aws route53domains register-domain --cli-input-json</div><div class="line">{</div><div class="line">    <span class="string">"OperationId"</span>: <span class="string">"00000000-0000-0000-0000-00000000000"</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-          <div class="alignleft">
-            <a href="/2016/12/30/registering-a-domain-with-amazon-route-53-via-cli/#more" class="more-link">Read More</a>
-          </div>
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-  
 
   <nav id="pagination">
   
@@ -572,7 +587,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>8</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>9</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -767,7 +782,7 @@
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>14</small></li>
+    <li><a href="/tags/cli/">cli</a><small>15</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -1524,6 +1539,8 @@
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
     <li><a href="/tags/totp/">totp</a><small>1</small></li>
+  
+    <li><a href="/tags/tr/">tr</a><small>1</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
   

@@ -64,6 +64,60 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-09-20T11:22:33.000Z"><a href="/2014/09/20/dirname-does-not-follow-symlink/">Sep 20, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/09/20/dirname-does-not-follow-symlink/">Dirname Does Not Follow Symlink</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Node’s global object <a href="http://nodejs.org/api/globals.html#globals_dirname" target="_blank" rel="external">__dirname</a> returns the name of the directory that the currently executing script resides in. However, if a directory is symbolic linked or a symlink, it still return the original path.</p>
+<p>For example, the following directory structure:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="input"><span class="prompt">/tmp/dirname/</span></span></div><div class="line">├── foo</div><div class="line">│   └── app.js</div><div class="line">└── lib</div><div class="line">    ├── bar -&gt; ../foo</div><div class="line">    └── util.js</div><div class="line"></div><div class="line"><span class="number">3</span> directories, <span class="number">2</span> files</div></pre></td></tr></table></figure>
+
+<p>The <code>app.js</code> contains the following line:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">console.<span class="built_in">log</span>(__dirname);</div></pre></td></tr></table></figure>
+
+<p>Run the script:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd /tmp/<span class="keyword">dirname</span>/foo && node app.js</div><div class="line">/tmp/<span class="keyword">dirname</span>/foo</div></pre></td></tr></table></figure>
+
+<p>You get the directory the <code>app.js</code> script is residing it. But if you do the same from the symlinked directory:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd <span class="regexp">/tmp/</span>dirname<span class="regexp">/lib/</span>bar && node app.js</div><div class="line"><span class="regexp">/tmp/</span>dirname<span class="regexp">/foo</span></div></pre></td></tr></table></figure>
+
+<p>Well, you get the same answer, even the current working directory is different:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd <span class="regexp">/tmp/</span>dirname<span class="regexp">/lib/</span>bar && pwd</div><div class="line"><span class="regexp">/tmp/</span>dirname<span class="regexp">/lib/</span>bar</div></pre></td></tr></table></figure>
+
+<p>The return of <code>__dirname</code> does not follow symbolic link.</p>
+<p>So, have to be extra careful when requiring files that is symbolic linked. If you think you are in <code>lib/bar</code> directory and try to require the <code>util.js</code> script in <code>app.js</code>:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">var</span> path <span class="subst">=</span> <span class="keyword">require</span>(<span class="string">'path'</span>);</div><div class="line">console<span class="built_in">.</span><span class="keyword">log</span>(<span class="keyword">require</span>(<span class="string">'../util'</span>));</div><div class="line">console<span class="built_in">.</span><span class="keyword">log</span>(<span class="keyword">require</span>(path<span class="built_in">.</span><span class="keyword">join</span>(__dirname, <span class="string">'..'</span>, <span class="string">'util'</span>)));</div></pre></td></tr></table></figure>
+
+<p>Both statements will throw module not found error. Path join does not help either.</p>
+<p>The best practice is to avoid symlinks and relative directory requiring. Instead, set up required as modules, and install them in <code>node_modules</code> directory, then they will become top-level modules.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-07-19T21:13:44.000Z"><a href="/2014/07/19/non-interactive-redis-install/">Jul 19, 2014</a></time>
       
       
@@ -558,46 +612,6 @@ undefined
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-14T20:59:12.000Z"><a href="/2014/06/14/inventing-on-principle/">Jun 14, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/14/inventing-on-principle/">Inventing on Principle</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Bret Victor, “Inventing on Principle”, January 20, 2012:</p>
-<iframe src="//player.vimeo.com/video/36579366?byline=0" width="500" height="281" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen></iframe>
-
-<p>Bret Victor’s principle:</p>
-<blockquote>
-<p>Creator needs immediate connection.</p>
-</blockquote>
-<p><em>Following a principle, following your passion, and doing things you love.</em></p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -627,7 +641,7 @@ undefined
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>8</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>9</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -822,7 +836,7 @@ undefined
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>14</small></li>
+    <li><a href="/tags/cli/">cli</a><small>15</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -1579,6 +1593,8 @@ undefined
     <li><a href="/tags/topic/">topic</a><small>2</small></li>
   
     <li><a href="/tags/totp/">totp</a><small>1</small></li>
+  
+    <li><a href="/tags/tr/">tr</a><small>1</small></li>
   
     <li><a href="/tags/train/">train</a><small>2</small></li>
   
