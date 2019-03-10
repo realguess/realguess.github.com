@@ -68,6 +68,71 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2019-03-10T12:00:00.000Z"><a href="/2019/03/10/generating-2fa-alike-6-digit-passcode-with-shuf/">Mar 10, 2019</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2019/03/10/generating-2fa-alike-6-digit-passcode-with-shuf/">Generating 2FA alike 6-digit Passcode with shuf</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>This is a one-liner to generate 2FA alike 6-digit passcode:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">6</span>); <span class="keyword">do</span> seq <span class="number">0</span> <span class="number">9</span>; <span class="keyword">done</span> | shuf -n <span class="number">6</span> | tr <span class="operator">-d</span> <span class="string">"\n"</span>; <span class="built_in">echo</span></div><div class="line"><span class="number">719154</span></div></pre></td></tr></table></figure>
+
+<p>Let’s break it down.</p>
+<p>To randomize 10 digits with shuf command, we can do either of the following:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">0</span> <span class="number">9</span> | shuf | tr <span class="operator">-d</span> <span class="string">"\n"</span>; <span class="built_in">echo</span></div><div class="line"><span class="number">0421568793</span></div><div class="line"></div><div class="line">$ shuf -i <span class="number">0</span>-<span class="number">9</span> | tr <span class="operator">-d</span> <span class="string">"\n"</span>; <span class="built_in">echo</span></div><div class="line"><span class="number">8521369407</span></div></pre></td></tr></table></figure>
+
+<p>The shuf command provides an <code>-i</code> or <code>--input-range</code> option to generate numeric random sequence. This reduces the need for another command. The last <code>echo</code> command is used to add the newline.</p>
+<p>If we just need a subset of them, such as 6 digits:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ shuf -i <span class="number">0</span>-<span class="number">9</span> | head -n <span class="number">6</span> | tr <span class="operator">-d</span> <span class="string">"\n"</span>; <span class="built_in">echo</span></div><div class="line"><span class="number">867923</span></div></pre></td></tr></table></figure>
+
+<p>Again, shuf has another option <code>-n</code> or <code>--head-count</code>, which is similar to the head command:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ shuf -i <span class="number">0</span>-<span class="number">9</span> -n <span class="number">6</span> | tr <span class="operator">-d</span> <span class="string">"\n"</span>; <span class="built_in">echo</span></div><div class="line"><span class="number">138472</span></div></pre></td></tr></table></figure>
+
+<p>The output looks like a 2FA passcode.</p>
+<p>Let’s try a few iterations:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">10</span>); <span class="keyword">do</span> shuf -i <span class="number">0</span>-<span class="number">9</span> -n <span class="number">6</span> | tr <span class="operator">-d</span> <span class="string">"\n"</span>; <span class="built_in">echo</span>; <span class="keyword">done</span></div><div class="line"><span class="number">360724</span></div><div class="line"><span class="number">945803</span></div><div class="line"><span class="number">381670</span></div><div class="line"><span class="number">654982</span></div><div class="line"><span class="number">957186</span></div><div class="line"><span class="number">852401</span></div><div class="line"><span class="number">759601</span></div><div class="line"><span class="number">968207</span></div><div class="line"><span class="number">106953</span></div><div class="line"><span class="number">753609</span></div></pre></td></tr></table></figure>
+
+<p>However, there is one problem. The digits are not repeatable.</p>
+<p>This is easy to resolve. We can do it one digit at a time and repeat for six times:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">6</span>); <span class="keyword">do</span> shuf -i <span class="number">0</span>-<span class="number">9</span> -n <span class="number">1</span>; <span class="keyword">done</span> | tr <span class="operator">-d</span> <span class="string">"\n"</span>; <span class="built_in">echo</span></div><div class="line"><span class="number">013750</span></div></pre></td></tr></table></figure>
+
+<p>To avoid calling <code>shuf</code> multiple times, we can generate our data space first:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">6</span>); <span class="keyword">do</span> seq <span class="number">0</span> <span class="number">9</span>; <span class="keyword">done</span> | shuf -n <span class="number">6</span> | tr <span class="operator">-d</span> <span class="string">"\n"</span>; <span class="built_in">echo</span></div><div class="line"><span class="number">781895</span></div></pre></td></tr></table></figure>
+
+<p>Let’s test out a few examples:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">10</span>); <span class="keyword">do</span> <span class="keyword">for</span> j <span class="keyword">in</span> $(seq <span class="number">6</span>); <span class="keyword">do</span> seq <span class="number">0</span> <span class="number">9</span>; <span class="keyword">done</span> | shuf -n <span class="number">6</span> | tr <span class="operator">-d</span> <span class="string">"\n"</span>; <span class="built_in">echo</span>; <span class="keyword">done</span></div><div class="line"><span class="number">614808</span></div><div class="line"><span class="number">738581</span></div><div class="line"><span class="number">864319</span></div><div class="line"><span class="number">334667</span></div><div class="line"><span class="number">319894</span></div><div class="line"><span class="number">576062</span></div><div class="line"><span class="number">072202</span></div><div class="line"><span class="number">103342</span></div><div class="line"><span class="number">770161</span></div><div class="line"><span class="number">940559</span></div></pre></td></tr></table></figure>
+
+<p>Now they look more like those 2FA passcodes.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2019/03/10/generating-2fa-alike-6-digit-passcode-with-shuf/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-v4-x-http-server-one-liner/">Jul 5, 2016</a></time>
       
       
@@ -163,7 +228,7 @@
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>9</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>10</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -358,7 +423,7 @@
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>15</small></li>
+    <li><a href="/tags/cli/">cli</a><small>16</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -844,7 +909,7 @@
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
   
-    <li><a href="/tags/one-liner/">one-liner</a><small>2</small></li>
+    <li><a href="/tags/one-liner/">one-liner</a><small>3</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>3</small></li>
   
@@ -863,6 +928,8 @@
     <li><a href="/tags/parseint/">parseint</a><small>1</small></li>
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
+  
+    <li><a href="/tags/passcode/">passcode</a><small>1</small></li>
   
     <li><a href="/tags/password/">password</a><small>3</small></li>
   
@@ -916,7 +983,7 @@
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>3</small></li>
+    <li><a href="/tags/random/">random</a><small>4</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1015,6 +1082,10 @@
     <li><a href="/tags/shellshock/">shellshock</a><small>1</small></li>
   
     <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
+  
+    <li><a href="/tags/shuf/">shuf</a><small>1</small></li>
+  
+    <li><a href="/tags/shuffle/">shuffle</a><small>1</small></li>
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
   

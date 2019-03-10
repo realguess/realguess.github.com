@@ -64,6 +64,48 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-09-28T12:00:00.000Z"><a href="/2014/09/28/patch-shellshock-vulnerability/">Sep 28, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/09/28/patch-shellshock-vulnerability/">Patch ShellShock Vulnerability</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>ShellShock is a Bash vulnerability, which allows bypassing environment restrictions in certain environments. See <a href="http://www.ubuntu.com/usn/USN-2363-1/" target="_blank" rel="external">Ubuntu Security Notice USN-2363-1</a>. And for more detailed description, see <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2014-7169" target="_blank" rel="external">CVE-2014-7169</a>.</p>
+<p>This Bash bug can be potentially bigger than the <a href="http://heartbleed.com/" target="_blank" rel="external">Heartbleed</a> bug, because Bash shell is usually the default shell for the user, and many commands will also spawn Bash to execute. See this answer <a href="http://askubuntu.com/a/528102" target="_blank" rel="external">http://askubuntu.com/a/528102</a> from StackOverflow.</p>
+<p>Running the following command will determine if the system is vulnerable or not:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$ </span>env x=<span class="string">'() { :;}; echo vulnerable'</span> bash -c <span class="string">"echo this is a test"</span></div></pre></td></tr></table></figure>
+
+<p><em>Source: <a href="http://t.co/nfDCUdRnb5" target="_blank" rel="external">http://t.co/nfDCUdRnb5</a></em></p>
+<p>Luckily, this is relatively easy to patch. Simple <code>apt-get update &amp;&amp; apt-get upgrade</code> will patch the Bash with the latest security fix. For example, this is a patched Bash version:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ bash --<span class="keyword">version</span></div><div class="line">GNU bash, <span class="keyword">version</span> <span class="number">4.2</span>.<span class="number">25</span>(<span class="number">1</span>)-release</div></pre></td></tr></table></figure>
+
+<p>This is for Ubuntu 12.04 LTS. If you are running Ubuntu 14.04 LTS, you have to<br>upgrade to <a href="http://www.ubuntu.com/usn/USN-2363-2/" target="_blank" rel="external">Bash 4.3-7ubuntu1.3</a>.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-09-20T11:22:33.000Z"><a href="/2014/09/20/dirname-does-not-follow-symlink/">Sep 20, 2014</a></time>
       
       
@@ -560,58 +602,6 @@ undefined
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2014-06-16T14:13:29.000Z"><a href="/2014/06/16/proxy-github-files-for-hotlinking/">Jun 16, 2014</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2014/06/16/proxy-github-files-for-hotlinking/">Proxy GitHub Files for Hotlinking</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I have a library that I would like to try in <a href="http://jsfiddle.net/" target="_blank" rel="external">JSFiddle</a>, for example, <a href="https://github.com/chjj/marked" target="_blank" rel="external">Marked</a>, a markdown parser and compiler. But I cannot by hotlinking the <a href="https://raw.githubusercontent.com/chjj/marked/master/marked.min.js" target="_blank" rel="external">minified JavaScript file</a> directly:</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">script</span> <span class="attribute">src</span>=<span class="value">"https://raw.githubusercontent.com/chjj/marked/master/marked.min.js"</span>&gt;</span><span class="javascript"></span><span class="tag">&lt;/<span class="title">script</span>&gt;</span></div></pre></td></tr></table></figure>
-
-<p>Error:</p>
-<p><em>Refused to execute script from ‘<a href="https://raw.githubusercontent.com/chjj/marked/master/marked.min.js" target="_blank" rel="external">https://raw.githubusercontent.com/chjj/marked/master/marked.min.js</a>‘ because its MIME type (‘text/plain’) is not executable, and strict MIME type checking is enabled.</em></p>
-<p>Double check the headers:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">$ curl -I https:<span class="comment">//raw.githubusercontent.com/chjj/marked/master/marked.min.js</span></div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Server: Apache</div><div class="line">Content-Security-Policy: <span class="keyword">default</span>-src <span class="string">'none'</span></div><div class="line">Access-Control-Allow-Origin: https:<span class="comment">//render.githubusercontent.com</span></div><div class="line">X-XSS-Protection: <span class="number">1</span>; mode=<span class="keyword">block</span></div><div class="line">X-Frame-Options: deny</div><div class="line">X-Content-<span class="keyword">Type</span>-Options: nosniff</div><div class="line"><span class="keyword">Strict</span>-Transport-Security: max-age=<span class="number">31536000</span></div><div class="line">Content-<span class="keyword">Type</span>: text/plain; charset=utf-<span class="number">8</span></div><div class="line">Cache-Control: max-age=<span class="number">300</span></div><div class="line">Content-Length: <span class="number">19160</span></div><div class="line">Accept-Ranges: bytes</div><div class="line">Via: <span class="number">1.1</span> varnish</div><div class="line">X-Served-<span class="keyword">By</span>: cache-lax1429-LAX</div><div class="line">X-Cache: MISS</div><div class="line">X-Cache-Hits: <span class="number">0</span></div><div class="line">Vary: Authorization,Accept-Encoding</div><div class="line">Source-Age: <span class="number">0</span></div></pre></td></tr></table></figure>
-
-<p>The two headers that prevents hotlinking:</p>
-<ul>
-<li><code>Content-Type</code> is set to <code>text/plain</code>, we are expecting <code>application/javascript</code>.</li>
-<li><code>Access-Control-Allow-Origin</code> is not set to <code>*</code>, which prevents AJAX request.</li>
-</ul>
-<p>The solution is to proxy the file by running your own server, or use <a href="https://rawgit.com/faq" target="_blank" rel="external">RawGit</a>:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">$ curl -<span class="keyword">I</span> https://rawgit.com/chjj/marked/master/marked.min.js</div><div class="line">HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</div><div class="line">Server: nginx</div><div class="line">Content-Type: application/javascript; charset=utf-<span class="number">8</span></div><div class="line">Connection: keep-alive</div><div class="line">Vary: Accept-Encoding</div><div class="line">X-Content-Type-<span class="keyword">Options</span>: nosniff</div><div class="line">X-Robots-Tag: none</div><div class="line">RawGit-Naughtiness: <span class="number">0</span></div><div class="line">Access-<span class="keyword">Control</span>-Allow-Origin: *</div><div class="line">Cache-<span class="keyword">Control</span>: max-age=<span class="number">300</span></div><div class="line">Vary: Accept-Encoding</div><div class="line">RawGit-Cache-Status: MISS</div></pre></td></tr></table></figure>
-
-<p>The <code>Content-Type</code> has been updated to <code>application/javascript</code> and the CORS restricted has been relaxed via <code>Access-Control-Allow-Origin</code>.</p>
-<p>Problem sovled and the fiddle works as expect:</p>
-<iframe width="100%" height="300" src="http://jsfiddle.net/realguess/2dmG5/embedded/html,result,js/" allowfullscreen="allowfullscreen" frameborder="0"></iframe>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -641,7 +631,7 @@ undefined
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>9</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>10</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -836,7 +826,7 @@ undefined
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>15</small></li>
+    <li><a href="/tags/cli/">cli</a><small>16</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -1322,7 +1312,7 @@ undefined
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
   
-    <li><a href="/tags/one-liner/">one-liner</a><small>2</small></li>
+    <li><a href="/tags/one-liner/">one-liner</a><small>3</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>3</small></li>
   
@@ -1341,6 +1331,8 @@ undefined
     <li><a href="/tags/parseint/">parseint</a><small>1</small></li>
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
+  
+    <li><a href="/tags/passcode/">passcode</a><small>1</small></li>
   
     <li><a href="/tags/password/">password</a><small>3</small></li>
   
@@ -1394,7 +1386,7 @@ undefined
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>3</small></li>
+    <li><a href="/tags/random/">random</a><small>4</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1493,6 +1485,10 @@ undefined
     <li><a href="/tags/shellshock/">shellshock</a><small>1</small></li>
   
     <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
+  
+    <li><a href="/tags/shuf/">shuf</a><small>1</small></li>
+  
+    <li><a href="/tags/shuffle/">shuffle</a><small>1</small></li>
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
   

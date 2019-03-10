@@ -68,6 +68,53 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2015-01-07T12:00:00.000Z"><a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/">Jan 7, 2015</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/">Use CLI s3api to Retrieve Metadata of Amazon S3 Object</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>In <a href="http://docs.aws.amazon.com/cli/latest/reference/s3/index.html#available-commands" target="_blank" rel="external">Amazon S3 CLI</a>, there are only a handful commands:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">cp      ls      mb      mv      rb      rm      sync    website</div></pre></td></tr></table></figure>
+
+<p>We can use <code>cp</code> command to retrieve S3 object:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3 cp s3://mybucket/myfile.json myfile.json</div></pre></td></tr></table></figure>
+
+<p>But if only the metadata of the object, such as <code>ETag</code> or <code>Content-Type</code> is needed, the S3 CLI does not have any command to do that.</p>
+<p>Now enter <a href="http://docs.aws.amazon.com/cli/latest/reference/s3api/index.html" target="_blank" rel="external">S3API CLI</a>. Not only the CLI commands can retrieve S3 objects, but also associated <a href="http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingMetadata.html#object-metadata" target="_blank" rel="external">metadata</a>. For example, retrieve S3 object similar to <code>aws s3 cp</code>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ aws s3api get-object --bucket mybucket --key myfile.json</div></pre></td></tr></table></figure>
+
+<p>Just need the metadata of the object, use <code>head-object</code>, which retrieves metadata without the object itself, as HTTP HEAD method:</p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2015/01/07/use-cli-s3api-to-retrieve-metadata-of-amazon-s3-object/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-12-27T12:00:00.000Z"><a href="/2014/12/27/revoke-and-grant-public-ip-addresses-to-amazon-ec2-instances-via-aws-command-line-interface-cli/">Dec 27, 2014</a></time>
       
       
@@ -414,7 +461,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
-    <li><a href="/categories/computing/">Computing</a><small>9</small></li>
+    <li><a href="/categories/computing/">Computing</a><small>10</small></li>
   
     <li><a href="/categories/data-processing/">Data Processing</a><small>0</small></li>
   
@@ -609,7 +656,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/chunked/">chunked</a><small>1</small></li>
   
-    <li><a href="/tags/cli/">cli</a><small>15</small></li>
+    <li><a href="/tags/cli/">cli</a><small>16</small></li>
   
     <li><a href="/tags/cloud-storage/">cloud-storage</a><small>1</small></li>
   
@@ -1095,7 +1142,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/object-attributes/">object-attributes</a><small>1</small></li>
   
-    <li><a href="/tags/one-liner/">one-liner</a><small>2</small></li>
+    <li><a href="/tags/one-liner/">one-liner</a><small>3</small></li>
   
     <li><a href="/tags/openssl/">openssl</a><small>3</small></li>
   
@@ -1114,6 +1161,8 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/parseint/">parseint</a><small>1</small></li>
   
     <li><a href="/tags/part/">part</a><small>1</small></li>
+  
+    <li><a href="/tags/passcode/">passcode</a><small>1</small></li>
   
     <li><a href="/tags/password/">password</a><small>3</small></li>
   
@@ -1167,7 +1216,7 @@ $ <span class="built_in">source</span> ~/.bashrc
   
     <li><a href="/tags/queue/">queue</a><small>1</small></li>
   
-    <li><a href="/tags/random/">random</a><small>3</small></li>
+    <li><a href="/tags/random/">random</a><small>4</small></li>
   
     <li><a href="/tags/range/">range</a><small>1</small></li>
   
@@ -1266,6 +1315,10 @@ $ <span class="built_in">source</span> ~/.bashrc
     <li><a href="/tags/shellshock/">shellshock</a><small>1</small></li>
   
     <li><a href="/tags/shopt/">shopt</a><small>1</small></li>
+  
+    <li><a href="/tags/shuf/">shuf</a><small>1</small></li>
+  
+    <li><a href="/tags/shuffle/">shuffle</a><small>1</small></li>
   
     <li><a href="/tags/simple/">simple</a><small>1</small></li>
   
