@@ -64,6 +64,47 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2013-10-27T10:39:40.000Z"><a href="/2013/10/27/change-time-zone-in-ubuntu-linux/">Oct 27, 2013</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2013/10/27/change-time-zone-in-ubuntu-linux/">Change Time Zone in Ubuntu Linux</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>All time zone files are located:</p>
+<pre><code><span class="regexp">/usr/</span>share<span class="regexp">/zoneinfo</span>
+</code></pre><p>Locate the timezone file name such as <code>Asia/Hong_Kong</code>:</p>
+<p>Change the time zone as root:</p>
+<pre><code><span class="input"><span class="prompt">echo 'Asia/Hong_Kong' &gt;</span> /etc/timezone </span>
+</code></pre><p>Configure time zone data:</p>
+<pre><code><span class="comment">dpkg</span><span class="literal">-</span><span class="comment">reconfigure</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">frontend</span> <span class="comment">noninteractive</span> <span class="comment">tzdata</span>
+</code></pre><p>Sync clock:</p>
+<pre><code>ntpdate pool.ntp<span class="preprocessor">.org</span>
+</code></pre>
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2013-10-26T23:06:00.000Z"><a href="/2013/10/26/coffeescript-inline-block-rule-toggling/">Oct 26, 2013</a></time>
       
       
@@ -439,53 +480,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-05-29T15:10:10.000Z"><a href="/2013/05/29/character-by-character-diff/">May 29, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/05/29/character-by-character-diff/">Character by Character Diff</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>I have two very long JSON strings. In a glance, they are the same, but their<br>MD5 hashes are not. The <code>diff</code> tool is line based, but those two JSON strings<br>are single line without newline character. So, I really need a tool that can<br><code>diff</code> character by character instead of line by line and with highlighting.<br>What I have found is <code>vimdiff</code>.</p>
-<p>Must have <code>vim</code> installed not just <code>vi</code>:</p>
-<pre><code>The program 'vimdiff' can be found in the following packages:
- <span class="keyword">*</span> vim
- <span class="keyword">*</span> vim-gnome
- <span class="keyword">*</span> vim-tiny
- <span class="keyword">*</span> vim-athena
- <span class="keyword">*</span> vim-gtk
- <span class="keyword">*</span> vim-nox
-Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
-</code></pre><p>What I have found out by using <code>vimdiff</code> is that both JSON strings are the<br>same if converting to objects, but the ordering of properties are different,<br>which is very difficult to tell by eyeballing.</p>
-<p>References:</p>
-<ul>
-<li><a href="http://unix.stackexchange.com/questions/11128/diff-within-a-line" target="_blank" rel="external">http://unix.stackexchange.com/questions/11128/diff-within-a-line</a></li>
-</ul>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -511,7 +505,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>12</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>13</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -1012,7 +1006,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
-    <li><a href="/tags/id/">id</a><small>1</small></li>
+    <li><a href="/tags/id/">id</a><small>2</small></li>
   
     <li><a href="/tags/ide/">ide</a><small>1</small></li>
   
@@ -1360,7 +1354,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/shebang/">shebang</a><small>1</small></li>
   
-    <li><a href="/tags/shell/">shell</a><small>3</small></li>
+    <li><a href="/tags/shell/">shell</a><small>4</small></li>
   
     <li><a href="/tags/shell-expansion/">shell-expansion</a><small>1</small></li>
   
@@ -1522,7 +1516,7 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
   
     <li><a href="/tags/url/">url</a><small>1</small></li>
   
-    <li><a href="/tags/username/">username</a><small>1</small></li>
+    <li><a href="/tags/username/">username</a><small>2</small></li>
   
     <li><a href="/tags/vagrant/">vagrant</a><small>8</small></li>
   
@@ -1561,6 +1555,8 @@ Try: sudo apt-get install <span class="variable">&lt;selected package&gt;</span>
     <li><a href="/tags/web-server/">web-server</a><small>2</small></li>
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
+  
+    <li><a href="/tags/whoami/">whoami</a><small>1</small></li>
   
     <li><a href="/tags/windows/">windows</a><small>2</small></li>
   

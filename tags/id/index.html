@@ -68,6 +68,63 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2019-03-19T12:00:00.000Z"><a href="/2019/03/19/a-safer-way-to-return-the-current-username-in-shell-script/">Mar 19, 2019</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2019/03/19/a-safer-way-to-return-the-current-username-in-shell-script/">A Safer Way to Return the Current Username in Shell Script</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Getting the current username, it sounds like a very easy task:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ bash -c <span class="string">'echo "$USER"'</span></div><div class="line">chao</div></pre></td></tr></table></figure>
+
+<p>But depending on the environment variable is not reliable, it can be easily overridden:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ USER=foo bash -c <span class="string">'echo "$USER"'</span></div><div class="line">foo</div></pre></td></tr></table></figure>
+
+<p>Or just simply fail to work:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ docker run --rm bash:<span class="number">4.4</span>.<span class="number">23</span> bash -c <span class="string">'USER=foo echo "$USER"'</span></div></pre></td></tr></table></figure>
+
+<p>The <code>USER</code> environment was not set in <code>/etc/profile</code> in this case:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ docker run --rm bash:<span class="number">4.4</span>.<span class="number">23</span> bash -c <span class="string">'cat /etc/profile'</span></div><div class="line"><span class="keyword">export</span> CHARSET=UTF-<span class="number">8</span></div><div class="line"><span class="keyword">export</span> PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</div><div class="line"><span class="keyword">export</span> PAGER=less</div><div class="line"><span class="keyword">export</span> PS1=<span class="string">'\h:\w\$ '</span></div><div class="line">umask <span class="number">022</span></div></pre></td></tr></table></figure>
+
+<p>This is especially important when writing shell script. You do not want to end up with a wrong username.</p>
+<p>One solution is to use <code>whoami</code>, which prints the effective user:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ USER=foo bash -c <span class="string">'whoami'</span></div><div class="line">chao</div></pre></td></tr></table></figure>
+
+<p>Another solution is to use <code>id</code> command:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ USER=foo bash -c <span class="string">'id -un'</span></div><div class="line">chao</div></pre></td></tr></table></figure>
+
+<p>This will eliminate the overridden environment variable issue. Also, check out this StackOverflow post for others and POSIX compatible means:</p>
+<p><a href="https://stackoverflow.com/questions/19306771/get-current-users-username-in-bash" target="_blank" rel="external">https://stackoverflow.com/questions/19306771/get-current-users-username-in-bash</a></p>
+
+      
+    </div>
+    <footer>
+      
+        
+          <div class="alignleft">
+            <a href="/2019/03/19/a-safer-way-to-return-the-current-username-in-shell-script/#more" class="more-link">Read More</a>
+          </div>
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+  
+    <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-09T09:18:19.000Z"><a href="/2014/01/09/working-with-big-number-in-javascript/">Jan 9, 2014</a></time>
       
       
@@ -148,7 +205,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>12</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>13</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -649,7 +706,7 @@
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
-    <li><a href="/tags/id/">id</a><small>1</small></li>
+    <li><a href="/tags/id/">id</a><small>2</small></li>
   
     <li><a href="/tags/ide/">ide</a><small>1</small></li>
   
@@ -997,7 +1054,7 @@
   
     <li><a href="/tags/shebang/">shebang</a><small>1</small></li>
   
-    <li><a href="/tags/shell/">shell</a><small>3</small></li>
+    <li><a href="/tags/shell/">shell</a><small>4</small></li>
   
     <li><a href="/tags/shell-expansion/">shell-expansion</a><small>1</small></li>
   
@@ -1159,7 +1216,7 @@
   
     <li><a href="/tags/url/">url</a><small>1</small></li>
   
-    <li><a href="/tags/username/">username</a><small>1</small></li>
+    <li><a href="/tags/username/">username</a><small>2</small></li>
   
     <li><a href="/tags/vagrant/">vagrant</a><small>8</small></li>
   
@@ -1198,6 +1255,8 @@
     <li><a href="/tags/web-server/">web-server</a><small>2</small></li>
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
+  
+    <li><a href="/tags/whoami/">whoami</a><small>1</small></li>
   
     <li><a href="/tags/windows/">windows</a><small>2</small></li>
   

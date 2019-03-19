@@ -64,6 +64,44 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
+
+<p>For example:</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2016-08-25T12:00:00.000Z"><a href="/2016/08/25/streaming-http-request-directly-to-response-in-node-js/">Aug 25, 2016</a></time>
       
       
@@ -597,61 +635,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-07-05T12:00:00.000Z"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Jul 5, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/07/05/node-js-installation-methods-july-2016-edition/">Node.js Installation Methods July 2016 Edition</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Follow up with the <a href="https://realguess.net/2015/09/02/various-node-js-installation-methods/" target="_blank" rel="external">previous blog</a> on various methods to install <a href="https://nodejs.org/" target="_blank" rel="external">Node.js</a>, here is the updated one with Node.js v4.x and v6.x versions.</p>
-<p>Install Node.js v4.x via <a href="https://nodesource.com/" target="_blank" rel="external">NodeSource</a>[^1] setup script:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_4.<span class="keyword">x</span> | sudo -E bash -</div><div class="line">$ sudo apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
-
-<p><code>sudo -E</code> option indicates to the security policy that the user wishes to preserve their existing environment variables[^2].</p>
-<p>With <a href="https://www.docker.com/" target="_blank" rel="external">Docker</a> and <a href="https://docs.docker.com/engine/reference/builder/" target="_blank" rel="external">Dockerfile</a>, <code>sudo</code> should be removed, because root:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">RUN curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_4.<span class="keyword">x</span> | bash - && \</div><div class="line">    apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
-
-<p>Install Node.js v6.x via the same method:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ curl -sL http<span class="variable">s:</span>//<span class="keyword">deb</span>.nodesource.<span class="keyword">com</span>/setup_6.<span class="keyword">x</span> | sudo -E bash -</div><div class="line">$ sudo apt-<span class="built_in">get</span> install -<span class="keyword">y</span> nodejs</div></pre></td></tr></table></figure>
-
-<p>The above installation method has been tested on:</p>
-<ul>
-<li>Debian 8.5</li>
-<li>Node.js v4.4.7 and v6.2.2</li>
-</ul>
-<p>In summary, the methods to install Node.js covered are:</p>
-<ul>
-<li>Package manager</li>
-<li>Nodesource script</li>
-<li>From the source</li>
-</ul>
-<p>[^1]: NodeSource provides <a href="https://github.com/nodesource/distributions" target="_blank" rel="external">binary distribution setup and support scripts</a>.<br>[^2]: See <code>man sudo</code>.</p>
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -677,7 +660,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>12</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>13</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -1178,7 +1161,7 @@
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
-    <li><a href="/tags/id/">id</a><small>1</small></li>
+    <li><a href="/tags/id/">id</a><small>2</small></li>
   
     <li><a href="/tags/ide/">ide</a><small>1</small></li>
   
@@ -1526,7 +1509,7 @@
   
     <li><a href="/tags/shebang/">shebang</a><small>1</small></li>
   
-    <li><a href="/tags/shell/">shell</a><small>3</small></li>
+    <li><a href="/tags/shell/">shell</a><small>4</small></li>
   
     <li><a href="/tags/shell-expansion/">shell-expansion</a><small>1</small></li>
   
@@ -1688,7 +1671,7 @@
   
     <li><a href="/tags/url/">url</a><small>1</small></li>
   
-    <li><a href="/tags/username/">username</a><small>1</small></li>
+    <li><a href="/tags/username/">username</a><small>2</small></li>
   
     <li><a href="/tags/vagrant/">vagrant</a><small>8</small></li>
   
@@ -1727,6 +1710,8 @@
     <li><a href="/tags/web-server/">web-server</a><small>2</small></li>
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
+  
+    <li><a href="/tags/whoami/">whoami</a><small>1</small></li>
   
     <li><a href="/tags/windows/">windows</a><small>2</small></li>
   

@@ -64,6 +64,51 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2017-04-29T12:00:00.000Z"><a href="/2017/04/29/wrapping-line-by-line-json-to-an-array/">Apr 29, 2017</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2017/04/29/wrapping-line-by-line-json-to-an-array/">Wrapping Line by Line JSON to an Array</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>Some utilities print out JSON data (object) line by line. Line by line JSON is not really a valid JSON format, need to wrap it in bracket as an array.</p>
+<p>For example, here are a few lines of JSON objects:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">3</span>); <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">'{"id":'</span><span class="variable">$i</span><span class="string">'}'</span>; <span class="keyword">done</span></div><div class="line">{<span class="string">"id"</span>:<span class="number">1</span>}</div><div class="line">{<span class="string">"id"</span>:<span class="number">2</span>}</div><div class="line">{<span class="string">"id"</span>:<span class="number">3</span>}</div></pre></td></tr></table></figure>
+
+<p>To combine them into a single array, we can use <a href="https://stedolan.github.io/jq/" target="_blank" rel="external">jq</a>‘s <strong>-s, —slurp</strong> option:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">3</span>); <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">'{"id":'</span><span class="variable">$i</span><span class="string">'}'</span>; <span class="keyword">done</span> | jq -cM <span class="operator">-s</span></div><div class="line">[{<span class="string">"id"</span>:<span class="number">1</span>},{<span class="string">"id"</span>:<span class="number">2</span>},{<span class="string">"id"</span>:<span class="number">3</span>}]</div></pre></td></tr></table></figure>
+
+<p>The option reads the entire input stream into a large array. This is good until the input stream is too large to process, because jq is not producing output while <em>slurping</em> up the input. If the input is line by line JSON, and all you want to do is wrapping it into an array (with or even without the trailing newline), we can simply do the following:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ <span class="keyword">for</span> i <span class="keyword">in</span> $(seq <span class="number">3</span>); <span class="keyword">do</span> <span class="built_in">echo</span> <span class="string">'{"id":'</span><span class="variable">$i</span><span class="string">'}'</span>; <span class="keyword">done</span> |\</div><div class="line">  awk <span class="string">'BEGIN { printf "["; getline; printf "%s", $0 } { printf ",%s", $0 } END { print "]" }'</span></div><div class="line">[{<span class="string">"id"</span>:<span class="number">1</span>},{<span class="string">"id"</span>:<span class="number">2</span>},{<span class="string">"id"</span>:<span class="number">3</span>}]</div></pre></td></tr></table></figure>
+
+<p>This is with the newline printed. And it will solve the problem of a very large input. Data will simply stream out as it comes it. Try it with a forever <code>while</code> loop.</p>
+<p>There is another option in jq named <strong>—stream</strong>, and it seems to be doing the same. But option <strong>—slurp</strong> overrides <strong>—stream</strong>, and the option itself is already so complicated.</p>
+<p>In conclusion, you can use <code>jq -s</code> to wrap line by line JSON into an array. If you want to be safe, just use the awk example above.</p>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2017-01-14T12:00:00.000Z"><a href="/2017/01/14/gitignore-excluding-everything-except-a-specific-directory/">Jan 14, 2017</a></time>
       
       
@@ -640,44 +685,6 @@
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2016-09-12T12:00:00.000Z"><a href="/2016/09/12/randomizing-an-array-with-sort/">Sep 12, 2016</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2016/09/12/randomizing-an-array-with-sort/">Randomizing an Array with Sort</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>How to randomize an array? Use the <code>sort</code> command, with the option:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">-R, <span class="comment">--random-sort</span></div><div class="line">    <span class="built_in">sort</span> <span class="keyword">by</span> <span class="built_in">random</span> hash <span class="operator">of</span> <span class="built_in">keys</span></div></pre></td></tr></table></figure>
-
-<p>For example:</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> -R</div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">10</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">1</span></div><div class="line">$ seq <span class="number">1</span> <span class="number">10</span> | <span class="built_in">sort</span> --random-<span class="built_in">sort</span></div><div class="line"><span class="number">9</span></div><div class="line"><span class="number">6</span></div><div class="line"><span class="number">1</span></div><div class="line"><span class="number">3</span></div><div class="line"><span class="number">2</span></div><div class="line"><span class="number">8</span></div><div class="line"><span class="number">7</span></div><div class="line"><span class="number">5</span></div><div class="line"><span class="number">4</span></div><div class="line"><span class="number">10</span></div></pre></td></tr></table></figure>
-
-
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -703,7 +710,7 @@
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>12</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>13</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -1204,7 +1211,7 @@
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
-    <li><a href="/tags/id/">id</a><small>1</small></li>
+    <li><a href="/tags/id/">id</a><small>2</small></li>
   
     <li><a href="/tags/ide/">ide</a><small>1</small></li>
   
@@ -1552,7 +1559,7 @@
   
     <li><a href="/tags/shebang/">shebang</a><small>1</small></li>
   
-    <li><a href="/tags/shell/">shell</a><small>3</small></li>
+    <li><a href="/tags/shell/">shell</a><small>4</small></li>
   
     <li><a href="/tags/shell-expansion/">shell-expansion</a><small>1</small></li>
   
@@ -1714,7 +1721,7 @@
   
     <li><a href="/tags/url/">url</a><small>1</small></li>
   
-    <li><a href="/tags/username/">username</a><small>1</small></li>
+    <li><a href="/tags/username/">username</a><small>2</small></li>
   
     <li><a href="/tags/vagrant/">vagrant</a><small>8</small></li>
   
@@ -1753,6 +1760,8 @@
     <li><a href="/tags/web-server/">web-server</a><small>2</small></li>
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
+  
+    <li><a href="/tags/whoami/">whoami</a><small>1</small></li>
   
     <li><a href="/tags/windows/">windows</a><small>2</small></li>
   

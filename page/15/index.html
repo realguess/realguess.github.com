@@ -64,6 +64,70 @@
     <header>
       
         <div class="icon"></div>
+        <time datetime="2014-01-09T09:18:19.000Z"><a href="/2014/01/09/working-with-big-number-in-javascript/">Jan 9, 2014</a></time>
+      
+      
+  
+    <h1 class="title"><a href="/2014/01/09/working-with-big-number-in-javascript/">Working with Big Number in JavaScript</a></h1>
+  
+
+    </header>
+    <div class="entry">
+      
+        <p>JavaScript is only capable of handling 53-bit numbers, if you are working with a big number such as <a href="https://dev.twitter.com/docs/twitter-ids-json-and-snowflake" target="_blank" rel="external">Twitter ID</a>, which is using 64-bit number, then you need to find an external library to do that, otherwise, there will be precision lost:</p>
+<pre><code>&gt; num = <span class="number">420938523475451904</span>
+<span class="input"><span class="prompt">420938523475451900
+&gt;</span> num = <span class="number">420938523475451904</span> + <span class="number">1</span></span>
+<span class="input"><span class="prompt">420938523475451900
+&gt;</span> num = <span class="number">420938523475451904</span> - <span class="number">1</span></span>
+<span class="number">420938523475451900</span>
+</code></pre><p>Here is one library to use in Node environment, install <a href="https://github.com/MikeMcl/big.js/" target="_blank" rel="external">Big.js</a>:</p>
+<pre><code><span class="variable">$ </span>npm install big.js
+</code></pre><p>Load the module:</p>
+<pre><code>&gt; BigNum = <span class="built_in">require</span>(<span class="string">'big.js'</span>)
+{ [<span class="built_in">Function</span>: Big] DP: <span class="number">20</span>, RM: <span class="number">1</span> }
+</code></pre><p>Use string to create the big number:</p>
+<pre><code>&gt; num = <span class="constant">BigNum</span>(<span class="string">'420938523475451904'</span>)
+<span class="input"><span class="prompt">{ s: 1,
+  e: 17,
+  c: [ 4, 2, 0, 9, 3, 8, 5, 2, 3, 4, 7, 5, 4, 5, 1, 9, 0, 4 ] }
+&gt;</span> num.toString()</span>
+<span class="string">'420938523475451904'</span>
+</code></pre><p>Perform addition:</p>
+<pre><code>&gt; num.<span class="keyword">plus</span>(<span class="number">1</span>).toString()
+<span class="string">'420938523475451905'</span>
+</code></pre><p>Perform substraction:</p>
+<pre><code>&gt; num.<span class="keyword">minus</span>(<span class="number">1</span>).toString()
+<span class="string">'420938523475451903'</span>
+</code></pre><p>There are other packages that yet to be tested:</p>
+<ul>
+<li><a href="https://github.com/MikeMcl/bignumber.js/" target="_blank" rel="external">bignumber.js</a></li>
+<li><a href="https://github.com/rauschma/strint" target="_blank" rel="external">strint.js</a></li>
+<li><a href="http://jsfromhell.com/classes/bignumber" target="_blank" rel="external">bignumber</a></li>
+<li><a href="https://github.com/jtobey/javascript-bignum" target="_blank" rel="external">JavaScript bignumber</a></li>
+</ul>
+
+      
+    </div>
+    <footer>
+      
+        
+        
+      
+      <div class="clearfix"></div>
+    </footer>
+  </div>
+</article>
+
+
+
+
+  <article class="post">
+  
+  <div class="post-content">
+    <header>
+      
+        <div class="icon"></div>
         <time datetime="2014-01-05T14:18:22.000Z"><a href="/2014/01/05/use-vim-cryptographic-features-to-encrypt-important-text-files/">Jan 5, 2014</a></time>
       
       
@@ -465,67 +529,6 @@ Binary <span class="keyword">file</span> encrypted.txt matches
 
 
 
-  <article class="post">
-  
-  <div class="post-content">
-    <header>
-      
-        <div class="icon"></div>
-        <time datetime="2013-12-04T17:34:59.000Z"><a href="/2013/12/04/configuration-setup-and-loading-precedence/">Dec 4, 2013</a></time>
-      
-      
-  
-    <h1 class="title"><a href="/2013/12/04/configuration-setup-and-loading-precedence/">Configuration Setup and Loading Precedence</a></h1>
-  
-
-    </header>
-    <div class="entry">
-      
-        <p>Loading precedence (latter overrides former):</p>
-<ol>
-<li>Load application default settings (<code>config/default.yml</code>)</li>
-<li>Load environment settings</li>
-<li>Load custom settings</li>
-</ol>
-<p>Default settings of the application is provided by the upstream, therefore, it should not be modified.</p>
-<p>There are four types of environments: <code>development</code>, <code>testing</code>, <code>staging</code> and <code>production</code>. Environment can be set by using the shell environment variable: <code>ENV</code>. If the environment variable is not specified, it is set to <code>development</code> as default. Environment settings override default settings.</p>
-<p>Custom settings override environment settings. The search path for custom settings is:</p>
-<ol>
-<li>Environment variable <code>SETTINGS</code></li>
-<li><code>config/settings.yml</code></li>
-</ol>
-<p>If both paths are not available, that means the custom settings are not specified.</p>
-<p><code>config/settings.yml</code> is a custom settings, therefore, it will be ignored by git in <code>.gitignore</code> file:</p>
-<pre><code>config/settings.yml
-</code></pre><p>The complete directory structure regarding to the configuration setup:</p>
-<pre><code><span class="title">config</span>/
-├── <span class="default"><span class="keyword">default</span>.yml</span>
-├── environments
-│   ├── development.yml
-│   ├── production.yml
-│   ├── staging.yml
-│   └── testing.yml
-└── settings.yml
-</code></pre><p>Quick start command:</p>
-<pre><code><span class="variable">$ </span>node app
-</code></pre><p>Fully customized start command:</p>
-<pre><code><span class="variable">$ </span><span class="constant">ENV</span>=production <span class="constant">SETTINGS</span>=<span class="regexp">/path/to</span><span class="regexp">/settings.yml node app</span>
-</code></pre>
-      
-    </div>
-    <footer>
-      
-        
-        
-      
-      <div class="clearfix"></div>
-    </footer>
-  </div>
-</article>
-
-
-
-
 
 <nav id="pagination">
   
@@ -551,7 +554,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/categories/cloud/">Cloud</a><small>11</small></li>
   
-    <li><a href="/categories/coding/">Coding</a><small>12</small></li>
+    <li><a href="/categories/coding/">Coding</a><small>13</small></li>
   
     <li><a href="/categories/communication/">Communication</a><small>1</small></li>
   
@@ -1052,7 +1055,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/http-server/">http-server</a><small>1</small></li>
   
-    <li><a href="/tags/id/">id</a><small>1</small></li>
+    <li><a href="/tags/id/">id</a><small>2</small></li>
   
     <li><a href="/tags/ide/">ide</a><small>1</small></li>
   
@@ -1400,7 +1403,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/shebang/">shebang</a><small>1</small></li>
   
-    <li><a href="/tags/shell/">shell</a><small>3</small></li>
+    <li><a href="/tags/shell/">shell</a><small>4</small></li>
   
     <li><a href="/tags/shell-expansion/">shell-expansion</a><small>1</small></li>
   
@@ -1562,7 +1565,7 @@ Binary <span class="keyword">file</span> encrypted.txt matches
   
     <li><a href="/tags/url/">url</a><small>1</small></li>
   
-    <li><a href="/tags/username/">username</a><small>1</small></li>
+    <li><a href="/tags/username/">username</a><small>2</small></li>
   
     <li><a href="/tags/vagrant/">vagrant</a><small>8</small></li>
   
@@ -1601,6 +1604,8 @@ Binary <span class="keyword">file</span> encrypted.txt matches
     <li><a href="/tags/web-server/">web-server</a><small>2</small></li>
   
     <li><a href="/tags/webhook/">webhook</a><small>1</small></li>
+  
+    <li><a href="/tags/whoami/">whoami</a><small>1</small></li>
   
     <li><a href="/tags/windows/">windows</a><small>2</small></li>
   
